@@ -43,7 +43,10 @@ limit_obs = np.array(limit_obs)
 
 x_min, x_max = mx.min(), mx.max()
 y_min, y_max = ms.min(), ms.max()
-grid_x, grid_y = np.mgrid[x_min:x_max:100j, y_min:y_max:200j]
+#grid_x, grid_y = np.mgrid[x_min:x_max:100j, y_min:y_max:200j]
+#grid_x, grid_y = np.meshgrid[x_min:x_max:100j, y_min:y_max:200j]
+xi, yi = np.linspace(x_min, x_max, 100), np.linspace(y_min, y_max, 200)
+grid_x, grid_y = np.meshgrid(xi, yi)
 
 ## Interpolate the limits on the grid
 grid_limit = griddata((mx, ms), limit_obs, (grid_x, grid_y), method='cubic')
@@ -53,7 +56,10 @@ ampl.use_atlas_style() # activate ATLAS style
 fig, ax = plt.subplots()
 
 ## transpose the data from mgrid (.T)
-im = ax.imshow(grid_limit.T, extent=(x_min,x_max,y_min,y_max), origin='lower', aspect='auto', cmap='viridis',
+#im = ax.imshow(grid_limit.T, extent=(x_min,x_max,y_min,y_max), origin='lower', aspect='auto', cmap='viridis',
+#               vmin=0,
+#               vmax=15)
+im = ax.imshow(grid_limit, extent=(x_min,x_max,y_min,y_max), origin='lower', aspect='auto', cmap='viridis',
                vmin=0,
                vmax=15)
 
@@ -72,5 +78,43 @@ ampl.set_zlabel(r'$\sigma( pp \rightarrow X)\times$ BR$ (X \rightarrow SH  \righ
 
 plt.tight_layout()
 
-fig.savefig("AtlasMassplottTest.png", format='png')
+fig.savefig("plotting/AtlasMassplotTest_lowmass.png", format='png')
+
+plt.close()
+
+
+
+
+
+
+
+
+fig, ax = plt.subplots()
+
+## transpose the data from mgrid (.T)
+#im = ax.imshow(grid_limit.T, extent=(x_min,x_max,y_min,y_max), origin='lower', aspect='auto', cmap='viridis',
+#               vmin=0,
+#               vmax=1)
+im = ax.imshow(grid_limit, extent=(x_min,x_max,y_min,y_max), origin='lower', aspect='auto', cmap='viridis',
+               vmin=0,
+               vmax=1)
+
+cbar = fig.colorbar(im, ax=ax)
+
+plotxmin, plotxmax = 420, 1020
+plotymin, plotymax = 0, 545
+ax.set_xlim(plotxmin, plotxmax)
+ax.set_ylim(plotymin, plotymax)
+
+
+ampl.set_ylabel("$m_S$ [GeV]", ax=ax)
+ampl.set_xlabel("$m_X$ [GeV]", ax=ax)
+ampl.set_zlabel(r'$\sigma( pp \rightarrow X)\times$ BR$ (X \rightarrow SH  \rightarrow bb \gamma \gamma)$ [fb]', ax=ax, cbar=cbar)
+
+
+plt.tight_layout()
+
+fig.savefig("plotting/AtlasMassplotTest_highmass.png", format='png')
+
+plt.close()
 
