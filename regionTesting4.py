@@ -210,11 +210,11 @@ def massplots(BP, physics, userParametersDict, directory, filename):
         
         if BP == "BP2":
             x, y, n = H1H2[0], H1H2[2], H1H2[3]
-            plt.title(filename + "BP2: $BR(X\to SH)$")
+            plt.title(filename + "BP2: $BR(X\\to SH)$")
         
         elif BP == "BP3":
             x, y, n = H1H2[1], H1H2[2], H1H2[3]
-            plt.title(filename + "BP3: $BR(X\to SH)$")
+            plt.title(filename + "BP3: $BR(X\\to SH)$")
 
         x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
@@ -223,11 +223,11 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
         if BP == "BP2":
             x, y, n = H1H2[0], H1H2[2], H1H2[3]
-            plt.title(filename + "BP2: $\sigma(pp \to X\to SH)$")
+            plt.title(filename + "BP2: $\sigma(pp \\to X\\to SH)$")
         
         elif BP == "BP3":
             x, y, n = H1H2[1], H1H2[2], H1H2[3]
-            plt.title(filename + "BP3: $\sigma(pp \to X\to SH)$")
+            plt.title(filename + "BP3: $\sigma(pp \\to X\\to SH)$")
 
         x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
@@ -235,11 +235,11 @@ def massplots(BP, physics, userParametersDict, directory, filename):
     elif physics == "XHH":
         if BP == "BP2":
             x, y, n = H2H2[0], H2H2[2], H2H2[3]
-            plt.title(filename + "BP2: $BR(pp \to X\to HH)$")
+            plt.title(filename + "BP2: $BR(pp \\to X\\to HH)$")
         
         elif BP == "BP3":
             x, y, n = H1H1[1], H1H1[2], H1H1[3]
-            plt.title(filename + "BP3: $BR(pp \to X\to HH)$")
+            plt.title(filename + "BP3: $BR(pp \\to X\\to HH)$")
 
         x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
@@ -247,11 +247,11 @@ def massplots(BP, physics, userParametersDict, directory, filename):
     elif physics == "ppXHH":
         if BP == "BP2":
             x, y, n = H2H2[0], H2H2[2], H2H2[3]
-            plt.title(filename + "BP2: $\sigma(pp \to X\to HH)$")
+            plt.title(filename + "BP2: $\sigma(pp \\to X\\to HH)$")
         
         elif BP == "BP3":
             x, y, n = H1H1[1], H1H1[2], H1H1[3]
-            plt.title(filename + "BP3: $\sigma(pp \to X\to HH)$")
+            plt.title(filename + "BP3: $\sigma(pp \\to X\\to HH)$")
 
         x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
@@ -260,11 +260,11 @@ def massplots(BP, physics, userParametersDict, directory, filename):
    
         if BP == "BP2":
             x, y, n = H1H1[0], H1H1[2], H1H1[3]
-            plt.title(filename + "BP2: $BR(X\to SS)$")
+            plt.title(filename + "BP2: $BR(X\\to SS)$")
 
         elif BP == "BP3":
             x, y, n = H2H2[1], H2H2[2], H2H2[3]
-            plt.title(filename + "BP3: $BR(X\to SS)$")
+            plt.title(filename + "BP3: $BR(X\\to SS)$")
 
         x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
@@ -273,11 +273,11 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
         if BP == "BP2":
             x, y, n =  H1H1[0], H1H1[2], H1H1[3]
-            plt.title(filename + "BP2: $\sigma(X\to SS)$")
+            plt.title(filename + "BP2: $\sigma(X\\to SS)$")
 
         elif BP == "BP3":
             x, y, n = H2H2[1], H2H2[2], H2H2[3]
-            plt.title(filename + "BP3: $\sigma(X\to SS)$")
+            plt.title(filename + "BP3: $\sigma(X\\to SS)$")
 
         x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
