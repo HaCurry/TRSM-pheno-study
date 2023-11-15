@@ -672,7 +672,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
         print("+----------------------------------------------------------+")
         print(duds)
         print("+----------------------------------------------------------+")
-        print("saving to" + directory + "as" + filename + "_Aborted.txt")
+        print("saving to " + directory + "as" + filename + "_Aborted.txt")
         
         with open(directory + "/" + filename +"_Aborted.txt", "w") as f:
             f.write(str(duds))
@@ -692,7 +692,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
-
+## BP2 REGION 2
 
 pointlist = pointGen("BP2", 2, 5, "grid")
 
@@ -701,8 +701,25 @@ dictPointlist = []
 for element in pointlist:
     dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "XSH_region2_5x5", "BP2_XSHvev_region1", individualPlots = True)
-regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "XSH_region2_5x5", "BP2_XSHangle_region1", individualPlots = True)
+regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "plotting/XSH_region2_5x5", "BP2_XSHvev_region2", individualPlots = True)
+regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "plotting/XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
+
+
+
+## BP2 REGION 3
+
+pointlist = pointGen("BP2", 3, 5, "grid")
+
+dictPointlist = []
+
+for element in pointlist:
+    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+
+regionTestingFunc("BP2", "XSS", dictPointlist, "vev", "plotting/XSS_region3_5x5", "BP2_XSSvev_region3", individualPlots = True)
+regionTestingFunc("BP2", "XSS", dictPointlist, "angle", "plotting/XSS_region3_5x5", "BP2_XSSangle_region3", individualPlots = True)
+
+
+
 
                   # BP,    physics,  userParametersDict,                  free,    filename
 #regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "testdir/BP2_XSHvev_region1")
