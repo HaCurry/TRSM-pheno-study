@@ -188,6 +188,48 @@ def XNP_rt(BPdirectory, axes1, axes2, axes3, physics):
         
         return H1H2, H1H1, H2H2
         
+    # Note, only ppXSHNP is supported, the rest are under development
+    elif (physics == "ppXSHNP") or (physics == "ppXSHNP") or (physics == "ppXSHNP"):
+        
+        SM1, SM2 = "bb", "gamgam" # This is here temporarily so that in the future the user can choose SM1, SM2
+        
+        b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
+        b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
+        b_H2_bb     = [i for i in df["b_H2_" + SM1]]        #"b_H2_bb"
+        b_H2_gamgam = [i for i in df["b_H2_" + SM2]]        #"b_H2_gamgam"
+        
+        b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
+        b_H1_gamgam_H2_bb = [b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
+        
+        b_H1H2_bbgamgam = [b_H1_bb_H2_gamgam[i] + b_H1_gamgam_H2_bb[i] for i in range(len(b_H1_bb))]
+        # b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
+        b_H1H1_bbgamgam = [b_H1_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
+        b_H2H2_bbgamgam = [b_H2_bb[i] * b_H2_gamgam[i] for i in range(len(b_H2_bb))]
+        
+#        For future customization of the user
+#        ggF_bbgamgam_xs_SM_Higgs = normalization
+        # ggF_bbgamgam_xs_SM_Higgs = (31.02 * 10**(-3)) * 0.0026  
+        # ggF_bbgamgam_xs_SM_Higgs = (31.02 * 10**(-3)) * (10**(-2)*0.028)  
+        ggF_bbgamgam_xs_SM_Higgs = 1 
+        
+        # rescaled cross-section
+        pp_X_H1H2_bbgamgam = [(b_H1H2_bbgamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H1H2_bbgamgam))]
+        
+        pp_X_H1H1_bbgamgam = [(b_H1H1_bbgamgam[i] * x_H3_gg_H1H1[i] * b_H3_H1H1[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H1H1_bbgamgam))]
+        
+        pp_X_H2H2_bbgamgam = [(b_H2H2_bbgamgam[i] * x_H3_gg_H2H2[i] * b_H3_H2H2[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H2H2_bbgamgam))]
+        
+        
+        pp_X_H1_bb_H2_gamgam = [b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
+        pp_X_H1_gamgam_H2_bb = [b_H1_gamgam_H2_bb[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
+        
+            
+        H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, pp_X_H1H2_bbgamgam, pp_X_H1_bb_H2_gamgam, pp_X_H1_gamgam_H2_bb])
+        H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, pp_X_H1H1_bbgamgam])
+        H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, pp_X_H2H2_bbgamgam])
+        
+        return H1H2, H1H1, H2H2
+        
     else:
         raise Exception("No physics chosen in XNP_rt")
 
@@ -195,7 +237,7 @@ def XNP_rt(BPdirectory, axes1, axes2, axes3, physics):
 
 
 def massplots(BP, physics, userParametersDict, directory, filename):
-    
+
     if BP == "BP2":
         H1H2, H1H1, H2H2 = XNP_rt(r"/home/iram/scannerS/ScannerS-master/build/BP2output/BP2_output_file.tsv", "mH1", "mH2", "mH3", physics)
 
@@ -210,27 +252,21 @@ def massplots(BP, physics, userParametersDict, directory, filename):
         
         if BP == "BP2":
             x, y, n = H1H2[0], H1H2[2], H1H2[3]
-            plt.title(filename + "BP2: $BR(X\\to SH)$")
+            title = filename + "BP2: $BR(X\\to SH)$"
         
         elif BP == "BP3":
             x, y, n = H1H2[1], H1H2[2], H1H2[3]
-            plt.title(filename + "BP3: $BR(X\\to SH)$")
+            title = filename + "BP3: $BR(X\\to SH)$"
 
-        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
-
-
-    elif physics == "ppXSH":
+    elif physics == "ppXSH" or "ppXSHNP":
 
         if BP == "BP2":
             x, y, n = H1H2[0], H1H2[2], H1H2[3]
-            plt.title(filename + "BP2: $\sigma(pp \\to X\\to SH)$")
+            title = filename + "BP2: $\sigma(pp \\to X\\to SH)$"
         
         elif BP == "BP3":
             x, y, n = H1H2[1], H1H2[2], H1H2[3]
-            plt.title(filename + "BP3: $\sigma(pp \\to X\\to SH)$")
-
-        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
-
+            title = filename + "BP3: $\sigma(pp \\to X\\to SH)$"
 
     elif physics == "XHH":
         if BP == "BP2":
@@ -239,47 +275,37 @@ def massplots(BP, physics, userParametersDict, directory, filename):
         
         elif BP == "BP3":
             x, y, n = H1H1[1], H1H1[2], H1H1[3]
-            plt.title(filename + "BP3: $BR(pp \\to X\\to HH)$")
-
-        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
-
+            title = filename + "BP3: $BR(pp \\to X\\to HH)$"
 
     elif physics == "ppXHH":
         if BP == "BP2":
             x, y, n = H2H2[0], H2H2[2], H2H2[3]
-            plt.title(filename + "BP2: $\sigma(pp \\to X\\to HH)$")
+            title = filename + "BP2: $\sigma(pp \\to X\\to HH)$"
         
         elif BP == "BP3":
             x, y, n = H1H1[1], H1H1[2], H1H1[3]
-            plt.title(filename + "BP3: $\sigma(pp \\to X\\to HH)$")
+            title = filename + "BP3: $\sigma(pp \\to X\\to HH)$"
 
-        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
-
-        
     elif physics == "XSS":
    
         if BP == "BP2":
             x, y, n = H1H1[0], H1H1[2], H1H1[3]
-            plt.title(filename + "BP2: $BR(X\\to SS)$")
+            title = filename + "BP2: $BR(X\\to SS)$"
 
         elif BP == "BP3":
             x, y, n = H2H2[1], H2H2[2], H2H2[3]
-            plt.title(filename + "BP3: $BR(X\\to SS)$")
-
-        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
-
+            title = filename + "BP3: $BR(X\\to SS)$"
 
     elif physics == "ppXSS":
 
         if BP == "BP2":
             x, y, n =  H1H1[0], H1H1[2], H1H1[3]
-            plt.title(filename + "BP2: $\sigma(X\\to SS)$")
+            title = filename + "BP2: $\sigma(X\\to SS)$"
 
         elif BP == "BP3":
             x, y, n = H2H2[1], H2H2[2], H2H2[3]
-            plt.title(filename + "BP3: $\sigma(X\\to SS)$")
+            title = filename + "BP3: $\sigma(X\\to SS)$"
 
-        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
 
     elif physics == "ppXNPSM":
@@ -287,6 +313,10 @@ def massplots(BP, physics, userParametersDict, directory, filename):
     
     else:
         raise Exception("No physics chosen for massplots")
+        
+    
+    plt.title(title)
+    x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
         
     if BP == "BP2":
         plt.xlim(0,124)        
@@ -724,49 +754,51 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
+
+
 #### BP2 REGION 2
 
-#pointlist = pointGen("BP2", 2, 5, "grid")
+#pointlist = TRSM_rt.pointGen("BP2", 2, 5, "grid")
 
 #dictPointlist = []
 
 #for element in pointlist:
 #    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-#regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "plotting/XSH_region2_5x5", "BP2_XSHvev_region2", individualPlots = True)
-#regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "plotting/XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "plotting/XSH_region2_5x5", "BP2_XSHvev_region2", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "plotting/XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
 
 
 
 #### BP2 REGION 3
 
-#pointlist = pointGen("BP2", 3, 5, "grid")
+#pointlist = TRSM_rt.pointGen("BP2", 3, 5, "grid")
 
 #dictPointlist = []
 
 #for element in pointlist:
 #    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-#regionTestingFunc("BP2", "XSS", dictPointlist, "vev", "plotting/XSS_region3_5x5", "BP2_XSSvev_region3", individualPlots = True)
-#regionTestingFunc("BP2", "XSS", dictPointlist, "angle", "plotting/XSS_region3_5x5", "BP2_XSSangle_region3", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP2", "XSS", dictPointlist, "vev", "plotting/XSS_region3_5x5", "BP2_XSSvev_region3", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP2", "XSS", dictPointlist, "angle", "plotting/XSS_region3_5x5", "BP2_XSSangle_region3", individualPlots = True)
 
 
-#regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "angle", "temp", "check_angle", individualPlots = True)
-#regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "vev", "temp", "check_vev", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "angle", "temp", "check_angle", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "vev", "temp", "check_vev", individualPlots = True)
 
 
 
 #### BP3 REGION 1
 
-#pointlist = pointGen("BP3", 1, 5, "grid")
+#pointlist = TRSM_rt.pointGen("BP3", 1, 5, "grid")
 
 #dictPointlist = []
 
 #for element in pointlist:
 #    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-#regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP3_XSHvev_region1",   individualPlots = True)
-#regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP2_XSHangle_region1", individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP3_XSHvev_region1",   individualPlots = True)
+#TRSM_rt.regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP2_XSHangle_region1", individualPlots = True)
 
 
 
@@ -779,19 +811,6 @@ dictPointlist = []
 for element in pointlist:
     dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region2_5x5", "BP3_XSHvev_region2",   individualPlots = True)
-regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
-
-
-
-
-
-
-
-
-                  # BP,    physics,  userParametersDict,                  free,    filename
-#regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "testdir/BP2_XSHvev_region1")
-#regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 375, 'points': 100}], "vev", "BP2rt/BP2_XSSvev_region1")
-
-#regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 375, 'points': 100}], "vev", "testdir/test")
+regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP3_XSHvev_region2",   individualPlots = True)
+regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP2_XSHangle_region2", individualPlots = True)
 
