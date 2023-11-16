@@ -508,6 +508,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
         for dictElement in userParametersDict:
             
             try:
+                # Ensures dictElement is always a dictionary
                 if isinstance(userParametersDict, dict) == True:
                     dictElement = userParametersDict
                 
@@ -525,7 +526,11 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 
                 if individualPlots == True:
                     individual.append( {"vev_vs": vev_vs, "val_vs": val_vs, "vev_vx": vev_vx, "val_vx": val_vx, "ms": dictElement["ms"], "mx": dictElement["mx"]} )
-                
+                    
+                    # For plotting constant y = dictElement["yaxis"] in individual plots
+                    if "yaxis" in dictElement:
+                        (individual[-1])["yaxis"] = dictElement["yaxis"]
+                    
                 plt.plot(vev_vs, val_vs)#, label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
                 plt.plot(vev_vx, val_vx, color = plt.gca().lines[-1].get_color(), label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
             
@@ -558,6 +563,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
         for dictElement in userParametersDict:
             
             try:
+                # Ensures dictElement is always a dictionary
                 if isinstance(userParametersDict, dict) == True:
                     dictElement = userParametersDict
                 
@@ -581,6 +587,10 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 
                 if individualPlots == True:
                     individual.append( {"angle_hS": angle_hS, "val_hS": val_hS, "angle_hX": angle_hX, "val_hX": val_hX, "angle_SX": angle_SX, "val_SX": val_SX , "ms": dictElement["ms"], "mx": dictElement["mx"]} )
+                    
+                    # For plotting constant y = dictElement["yaxis"] in individual plots
+                    if "yaxis" in dictElement:
+                        (individual[-1])["yaxis"] = dictElement["yaxis"]
                 
                 plt.plot(angle_hS, val_hS)#, label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
                 plt.plot(angle_hX, val_hX, color = plt.gca().lines[-1].get_color())#, label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
@@ -627,11 +637,24 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 plt.plot(dictElement["vev_vs"], dictElement["val_vs"],label = "vs")
                 plt.plot(dictElement["vev_vx"], dictElement["val_vx"],label = "vx", color = plt.gca().lines[-1].get_color())
                 
+                # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
+                if "yaxis" in dictElement:
+                    plt.axhline(y=dictElement["yaxis"], color='black', linestyle="dashed")
+                
                 plt.xlim(1, 1000)
                 plt.ylim(ylim_lb, ylim_ub)
                 plt.legend(bbox_to_anchor=(1.04, 1), borderaxespad=0)
                 plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                
+                # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
+                # and removes it for the next individual plot
+                if "yaxis" in dictElement:
+                    yaxis = plt.axhline(y=dictElement["yaxis"], color='black', linestyle='dashed')
+                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                    #code from stackexchange (specifically the comment by user P2000): https://stackoverflow.com/a/42955955/17456342
+                    yaxis.remove()
+                else:
+                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
 
                 # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
                 for line in plt.gca().lines: # put this before you call the 'mean' plot function.
@@ -654,7 +677,16 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 plt.ylim(ylim_lb, ylim_ub)
                 plt.legend(bbox_to_anchor=(1.04, 1), borderaxespad=0)
                 plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                
+                # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
+                # and removes it for the next individual plot
+                if "yaxis" in dictElement:
+                    yaxis = plt.axhline(y=dictElement["yaxis"], color='black', linestyle='dashed')
+                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                    #code from stackexchange (specifically the comment by user P2000): https://stackoverflow.com/a/42955955/17456342
+                    yaxis.remove()
+                else:            
+                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
                 
                 # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
                 for line in plt.gca().lines: # put this before you call the 'mean' plot function.
@@ -692,34 +724,38 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
-## BP2 REGION 2
+### BP2 REGION 2
 
-pointlist = pointGen("BP2", 2, 5, "grid")
+#pointlist = pointGen("BP2", 2, 5, "grid")
 
-dictPointlist = []
+#dictPointlist = []
 
-for element in pointlist:
-    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+#for element in pointlist:
+#    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "plotting/XSH_region2_5x5", "BP2_XSHvev_region2", individualPlots = True)
-regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "plotting/XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
-
-
-
-## BP2 REGION 3
-
-pointlist = pointGen("BP2", 3, 5, "grid")
-
-dictPointlist = []
-
-for element in pointlist:
-    dictPointlist.append({ "ms": element[0], "mx": element[1] })
-
-regionTestingFunc("BP2", "XSS", dictPointlist, "vev", "plotting/XSS_region3_5x5", "BP2_XSSvev_region3", individualPlots = True)
-regionTestingFunc("BP2", "XSS", dictPointlist, "angle", "plotting/XSS_region3_5x5", "BP2_XSSangle_region3", individualPlots = True)
+#regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "plotting/XSH_region2_5x5", "BP2_XSHvev_region2", individualPlots = True)
+#regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "plotting/XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
 
 
 
+### BP2 REGION 3
+
+#pointlist = pointGen("BP2", 3, 5, "grid")
+
+#dictPointlist = []
+
+#for element in pointlist:
+#    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+
+#regionTestingFunc("BP2", "XSS", dictPointlist, "vev", "plotting/XSS_region3_5x5", "BP2_XSSvev_region3", individualPlots = True)
+#regionTestingFunc("BP2", "XSS", dictPointlist, "angle", "plotting/XSS_region3_5x5", "BP2_XSSangle_region3", individualPlots = True)
+
+
+regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "angle", "temp", "check_angle", individualPlots = True)
+regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "vev", "temp", "check_vev", individualPlots = True)
+
+regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350, "yaxis": 0.3}, {"ms": 100, "mx": 300, "yaxis": 0.7}], "angle", "temp2", "check_angle", individualPlots = True)
+regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350, "yaxis": 0.1}, {"ms": 100, "mx": 300, "yaxis": 0.9}], "vev", "temp2", "check_vev", individualPlots = True)
 
                   # BP,    physics,  userParametersDict,                  free,    filename
 #regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "testdir/BP2_XSHvev_region1")
