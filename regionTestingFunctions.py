@@ -724,7 +724,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
-### BP2 REGION 2
+#### BP2 REGION 2
 
 #pointlist = pointGen("BP2", 2, 5, "grid")
 
@@ -738,7 +738,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
-### BP2 REGION 3
+#### BP2 REGION 3
 
 #pointlist = pointGen("BP2", 3, 5, "grid")
 
@@ -756,23 +756,23 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
-### BP3 REGION 1
+#### BP3 REGION 1
 
-pointlist = pointGen("BP3", 1, 5, "grid")
+#pointlist = pointGen("BP3", 1, 5, "grid")
 
-dictPointlist = []
+#dictPointlist = []
 
-for element in pointlist:
-    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+#for element in pointlist:
+#    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP3_XSHvev_region1",   individualPlots = True)
-regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP2_XSHangle_region1", individualPlots = True)
+#regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP3_XSHvev_region1",   individualPlots = True)
+#regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP2_XSHangle_region1", individualPlots = True)
 
 
 
 ### BP3 REGION 2
 
-pointlist = pointGen("BP3", 2, 5, "grid")
+pointlist = pointGen("BP3", 2, 8, "grid")
 
 dictPointlist = []
 
