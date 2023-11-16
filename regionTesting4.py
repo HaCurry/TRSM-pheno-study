@@ -751,11 +751,43 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 #regionTestingFunc("BP2", "XSS", dictPointlist, "angle", "plotting/XSS_region3_5x5", "BP2_XSSangle_region3", individualPlots = True)
 
 
-regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "angle", "temp", "check_angle", individualPlots = True)
-regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "vev", "temp", "check_vev", individualPlots = True)
+#regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "angle", "temp", "check_angle", individualPlots = True)
+#regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350}, {"ms": 100, "mx": 300}], "vev", "temp", "check_vev", individualPlots = True)
 
-regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350, "yaxis": 0.3}, {"ms": 100, "mx": 300, "yaxis": 0.7}], "angle", "temp2", "check_angle", individualPlots = True)
-regionTestingFunc("BP2", "XSH", [{"ms": 80, "mx": 350, "yaxis": 0.1}, {"ms": 100, "mx": 300, "yaxis": 0.9}], "vev", "temp2", "check_vev", individualPlots = True)
+
+
+### BP3 REGION 1
+
+pointlist = pointGen("BP3", 1, 5, "grid")
+
+dictPointlist = []
+
+for element in pointlist:
+    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+
+regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP3_XSHvev_region1",   individualPlots = True)
+regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region1_5x5", "BP2_XSHangle_region1", individualPlots = True)
+
+
+
+### BP3 REGION 2
+
+pointlist = pointGen("BP3", 2, 5, "grid")
+
+dictPointlist = []
+
+for element in pointlist:
+    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+
+regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region2_5x5", "BP3_XSHvev_region2",   individualPlots = True)
+regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
+
+
+
+
+
+
+
 
                   # BP,    physics,  userParametersDict,                  free,    filename
 #regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "testdir/BP2_XSHvev_region1")
