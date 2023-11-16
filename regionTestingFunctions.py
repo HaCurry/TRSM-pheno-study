@@ -188,21 +188,16 @@ def XNP_rt(BPdirectory, axes1, axes2, axes3, physics):
         
         return H1H2, H1H1, H2H2
         
-    # Note, only ppXSHNP is supported, the rest are under development
-    elif (physics == "ppXSHNP") or (physics == "ppXSHNP") or (physics == "ppXSHNP"):
+    # Note, only ppXSHSM is supported, the rest are under development
+    elif (physics == "ppXSHSM") or (physics == "ppXSSSM") or (physics == "ppXHHSM"):
         
-        SM1, SM2 = "bb", "gamgam" # This is here temporarily so that in the future the user can choose SM1, SM2
-        
+        SM1, SM2 = "bb", "gamgam"
         b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
         b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
         b_H2_bb     = [i for i in df["b_H2_" + SM1]]        #"b_H2_bb"
         b_H2_gamgam = [i for i in df["b_H2_" + SM2]]        #"b_H2_gamgam"
         
-        b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
-        b_H1_gamgam_H2_bb = [b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
-        
-        b_H1H2_bbgamgam = [b_H1_bb_H2_gamgam[i] + b_H1_gamgam_H2_bb[i] for i in range(len(b_H1_bb))]
-        # b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
+        b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
         b_H1H1_bbgamgam = [b_H1_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
         b_H2H2_bbgamgam = [b_H2_bb[i] * b_H2_gamgam[i] for i in range(len(b_H2_bb))]
         
@@ -219,14 +214,16 @@ def XNP_rt(BPdirectory, axes1, axes2, axes3, physics):
         
         pp_X_H2H2_bbgamgam = [(b_H2H2_bbgamgam[i] * x_H3_gg_H2H2[i] * b_H3_H2H2[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H2H2_bbgamgam))]
         
-        
+        b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
         pp_X_H1_bb_H2_gamgam = [b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
+        
+        b_H1_gamgam_H2_bb = [b_H1_gamgam[i] * b_H2_bb[i] for i in range(len(b_H1_gamgam))]
         pp_X_H1_gamgam_H2_bb = [b_H1_gamgam_H2_bb[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
         
             
         H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, pp_X_H1H2_bbgamgam, pp_X_H1_bb_H2_gamgam, pp_X_H1_gamgam_H2_bb])
-        H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, pp_X_H1H1_bbgamgam])
-        H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, pp_X_H2H2_bbgamgam])
+        H1H1 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, pp_X_H1H1_bbgamgam])
+        H2H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, pp_X_H2H2_bbgamgam])
         
         return H1H2, H1H1, H2H2
         
@@ -237,7 +234,7 @@ def XNP_rt(BPdirectory, axes1, axes2, axes3, physics):
 
 
 def massplots(BP, physics, userParametersDict, directory, filename):
-
+    
     if BP == "BP2":
         H1H2, H1H1, H2H2 = XNP_rt(r"/home/iram/scannerS/ScannerS-master/build/BP2output/BP2_output_file.tsv", "mH1", "mH2", "mH3", physics)
 
@@ -247,37 +244,62 @@ def massplots(BP, physics, userParametersDict, directory, filename):
     else:
         raise Exception("No BP chosen in massplots")
 
+    # line of code suggested by ChatGPT
+    x, y, z = '', '', ''  # Initialize the variables
 
     if physics == "XSH":
         
         if BP == "BP2":
             x, y, n = H1H2[0], H1H2[2], H1H2[3]
-        
         elif BP == "BP3":
             x, y, n = H1H2[1], H1H2[2], H1H2[3]
-            title = filename + "BP3: $BR(X\\to SH)$"
-
+        else:
+            raise Exception("Error HERE!")
+        
         title = filename + BP + ": $BR(X\\to SH)$"
 
-    elif physics == "ppXSH" or "ppXSHNP":
+    elif (physics == "ppXSH") or (physics == "ppXSHSM"):
 
-        if BP == "BP2":
-            x, y, n = H1H2[0], H1H2[2], H1H2[3]
+        if physics == "ppXSH":
         
-        elif BP == "BP3":
-            x, y, n = H1H2[1], H1H2[2], H1H2[3]
-        
-        title = filename + BP + ": $\sigma(pp \\to X\\to SH)$"
+            if BP == "BP2":
+                x, y, n = H1H2[0], H1H2[2], H1H2[3]
+            elif BP == "BP3":
+                x, y, n = H1H2[1], H1H2[2], H1H2[3]
+            else:
+                raise Exception("Error HERE!")
+            
+            title = filename + BP + ": $\sigma(pp \\to X\\to SH)$"
+            
+            plt.title(title)
+            x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
+            
+#        else: # physics == "ppXSHSM":
+#            
+#            if BP == "BP2":
+#                x, y, n = H1H2[0], H1H2[2], H1H2[4]
+#            
+#            elif BP == "BP3":
+#                x, y, n = H1H2[1], H1H2[2], H1H2[4]
+#            
+#            title = filename + BP + ": $\sigma(pp \\to X\\to SH" + SM1 + SM1 + SM2 + SM2 + ")$"
 
     elif physics == "XHH":
         
         if BP == "BP2":
             x, y, n = H2H2[0], H2H2[2], H2H2[3]
+            print(x[0],y[0],n[0])
         
         elif BP == "BP3":
             x, y, n = H1H1[1], H1H1[2], H1H1[3]
-            
+            print(x[0],y[0],n[0])
+        else:
+            raise Exception("Error HERE!")
+        
         title = filename + BP +": $BR(pp \\to X\\to HH)$"
+
+        plt.title(title)
+        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
     elif physics == "ppXHH":
         
@@ -286,8 +308,13 @@ def massplots(BP, physics, userParametersDict, directory, filename):
         
         elif BP == "BP3":
             x, y, n = H1H1[1], H1H1[2], H1H1[3]
+        else:
+            raise Exception("Error HERE!")
             
         title = filename + BP + ": $\sigma(pp \\to X\\to HH)$"
+
+        plt.title(title)
+        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
     elif physics == "XSS":
    
@@ -296,8 +323,13 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
         elif BP == "BP3":
             x, y, n = H2H2[1], H2H2[2], H2H2[3]
-            
+        else:
+            raise Exception("Error HERE!")
+        
         title = filename + BP + ": $BR(X\\to SS)$"
+
+        plt.title(title)
+        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
     elif physics == "ppXSS":
 
@@ -306,10 +338,13 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
         elif BP == "BP3":
             x, y, n = H2H2[1], H2H2[2], H2H2[3]
-            
+        else:
+            raise Exception("Error HERE!")
+        
         title = filename + BP + ": $\sigma(X\\to SS)$"
 
-
+        plt.title(title)
+        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
     elif physics == "ppXNPSM":
         raise Exception("ppXNPSM is in work in progress not finished")
@@ -318,8 +353,8 @@ def massplots(BP, physics, userParametersDict, directory, filename):
         raise Exception("No physics chosen for massplots")
         
     
-    plt.title(title)
-    x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
+#    plt.title(title)
+#    x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
         
     if BP == "BP2":
         plt.xlim(0,124)        
@@ -349,6 +384,9 @@ def massplots(BP, physics, userParametersDict, directory, filename):
         plt.plot(boundaryx, boundaryx, color = 'C2', label = r'$m_{X} = m_{S}$')
         # plt.text(353, 336, r'$M_{X} = M_{S}$', size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))
     
+    else:
+        raise Exception("Error HERE!")
+    
     # code taken from stackexchange
     nInterp = 500
     xi, yi = np.linspace(x.min(), x.max(), nInterp), np.linspace(y.min(), y.max(), nInterp)
@@ -376,14 +414,17 @@ def massplots(BP, physics, userParametersDict, directory, filename):
             # points.append([ms, mx])
             points.append([int(dictElement["ms"]), int(dictElement["mx"])])
         plotmarkerAuto2(points, visibleMarkers, decimals, fontsize, x, y, n)
+    else:
+        raise Exception("Error HERE!")
     
     location = directory + "/" + filename 
     plt.savefig(location + " " + physics + "massplot")
 
 
 
-
 def dataPuller(BP, physics, userParametersDict, axis):
+# Returns arrays for parameter plots
+
     
     if BP == "BP2":
         programParametersDict = { 
@@ -496,16 +537,33 @@ def dataPuller(BP, physics, userParametersDict, axis):
     # https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
     ggF_xs_SM_Higgs = 31.02 * 10**(-3)
     
-    if physics == "ppXSH":
+    if (physics == "ppXSH") or (physics == "ppXSHSM"):
+        
         b_H3_H1H2 = b_H3_H1H2[idx]
-        pp_X_H1H2 = np.array([(b_H3_H1H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H2))])
-#        pp_X_H1H2 = np.array([b_H3_H1H2[i] for i in range(len(b_H3_H1H2))])
-        return mH1_H1H2, pp_X_H1H2
+
+        if physics == "ppXSH":
+            pp_X_H1H2 = np.array([(b_H3_H1H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H2))])
+    #        pp_X_H1H2 = np.array([b_H3_H1H2[i] for i in range(len(b_H3_H1H2))])
+            return mH1_H1H2, pp_X_H1H2
+        
+        else: # physics == "ppXSHSM"
+            SM1, SM2 = "bb", "gamgam"
+            b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
+            b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
+            b_H2_bb     = [i for i in df["b_H2_" + SM1]]        #"b_H2_bb"
+            b_H2_gamgam = [i for i in df["b_H2_" + SM2]]        #"b_H2_gamgam"
+            
+            b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
+            b_H1_bb_H2_gamgam = b_H1_bb_H2_gamgam[idx]
+            
+            pp_X_H1_bb_H2_gamgam = [b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i] for i in range(len(b_H3_H1H2))]
+            
+            return mH1_H1H2, pp_X_H1_bb_H2_gamgam
     
     elif physics == "ppXHH":
         if BP == "BP2":
             b_H3_H2H2 = b_H3_H2H2[idx]
-            pp_X_H2H2 = np.array([(b_H3_H2H2[i] * x_H3_gg_H2H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H2H2))])
+            pp_X_H2H2 = np.array([(b_H3_H2H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H2H2))])
             return mH1_H1H2, pp_X_H2H2
         elif BP == "BP3":
             b_H3_H1H1 = b_H3_H1H1[idx]
@@ -574,11 +632,11 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 duds.append( [dictElement["ms"], dictElement["mx"]] )
 
         plt.xlim(1, 1000)
-        if physics == "XSH" or physics == "XHH" or physics == "XSS":
+        if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
             ylim_lb, ylim_ub = 0, 1                 # will be used in individual plots
             plt.ylim(ylim_lb, ylim_ub)
-        if physics == "ppXSH" or physics == "ppXHH" or physics == "ppXSS":
-            ylim_lb, ylim_ub = plt.gca().get_ylim()
+        if (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
+            ylim_lb, ylim_ub = plt.gca().get_ylim() # will be used in individual plots
 #            plt.ylim(0,50)
         # code taken from stackexchange: https://stackoverflow.com/a/43439132/17456342
         plt.title(filename)
@@ -638,10 +696,10 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 duds.append( [dictElement["ms"], dictElement["mx"]] )
         
         plt.xlim(-np.pi/2, np.pi/2)
-        if physics == "XSH" or physics == "XHH" or physics == "XSS":
+        if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
             ylim_lb, ylim_ub = 0, 1                 # will be used in individual plots
             plt.ylim(ylim_lb, ylim_ub)
-        if physics == "ppXSH" or physics == "ppXHH" or physics == "ppXSS":
+        if (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
             ylim_lb, ylim_ub = plt.gca().get_ylim() # will be used in individual plots
 #            plt.ylim(0,50)
         plt.title(filename)
@@ -752,6 +810,13 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
         raise Exception("aborted mass points failed")
 
 
+## Problems/issues/obs to look out for and potentially fix:
+#1.     ppXSHbbgamgam is not rescaled while ppXSH is
+#1.1    The scale factor is fixed in ppXSH, this should potentially for the user 
+#       to be able to customize  
+#2.     Only ppXSHbbgamgam is supported but not the general ppXNPbbgamgam where NP is SS, HH.
+#3.     physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
+#       for the user be able to customize.
 
 
 
@@ -805,15 +870,93 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 
 
-### BP3 REGION 2
+#### BP3 REGION 2
 
-pointlist = pointGen("BP3", 2, 8, "grid")
+#pointlist = pointGen("BP3", 2, 8, "grid")
+
+#dictPointlist = []
+
+#for element in pointlist:
+#    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+
+#regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP3_XSHvev_region2",   individualPlots = True)
+#regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP2_XSHangle_region2", individualPlots = True)
+
+## YOU WERE JUST DOING THIS ONE
+### BP3 REGION 3
+
+pointlist = pointGen("BP3", 3, 8, "grid")
 
 dictPointlist = []
 
 for element in pointlist:
     dictPointlist.append({ "ms": element[0], "mx": element[1] })
+                                                                            #BP3_XHH_region3_8x8
+print(dictPointlist)
+#regionTestingFunc("BP3", "XHH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP3_XHHvev_region3",   individualPlots = True)
+regionTestingFunc("BP3", "XHH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP3_XHHangle_region3", individualPlots = True)
 
-regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP3_XSHvev_region2",   individualPlots = True)
-regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP2_XSHangle_region2", individualPlots = True)
+
+
+### BP2 ATLAS LIMITS
+
+### OBSERVED LIMITS DATA PULLER##
+#limits = pandas.read_json('../Atlas2023Limits.json')
+
+#mx, ms, limit_obs, limit_exp = [], [], [], []
+
+#for element in limits:
+#    mx.append((limits[element])[0])
+#    ms.append((limits[element])[1])
+##    limit_exp.append((limits[element])[2] * 10 **(-3))
+##    limit_obs.append((limits[element])[3] * 10 **(-3))
+#    limit_exp.append((limits[element])[2] * 10 **(-3))
+#    limit_obs.append((limits[element])[3] * 10 **(-3))
+#    # limit_exp.append((limits[element])[2] )
+#    # limit_obs.append((limits[element])[3] )
+
+#mx = np.array(mx)
+#ms = np.array(ms)
+#limit_exp = np.array(limit_exp)
+#limit_obs = np.array(limit_obs)
+
+#def constrained_observed_lim(ms, mx, limit_obs, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500, LessThanOrEqualTo = True):
+#    ms_BP2constrained = []
+#    mx_BP2constrained = []
+#    limit_obs_BP2constrained = []
+#    if LessThanOrEqualTo == True:
+#        for i in range(len(limit_obs)):
+#            # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
+#            # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
+#            # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
+#            if (ms_lb <= ms[i]) and  (ms[i] <= ms_ub) and (mx_lb <= mx[i]) and (mx[i] <= mx_ub):
+#                ms_BP2constrained.append(ms[i])
+#                mx_BP2constrained.append(mx[i])
+#                limit_obs_BP2constrained.append(limit_obs[i])
+#            else:
+#                continue
+#        
+#        return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
+#    
+#    else:
+#        for i in range(len(limit_obs)):
+#            # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
+#            # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
+#            # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
+#            if (ms_lb < ms[i]) and  (ms[i] < ms_ub) and (mx_lb < mx[i]) and (mx[i] < mx_ub):
+#                ms_BP2constrained.append(ms[i])
+#                mx_BP2constrained.append(mx[i])
+#                limit_obs_BP2constrained.append(limit_obs[i])
+#            else:
+#                continue
+#        
+#        return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
+#    
+#ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained = constrained_observed_lim(ms, mx, limit_obs, LessThanOrEqualTo = True)
+
+#dictPointlistAtlas = []
+#for i in range(len(limit_obs_BP2constrained)):
+#    dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
+    
+#regionTestingFunc("BP3", "XHH", [{"ms": 225, "mx": 300, "yaxis": 0.5 }], "angle", "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP2_XHHangle_region3", individualPlots = True)
 
