@@ -15,6 +15,13 @@ import subprocess
 
 
 def pointfinder(epsilon, pointS, pointX, listS, listX, br):
+    """Returns the coordinates (listS)[index], (listX)[index] and the value at 
+    the coordinates (br)[index] nearest to the given coordinates (pointS, pointX).
+    
+    Let epsilon be larger than the average distance between the points in the
+    coordinate lists listS, listX.
+    """
+
     S = pointS
     X = pointX
     index = 0
@@ -32,6 +39,15 @@ def pointfinder(epsilon, pointS, pointX, listS, listX, br):
 
 
 def pointGen(BP, region, size, generator):
+    """ Generates mass points for a benchmarkplane BP in a given region with a
+    given size and generator.
+    
+    If generator is set to random, size is the numer of points generated.
+    
+    If generator is set to grid, size is the side length of the grid before the
+    applied constrains from the region i.e all points outside regions will be 
+    thrown away.
+    """
     
     def random(ms_lowerbound, ms_upperbound, mx_lowerbound, mx_upperbound, condition):
         ms = np.random.uniform(ms_lowerbound, ms_upperbound, 1)
@@ -138,6 +154,20 @@ def pointGen(BP, region, size, generator):
 
 
 def plotmarkerAuto2(markers, visible, decimals, fsize, x, y, n):
+    """Plots markers in a figure given a list of tuples of coordinates with the 
+    value of the coordinates given by pointfinder.
+    
+    If visible is set to True, a red o-shaped marker is plotted in the figure.
+    
+    Decimals determines the number of decimals in pointfinder.
+    
+    fsize determines the fontsize for the value given by pointfinder.
+    
+    x, y, n is used by pointfinder to generate the nearest value given the marker
+    points. 
+    """
+
+
     for i in range(len(markers)):
         dudS, dudX, br = pointfinder(5, (markers[i])[0], (markers[i])[1], x, y, n)
         pointS, pointX = (markers[i])[0], (markers[i])[1]
@@ -257,6 +287,9 @@ def massplots(BP, physics, userParametersDict, directory, filename):
             raise Exception("Error HERE!")
         
         title = filename + BP + ": $BR(X\\to SH)$"
+        
+        plt.title(title)
+        x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
     elif (physics == "ppXSH") or (physics == "ppXSHSM"):
 
@@ -274,15 +307,20 @@ def massplots(BP, physics, userParametersDict, directory, filename):
             plt.title(title)
             x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
             
-#        else: # physics == "ppXSHSM":
-#            
-#            if BP == "BP2":
-#                x, y, n = H1H2[0], H1H2[2], H1H2[4]
-#            
-#            elif BP == "BP3":
-#                x, y, n = H1H2[1], H1H2[2], H1H2[4]
-#            
-#            title = filename + BP + ": $\sigma(pp \\to X\\to SH" + SM1 + SM1 + SM2 + SM2 + ")$"
+        else: # physics == "ppXSHSM":
+            
+            if BP == "BP2":
+                x, y, n = H1H2[0], H1H2[2], H1H2[4]
+            
+            elif BP == "BP3":
+                x, y, n = H1H2[1], H1H2[2], H1H2[4]
+            
+            SM1, SM2 = "bb", "gamgam"
+            
+            title = filename + BP + ": $\sigma(pp \\to X\\to SH" + SM1 + SM1 + SM2 + SM2 + ")$"
+            
+            plt.title(title)
+            x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
 
     elif physics == "XHH":
         
@@ -397,7 +435,9 @@ def massplots(BP, physics, userParametersDict, directory, filename):
     plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
     
-    colorbarlabel = {"XSH": "$BR(X \\to SH)$", "ppXSH": "$\sigma(pp \\to X \\to SH)$", "XHH": "$BR(X \\to HH)$", "ppXHH" : "$\sigma(pp \\to X \\to HH)$", "XSS": "$BR(X \\to SS)$", "ppXSS" : "$\sigma(pp \\to X \\to SS)$"}
+    SMlabel = {"uu": "u\\bar{u}", "cc": "c\\bar{c}", "tt": "t\\bar{t}", "dd": "d\\bar{d}", "ss": "s\\bar{s}", "bb": "b\\bar{b}", "mumu": "\mu^{+}\mu^{-}", "tautau": "\\tau^{+}\\tau^{-}", "gg": "gg", "gamgam": "\gamma\gamma", "ZZ": "ZZ", "WW": "W^{+}W^{-}"}
+    
+    colorbarlabel = {"XSH": "$BR(X \\to SH)$", "ppXSH": "$\sigma(pp \\to X \\to SH)$", "XHH": "$BR(X \\to HH)$", "ppXHH" : "$\sigma(pp \\to X \\to HH)$", "XSS": "$BR(X \\to SS)$", "ppXSS" : "$\sigma(pp \\to X \\to SS)$", "ppXSHSM": "$\sigma(pp \\to X \\to SH \\to " + SMlabel[SM1] + SMlabel[SM2] + " )$"}                                         
     
     plt.colorbar(label = BP + ": " + colorbarlabel[physics])
     
@@ -548,15 +588,15 @@ def dataPuller(BP, physics, userParametersDict, axis):
         
         else: # physics == "ppXSHSM"
             SM1, SM2 = "bb", "gamgam"
-            b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
-            b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
-            b_H2_bb     = [i for i in df["b_H2_" + SM1]]        #"b_H2_bb"
-            b_H2_gamgam = [i for i in df["b_H2_" + SM2]]        #"b_H2_gamgam"
+            b_H1_bb     = np.array([i for i in df["b_H1_" + SM1]])        #"b_H1_bb"
+            b_H1_gamgam = np.array([i for i in df["b_H1_" + SM2]])        #"b_H1_gamgam"
+            b_H2_bb     = np.array([i for i in df["b_H2_" + SM1]])        #"b_H2_bb"
+            b_H2_gamgam = np.array([i for i in df["b_H2_" + SM2]])        #"b_H2_gamgam"
             
-            b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
+            b_H1_bb_H2_gamgam = np.array([b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))])
             b_H1_bb_H2_gamgam = b_H1_bb_H2_gamgam[idx]
             
-            pp_X_H1_bb_H2_gamgam = [b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i] for i in range(len(b_H3_H1H2))]
+            pp_X_H1_bb_H2_gamgam = np.array([b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i] for i in range(len(b_H3_H1H2))])
             
             return mH1_H1H2, pp_X_H1_bb_H2_gamgam
     
@@ -815,7 +855,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 #1.1    The scale factor is fixed in ppXSH, this should potentially for the user 
 #       to be able to customize  
 #2.     Only ppXSHbbgamgam is supported but not the general ppXNPbbgamgam where NP is SS, HH.
-#3.     physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
+#2.1     physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
 #       for the user be able to customize.
 
 
@@ -882,81 +922,89 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 #regionTestingFunc("BP3", "XSH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP3_XSHvev_region2",   individualPlots = True)
 #regionTestingFunc("BP3", "XSH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XSH_region2_8x8", "BP2_XSHangle_region2", individualPlots = True)
 
-## YOU WERE JUST DOING THIS ONE
-### BP3 REGION 3
+### YOU WERE JUST DOING THIS ONE
+#### BP3 REGION 3
 
-pointlist = pointGen("BP3", 3, 8, "grid")
+#pointlist = pointGen("BP3", 3, 8, "grid")
 
-dictPointlist = []
+#dictPointlist = []
 
-for element in pointlist:
-    dictPointlist.append({ "ms": element[0], "mx": element[1] })
-                                                                            #BP3_XHH_region3_8x8
-print(dictPointlist)
-#regionTestingFunc("BP3", "XHH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP3_XHHvev_region3",   individualPlots = True)
-regionTestingFunc("BP3", "XHH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP3_XHHangle_region3", individualPlots = True)
+#for element in pointlist:
+#    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+#                                                                            #BP3_XHH_region3_8x8
+#print(dictPointlist)
+##regionTestingFunc("BP3", "XHH", dictPointlist, "vev",   "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP3_XHHvev_region3",   individualPlots = True)
+#regionTestingFunc("BP3", "XHH", dictPointlist, "angle", "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP3_XHHangle_region3", individualPlots = True)
 
 
 
-### BP2 ATLAS LIMITS
+## BP2 ATLAS LIMITS
 
-### OBSERVED LIMITS DATA PULLER##
-#limits = pandas.read_json('../Atlas2023Limits.json')
+## OBSERVED LIMITS DATA PULLER##
+limits = pandas.read_json('Atlas2023Limits.json')
 
-#mx, ms, limit_obs, limit_exp = [], [], [], []
+mx, ms, limit_obs, limit_exp = [], [], [], []
 
-#for element in limits:
-#    mx.append((limits[element])[0])
-#    ms.append((limits[element])[1])
-##    limit_exp.append((limits[element])[2] * 10 **(-3))
-##    limit_obs.append((limits[element])[3] * 10 **(-3))
+for element in limits:
+    mx.append((limits[element])[0])
+    ms.append((limits[element])[1])
 #    limit_exp.append((limits[element])[2] * 10 **(-3))
 #    limit_obs.append((limits[element])[3] * 10 **(-3))
-#    # limit_exp.append((limits[element])[2] )
-#    # limit_obs.append((limits[element])[3] )
+    limit_exp.append((limits[element])[2] * 10 **(-3))
+    limit_obs.append((limits[element])[3] * 10 **(-3))
+    # limit_exp.append((limits[element])[2] )
+    # limit_obs.append((limits[element])[3] )
 
-#mx = np.array(mx)
-#ms = np.array(ms)
-#limit_exp = np.array(limit_exp)
-#limit_obs = np.array(limit_obs)
+mx = np.array(mx)
+ms = np.array(ms)
+limit_exp = np.array(limit_exp)
+limit_obs = np.array(limit_obs)
 
-#def constrained_observed_lim(ms, mx, limit_obs, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500, LessThanOrEqualTo = True):
-#    ms_BP2constrained = []
-#    mx_BP2constrained = []
-#    limit_obs_BP2constrained = []
-#    if LessThanOrEqualTo == True:
-#        for i in range(len(limit_obs)):
-#            # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
-#            # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
-#            # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
-#            if (ms_lb <= ms[i]) and  (ms[i] <= ms_ub) and (mx_lb <= mx[i]) and (mx[i] <= mx_ub):
-#                ms_BP2constrained.append(ms[i])
-#                mx_BP2constrained.append(mx[i])
-#                limit_obs_BP2constrained.append(limit_obs[i])
-#            else:
-#                continue
-#        
-#        return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
-#    
-#    else:
-#        for i in range(len(limit_obs)):
-#            # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
-#            # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
-#            # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
-#            if (ms_lb < ms[i]) and  (ms[i] < ms_ub) and (mx_lb < mx[i]) and (mx[i] < mx_ub):
-#                ms_BP2constrained.append(ms[i])
-#                mx_BP2constrained.append(mx[i])
-#                limit_obs_BP2constrained.append(limit_obs[i])
-#            else:
-#                continue
-#        
-#        return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
-#    
-#ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained = constrained_observed_lim(ms, mx, limit_obs, LessThanOrEqualTo = True)
-
-#dictPointlistAtlas = []
-#for i in range(len(limit_obs_BP2constrained)):
-#    dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
+def constrained_observed_lim(ms, mx, limit_obs, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500, LessThanOrEqualTo = True):
+    ms_BP2constrained = []
+    mx_BP2constrained = []
+    limit_obs_BP2constrained = []
+    if LessThanOrEqualTo == True:
+        for i in range(len(limit_obs)):
+            # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
+            # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
+            # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
+            if (ms_lb <= ms[i]) and  (ms[i] <= ms_ub) and (mx_lb <= mx[i]) and (mx[i] <= mx_ub):
+                ms_BP2constrained.append(ms[i])
+                mx_BP2constrained.append(mx[i])
+                limit_obs_BP2constrained.append(limit_obs[i])
+            else:
+                continue
+        
+        return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
     
-#regionTestingFunc("BP3", "XHH", [{"ms": 225, "mx": 300, "yaxis": 0.5 }], "angle", "plotting/BP3_BR_XNP/BP3_XHH_region3_8x8", "BP2_XHHangle_region3", individualPlots = True)
+    else:
+        for i in range(len(limit_obs)):
+            # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
+            # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
+            # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
+            if (ms_lb < ms[i]) and  (ms[i] < ms_ub) and (mx_lb < mx[i]) and (mx[i] < mx_ub):
+                ms_BP2constrained.append(ms[i])
+                mx_BP2constrained.append(mx[i])
+                limit_obs_BP2constrained.append(limit_obs[i])
+            else:
+                continue
+        
+        return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
+    
+ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained = constrained_observed_lim(ms, mx, limit_obs, LessThanOrEqualTo = True)
+
+BP2_dictPointlistAtlas = []
+for i in range(len(limit_obs_BP2constrained)):
+    BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
+    
+regionTestingFunc("BP2", "ppXSHSM", BP2_dictPointlistAtlas[0:2], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", individualPlots = True)
+
+
+
+
+
+
+
+
 
