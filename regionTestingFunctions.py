@@ -1057,7 +1057,7 @@ BP2_dictPointlistAtlas = []
 for i in range(len(limit_obs_BP2constrained)):
     BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
     
-regionTestingFunc("BP2", "ppXSHSM", [BP2_dictPointlistAtlas[2]], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", logyscale = True, individualPlots = True)
+regionTestingFunc("BP2", "ppXSHSM", BP2_dictPointlistAtlas[2], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", logyscale = True, individualPlots = True)
 
 
 
