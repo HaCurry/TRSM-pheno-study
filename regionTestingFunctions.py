@@ -464,7 +464,6 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
 def dataPuller(BP, physics, userParametersDict, axis):
 # Returns arrays for parameter plots
-
     
     if BP == "BP2":
         programParametersDict = { 
@@ -520,24 +519,13 @@ def dataPuller(BP, physics, userParametersDict, axis):
     
     #code from stackexchange: https://stackoverflow.com/a/75843787/17456342
 
-#    try:
-    subprocess.run(toShell, timeout = 120)
-#    except subprocess.TimeoutExpired:
-#        print('timed out!')
+    subprocess.run(toShell, timeout = 180)
     
     df = pandas.read_table(r"regionTesting.tsv")
     
     mH1_H1H2 = np.array([i for i in df[axis]])
     mH2_H1H2 = np.array([i for i in df["mH2"]])
     mH3_H1H2 = np.array([i for i in df["mH3"]])
-
-#    mH1_H1H1 = mH1_H1H2.copy()
-#    mH2_H1H1 = mH2_H1H2.copy()
-#    mH3_H1H1 = mH3_H1H2.copy()
-
-#    mH1_H2H2 = mH1_H1H2.copy()
-#    mH2_H2H2 = mH2_H1H2.copy()
-#    mH3_H2H2 = mH3_H1H2.copy()
 
     b_H3_H1H2 = np.array([i for i in df["b_H3_H1H2"]])
     b_H3_H1H1 = np.array([i for i in df["b_H3_H1H1"]])
@@ -629,7 +617,7 @@ def dataPuller(BP, physics, userParametersDict, axis):
 
 
 
-def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename, individualPlots):
+def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename, logyscale = False, individualPlots = True):
     
     duds = []
     individual = []
@@ -668,16 +656,37 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 # If userParametersDict is a dictionary (a single element), the loop should break after this
                 if isinstance(userParametersDict, dict) == True:
                     break
+            
             except subprocess.TimeoutExpired:
                 duds.append( [dictElement["ms"], dictElement["mx"]] )
 
         plt.xlim(1, 1000)
+        
+        if logyscale == True:
+            plt.yscale('log')
+        
         if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
             ylim_lb, ylim_ub = 0, 1                 # will be used in individual plots
             plt.ylim(ylim_lb, ylim_ub)
-        if (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
-            ylim_lb, ylim_ub = plt.gca().get_ylim() # will be used in individual plots
-#            plt.ylim(0,50)
+        
+        elif (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
+            
+            if individualPlots == True:
+                ylim_lb, ylim_ub = plt.gca().get_ylim()     # will be used in individual plots
+                
+                for dictElementIndividual in individual:    
+                    
+                    # if plt ylimit upper bound is larger than yaxis set bound to to that otherwise use default settings 
+                    # This is so that the y limits of the  individual plots encompass all the figures 
+                    if ("yaxis" in dictElementIndividual) and (dictElementIndividual["yaxis"] > ylim_ub):
+                        ylim_ub = dictElementIndividual["yaxis"]
+                    
+                    else:
+                        continue
+        
+        else:
+            raise Exception("No physics chosen")
+
         # code taken from stackexchange: https://stackoverflow.com/a/43439132/17456342
         plt.title(filename)
         location = directory + "/" + filename
@@ -690,13 +699,17 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
         plt.close()
         
     elif free == "angle":
-
+    
+        print(userParametersDict)
+        
         for dictElement in userParametersDict:
             
             try:
                 # Ensures dictElement is always a dictionary
                 if isinstance(userParametersDict, dict) == True:
                     dictElement = userParametersDict
+                
+                print(userParametersDict)
                 
                 dictElement["ths_lb"] = -np.pi/2
                 dictElement["ths_ub"] = np.pi/2
@@ -728,6 +741,8 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 plt.plot(angle_SX, val_SX, color = plt.gca().lines[-1].get_color(), label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
                 plt.xlim(-np.pi/2, np.pi/2)
                 
+                print(userParametersDict)
+                
                 # If userParametersDict is a dictionary (a single element), the loop should break after this
                 if isinstance(userParametersDict, dict) == True:
                     break
@@ -735,13 +750,40 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
             except subprocess.TimeoutExpired:
                 duds.append( [dictElement["ms"], dictElement["mx"]] )
         
+        print(userParametersDict)
+        
         plt.xlim(-np.pi/2, np.pi/2)
+
+        if logyscale == True:
+            plt.yscale('log')
+        
         if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
-            ylim_lb, ylim_ub = 0, 1                 # will be used in individual plots
+            ylim_lb, ylim_ub = 0, 1    # will be used in individual plots
             plt.ylim(ylim_lb, ylim_ub)
-        if (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
-            ylim_lb, ylim_ub = plt.gca().get_ylim() # will be used in individual plots
+        
+        elif (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
+            
+            if individualPlots == True:
+                ylim_lb, ylim_ub = plt.gca().get_ylim()    # will be used in individual plots
+
+                for dictElementIndividual in individual:    
+
+                    # if plt ylimit upper bound is larger than yaxis set bound to to that otherwise use default settings
+                    # This is so that the y limits of the  individual plots encompass all the figures 
+                    if ("yaxis" in dictElementIndividual) and (dictElementIndividual["yaxis"] > ylim_ub):
+                        ylim_ub = dictElementIndividual["yaxis"]
+                        print("==================== First step! ====================")
+
+                    else:
+                        continue
+
+            else:
+                ylim_lb, ylim_ub = plt.gca().get_ylim() # will be used in individual plots
 #            plt.ylim(0,50)
+
+        else:
+            raise Exception("No physics chosen")
+
         plt.title(filename)
         location = directory + "/" + filename
         plt.savefig(location)
@@ -774,6 +816,10 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 
                 plt.xlim(1, 1000)
                 plt.ylim(ylim_lb, ylim_ub)
+                
+                if logyscale == True:
+                    plt.yscale('log')
+                
                 plt.legend(bbox_to_anchor=(1.04, 1), borderaxespad=0)
                 plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
                 
@@ -805,17 +851,24 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
                 plt.plot(dictElement["angle_SX"], dictElement["val_SX"],label = "SX", color = plt.gca().lines[-1].get_color())
                 
                 plt.xlim(-np.pi/2, np.pi/2)
-                plt.ylim(ylim_lb, ylim_ub)
+                plt.ylim(ylim_lb, ylim_ub * 2)
+                
+                if logyscale == True:
+                    plt.yscale('log')
+                
                 plt.legend(bbox_to_anchor=(1.04, 1), borderaxespad=0)
                 plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
                 
                 # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
                 # and removes it for the next individual plot
                 if "yaxis" in dictElement:
-                    yaxis = plt.axhline(y=dictElement["yaxis"], color='black', linestyle='dashed')
+                    yaxis = plt.axhline(y = dictElement["yaxis"], color='black', linestyle='dashed')
+                    print("==================== Second step! ====================")
+                    print(ylim_ub)
                     plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
-                    #code from stackexchange (specifically the comment by user P2000): https://stackoverflow.com/a/42955955/17456342
+                    #code from stackexchange (post and comment by user P2000): https://stackoverflow.com/a/42955955/17456342
                     yaxis.remove()
+                    print("==================== Third step! ====================")
                 else:            
                     plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
                 
@@ -852,11 +905,17 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 ## Problems/issues/obs to look out for and potentially fix:
 #1.     ppXSHbbgamgam is not rescaled while ppXSH is
+
 #1.1    The scale factor is fixed in ppXSH, this should potentially for the user 
 #       to be able to customize  
+
 #2.     Only ppXSHbbgamgam is supported but not the general ppXNPbbgamgam where NP is SS, HH.
+
 #2.1     physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
 #       for the user be able to customize.
+
+#3.1    fix the following line in XNP_rt (we only want one of the modes): 
+#       b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
 
 
 
@@ -998,11 +1057,50 @@ BP2_dictPointlistAtlas = []
 for i in range(len(limit_obs_BP2constrained)):
     BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
     
-regionTestingFunc("BP2", "ppXSHSM", BP2_dictPointlistAtlas[0:2], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", individualPlots = True)
+regionTestingFunc("BP2", "ppXSHSM", [BP2_dictPointlistAtlas[2]], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", logyscale = True, individualPlots = True)
 
 
 
 
+
+
+
+
+#listPacker(BPdirectory, axes1, axes2, axes3, SM1, SM2, xs_NP = True, xs_SM = True, sort = False):
+#    
+#    df = pandas.read_table(BPdirectory, index_col = 0)
+#    
+#    mH1_H1H2 = [i for i in df[axes1]]
+#    mH2_H1H2 = [i for i in df[axes2]]
+#    mH3_H1H2 = [i for i in df[axes3]]
+#    
+#    b_H3_H1H2 = [i for i in df["b_H3_H1H2"]]
+#    b_H3_H1H1 = [i for i in df["b_H3_H1H1"]]
+#    b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
+#    
+#    masses, br = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2]), np.array([b_H3_H1H2, b_H3_H1H1, b_H3_H2H2])
+#    
+#    if (xs_NP == False) and (xs_SM == False): 
+#        return masses, br
+#        
+#    elif (xs_NP == True) and (xs_SM == False): 
+#        Xsection_NP = np.array([i for i in df["x_H3_gg"]])
+#        return masses, br, Xsection_NP
+#    
+#    elif (xs_NP == True) and (xs_SM == True):
+#        SM1, SM2
+#        b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
+#        b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
+#        b_H2_bb     = [i for i in df["b_H2_" + SM1]]        #"b_H2_bb"
+#        b_H2_gamgam = [i for i in df["b_H2_" + SM2]]        #"b_H2_gamgam" 
+#        
+#        b_H1_bb_H2_gamgam = np.array([b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))])
+#        b_H1_gamgam_H2_bb = np.array([b_H1_gamgam[i] * b_H2_bb[i] for i in range(len(b_H1_gamgam))])
+#        b_H1H2_bbgamgam = np.array([b_H1_bb_H2_gamgam[i] + b_H1_gamgam_H2_bb[i] for i in range(len(b_H1_bb_H2_gamgam))])
+#        
+#        Xsection_SM = np.array([b_H1_bb_H2_gamgam, b_H1_gamgam_H2_bb, b_H1H2_bbgamgam])
+#        
+#        return masses, br, Xsection_NP, Xsection_SM
 
 
 
