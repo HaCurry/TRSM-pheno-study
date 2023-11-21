@@ -669,6 +669,11 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
 
     else:
         sameFrame = True
+        
+    if "numberedTitle" in kwargs:
+        numberedTitle = kwargs["numberedTitle"]
+    else:
+        numberedTitle = False
     
     
     duds = []
@@ -762,7 +767,7 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
             color_index = color_index + 1
 
         except subprocess.TimeoutExpired:
-            duds.append( [dictElement["ms"], dictElement["mx"]] )
+            duds.append( [(userParametersDict[i])["ms"], (userParametersDict[i])["mx"]] )
 
     plt.xlim(xlim_lb, xlim_ub)
 
@@ -829,14 +834,22 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
         color_list = ["C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"]
         color_index = 0
         
+        if numberedTitle == True:
+            numberedTitle_index = 0
+        
         linestyle_list = ['solid', 'dotted', 'dashdot']
         
         for dictElement in individual:
+            
+            print(dictElement["ms"], dictElement["mx"])
             
             linestyle_index = 0
 
             for plot in dictElement["plotting_list"]:
                 
+                print(plot[0])
+                print(plot[1])    
+                    
                 plt.plot(plot[0], plot[1], 
                 color = color_list[color_index % 10],
                 linestyle = linestyle_list[linestyle_index])
@@ -860,14 +873,20 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
                 yaxis = plt.axhline(y = dictElement["yaxis"], color='black', linestyle='dashed')
                 print("==================== Second step! ====================")
                 print(ylim_ub)
-                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                
+                if numberedTitle == True:
+                    plt.savefig(location + "/" + filename + str(numberedTitle_index) + ".png", bbox_inches="tight")
+                    numberedTitle_index = numberedTitle_index + 1
+                    
+                else:                        
+                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                
+#                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
                 #code from stackexchange (post and comment by user P2000): https://stackoverflow.com/a/42955955/17456342
                 yaxis.remove()
                 print("==================== Third step! ====================")
-            
-            else:            
-                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
-            
+
+                
             # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
             for line in plt.gca().lines: # put this before you call the 'mean' plot function.
                 line.set_label(s='')
@@ -904,9 +923,6 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
 
 #2.     Only ppXSHbbgamgam is supported but not the general ppXNPbbgamgam where NP is SS, HH.
 
-#2.1    physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
-#       for the user be able to customize.
-
 #3.1    fix the following line in XNP_rt (we only want one of the modes): 
 #       b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
 
@@ -925,7 +941,7 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
 #for element in pointlist:
 #    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-##"temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
+###"temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
 
 #regionTestingFunc("temp5", "BP2_XSHvev_region2", dictPointlist[0:2],  BP = "BP2", physics = "XSH", free = "vev", individualPlots = True,)
 #regionTestingFunc("temp5", "BP2_XSHangle_region2", dictPointlist[0:2], BP = "BP2", physics = "XSH", free = "angle", individualPlots = True)
@@ -1056,8 +1072,9 @@ for i in range(len(limit_obs_BP2constrained)):
 
 #(directory, filename, userParametersDict, **kwargs)
 
-#regionTestingFunc("temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
-#regionTestingFunc("temp4", "BP2_Atlas2023_obs_limit_vev", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True)
+#regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_vev_points_1_to_25", BP2_dictPointlistAtlas[0:25], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True, numberedTitle = True)
+regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_vev_points_25_to_rest", BP2_dictPointlistAtlas[25:], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True, numberedTitle = True)
+#regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_angle_points_1_to_25", BP2_dictPointlistAtlas[0:25], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True, numberedTitle = True)
 
 
 
