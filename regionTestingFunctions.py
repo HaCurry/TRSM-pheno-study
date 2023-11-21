@@ -263,7 +263,7 @@ def XNP_rt(BPdirectory, axes1, axes2, axes3, physics):
 
 
 
-def massplots(BP, physics, userParametersDict, directory, filename):
+def massplots(BP, physics, userParametersDict, directory, filename, SM1, SM2):
     
     if BP == "BP2":
         H1H2, H1H1, H2H2 = XNP_rt(r"/home/iram/scannerS/ScannerS-master/build/BP2output/BP2_output_file.tsv", "mH1", "mH2", "mH3", physics)
@@ -317,7 +317,7 @@ def massplots(BP, physics, userParametersDict, directory, filename):
             
             SM1, SM2 = "bb", "gamgam"
             
-            title = filename + BP + ": $\sigma(pp \\to X\\to SH" + SM1 + SM1 + SM2 + SM2 + ")$"
+            title = filename + BP + ": $\sigma(pp \\to X\\to SH" + SM1 + SM2 + ")$"
             
             plt.title(title)
             x, y, z = np.asarray(x), np.asarray(y), np.asarray(n)
@@ -407,7 +407,7 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
         plt.plot(boundaryx, 2*boundaryx, label = r'$m_{X} = 2 \cdot m_{S}$')
         # plt.text(75, 134, r'$M_{X} = 2\cdot M_{S}$', size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))#, rotation=32)
-        
+
     elif BP == "BP3":
         plt.xlim(126, 500)
         plt.ylim(255, 650)
@@ -421,10 +421,10 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
         plt.plot(boundaryx, boundaryx, color = 'C2', label = r'$m_{X} = m_{S}$')
         # plt.text(353, 336, r'$M_{X} = M_{S}$', size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))
-    
+
     else:
         raise Exception("Error HERE!")
-    
+
     # code taken from stackexchange
     nInterp = 500
     xi, yi = np.linspace(x.min(), x.max(), nInterp), np.linspace(y.min(), y.max(), nInterp)
@@ -434,11 +434,16 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
     plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    
+
     SMlabel = {"uu": "u\\bar{u}", "cc": "c\\bar{c}", "tt": "t\\bar{t}", "dd": "d\\bar{d}", "ss": "s\\bar{s}", "bb": "b\\bar{b}", "mumu": "\mu^{+}\mu^{-}", "tautau": "\\tau^{+}\\tau^{-}", "gg": "gg", "gamgam": "\gamma\gamma", "ZZ": "ZZ", "WW": "W^{+}W^{-}"}
-    
-    colorbarlabel = {"XSH": "$BR(X \\to SH)$", "ppXSH": "$\sigma(pp \\to X \\to SH)$", "XHH": "$BR(X \\to HH)$", "ppXHH" : "$\sigma(pp \\to X \\to HH)$", "XSS": "$BR(X \\to SS)$", "ppXSS" : "$\sigma(pp \\to X \\to SS)$", "ppXSHSM": "$\sigma(pp \\to X \\to SH \\to " + SMlabel[SM1] + SMlabel[SM2] + " )$"}                                         
-    
+
+    if SM1 != None and SM2 != None:
+        colorbarlabel = {"XSH": "$BR(X \\to SH)$", "ppXSH": "$\sigma(pp \\to X \\to SH)$", "XHH": "$BR(X \\to HH)$", "ppXHH" : "$\sigma(pp \\to X \\to HH)$", "XSS": "$BR(X \\to SS)$", "ppXSS" : "$\sigma(pp \\to X \\to SS)$", "ppXSHSM": "$\sigma(pp \\to X \\to SH \\to " + SMlabel[SM1] + SMlabel[SM2] + " )$"}                                         
+
+    else:
+        colorbarlabel = {"XSH": "$BR(X \\to SH)$", "ppXSH": "$\sigma(pp \\to X \\to SH)$", "XHH": "$BR(X \\to HH)$", "ppXHH" : "$\sigma(pp \\to X \\to HH)$", "XSS": "$BR(X \\to SS)$", "ppXSS" : "$\sigma(pp \\to X \\to SS)$"}
+
+
     plt.colorbar(label = BP + ": " + colorbarlabel[physics])
     
     plt.xlabel(r"$M_{S}$ [GeV]")
@@ -462,7 +467,7 @@ def massplots(BP, physics, userParametersDict, directory, filename):
 
 
 
-def dataPuller(BP, physics, userParametersDict, axis):
+def dataPuller(BP, physics, userParametersDict, axis, SM1, SM2):
 # Returns arrays for parameter plots
     
     if BP == "BP2":
@@ -564,6 +569,7 @@ def dataPuller(BP, physics, userParametersDict, axis):
     # rescaled SM dihiggs cross-section (ggF):
     # https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
     ggF_xs_SM_Higgs = 31.02 * 10**(-3)
+    ggF_xs_SM_Higgs_SM1SM2 = 1
     
     if (physics == "ppXSH") or (physics == "ppXSHSM"):
         
@@ -575,7 +581,7 @@ def dataPuller(BP, physics, userParametersDict, axis):
             return mH1_H1H2, pp_X_H1H2
         
         else: # physics == "ppXSHSM"
-            SM1, SM2 = "bb", "gamgam"
+#            SM1, SM2 = "bb", "gamgam"
             b_H1_bb     = np.array([i for i in df["b_H1_" + SM1]])        #"b_H1_bb"
             b_H1_gamgam = np.array([i for i in df["b_H1_" + SM2]])        #"b_H1_gamgam"
             b_H2_bb     = np.array([i for i in df["b_H2_" + SM1]])        #"b_H2_bb"
@@ -617,270 +623,257 @@ def dataPuller(BP, physics, userParametersDict, axis):
 
 
 
-def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename, logyscale = False, individualPlots = True):
+#def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename, logyscale = False, individualPlots = True, sameFrame = True):
+def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
+    
+    if "free" in kwargs:
+        free = kwargs["free"]
+    
+    else:
+        raise Exception("No free chosen")
+
+    if "BP" in kwargs:
+        BP = kwargs["BP"]
+
+    else:
+        raise Exception("No BP chosen")
+    
+    if "physics" in kwargs:
+        physics = kwargs["physics"]
+        
+        if (physics == "ppXSHSM") or (physics == "ppXSSSM") or (physics == "ppXHHSM"):
+
+            if ("SM1" in kwargs) and ("SM2" in kwargs):
+                SM1, SM2 = kwargs["SM1"], kwargs["SM2"]
+
+            else:
+                raise Exception("No SM finalstates chosen")
+
+        else:
+            SM1, SM2 = None, None
+
+    if "logyscale" in kwargs:
+        logyscale = kwargs["logyscale"]
+
+    else:
+        logyscale = False
+        
+    if "individualPlots" in kwargs:
+        individualPlots = kwargs["individualPlots"]
+
+    else:
+        individualPlots = True
+    
+    if "sameFrame" in kwargs:
+        sameFrame = kwargs["sameFrame"]
+
+    else:
+        sameFrame = True
+    
     
     duds = []
     individual = []
     
+    bounds_vev = [{"vs_lb": 1, "vs_ub": 1000, "axis": "vs"}, {"vx_lb": 1, "vx_ub": 1000, "axis": "vx"}]
+    bounds_angle = [{"ths_lb": -np.pi/2, "ths_ub": np.pi/2, "axis": "thetahS"}, {"thx_lb": -np.pi/2, "thx_ub": np.pi/2, "axis": "thetahX"}, {"tsx_lb": -np.pi/2, "tsx_ub": np.pi/2, "axis": "thetaSX"}]
+
     if free == "vev":
-        
-        for dictElement in userParametersDict:
-            
-            try:
-                # Ensures dictElement is always a dictionary
-                if isinstance(userParametersDict, dict) == True:
-                    dictElement = userParametersDict
-                
-                dictElement["vs_lb"] = 1
-                dictElement["vs_ub"] = 1000
-                vev_vs, val_vs = dataPuller(BP, physics, dictElement, "vs")
-                del dictElement["vs_lb"]
-                del dictElement["vs_ub"]
-                
-                dictElement["vx_lb"] = 1
-                dictElement["vx_ub"] = 1000
-                vev_vx, val_vx = dataPuller(BP, physics, dictElement, "vx")
-                del dictElement["vx_lb"]
-                del dictElement["vx_ub"]
-                
-                if individualPlots == True:
-                    individual.append( {"vev_vs": vev_vs, "val_vs": val_vs, "vev_vx": vev_vx, "val_vx": val_vx, "ms": dictElement["ms"], "mx": dictElement["mx"]} )
-                    
-                    # For plotting constant y = dictElement["yaxis"] in individual plots
-                    if "yaxis" in dictElement:
-                        (individual[-1])["yaxis"] = dictElement["yaxis"]
-                    
-                plt.plot(vev_vs, val_vs)#, label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                plt.plot(vev_vx, val_vx, color = plt.gca().lines[-1].get_color(), label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-            
-                # If userParametersDict is a dictionary (a single element), the loop should break after this
-                if isinstance(userParametersDict, dict) == True:
-                    break
-            
-            except subprocess.TimeoutExpired:
-                duds.append( [dictElement["ms"], dictElement["mx"]] )
+        bounds_list = bounds_vev
+        label = [r'$v_{S} \ (solid), v_{X} \ (dotted)$']
+        xlim_lb, xlim_ub = 1, 1000
 
-        plt.xlim(1, 1000)
-        
-        if logyscale == True:
-            plt.yscale('log')
-        
-        if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
-            ylim_lb, ylim_ub = 0, 1                 # will be used in individual plots
-            plt.ylim(ylim_lb, ylim_ub)
-        
-        elif (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
-            
-            if individualPlots == True:
-                ylim_lb, ylim_ub = plt.gca().get_ylim()     # will be used in individual plots
-                
-                for dictElementIndividual in individual:    
-                    
-                    # if plt ylimit upper bound is larger than yaxis set bound to to that otherwise use default settings 
-                    # This is so that the y limits of the  individual plots encompass all the figures 
-                    if ("yaxis" in dictElementIndividual) and (dictElementIndividual["yaxis"] > ylim_ub):
-                        ylim_ub = dictElementIndividual["yaxis"]
-                    
-                    else:
-                        continue
-        
-        else:
-            raise Exception("No physics chosen")
-
-        # code taken from stackexchange: https://stackoverflow.com/a/43439132/17456342
-        plt.title(filename)
-        location = directory + "/" + filename
-        plt.savefig(location)
-#        plt.show()
-        plt.close()
-
-        massplots(BP, physics, userParametersDict, directory, filename)
-#        plt.show()
-        plt.close()
-        
     elif free == "angle":
-    
-        print(userParametersDict)
-        
-        for dictElement in userParametersDict:
-            
-            try:
-                # Ensures dictElement is always a dictionary
-                if isinstance(userParametersDict, dict) == True:
-                    dictElement = userParametersDict
-                
-                print(userParametersDict)
-                
-                dictElement["ths_lb"] = -np.pi/2
-                dictElement["ths_ub"] = np.pi/2
-                angle_hS, val_hS = dataPuller(BP, physics, dictElement, "thetahS")
-                del dictElement["ths_lb"]
-                del dictElement["ths_ub"]
-                
-                dictElement["thx_lb"] = -np.pi/2
-                dictElement["thx_ub"] = np.pi/2
-                angle_hX, val_hX = dataPuller(BP, physics, dictElement, "thetahX")
-                del dictElement["thx_lb"]
-                del dictElement["thx_ub"]
-                
-                dictElement["tsx_lb"] = -np.pi/2
-                dictElement["tsx_ub"] = np.pi/2
-                angle_SX, val_SX = dataPuller(BP, physics, dictElement, "thetaSX")
-                del dictElement["tsx_lb"]
-                del dictElement["tsx_ub"]
-                
-                if individualPlots == True:
-                    individual.append( {"angle_hS": angle_hS, "val_hS": val_hS, "angle_hX": angle_hX, "val_hX": val_hX, "angle_SX": angle_SX, "val_SX": val_SX , "ms": dictElement["ms"], "mx": dictElement["mx"]} )
+        bounds_list = bounds_angle
+        label = [r'$\theta_{hS} \ (solid), \theta_{hX} \ (dotted), \theta_{SX} \ (dashdot)$']
+        xlim_lb, xlim_ub = -np.pi/2, np.pi/2
+
+    else:
+        raise Exception("No free chosen in regionTestingFunc!")
+
+    color_list = ["C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"]
+    color_index = 0
+
+    for i in range(len(userParametersDict)) :
+
+        try:
+
+            plotting_list = []
+
+            for j in range(len(bounds_list)):
+                # add free parameters to userParametersDict
+                for key in (bounds_list[j]).keys():
                     
-                    # For plotting constant y = dictElement["yaxis"] in individual plots
-                    if "yaxis" in dictElement:
-                        (individual[-1])["yaxis"] = dictElement["yaxis"]
-                
-                plt.plot(angle_hS, val_hS)#, label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                plt.plot(angle_hX, val_hX, color = plt.gca().lines[-1].get_color())#, label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                plt.plot(angle_SX, val_SX, color = plt.gca().lines[-1].get_color(), label = "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                plt.xlim(-np.pi/2, np.pi/2)
-                
-                print(userParametersDict)
-                
-                # If userParametersDict is a dictionary (a single element), the loop should break after this
-                if isinstance(userParametersDict, dict) == True:
-                    break
+                    if key != "axis":
+                        print(key)
+                        (userParametersDict[i])[key] = (bounds_list[j])[key]
                     
-            except subprocess.TimeoutExpired:
-                duds.append( [dictElement["ms"], dictElement["mx"]] )
-        
-        print(userParametersDict)
-        
-        plt.xlim(-np.pi/2, np.pi/2)
-
-        if logyscale == True:
-            plt.yscale('log')
-        
-        if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
-            ylim_lb, ylim_ub = 0, 1    # will be used in individual plots
-            plt.ylim(ylim_lb, ylim_ub)
-        
-        elif (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
-            
-            if individualPlots == True:
-                ylim_lb, ylim_ub = plt.gca().get_ylim()    # will be used in individual plots
-
-                for dictElementIndividual in individual:    
-
-                    # if plt ylimit upper bound is larger than yaxis set bound to to that otherwise use default settings
-                    # This is so that the y limits of the  individual plots encompass all the figures 
-                    if ("yaxis" in dictElementIndividual) and (dictElementIndividual["yaxis"] > ylim_ub):
-                        ylim_ub = dictElementIndividual["yaxis"]
-                        print("==================== First step! ====================")
-
+                    elif key == "axis":
+                        axis = (bounds_list[j])["axis"]
+                    
                     else:
-                        continue
+                        raise Exception("error with \"axis\" in adding keys")
+                    
+                # free parameter list and value list
+                x, y = dataPuller(BP, physics, (userParametersDict[i]), axis, SM1, SM2)
+                
+                # save free parameter list and value list in plotting_list
+                # for key in (bounds_list[j]).keys():
+                plotting_list.append([x,y])
+                
+                # delete free parameters to userParametersDict
+                for key in (bounds_list[j]).keys():
 
-            else:
-                ylim_lb, ylim_ub = plt.gca().get_ylim() # will be used in individual plots
-#            plt.ylim(0,50)
+                    if key != "axis":
+                        del (userParametersDict[i])[key]
+                        
+                    elif key == "axis":
+                        continue
+                        
+                    else:
+                        raise Exception("error with \"axis\" in deleting keys")
+
+            linestyle_list = ['solid', 'dotted', 'dashdot']
+            linestyle_index = 0
+
+            for plot in plotting_list:
+
+                # color value makes sure all curves have the same colour
+#                try:
+                plt.plot(plot[0], plot[1], 
+                color = color_list[color_index % 10], 
+#                label = "ms = {}, mx = {}".format((userParametersDict[i])["ms"], (userParametersDict[i])["mx"]) 
+                linestyle = linestyle_list[linestyle_index])
+                
+                linestyle_index = linestyle_index + 1
+
+                # if it is the first element, we plot as normal
+#                except IndexError:
+#                    plt.plot(plot[0], plot[1])
+            
+            
+            # if individualPlots is True, make sure to save plotting_list
+            if individualPlots == True:
+                individual.append( {"plotting_list": plotting_list, "ms": (userParametersDict[i])["ms"], "mx": (userParametersDict[i])["mx"]} )
+                
+                # if user gives "yaxis" in userParametersDict then save to individual plots
+                if "yaxis" in (userParametersDict[i]):
+                    (individual[-1])["yaxis"] = (userParametersDict[i])["yaxis"]
+                    
+            color_index = color_index + 1
+
+        except subprocess.TimeoutExpired:
+            duds.append( [dictElement["ms"], dictElement["mx"]] )
+
+    plt.xlim(xlim_lb, xlim_ub)
+
+    plt.legend(label, loc = 'upper right')
+
+    if logyscale == True:
+        plt.yscale('log')
+
+    if (physics == "XSH") or (physics == "XHH") or (physics == "XSS"):
+        ylim_lb, ylim_ub = 0, 1    # will be used in individual plots
+        plt.ylim(ylim_lb, ylim_ub)
+
+
+    elif (physics == "ppXSH") or (physics == "ppXHH") or (physics == "ppXSS") or (physics == "ppXSHSM") or (physics == "ppXHHSM") or (physics == "ppXSSSM"):
+        
+        if individualPlots == True:
+            ylim_lb, ylim_ub = plt.gca().get_ylim()    # will be used in individual plots
+
+            for dictElementIndividual in individual:    
+
+                # if plt ylimit upper bound is larger than yaxis set bound to to that otherwise use default settings
+                # This is so that the y limits of the  individual plots encompass all the figures 
+                if ("yaxis" in dictElementIndividual) and (dictElementIndividual["yaxis"] > ylim_ub):
+                    ylim_ub = 2 * dictElementIndividual["yaxis"] # set the upperbound to double ylim_ub, otherwise the yaxis line is not visible in individual plots
+                    print("==================== First step! ====================")
+
+                else:
+                    continue
+            
+            # if user wants same ylimts of the individual plots and the total plots
+            if sameFrame == True:
+                plt.ylim(ylim_lb, ylim_ub)
+
 
         else:
-            raise Exception("No physics chosen")
+            ylim_lb, ylim_ub = plt.gca().get_ylim()
 
-        plt.title(filename)
-        location = directory + "/" + filename
-        plt.savefig(location)
-#        plt.show()
-        plt.close()
-
-        massplots(BP, physics, userParametersDict, directory, filename)
-#        plt.show()
-        plt.close()
-        
     else:
-        raise Exception("No proper axes given for plotting")
-        
-    
+        raise Exception("No physics chosen")
+
+    plt.title(filename)
+    location = directory + "/" + filename
+    plt.savefig(location)
+    plt.close()
+
+    massplots(BP, physics, userParametersDict, directory, filename, SM1, SM2)
+    plt.close()
+
     if individualPlots == True:
         
         if free == "vev":
-        
             location = directory + "/" + "vevIndividual"
-            toShell = ["mkdir", location]
-            subprocess.run(toShell)
-        
-            for dictElement in individual:
-                plt.plot(dictElement["vev_vs"], dictElement["val_vs"],label = "vs")
-                plt.plot(dictElement["vev_vx"], dictElement["val_vx"],label = "vx", color = plt.gca().lines[-1].get_color())
-                
-                # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
-                if "yaxis" in dictElement:
-                    plt.axhline(y=dictElement["yaxis"], color='black', linestyle="dashed")
-                
-                plt.xlim(1, 1000)
-                plt.ylim(ylim_lb, ylim_ub)
-                
-                if logyscale == True:
-                    plt.yscale('log')
-                
-                plt.legend(bbox_to_anchor=(1.04, 1), borderaxespad=0)
-                plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                
-                # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
-                # and removes it for the next individual plot
-                if "yaxis" in dictElement:
-                    yaxis = plt.axhline(y=dictElement["yaxis"], color='black', linestyle='dashed')
-                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
-                    #code from stackexchange (specifically the comment by user P2000): https://stackoverflow.com/a/42955955/17456342
-                    yaxis.remove()
-                else:
-                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+            xlim_lb, xlim_ub = 1, 1000
+            label = [r'$v_{S} \ (solid), v_{X} \ (dotted)$']
 
-                # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
-                for line in plt.gca().lines: # put this before you call the 'mean' plot function.
-                    line.set_label(s='')
-            
-            plt.close()
-        
-        elif free == "angle":
-        
+        elif free == "angle":        
             location = directory + "/" + "angleIndividual"
-            toShell = ["mkdir", location]
-            subprocess.run(toShell)
+            xlim_lb, xlim_ub = -np.pi/2, np.pi/2
+            label = [r'$\theta_{hS} \ (solid), \theta_{hX} \ (dotted), \theta_{SX} \ (dashdot)$']
         
-            for dictElement in individual:
-                plt.plot(dictElement["angle_hS"], dictElement["val_hS"],label = "hs")
-                plt.plot(dictElement["angle_hX"], dictElement["val_hX"],label = "hX", color = plt.gca().lines[-1].get_color())
-                plt.plot(dictElement["angle_SX"], dictElement["val_SX"],label = "SX", color = plt.gca().lines[-1].get_color())
-                
-                plt.xlim(-np.pi/2, np.pi/2)
-                plt.ylim(ylim_lb, ylim_ub * 2)
-                
-                if logyscale == True:
-                    plt.yscale('log')
-                
-                plt.legend(bbox_to_anchor=(1.04, 1), borderaxespad=0)
-                plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
-                
-                # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
-                # and removes it for the next individual plot
-                if "yaxis" in dictElement:
-                    yaxis = plt.axhline(y = dictElement["yaxis"], color='black', linestyle='dashed')
-                    print("==================== Second step! ====================")
-                    print(ylim_ub)
-                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
-                    #code from stackexchange (post and comment by user P2000): https://stackoverflow.com/a/42955955/17456342
-                    yaxis.remove()
-                    print("==================== Third step! ====================")
-                else:            
-                    plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
-                
-                # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
-                for line in plt.gca().lines: # put this before you call the 'mean' plot function.
-                    line.set_label(s='')
+        toShell = ["mkdir", location]
+        subprocess.run(toShell)
+        
+        color_list = ["C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"]
+        color_index = 0
+        
+        linestyle_list = ['solid', 'dotted', 'dashdot']
+        
+        for dictElement in individual:
             
-            plt.close()
+            linestyle_index = 0
+
+            for plot in dictElement["plotting_list"]:
+                
+                plt.plot(plot[0], plot[1], 
+                color = color_list[color_index % 10],
+                linestyle = linestyle_list[linestyle_index])
+                
+                linestyle_index = linestyle_index + 1
+
+            color_index = color_index + 1
+
+            plt.xlim(xlim_lb, xlim_ub)
+            plt.ylim(ylim_lb, ylim_ub)
+
+            if logyscale == True:
+                plt.yscale('log')
+
+            plt.legend(label, loc = 'upper right', handletextpad=-2.0, handlelength=0)
+            plt.title(filename + ", " + "ms = {}, mx = {}".format(dictElement["ms"], dictElement["mx"]))
+
+            # Plots a constant dashed line at y = dictElement["yaxis"] (can be used for checking if scannerS is above observed limits)
+            # and removes it for the next individual plot
+            if "yaxis" in dictElement:
+                yaxis = plt.axhline(y = dictElement["yaxis"], color='black', linestyle='dashed')
+                print("==================== Second step! ====================")
+                print(ylim_ub)
+                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+                #code from stackexchange (post and comment by user P2000): https://stackoverflow.com/a/42955955/17456342
+                yaxis.remove()
+                print("==================== Third step! ====================")
             
-        else:
-            raise Exception("No physics chosen in individual plots")
-    
+            else:            
+                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
+            
+            # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
+            for line in plt.gca().lines: # put this before you call the 'mean' plot function.
+                line.set_label(s='')
+
+        plt.close()
+
     if len(duds) != 0:
     
         print("+----------------------------------------------------------+")
@@ -911,7 +904,7 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 #2.     Only ppXSHbbgamgam is supported but not the general ppXNPbbgamgam where NP is SS, HH.
 
-#2.1     physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
+#2.1    physics = ppXSHSM automatically does SM = bbgamgam, this should potentially 
 #       for the user be able to customize.
 
 #3.1    fix the following line in XNP_rt (we only want one of the modes): 
@@ -925,15 +918,17 @@ def regionTestingFunc(BP, physics, userParametersDict, free, directory, filename
 
 #### BP2 REGION 2
 
-#pointlist = TRSM_rt.pointGen("BP2", 2, 5, "grid")
+#pointlist = pointGen("BP2", 2, 5, "grid")
 
 #dictPointlist = []
 
 #for element in pointlist:
 #    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-#TRSM_rt.regionTestingFunc("BP2", "XSH", dictPointlist, "vev", "plotting/XSH_region2_5x5", "BP2_XSHvev_region2", individualPlots = True)
-#TRSM_rt.regionTestingFunc("BP2", "XSH", dictPointlist, "angle", "plotting/XSH_region2_5x5", "BP2_XSHangle_region2", individualPlots = True)
+##"temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
+
+#regionTestingFunc("temp5", "BP2_XSHvev_region2", dictPointlist[0:2],  BP = "BP2", physics = "XSH", free = "vev", individualPlots = True,)
+#regionTestingFunc("temp5", "BP2_XSHangle_region2", dictPointlist[0:2], BP = "BP2", physics = "XSH", free = "angle", individualPlots = True)
 
 
 
@@ -1057,7 +1052,12 @@ BP2_dictPointlistAtlas = []
 for i in range(len(limit_obs_BP2constrained)):
     BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
     
-regionTestingFunc("BP2", "ppXSHSM", BP2_dictPointlistAtlas[2], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", logyscale = True, individualPlots = True)
+#regionTestingFunc("BP2", "ppXSHSM", BP2_dictPointlistAtlas[2], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", logyscale = True, individualPlots = True)
+
+#(directory, filename, userParametersDict, **kwargs)
+
+#regionTestingFunc("temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
+#regionTestingFunc("temp4", "BP2_Atlas2023_obs_limit_vev", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True)
 
 
 
