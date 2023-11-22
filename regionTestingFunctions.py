@@ -526,7 +526,7 @@ def dataPuller(BP, physics, userParametersDict, axis, SM1, SM2):
 
     subprocess.run(toShell, timeout = 180)
     
-    df = pandas.read_table(r"regionTesting.tsv")
+    df = pandas.read_table(r"regionTesting.tsv", index_col = 0)
     
     mH1_H1H2 = np.array([i for i in df[axis]])
     mH2_H1H2 = np.array([i for i in df["mH2"]])
@@ -841,14 +841,14 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
         
         for dictElement in individual:
             
-            print(dictElement["ms"], dictElement["mx"])
+#            print(dictElement["ms"], dictElement["mx"])
             
             linestyle_index = 0
 
             for plot in dictElement["plotting_list"]:
                 
-                print(plot[0])
-                print(plot[1])    
+#                print(plot[0])
+#                print(plot[1])    
                     
                 plt.plot(plot[0], plot[1], 
                 color = color_list[color_index % 10],
@@ -871,8 +871,8 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
             # and removes it for the next individual plot
             if "yaxis" in dictElement:
                 yaxis = plt.axhline(y = dictElement["yaxis"], color='black', linestyle='dashed')
-                print("==================== Second step! ====================")
-                print(ylim_ub)
+#                print("==================== Second step! ====================")
+#                print(ylim_ub)
                 
                 if numberedTitle == True:
                     plt.savefig(location + "/" + filename + str(numberedTitle_index) + ".png", bbox_inches="tight")
@@ -884,7 +884,7 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
 #                plt.savefig(location + "/" + filename + "_{}-{}".format(dictElement["ms"], dictElement["mx"]) + ".png", bbox_inches="tight")
                 #code from stackexchange (post and comment by user P2000): https://stackoverflow.com/a/42955955/17456342
                 yaxis.remove()
-                print("==================== Third step! ====================")
+#                print("==================== Third step! ====================")
 
                 
             # code from stackexchange: https://stackoverflow.com/a/64043072/17456342
@@ -932,19 +932,19 @@ def regionTestingFunc(directory, filename, userParametersDict, **kwargs):
 
 
 
-#### BP2 REGION 2
+### BP2 REGION 2
 
-#pointlist = pointGen("BP2", 2, 5, "grid")
+pointlist = pointGen("BP2", 2, 5, "grid")
 
-#dictPointlist = []
+dictPointlist = []
 
-#for element in pointlist:
-#    dictPointlist.append({ "ms": element[0], "mx": element[1] })
+for element in pointlist:
+    dictPointlist.append({ "ms": element[0], "mx": element[1] })
 
-###"temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
+##"temp4", "BP2_Atlas2023_obs_limit_angle", BP2_dictPointlistAtlas[0:2], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True)
 
-#regionTestingFunc("temp5", "BP2_XSHvev_region2", dictPointlist[0:2],  BP = "BP2", physics = "XSH", free = "vev", individualPlots = True,)
-#regionTestingFunc("temp5", "BP2_XSHangle_region2", dictPointlist[0:2], BP = "BP2", physics = "XSH", free = "angle", individualPlots = True)
+regionTestingFunc("temp5", "BP2_XSHvev_region2", dictPointlist[0:2],  BP = "BP2", physics = "XSH", free = "vev", individualPlots = True,)
+regionTestingFunc("temp5", "BP2_XSHangle_region2", dictPointlist[0:2], BP = "BP2", physics = "XSH", free = "angle", individualPlots = True)
 
 
 
@@ -1066,22 +1066,24 @@ ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained = constrained_obs
 
 BP2_dictPointlistAtlas = []
 for i in range(len(limit_obs_BP2constrained)):
-    BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i] })
+#    BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i]})
+    BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i], "points": 10})
     
 #regionTestingFunc("BP2", "ppXSHSM", BP2_dictPointlistAtlas[2], "angle", "plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit", logyscale = True, individualPlots = True)
 
 #(directory, filename, userParametersDict, **kwargs)
 
 #regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_vev_points_1_to_25", BP2_dictPointlistAtlas[0:25], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True, numberedTitle = True)
-regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_vev_points_25_to_rest", BP2_dictPointlistAtlas[25:], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True, numberedTitle = True)
+#regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_vev_points_25_to_rest", BP2_dictPointlistAtlas[25:], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "vev", logyscale = True, numberedTitle = True)
+
 #regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_angle_points_1_to_25", BP2_dictPointlistAtlas[0:25], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True, numberedTitle = True)
+regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit_angle_points_25_to_rest", BP2_dictPointlistAtlas[25:], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True, numberedTitle = True)
 
 
+#regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "TEST_", [BP2_dictPointlistAtlas[0:5]], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True, numberedTitle = True)
 
 
-
-
-
+#regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "TEST_", [BP2_dictPointlistAtlas[16]], BP = "BP2", physics = "ppXSHSM", SM1 = "bb", SM2 = "gamgam", free =  "angle", logyscale = True, numberedTitle = True)
 
 #listPacker(BPdirectory, axes1, axes2, axes3, SM1, SM2, xs_NP = True, xs_SM = True, sort = False):
 #    
@@ -1119,7 +1121,9 @@ regionTestingFunc("plottingLimits/Atlas2023/BP2_Atlas", "BP2_Atlas2023_obs_limit
 #        
 #        return masses, br, Xsection_NP, Xsection_SM
 
+def main()
+    
 
-
-
+__name__ == "__main__"
+    
 
