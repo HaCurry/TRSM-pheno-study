@@ -1,35 +1,72 @@
 # -*- coding: utf-8 -*-
 import csv
 import pandas
+
 import numpy as np
+from scipy.interpolate import CubicSpline
+
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import scipy.interpolate
-from scipy.interpolate import CubicSpline
 mpl.rcParams.update(mpl.rcParamsDefault)
-from numpy import ma
-from subprocess import call
+
 import subprocess
 import configparser
+import os
+import datetime
 
-def paramDirCreator(userParametersDict):
+def paramDirCreator(userParametersDict, targetDir):
 
-#    create directory for storage
+#    main directory for storage
+    if os.path.isdir(targetDir) == False:
+        subprocess.run(['mkdir', targetDir])
+
     dataId = 'mS' + str(userParametersDict['ms']) + '-' + 'mX' + str(userParametersDict['mx'])
-    subprocess.run(['mkdir', dataId])
-    
+
+#   dattaId specifc directory for storage
+    if os.path.isdir(targetDir + '/' + dataId) == False:
+        dataId = 'mS' + str(userParametersDict['ms']) + '-' + 'mX' + str(userParametersDict['mx'])
+        subprocess.run(['mkdir', targetDir + '/' + dataId])
+
     return dataId
 
 
 
-def repackingProgramParamDict(userParametersDict):
-
-#    parameter values used by script
-    programParametersDict = {
-        'mHa_lb': 80, 'mHa_ub': 80, 'mHb_lb': 125.09, 'mHb_ub': 125.09, 'mHc_lb': 375, 'mHc_ub': 375,
-        'ths_lb': 1.352, 'ths_ub': 1.352, 'thx_lb': 1.175, 'thx_ub': 1.175, 'tsx_lb': -0.407, 'tsx_ub': -0.407,
-        'vs_lb': 120, 'vs_ub': 120, 'vx_lb': 890, 'vx_ub': 890,
-        }
+def repackingProgramParamDict(userParametersDict, **kwargs):
+    
+#    parameter values used by script. Default is BP2 values
+    if 'manualBP' in kwargs:
+        programParametersDict = kwargs['manualBP']
+        
+    else:
+        programParametersDict = {
+            'mHa_lb': 80, 'mHa_ub': 80, 'mHb_lb': 125.09, 'mHb_ub': 125.09, 'mHc_lb': 375, 'mHc_ub': 375,
+            'ths_lb': 1.352, 'ths_ub': 1.352, 'thx_lb': 1.175, 'thx_ub': 1.175, 'tsx_lb': -0.407, 'tsx_ub': -0.407,
+            'vs_lb': 120, 'vs_ub': 120, 'vx_lb': 890, 'vx_ub': 890,
+            }
+    
+#    or if user specifies the BP by name eg. 'BP2', then use the appropriate parameter values
+    if 'BP' in kwargs:
+        
+        if kwargs['BP'] == 'BP2':
+            programParametersDict = {
+                'mHa_lb': 80, 'mHa_ub': 80, 'mHb_lb': 125.09, 'mHb_ub': 125.09, 'mHc_lb': 375, 'mHc_ub': 375,
+                'ths_lb': 1.352, 'ths_ub': 1.352, 'thx_lb': 1.175, 'thx_ub': 1.175, 'tsx_lb': -0.407, 'tsx_ub': -0.407,
+                'vs_lb': 120, 'vs_ub': 120, 'vx_lb': 890, 'vx_ub': 890,
+                }
+        
+        elif kwargs['BP'] == 'BP3':
+            programParametersDict = { 
+                "mHa_lb": 125.09, "mHa_ub": 125.09, "mHb_lb": 200, "mHb_ub": 200, "mHc_lb": 400, "mHc_ub": 400, 
+                "ths_lb": -0.129, "ths_ub": -0.129, "thx_lb": 0.226, "thx_ub": 0.226, "tsx_lb": -0.899, "tsx_ub": -0.899, 
+                "vs_lb": 140, "vs_ub": 140, "vx_lb": 100, "vx_ub": 100, 
+                "points": 100
+                }
+    
+#    raise exception if user specifies programParametersDict and specifies BP at the same time
+    if ('manualBP' in kwargs) and ('BP' in kwargs):
+        raise Exception('Cannot specify BP (Benchmark plane) and manualBP at the same time in kwargs.')
+    
     
     # change parameters used in script to user given masses
     programParametersDict['mHa_lb'] = userParametersDict['ms']
@@ -51,7 +88,7 @@ def repackingProgramParamDict(userParametersDict):
 
 
 
-def param(programParametersDict, dataId, paramFree, points, **kwargs):
+def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
 
     ########################    kwargs    ########################
 
@@ -66,21 +103,12 @@ def param(programParametersDict, dataId, paramFree, points, **kwargs):
         CreateDir = kwargs['CreateDir']
 
 #    default option set to True. Creates parameter specific directory inside
-#    directory dataId, created by other functions.
+#    directory targetDir/dataId/, created by other functions.
     else:
         createDir = True
-    
-    if createDir == True:
-        paramDir = dataId + '/' + paramFree + '_' + dataId
-        subprocess.run(['mkdir', paramDir])
 
-#    otherwise create a directory paramDir in local directory
-    else:
-        print('No directory found, output in local directory.')
-        paramDir = paramFree + '_' + dataId
-        subprocess.run(['mkdir', paramDir])
 
-#    default option set to True. Prints shorter outputs from ScannerS in shell
+#    default option set to True. Saves shorter outputs from ScannerS to shell in .txt file
     if 'shortLog' in kwargs:
         shortLog = kwargs['shortLog']
     
@@ -88,6 +116,58 @@ def param(programParametersDict, dataId, paramFree, points, **kwargs):
         shortLog = True
 
     ##############################################################
+
+    if createDir == True:
+
+        if os.path.isdir(targetDir + '/' + dataId + '/' + paramFree + '_' + dataId) == True:
+
+            paramDir = targetDir + '/' + dataId + '/' + paramFree + '_' + dataId
+
+        elif os.path.isdir(targetDir + '/' + dataId + '/' + paramFree + '_' + dataId) == False:
+
+            if os.path.isdir(targetDir + '/' + dataId) == True:
+                paramDir = targetDir + '/' + dataId + '/' + paramFree + '_' + dataId
+                subprocess.run(['mkdir', paramDir])
+
+            elif os.path.isdir(targetDir + '/' + dataId) == False:
+                
+                if os.path.isdir(targetDir) == True:
+                    subprocess.run(['mkdir', targetDir + '/' + dataId])
+                    paramDir = targetDir + '/' + dataId + '/' + paramFree + '_' + dataId
+                    subprocess.run(['mkdir', paramDir])
+                    
+                elif os.path.isdir(targetDir) == False:
+                    subprocess.run(['mkdir', targetDir])
+                    subprocess.run(['mkdir', targetDir + '/' + dataId])
+                    paramDir = targetDir + '/' + dataId + '/' + paramFree + '_' + dataId
+                    subprocess.run(['mkdir', paramDir])
+                
+                else:
+                    raise Exception('Error creating directories in param')
+
+            else:
+                raise Exception('Error creating directories in param')
+        
+        else:
+            raise Exception('Error creating directories in param')
+
+#    otherwise output everything in the directory targetDir
+    elif createDir == False:
+    
+        print('CreateDir set to False, output generated in targetDir.')
+    
+        if os.path.isdir(targetDir) == True:
+            paramDir = targetDir
+        
+        elif os.path.isdir(targetDir) == False:
+            paramDir = targetDir
+            subprocess.run(['mkdir', paramDir])
+        
+        else:
+            raise Exception('Error creating directories in param')
+    
+    else:
+        raise Exception('error occurred in createDir in param')
 
 
     config = configparser.ConfigParser()
@@ -98,11 +178,11 @@ def param(programParametersDict, dataId, paramFree, points, **kwargs):
                          'Higgs': 'apply'}
     config['scan'] = {'mHa': str(programParametersDict['mHa_lb']) + ' ' + str(programParametersDict['mHa_ub']),
                       'mHb': str(programParametersDict['mHb_lb']) + ' ' + str(programParametersDict['mHb_ub']),
-                      'mHc': str(programParametersDict['mHc_lb']) + ' ' + str(programParametersDict['mHc_ub']),
+                      'mHc': str(programParametersDict['mHc_lb']) + ' ' + str(programParametersDict['mHc_ub'])}
                       
-                      't1':  str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub']),
-                      't2':  str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub']),
-                      't3':  str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])}
+#                      't1':  str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub']),
+#                      't2':  str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub']),
+#                      't3':  str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])}
 
     if paramFree == 'ths':
         config['scan']['t1'] = str(-np.pi/2) + ' ' + str(np.pi/2)
@@ -137,6 +217,9 @@ def param(programParametersDict, dataId, paramFree, points, **kwargs):
         config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
 
     elif paramFree == 'vx':
+        config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
+        config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
+        config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
         config['scan']['vs'] = str(programParametersDict['vs_lb']) + ' ' + str(programParametersDict['vs_ub'])
         config['scan']['vx'] = '1 1000'
         
@@ -151,9 +234,17 @@ def param(programParametersDict, dataId, paramFree, points, **kwargs):
     configDir = 'config_' + paramFree + '_' + dataId + '.ini'
     outputDir = 'output_' + paramFree + '_' + dataId + '.tsv'
     
-    runTRSM = ['../../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
-    
+    if createDir == True:
+        runTRSM = ['../../../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
+
+    elif CreateDir == False:
+        runTRSM = ['../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
+
+    else:
+        raise Exception('createDir is not working in runTRSM')
+
     try:
+
         shell_output = subprocess.run(runTRSM, timeout = 180, capture_output = True, cwd = paramDir)
         shell_output = shell_output.stdout.decode('utf-8')
         shell_output_short = (shell_output.splitlines())[-17:]
@@ -163,43 +254,53 @@ def param(programParametersDict, dataId, paramFree, points, **kwargs):
             for line in shell_output_short:
                 print(line)
         
-        with open(paramDir + '/' + paramFree + dataId + '_full_log.txt', 'w') as text_file:
+        with open(paramDir + '/' 'full_log_' + paramFree + '_' + dataId + '.txt', 'w') as text_file:
             text_file.write(shell_output)
         
-        shell_output = shell_output.splitlines()
+#        shell_output = shell_output.splitlines()
 
-        with open(paramDir + '/' + paramFree + dataId + '_short_log.txt', 'w') as text_file:
+        with open(paramDir + '/' + 'short_log_' + paramFree + '_' + dataId + '.txt', 'w') as text_file:
             
             for line in shell_output_short:
                 text_file.write(line + '\n')
-        
+                
     except subprocess.TimeoutExpired:
+
         print('Process timed out for taking too long. ')
+#        Write down faulty point in duds.txt
+        with open(targetDir + '/' + 'duds.txt', 'a') as dud:
+            dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) '\n')
 
 
 
-def parameterMain(listUserParametersDict, **kwargs):
-    '''Main function calling everything else'''
+def parameterMain(listUserParametersDict, targetDir, **kwargs):
+    '''Main function'''
     
     print('+---------------+')
     print(' Starting script')
     print('+---------------+')
     
-    
+    loading = len(listUserParametersDict)
+    loadingstep = 1
+
     for userParametersDict in listUserParametersDict:
         
+        
 #        create directory for storage, returns name of directory
-        dataId = paramDirCreator(userParametersDict)
+        dataId = paramDirCreator(userParametersDict, targetDir)
 
 #        reformats user given dictionary to usable format for param
-        programParametersDict = repackingProgramParamDict(userParametersDict)
+        programParametersDict = repackingProgramParamDict(userParametersDict, **kwargs)
 
-        param(programParametersDict, dataId, 'ths', **kwargs)
-        param(programParametersDict, dataId, 'thx', **kwargs)
-        param(programParametersDict, dataId, 'tsx', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'ths', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'thx', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'tsx', **kwargs)
         
-        param(programParametersDict, dataId, 'vs', **kwargs)
-        param(programParametersDict, dataId, 'vx', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'vs', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'vx', **kwargs)
+
+        print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
+        loadingstep = loadingstep + 1
     
     print('+----------------+')
     print(' Script complete!')
@@ -273,10 +374,29 @@ if __name__ == '__main__':
     BP2_dictPointlistAtlas = []
     for i in range(len(limit_obs_BP2constrained)):
     #    BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i]})
-        BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "points": 10})
-        
+        BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i]})
+
+
+    # BP2: 
+    programParametersDictBP2 = { 
+        "mHa_lb": 80, "mHa_ub": 80, "mHb_lb": 125.09, "mHb_ub": 125.09, "mHc_lb": 375, "mHc_ub": 375, 
+        "ths_lb": 1.352, "ths_ub": 1.352, "thx_lb": 2, "thx_ub": 2, "tsx_lb": -0.407, "tsx_ub": -0.407, 
+        "vs_lb": 120, "vs_ub": 120, "vx_lb": 890, "vx_ub": 890, 
+        "points": 100
+        }
     
-    parameterMain(BP2_dictPointlistAtlas, points = 10)
+    # BP3:
+    programParametersDictBP3 = { 
+        "mHa_lb": 125.09, "mHa_ub": 125.09, "mHb_lb": 200, "mHb_ub": 200, "mHc_lb": 400, "mHc_ub": 400, 
+        "ths_lb": -0.129, "ths_ub": -0.129, "thx_lb": 0.226, "thx_ub": 0.226, "tsx_lb": -0.899, "tsx_ub": -0.899, 
+        "vs_lb": 140, "vs_ub": 140, "vx_lb": 100, "vx_ub": 100, 
+        "points": 100
+        }
+    
+    BP3_dictPoint = [{"ms": 200, "mx": 350}, {"ms": 150, "mx": 475}, {"ms": 275, "mx": 450}]
+    
+    parameterMain(BP2_dictPointlistAtlas[0:2], 'test3', points = 10, manualBP = programParametersDictBP2)
+#    parameterMain(BP2_dictPointlistAtlas[0:2], 'test3', points = 10, BP = 'BP3')
 
 
 
