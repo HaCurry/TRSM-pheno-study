@@ -14,12 +14,17 @@ import subprocess
 import configparser
 import os
 import datetime
+import multiprocessing
+import sys
+
+
 
 def paramDirCreator(userParametersDict, targetDir):
 
 #    main directory for storage
     if os.path.isdir(targetDir) == False:
         subprocess.run(['mkdir', targetDir])
+        print('HEJSAN')
 
     dataId = 'mS' + str(userParametersDict['ms']) + '-' + 'mX' + str(userParametersDict['mx'])
 
@@ -176,14 +181,11 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
                          'uni': 'apply',
                          'stu': 'apply',
                          'Higgs': 'apply'}
+
     config['scan'] = {'mHa': str(programParametersDict['mHa_lb']) + ' ' + str(programParametersDict['mHa_ub']),
                       'mHb': str(programParametersDict['mHb_lb']) + ' ' + str(programParametersDict['mHb_ub']),
                       'mHc': str(programParametersDict['mHc_lb']) + ' ' + str(programParametersDict['mHc_ub'])}
                       
-#                      't1':  str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub']),
-#                      't2':  str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub']),
-#                      't3':  str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])}
-
     if paramFree == 'ths':
         config['scan']['t1'] = str(-np.pi/2) + ' ' + str(np.pi/2)
         config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
@@ -268,13 +270,17 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
 
         print('Process timed out for taking too long. ')
 #        Write down faulty point in duds.txt
-        with open(targetDir + '/' + 'duds.txt', 'a') as dud:
-            dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) '\n')
-
+        # with open(targetDir + '/' + 'duds.txt', 'a') as dud:
+            # dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
+        with open(targetDir + '/' + dataId + '_' + paramFree + '_' + str(datetime.datetime.now()) + '.txt', 'a') as dud:
+            dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
+        
 
 
 def parameterMain(listUserParametersDict, targetDir, **kwargs):
     '''Main function'''
+
+    startTime = str(datetime.datetime.now())
     
     print('+---------------+')
     print(' Starting script')
@@ -306,107 +312,83 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
     print(' Script complete!')
     print('+----------------+')
 
+    endTime = str(datetime.datetime.now())
+
+    with open('processTime.txt', 'a') as text_file:
+        text_file.write('normal start:' + startTime + '\nnormal end:' + endTime + '\n\n')
 
 
-def mProcWrapper(userParametersDict, programParametersDict, targetDir, dataId, points):
 
-    kwargs['points'] = points
+def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints):
 
     dataId = paramDirCreator(userParametersDict, targetDir)
 
-
 #        reformats user given dictionary to usable format for param
-    programParametersDict = repackingProgramParamDict(userParametersDict, points = points)
+    programParametersDict = repackingProgramParamDict(userParametersDict, BP = mprocBP, points = mprocPoints)
 
-    param(programParametersDict, targetDir, dataId, 'ths', points = points)
-    param(programParametersDict, targetDir, dataId, 'thx', points = points)
-    param(programParametersDict, targetDir, dataId, 'tsx', points = points)
+    param(programParametersDict, targetDir, dataId, 'ths', BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'thx', BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'tsx', BP = mprocBP, points = mprocPoints)
     
-    param(programParametersDict, targetDir, dataId, 'vs', points = points)
-    param(programParametersDict, targetDir, dataId, 'vx', points = points)
+    param(programParametersDict, targetDir, dataId, 'vs',  BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'vx',  BP = mprocBP, points = mprocPoints)
 
-    print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
-    loadingstep = loadingstep + 1
+    # print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
+    # loadingstep = loadingstep + 1
 
 
-def mProcParameterMain(listUserParametersDict, targetDir):
-    '''Main function'''
+
+def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints):
+    '''Main function (multiprocessing)'''
+
+    mprocStartTime = str(datetime.datetime.now())
     
-    print('+---------------------------------+')
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
     print(' Starting script (multiprocessing)')
-    print('+---------------------------------+')
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    
+    starmapIter = []
+    
+    pool = multiprocessing.Pool()
+
+    for userParametersDict in listUserParametersDict:
+        starmapIter.append( (userParametersDict, BP, targetDir, mprocMainPoints) )
+
+    # try:
+    pool.starmap(mProcWrapper, starmapIter)
+
+    # except KeyboardInterrupt:
+        # code from StackExchange: https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool
+        # **** THIS PART NEVER EXECUTES. ****
+        # pool.terminate()
+        # print('You cancelled the script!')
+        # sys.exit('Script exiting')
+
+    print('*~~~~~~~~~~~~~~~~*')
+    print(' Script complete!')
+    print('*~~~~~~~~~~~~~~~~*')
+
+    mprocEndTime = str(datetime.datetime.now())
 
     
-
-
-
+    with open('processTime.txt', 'a') as text_file:
+        text_file.write('mProc start:' + mprocStartTime + '\nmProc end:' + mprocEndTime + '\n\n\n')
 
 
 
 
 
 if __name__ == '__main__':
+
+    df2 = pandas.read_table('Atlas2023Limits_BP2lessThanOrEqualTo.tsv', index_col = 0)
+
+    ms_BP2 = df2['ms_BP2']
+    mx_BP2 = df2['mx_BP2']
+    limit_obs_BP2 = df2['limit_obs_BP2']
+
+    BP2_dictPointlistAtlas = [{ "ms": ms_BP2[i], "mx": mx_BP2[i]} for i in  range(len(ms_BP2))]
     
-    limits = pandas.read_json('Atlas2023Limits.json')
-
-    mx, ms, limit_obs, limit_exp = [], [], [], []
-
-    for element in limits:
-        mx.append((limits[element])[0])
-        ms.append((limits[element])[1])
-    #    limit_exp.append((limits[element])[2] * 10 **(-3))
-    #    limit_obs.append((limits[element])[3] * 10 **(-3))
-        limit_exp.append((limits[element])[2] * 10 **(-3))
-        limit_obs.append((limits[element])[3] * 10 **(-3))
-        # limit_exp.append((limits[element])[2] )
-        # limit_obs.append((limits[element])[3] )
-
-    mx = np.array(mx)
-    ms = np.array(ms)
-    limit_exp = np.array(limit_exp)
-    limit_obs = np.array(limit_obs)
-
-    def constrained_observed_lim(ms, mx, limit_obs, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500, LessThanOrEqualTo = True):
-        ms_BP2constrained = []
-        mx_BP2constrained = []
-        limit_obs_BP2constrained = []
-        if LessThanOrEqualTo == True:
-            for i in range(len(limit_obs)):
-                # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
-                # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
-                # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
-                if (ms_lb <= ms[i]) and  (ms[i] <= ms_ub) and (mx_lb <= mx[i]) and (mx[i] <= mx_ub):
-                    ms_BP2constrained.append(ms[i])
-                    mx_BP2constrained.append(mx[i])
-                    limit_obs_BP2constrained.append(limit_obs[i])
-                else:
-                    continue
-            
-            return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
-        
-        else:
-            for i in range(len(limit_obs)):
-                # if (BP2_x_min < ms[i]) and  (ms[i] < BP2_x_max) and (BP2_y_min < mx[i]) and (mx[i] < BP2_y_max):
-                # MAKE SURE TO PLOT THIS SO YOU HAVE YOUR DESIRED POINTS BECAUSE THE EQUALITY MIGHT INCLUDE SOME
-                # UNDESIRED POINTS IF THE FLOAT VALUE IS VERY CLOSE TO HE BOUNDS. OTHERWISE SET LessThanOrEqualTo = False
-                if (ms_lb < ms[i]) and  (ms[i] < ms_ub) and (mx_lb < mx[i]) and (mx[i] < mx_ub):
-                    ms_BP2constrained.append(ms[i])
-                    mx_BP2constrained.append(mx[i])
-                    limit_obs_BP2constrained.append(limit_obs[i])
-                else:
-                    continue
-            
-            return ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained
-        
-    ms_BP2constrained, mx_BP2constrained, limit_obs_BP2constrained = constrained_observed_lim(ms, mx, limit_obs, LessThanOrEqualTo = True)
-
-    BP2_dictPointlistAtlas = []
-    for i in range(len(limit_obs_BP2constrained)):
-    #    BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i], "yaxis": limit_obs_BP2constrained[i]})
-        BP2_dictPointlistAtlas.append({ "ms": ms_BP2constrained[i], "mx": mx_BP2constrained[i]})
-
-
-    # BP2: 
+    # BP2 settings: 
     programParametersDictBP2 = { 
         "mHa_lb": 80, "mHa_ub": 80, "mHb_lb": 125.09, "mHb_ub": 125.09, "mHc_lb": 375, "mHc_ub": 375, 
         "ths_lb": 1.352, "ths_ub": 1.352, "thx_lb": 2, "thx_ub": 2, "tsx_lb": -0.407, "tsx_ub": -0.407, 
@@ -414,7 +396,7 @@ if __name__ == '__main__':
         "points": 100
         }
     
-    # BP3:
+    # BP3 settings:
     programParametersDictBP3 = { 
         "mHa_lb": 125.09, "mHa_ub": 125.09, "mHb_lb": 200, "mHb_ub": 200, "mHc_lb": 400, "mHc_ub": 400, 
         "ths_lb": -0.129, "ths_ub": -0.129, "thx_lb": 0.226, "thx_ub": 0.226, "tsx_lb": -0.899, "tsx_ub": -0.899, 
@@ -424,12 +406,27 @@ if __name__ == '__main__':
     
     BP3_dictPoint = [{"ms": 200, "mx": 350}, {"ms": 150, "mx": 475}, {"ms": 275, "mx": 450}]
     
-    parameterMain(BP2_dictPointlistAtlas[0:2], 'test3', points = 10, manualBP = programParametersDictBP2)
+    # parameterMain(BP2_dictPointlistAtlas[0:2], 'test3', points = 10, manualBP = programParametersDictBP2)
 #    parameterMain(BP2_dictPointlistAtlas[0:2], 'test3', points = 10, BP = 'BP3')
 
 
+# 
+    # mProcParameterMain(BP2_dictPointlistAtlas[0:3], 'BP2', 'test4', 100)
+    # parameterMain(BP2_dictPointlistAtlas[0:3], 'test3', points = 100, BP = 'BP2')
+    # 
+
+    mProcParameterMain(BP2_dictPointlistAtlas[0:25], 'BP2', 'test5', 100)
 
 
 
 
+
+
+
+
+
+
+
+
+    
 
