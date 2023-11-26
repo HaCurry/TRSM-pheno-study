@@ -23,8 +23,8 @@ def paramDirCreator(userParametersDict, targetDir):
 
 #    main directory for storage
     if os.path.isdir(targetDir) == False:
-        subprocess.run(['mkdir', targetDir])
         print('HEJSAN')
+        subprocess.run(['mkdir', targetDir])
 
     dataId = 'mS' + str(userParametersDict['ms']) + '-' + 'mX' + str(userParametersDict['mx'])
 
