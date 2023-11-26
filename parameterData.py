@@ -308,6 +308,35 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
 
 
 
+def mProcWrapper(userParametersDict, programParametersDict, targetDir, dataId, points):
+
+    kwargs['points'] = points
+
+    dataId = paramDirCreator(userParametersDict, targetDir)
+
+
+#        reformats user given dictionary to usable format for param
+    programParametersDict = repackingProgramParamDict(userParametersDict, points = points)
+
+    param(programParametersDict, targetDir, dataId, 'ths', points = points)
+    param(programParametersDict, targetDir, dataId, 'thx', points = points)
+    param(programParametersDict, targetDir, dataId, 'tsx', points = points)
+    
+    param(programParametersDict, targetDir, dataId, 'vs', points = points)
+    param(programParametersDict, targetDir, dataId, 'vx', points = points)
+
+    print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
+    loadingstep = loadingstep + 1
+
+
+def mProcParameterMain(listUserParametersDict, targetDir):
+    '''Main function'''
+    
+    print('+---------------------------------+')
+    print(' Starting script (multiprocessing)')
+    print('+---------------------------------+')
+
+    
 
 
 
