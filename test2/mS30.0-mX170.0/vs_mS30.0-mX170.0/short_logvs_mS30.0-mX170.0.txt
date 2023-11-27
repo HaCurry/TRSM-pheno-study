@@ -1,0 +1,17 @@
+=====================================================================
+Starting ScannerS scan of the TRSM broken phase using the settings:
+BFB=1
+Uni=1
+STU=1
+Higgs=1
+scan.npoints=10
+scan.seed=-2088358908
+scan.mHa=30.0 30.0
+scan.mHb=125.09 125.09
+scan.mHc=170.0 170.0
+scan.t1=1.352 1.352
+scan.t2=1.175 1.175
+scan.t3=-0.407 -0.407
+scan.vs=1 1000
+scan.vx=890 890
+=====================================================================
