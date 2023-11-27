@@ -319,9 +319,7 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
 
 
 
-def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints):
-
-    dataId = paramDirCreator(userParametersDict, targetDir)
+def mProcWrapper(userParametersDict, dataId, mprocBP, targetDir, mprocPoints):
 
 #        reformats user given dictionary to usable format for param
     programParametersDict = repackingProgramParamDict(userParametersDict, BP = mprocBP, points = mprocPoints)
@@ -341,28 +339,34 @@ def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints):
 def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints):
     '''Main function (multiprocessing)'''
 
+    dataIdList = [paramDirCreator(listUserParametersDict[i], targetDir) for i in range(len(listUserParametersDict))]
+    
+    # for userParametersDict in listUserParametersDict:
+        # dataId = paramDirCreator(userParametersDict, targetDir)
+        # dataIdList.append(dataId)
+        
     mprocStartTime = str(datetime.datetime.now())
     
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
     print(' Starting script (multiprocessing)')
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+
+    # for userParametersDict in listUserParametersDict:
+        # starmapIter.append( (userParametersDict, BP, targetDir, mprocMainPoints) )
     
-    starmapIter = []
+    starmapIter = [(listUserParametersDict[i], dataIdList[i], BP, targetDir, mprocMainPoints) for i in range(len(listUserParametersDict))]
     
     pool = multiprocessing.Pool()
 
-    for userParametersDict in listUserParametersDict:
-        starmapIter.append( (userParametersDict, BP, targetDir, mprocMainPoints) )
+    try:
+        pool.starmap(mProcWrapper, starmapIter)
 
-    # try:
-    pool.starmap(mProcWrapper, starmapIter)
-
-    # except KeyboardInterrupt:
+    except KeyboardInterrupt:
         # code from StackExchange: https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool
         # **** THIS PART NEVER EXECUTES. ****
-        # pool.terminate()
-        # print('You cancelled the script!')
-        # sys.exit('Script exiting')
+        pool.terminate()
+        print('You cancelled the script!')
+        sys.exit('Script exiting')
 
     print('*~~~~~~~~~~~~~~~~*')
     print(' Script complete!')
@@ -415,7 +419,7 @@ if __name__ == '__main__':
     # parameterMain(BP2_dictPointlistAtlas[0:3], 'test3', points = 100, BP = 'BP2')
     # 
 
-    mProcParameterMain(BP2_dictPointlistAtlas[0:25], 'BP2', 'test5', 100)
+    mProcParameterMain(BP2_dictPointlistAtlas[0:25], 'BP2', 'test6', 100)
 
 
 
