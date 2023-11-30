@@ -16,6 +16,7 @@ import os
 import datetime
 import multiprocessing
 import sys
+import json
 
 
 
@@ -23,7 +24,6 @@ def paramDirCreator(userParametersDict, targetDir):
 
 #    main directory for storage
     if os.path.isdir(targetDir) == False:
-        print('HEJSAN')
         subprocess.run(['mkdir', targetDir])
 
     dataId = 'mS' + str(userParametersDict['ms']) + '-' + 'mX' + str(userParametersDict['mx'])
@@ -90,6 +90,20 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
             programParametersDict[key] = userParametersDict[key]
 
     return programParametersDict
+
+
+
+def createJSON(programParametersDict, programConstraints, paramFree, dataId, paths, filename):
+
+    dictJSON = {}
+    dictJSON['programParametersDict'] = programParametersDict
+    dictJSON['programConstraints'] = programConstraints
+    dictJSON['free'] = paramFree
+    dictJSON['dataId'] = dataId
+    dictJSON['paths'] = paths
+
+    with open('filename', 'w') as f:
+        json.dump(dictJSON, f)
 
 
 
@@ -274,7 +288,15 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
             # dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
         with open(targetDir + '/' + dataId + '_' + paramFree + '_' + str(datetime.datetime.now()) + '.txt', 'a') as dud:
             dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
-        
+
+    # paths = {}
+    # paths['config'] = paramDir + '/' + configDir
+    # paths['output'] = paramDir + '/' + outputDir
+    # paths['directory'] = paramDir
+    # programConstraints = config['DEFAULT']
+    # filename = paramDir + '/' + 'settings_' + paramFree + dataId + '.json'
+    # 
+    # createJSON(programParametersDict, programConstraints, paramFree, dataId, paths, filename)
 
 
 def parameterMain(listUserParametersDict, targetDir, **kwargs):
@@ -360,6 +382,7 @@ def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints):
 
     try:
         pool.starmap(mProcWrapper, starmapIter)
+        
 
     except KeyboardInterrupt:
         # code from StackExchange: https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool
@@ -419,7 +442,7 @@ if __name__ == '__main__':
     # parameterMain(BP2_dictPointlistAtlas[0:3], 'test3', points = 100, BP = 'BP2')
     # 
 
-    mProcParameterMain(BP2_dictPointlistAtlas[0:25], 'BP2', 'test6', 100)
+    mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'ATLAS2023_BP2_prel', 100)
 
 
 

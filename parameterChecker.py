@@ -27,7 +27,7 @@ test = os.listdir(targetDir)
 # test2 = os.listdir(targetDir + '/' + test[0])
 
 test2 = glob.glob(targetDir + '/**/output_*.tsv', recursive = True)
-test3 = glob.glob(targetDir + '/**/config_*.ini', recursive = True)
+test3 = glob.glob(targetDir + '/**/config_*.ts', recursive = True)
 
 for i in test2:
     print(i)
