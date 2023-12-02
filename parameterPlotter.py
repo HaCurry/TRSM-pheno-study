@@ -109,15 +109,31 @@ def directorySearcher(relPath, globPathname):
 
 
 
-def parameterPlot(xlist, ylist, xlims, **kwargs):
+def auxSoloPlot(xlims, ylims, path, filename_H1H2, **kwargs):
+    '''
+    Plots and saves figure in the ranges xlims and ylims.
 
-    if 'ls' in kwargs:
-        ls = kwargs['ls']
+    path. string. directory to save figure. Saves the plot in the directory path.
 
-    else:
-        ls = 'None'
+    filename. name of the file. Saves the figure with file name filename.
+
+    ylims. tuple. y-limit bounds. Values can be set to None, and matplotlib auto sets the bound
+
+    xlims. tuple. x-limit bounds. Values can be set to None, and matplotlib auto sets the bound
+
+    kwarg yConst. int/float. default nothing. plots a constant line at y = yConst.
+
+        kwarg yConstLs. string. default 'dashed'. dependent on yConst, linestyle of yConst 
+
+        kwarg yConstClr. string. default 'r'. dependent on yConst, color of yConst
+
+    kwarg yscale. string. Can only be set to 'log' otherwise raises error.
+
+    kwarg show. bool. If True, script will plot the figure with gui, otherwise does nothing
+    '''
+
     
-    plt.plot(xlist, ylist, marker = '.', linestyle = ls)
+    #################################### kwargs ####################################
 
     # for observed limits
     if 'yConst' in kwargs:
@@ -134,12 +150,7 @@ def parameterPlot(xlist, ylist, xlims, **kwargs):
         else:
             clr = 'r'
             
-        plt.axhline(y = kwargs['yConst'], color = clr, linestyle = ls)
-    
-    plt.xlim(xlims)
-
-    if 'ylims' in kwargs:
-        plt.ylim(kwargs['ylims'])
+        plt.axhline(y = kwargs['yConst'], color = clr, linestyle = ls)    
 
     # for cross-sections
     if 'yscale' in kwargs:
@@ -150,21 +161,35 @@ def parameterPlot(xlist, ylist, xlims, **kwargs):
         else:
             raise Exception('invalid log scale parameterPlot')
 
+    # plots figure using gui
+    if 'show' in kwargs:
 
-# if 'show' in kwargs:
-# 
-    # if kwargs['show'] == True:
-# 
-        # plt.show()
-# 
-    # elif kwargs['show'] == False:
-        # pass
-# 
-    # else:
-        # raise Exception('invalid show value in parameterPlot')
-# 
-# 
-# plt.savefig(saveDir + '/' + name)
+        if kwargs['show'] == True:
+            show = True
+            
+        elif kwargs['show'] == False
+            show = False
+
+        else:
+            raise Exception('show set to invalid value in auxSoloPlot')
+
+    else:
+        show = False
+        
+    ################################################################################
+
+    plt.xlim(left = xlims[0], right = xlims[1])
+    plt.ylim(left = ylims[0], right = ylims[1])
+
+    plt.savefig(path + '/' + filename)
+
+    if show == True:
+        plt.show()
+        plt.close()
+
+    else:
+        plt.close()
+
 
 def sorter(xlist, ylist):
     '''
@@ -182,7 +207,7 @@ def sorter(xlist, ylist):
 
 
 
-def definer(generalPhysics, axis, path, sort, **kwargs):
+def definer(generalPhysics, axis, path, **kwargs):
     '''
     produces all the list elements in a nice format
     '''
@@ -215,8 +240,24 @@ def definer(generalPhysics, axis, path, sort, **kwargs):
                 
 
 
-def parameterPlotterSolo(generalPhysics, axis, xlims, relPath, **kwargs):
+def parameterPlotterSolo(relPath, generalPhysics, axis, xlims, ylims, **kwargs):
 
+    #################################### kwargs ####################################
+    
+    if 'ls' in kwargs:
+        ls = kwargs['ls']
+
+    else:
+        ls = 'None'
+
+    if 'marker' in kwargs:
+        'marker' = kwargs['marker']
+
+    else:
+        mrkr = 'None'
+
+    ################################################################################
+    
     outputPaths = directorySearcher(relPath, '/**/output_*.tsv')
 
     H1H2 = []
@@ -229,35 +270,29 @@ def parameterPlotterSolo(generalPhysics, axis, xlims, relPath, **kwargs):
             for path in outputPaths:
 
                 # returns lists in nice format
-                (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = definer(generalPhysics, axis, path, sort, **kwargs)
+                (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = definer(generalPhysics, axis, path, **kwargs)
 
                 # sort according to xlist
                 (xlist_H1H2, ylist_H1H2) = sorter(xlist_H1H2, ylist_H1H2)
                 (xlist_H1H1, ylist_H1H1) = sorter(xlist_H1H1, ylist_H1H1)
                 (xlist_H2H2, ylist_H2H2) = sorter(xlist_H2H2, ylist_H2H2)
-                
-                
-                plt.close()
-                parameterPlot(xlist_H1H2, ylist_H1H2, xlims, **kwargs)
-                filename_H1H2 = os.path.dirname(path) + '/' + generalPhysics + '_solo_parameterPlot_H1H2'
-                plt.title(filename_H1H2)
-                plt.savefig(filename)
-                plt.show()
-                plt.close()
-                
-                parameterPlot(xlist_H1H1, ylist_H1H1, xlims, **kwargs)
-                filename_H1H1 = os.path.dirname(path) + '/' + generalPhysics + '_solo_parameterPlot_H1H1'
-                plt.title(filename_H1H1)
-                plt.savefig(filename_H1H1)
-                plt.show()
-                plt.close()
 
-                parameterPlot(xlist_H2H2, ylist_H2H2, xlims, **kwargs)
-                filename_H2H2 = os.path.dirname(path) + '/' + generalPhysics + '_solo_parameterPlot_H2H2'
-                plt.title(filename_H2H2)
-                plt.savefig(filename_H2H2)
-                plt.show()
+                parentDir = os.path.dirname(path)
+                filename_H1H2 = '/' + generalPhysics + axis + '_solo_parameterPlot_H1H2'
+                filename_H1H1 = '/' + generalPhysics + axis + '_solo_parameterPlot_H1H1'
+                filename_H2H2 = '/' + generalPhysics + axis + '_solo_parameterPlot_H2H2'
+                
                 plt.close()
+                plt.plot(xlist_H1H2, ylist_H1H2)
+                auxSoloPlot(xlims, ylims, path, filename_H1H2, **kwargs)
+                
+                plt.close()
+                plt.plot(xlist_H1H1, ylist_H1H1)
+                auxSoloPlot(xlims, ylims, path, filename_H1H1, **kwargs)
+
+                plt.close()
+                plt.plot(xlist_H2H2, ylist_H2H2)
+                auxSoloPlot(xlims, ylims, path, filename_H1H1, **kwargs)
 
                 H1H2.append((xlist_H1H2, ylist_H1H2))
                 H1H1.append((xlist_H1H1, ylist_H1H1))
@@ -273,15 +308,19 @@ def parameterPlotterSolo(generalPhysics, axis, xlims, relPath, **kwargs):
 
         if kwargs['together'] == True:
 
-            def togetherPlot(iterable, xlims, relPath, filename, generalPhysics, **kwargs):
+            def togetherPlot(iterable, xlims, ylims, relPath, filename, generalPhysics, **kwargs):
             
                 plt.close()
                 for x, y in iterable:
-                    parameterPlot(x,y, xlims, **kwargs)
+                    plt.plot(x,y)
 
-                filename_H1H2 = relPath + '/' + generalPhysics + filename
-            plt.title(filename_H1H2)
-            plt.savefig(relPath)
+                    plt.xlim(left = xlims[0], right = xlims[1])
+                    plt.ylim(left = ylims[0], right = ylims[1])
+
+                filename = relPath + '/' + generalPhysics + filename
+                
+                plt.title(filename_H1H2)
+                plt.savefig(relPath)
             
 
                 
