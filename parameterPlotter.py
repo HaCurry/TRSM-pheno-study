@@ -18,20 +18,33 @@ import multiprocessing
 import sys
 import glob
 
+import functions as TRSM
+import Exclusion_functions as excl
+
 # NOTE the dominant SMmode changes in BP3 to SMmode = 2!
-def dataGenerator(physics, quantity, axis, path, **kwargs):
+def dataGenerator(generalPhysics, axis, path, **kwargs):
+    ''' 
+    generalPhysics can be XNP, ppXNP, ppXNPSM
+    axis is the desired axis of the physical quantity
+    path is the path to the data
+    **kwargs need to define SM1 SM2 if generalPhysics = ppXNPSM.
+             User can also give additional axes in axis2, axis3.
+             User can give normalization of ppXNP, default set to 1.
+             User can give normalization of ppXNPSM, default set to 1.
+
+    returns H1H2, H1H1, H2H2, where each array contains elements with the axis list and the physical quantity
+            eg. for XNP, H1H2 = np.array([axis, axis2, axis3, b_H3_H1H2])
+    '''
 
     ########################    kwargs    ########################
     
-    if (physics == "ppXSHSM") or (physics == "ppXSSSM") or (physics == "ppXHHSM"):
+    if (generalPhysics == 'ppXNPSM'):
 
         if 'SM1' and 'SM2' in kwargs:
                 SM1, SM2 = kwargs['SM1'], kwargs['SM2']
     
         else:
-            raise Exception('No SM final state chosen in plotter, please define SM1 and SM2')
-
-        df = pandas.read_table(path, index_col = 0)
+            raise Exception('No SM final state chosen in plotter, please define SM1 and SM2 in kwargs')
 
     if 'axis2' in kwargs:
         axis2 = kwargs['axis2']
@@ -52,11 +65,12 @@ def dataGenerator(physics, quantity, axis, path, **kwargs):
         ggF_xs_SM_Higgs = kwargs['ggF_xs_SM_Higgs']
 
     else:
-        # rescaled SM dihiggs cross-section (ggF):
+        # rescaled SM dihiggs cross-section (ggF): 31.02 * 10**(-3)
         # https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
-        ggF_xs_SM_Higgs = 31.02 * 10**(-3)
+        # Default set to 1
+        ggF_xs_SM_Higgs = 1
 
-    # Rescale ppX__SM cross-section
+    # Rescale SM1SM2 cross-section
     # Default set to 1 (no rescaling ocurrs)
     if 'ggF_xs_SM_Higgs_SM1SM2' in kwargs:
         ggF_xs_SM_Higgs_SM1SM2 = kwargs['ggF_xs_SM_Higgs_SM1SM2']
@@ -64,155 +78,138 @@ def dataGenerator(physics, quantity, axis, path, **kwargs):
     else:
         ggF_xs_SM_Higgs_SM1SM2 = 1
 
-    # dataGenerator outputs eg. 
-    # XSHSM1SM2 + XSHSM2SM1 if SMmode = 0
-    # XSHSM1SM2 if SMmode = 1
-    # XSHSM2SM1 if SMmode = 2
-    # default set to 1
-    # NOTE the dominant SMmode changes in BP3 to SMmode = 2!
-    if 'SMmode' in kwargs:
-        SMmode = kwargs['SMmode']
-
-    else:
-        SMmode = 1
-
+    
     ##############################################################
     
-
-    df = pandas.read_table(path, index_col = 0)
-    
-    mH1_H1H2 = np.array([i for i in df[axis]])
-    mH2_H1H2 = np.array([i for i in df[axis2]])
-    mH3_H1H2 = np.array([i for i in df[axis3]])
-
-    b_H3_H1H2 = np.array([i for i in df["b_H3_H1H2"]])
-    b_H3_H1H1 = np.array([i for i in df["b_H3_H1H1"]])
-    b_H3_H2H2 = np.array([i for i in df["b_H3_H2H2"]])
-
-    idx = np.argsort(mH1_H1H2)
-    mH1_H1H2  = mH1_H1H2[idx]
-    
-    
-    if physics == "XSH":
-        b_H3_H1H2 = b_H3_H1H2[idx]
-        return mH1_H1H2, b_H3_H1H2
-            
-    elif physics == "XHH":
-
-        if BP == "BP2":    
-            b_H3_H2H2 = b_H3_H2H2[idx]
-            return mH1_H1H2, b_H3_H2H2
-
-        elif BP == "BP3":
-            b_H3_H1H1 = b_H3_H1H1[idx]
-            return mH1_H1H2, b_H3_H1H1
+    if generalPhysics == 'XNP':
+        H1H2, H1H1, H2H2, x_H3_gg = TRSM.XNP_massfree(path, axis, axis2, axis3)
         
-    elif physics == "XSS":
-
-        if BP == "BP2":
-            b_H3_H1H1 = b_H3_H1H1[idx]
-            return mH1_H1H2, b_H3_H1H1
-
-        elif BP == "BP3":
-            b_H3_H2H2 = b_H3_H2H2[idx]
-            return mH1_H1H2, b_H3_H2H2
-
-    
-    x_H3_gg_H1H2 = np.array([i for i in df["x_H3_gg"]])
-    x_H3_gg_H1H2 = x_H3_gg_H1H2[idx]
-#    x_H3_gg_H1H1 = x_H3_gg_H1H2.copy()
-#    x_H3_gg_H2H2 = x_H3_gg_H1H2.copy()
-
-    
-    if (physics == "ppXSH") or (physics == "ppXSHSM") or (physics == "XSHSM"):
+    elif generalPhysics == 'ppXNP':
+        H1H2, H1H1, H2H2 = TRSM.ppXNP_massfree(path, axis, axis2, axis3, normalizationNP = ggF_xs_SM_Higgs)
         
-        b_H3_H1H2 = b_H3_H1H2[idx]
-
-        if physics == "ppXSH":
-            pp_X_H1H2 = np.array([(b_H3_H1H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H2))])
-    #        pp_X_H1H2 = np.array([b_H3_H1H2[i] for i in range(len(b_H3_H1H2))])
-            return mH1_H1H2, pp_X_H1H2
+    elif generalPhysics == 'ppXNPSM':
+        H1H2, H1H1, H2H2 = TRSM.ppXNPSM_massfree(path, axis, axis2, axis3, SM1, SM2, normalizationSM = ggF_xs_SM_Higgs_SM1SM2)
         
-        else: # physics == "ppXSHSM" or physics == "XSHSM"
-#            SM1, SM2 = "bb", "gamgam"
-            b_H1_bb     = np.array([i for i in df["b_H1_" + SM1]])        #"b_H1_bb"
-            b_H1_bb     = b_H1_bb[idx]
-
-            b_H1_gamgam = np.array([i for i in df["b_H1_" + SM2]])        #"b_H1_gamgam"
-            b_H1_gamgam = b_H1_gamgam[idx]
-
-            b_H2_bb     = np.array([i for i in df["b_H2_" + SM1]])        #"b_H2_bb"
-            b_H2_bb     = b_H2_bb[idx]
-
-            b_H2_gamgam = np.array([i for i in df["b_H2_" + SM2]])        #"b_H2_gamgam"
-            b_H2_gamgam = b_H2_gamgam[idx]
-            
-            b_H1H2_bbgamgam = [b_H1_bb_H2_gamgam[i] + b_H1_gamgam_H2_bb[i] for i in range(len(b_H1_bb))]
-            b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
-            b_H1_gamgam_H2_bb = [b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
-
-            if physics == "XSHSM":
-
-                if SMmode == 0:
-                    H1H2 = np.array([b_H1H2_bbgamgam])
-
-                elif SMmode == 1:
-                    H1H2 = np.array([b_H1_bb_H2_gamgam])
-
-                elif SMmode == 2:
-                    H1H2 = np.array([b_H1_gamgam_H2_bb])
-                
-                return mH1_H1H2, H1H2
-
-            elif physics == "ppXSHSM":
-
-                if SMmode == 0:
-                    pp_X_H1H2_bbgamgam = [(b_H1H2_bbgamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H1H2_bbgamgam))]
-                    H1H2 = pp_X_H1H2_bbgamgam
-                    return mH1_H1H2, H1H2
-
-                elif SMmode == 1:
-                    pp_X_H1_bb_H2_gamgam = [b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
-                    H1H2 = pp_X_H1_bb_H2_gamgam
-                    return mH1_H1H2, H1H2
-                    
-                elif SMmode == 2:
-                    pp_X_H1_gamgam_H2_bb = [b_H1_gamgam_H2_bb[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
-                    H1H2 = pp_X_H1_gamgam_H2_bb
-                    return mH1_H1H2, H1H2
-
-                else:
-                    raise Exception('No SMmode chosen in dataGenerator in conditionals ppXSH, ppXSHSM, XSHSM')
-
-            else:
-                raise Exception('No physics chosen in dataGenerator in conditionals ppXSH, ppXSHSM, XSHSM')
-    
-    elif physics == "ppXHH":
-    
-        if BP == "BP2":
-            b_H3_H2H2 = b_H3_H2H2[idx]
-            pp_X_H2H2 = np.array([(b_H3_H2H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H2H2))])
-            return mH1_H1H2, pp_X_H2H2
-
-        elif BP == "BP3":
-            b_H3_H1H1 = b_H3_H1H1[idx]
-            pp_X_H1H1 = np.array([(b_H3_H1H1[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H1))])
-            return mH1_H1H2, pp_X_H1H1
-
-    elif physics == "ppXSS":
-
-        if BP == "BP2":
-            b_H3_H1H1 = b_H3_H1H1[idx]
-            pp_X_H1H1 = np.array([(b_H3_H1H1[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H1))])
-            return mH1_H1H2, pp_X_H1H1
-
-        elif BP == "BP3":
-            b_H3_H2H2 = b_H3_H2H2[idx]
-            pp_X_H2H2 = np.array([(b_H3_H2H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H2H2))])
-            return mH1_H1H2, pp_X_H2H2
-            
     else:
-        raise Exception("No physics chosen")
+        raise Exception('No general physics chosen')
+
+    return H1H2, H1H1, H2H2
+
+
+
+def directorySearcher(relPath, globPathname):
+    ''' 
+    relPath is relative path to directory where glob searches
+    globPathname is the files in globstyle you want the paths to
+
+    returns: relative paths in listPaths
+    '''
+    relListPaths = glob.glob(relPath + '/**/output_*.tsv', recursive = True)
+    return relListPaths
+
+
+
+def parameterPlot(xlist, ylist, xlims, **kwargs):
+
+    if 'ls' in kwargs:
+        ls = kwargs['ls']
+
+    else:
+        ls = 'None'
+    
+    plt.plot(xlist, ylist, marker = '.', linestyle = ls)
+
+    # for observed limits
+    if 'yConst' in kwargs:
+
+        if 'yConstLs' in kwargs:
+            linestyle = kwargs['yConstLs']
+
+        else:
+            ls = 'dashed'
+
+        if 'yConstClr' in kwargs:
+            clr = kwargs['yConstClr']
+
+        else:
+            clr = 'r'
+            
+        plt.axhline(y = kwargs['yConst'], color = clr, linestyle = ls)
+    
+    plt.xlim(xlims)
+
+    if 'ylims' in kwargs:
+        plt.ylim(kwargs['ylims'])
+
+    # for cross-sections
+    if 'yscale' in kwargs:
+
+        if kwargs['yscale'] == 'log':
+            plt.yscale('log')
+
+        else:
+            raise Exception('invalid log scale parameterPlot')
+
+
+# if 'show' in kwargs:
+# 
+    # if kwargs['show'] == True:
+# 
+        # plt.show()
+# 
+    # elif kwargs['show'] == False:
+        # pass
+# 
+    # else:
+        # raise Exception('invalid show value in parameterPlot')
+# 
+# 
+# plt.savefig(saveDir + '/' + name)
+
+def parameterPlotterSoloMain(generalPhysics, axis, xlims, relPath, **kwargs):
+
+    outputPaths = directorySearcher(relPath, '/**/output_*.tsv')
+
+    for path in outputPaths:
+
+        H1H2, H1H1, H2H2 = dataGenerator(generalPhysics, axis, path, **kwargs)
+        
+        xlist_H1H2 = H1H2[0]
+        ylist_H1H2 = H1H2[3]
+        #name_H1H2 = 'H1H2'
+
+        xlist_H1H1 = H1H1[0]
+        ylist_H1H1 = H1H1[3]
+        #name_H1H1 = 'H1H1'
+        
+        xlist_H2H2 = H2H2[0]
+        ylist_H2H2 = H2H2[3]
+        #name_H2H2 = 'H2H2'
+
+        plt.close()
+        parameterPlot(xlist_H1H2, ylist_H1H2, xlims, **kwargs)
+        plt.savefig(os.path.dirname(path) + '/' + 'parameterPlot_H1H2')
+        plt.show()
+        plt.close()
+        
+        parameterPlot(xlist_H1H1, ylist_H1H1, xlims, **kwargs)
+        plt.savefig(os.path.dirname(path) + '/' + 'parameterPlot_H1H1')
+        plt.show()
+        plt.close()
+
+        parameterPlot(xlist_H2H2, ylist_H2H2, xlims, **kwargs)
+        plt.savefig(os.path.dirname(path) + '/' + 'parameterPlot_H2H2')
+        plt.show()
+        plt.close()
+        
+    
+if __name__ == "__main__":
+
+    parameterPlotterSoloMain('ppXNPSM', 'thetahS', (-np.pi/2, np.pi/2), 'test5', SM1 = 'bb', SM2 = 'gamgam')
+
+    
+    
+        
 
     
         

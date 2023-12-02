@@ -98,11 +98,9 @@ def NPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2):
     return H1H2, H1H1, H2H2
 
 
-def ppXNP_massfree(BPdirectory, axes1, axes2, axes3):
+def ppXNP_massfree(BPdirectory, axes1, axes2, axes3, normalizationNP = 31.02 * 10**(-3)):
     
     df = pandas.read_table(BPdirectory, index_col = 0)
-    # PC
-    # df = pandas.read_table ( r"\\wsl.localhost\Ubuntu\home\iram\scannerS\ScannerS-master\build\output_file.tsv" , index_col =0)
     
     mH1_H1H2 = [i for i in df[axes1]]
     mH2_H1H2 = [i for i in df[axes2]]
@@ -116,10 +114,6 @@ def ppXNP_massfree(BPdirectory, axes1, axes2, axes3):
     mH2_H2H2 = mH2_H1H2.copy()
     mH3_H2H2 = mH3_H1H2.copy()
     
-    # mH1_x_H3_gg = mH1_H1H2.copy()
-    # mH2_x_H3_gg = mH2_H1H2.copy()
-    # mH3_x_H3_gg = mH3_H1H2.copy()
-    
     b_H3_H1H2 = [i for i in df["b_H3_H1H2"]]
     b_H3_H1H1 = [i for i in df["b_H3_H1H1"]]
     b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
@@ -129,61 +123,9 @@ def ppXNP_massfree(BPdirectory, axes1, axes2, axes3):
     x_H3_gg_H2H2 = x_H3_gg_H1H2.copy()
     
     
-    # indexDeleteH1H2 = []
-    # for i in range(len(b_H3_H1H2)):
-    #     if b_H3_H1H2[i] <= 0:
-    #         indexDeleteH1H2.append(i)
-    #     else:
-    #         continue
-    # indexDeleteH1H1 = []
-    # for i in range(len(b_H3_H1H1)):
-    #     if b_H3_H1H1[i] <= 0:
-    #         indexDeleteH1H1.append(i)
-    #     else:
-    #         continue
-    # indexDeleteH2H2 = []
-    # for i in range(len(b_H3_H2H2)):
-    #     if b_H3_H2H2[i] <= 0:
-    #         indexDeleteH2H2.append(i)
-    #     else:
-    #         continue
-########################################################
-    # indexDeletex_H3_gg = []
-    # for i in range(len(x_H3_gg)):
-    #     if x_H3_gg[i] <= 0:
-    #         indexDeletex_H3_gg.append(i)
-    #     else:
-    #         continue
-    
-    # code from stackexchange:
-    # for i in sorted(indexDeleteH1H2, reverse=True):
-    #     del mH1_H1H2[i]
-    #     del mH2_H1H2[i]
-    #     del mH3_H1H2[i]
-    #     del b_H3_H1H2[i]
-    #     del x_H3_gg_H1H2[i]
-    # for i in sorted(indexDeleteH1H1, reverse=True):
-    #     del mH1_H1H1[i]
-    #     del mH2_H1H1[i]
-    #     del mH3_H1H1[i]
-    #     del b_H3_H1H1[i]
-    #     del x_H3_gg_H1H1[i]
-    # for i in sorted(indexDeleteH2H2, reverse=True):
-    #     del mH1_H2H2[i]
-    #     del mH2_H2H2[i]
-    #     del mH3_H2H2[i]
-    #     del b_H3_H2H2[i]
-    #     del x_H3_gg_H2H2[i]
-########################################################
-    # for i in sorted(indexDeletex_H3_gg, reverse=True):
-    #     del mH1_x_H3_gg[i]
-    #     del mH2_x_H3_gg[i]
-    #     del mH3_x_H3_gg[i]
-    #     del x_H3_gg[i]
-    
     # rescaled SM dihiggs cross-section (ggF):
     # https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
-    ggF_xs_SM_Higgs = 31.02 * 10**(-3)
+    ggF_xs_SM_Higgs = normalizationNP
     
     # rescaled cross-section
     pp_X_H1H2 = [(b_H3_H1H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
@@ -194,32 +136,13 @@ def ppXNP_massfree(BPdirectory, axes1, axes2, axes3):
     
     pp_X_H2H2 = [(b_H3_H2H2[i] * x_H3_gg_H2H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H2H2))]
     H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, b_H3_H2H2, pp_X_H2H2])
-    
-    # cross-section
-    # pp_X_H1H2 = [(b_H3_H1H2[i] * x_H3_gg_H1H2[i]) for i in range(len(b_H3_H1H2))]
-    # H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, b_H3_H1H2, pp_X_H1H2])
-    
-    # pp_X_H1H1 = [(b_H3_H1H1[i] * x_H3_gg_H1H1[i]) for i in range(len(b_H3_H1H1))]
-    # H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, b_H3_H1H1, pp_X_H1H1])
-    
-    # pp_X_H2H2 = [(b_H3_H2H2[i] * x_H3_gg_H2H2[i]) for i in range(len(b_H3_H2H2))]
-    # H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, b_H3_H2H2, pp_X_H2H2])
-    
-    
-    # pp_X_H1H2 = [(b_H3_H1H2[i]) for i in range(len(b_H3_H1H2))]
-    # H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, b_H3_H1H2, pp_X_H1H2])
-    
-    # pp_X_H1H1 = [(b_H3_H1H1[i]) for i in range(len(b_H3_H1H1))]
-    # H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, b_H3_H1H1, pp_X_H1H1])
-    
-    # pp_X_H2H2 = [(b_H3_H2H2[i]) for i in range(len(b_H3_H2H2))]
-    # H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, b_H3_H2H2, pp_X_H2H2])
+
     
     return H1H2, H1H1, H2H2
 
 
 
-def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalization = (31.02 * 10**(-3)) * 0.0026):
+def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026):
     df = pandas.read_table(BPdirectory)#, index_col = 0)
     # PC
     # df = pandas.read_table ( r"\\wsl.localhost\Ubuntu\home\iram\scannerS\ScannerS-master\build\output_file.tsv" , index_col =0)
@@ -273,7 +196,7 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalization =
     b_H2H2_bbgamgam = [b_H2_bb[i] * b_H2_gamgam[i] for i in range(len(b_H2_bb))]
     
     
-    ggF_bbgamgam_xs_SM_Higgs = normalization
+    ggF_bbgamgam_xs_SM_Higgs = normalizationSM
     # bbgamgam BR: https://inspirehep.net/files/a34811e0b9462ca5900081ffe6c92bdb
     # ggF XS: https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
     # ggF_bbgamgam_xs_SM_Higgs = (31.02 * 10**(-3)) * 0.0026  

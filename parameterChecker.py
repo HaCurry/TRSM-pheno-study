@@ -17,8 +17,8 @@ import datetime
 import multiprocessing
 import sys
 import glob
-
-targetDir = 'test6'
+"""
+targetDir = 'test5'
 test = os.listdir(targetDir)
 # print(test)
 # for i in test:
@@ -29,15 +29,18 @@ test = os.listdir(targetDir)
 test2 = glob.glob(targetDir + '/**/output_*.tsv', recursive = True)
 test3 = glob.glob(targetDir + '/**/config_*.ts', recursive = True)
 
+print(type(test2[2]))
 for i in test2:
-    print(i)
+    print(i, os.path.dirname(i))
 
 print('===============================')
 
-for i in test3:
-    print(i)
+# for i in test3:
+    # print(i)
 
+"""
 
+plt.close()
 
 
 
