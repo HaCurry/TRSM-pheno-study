@@ -166,41 +166,136 @@ def parameterPlot(xlist, ylist, xlims, **kwargs):
 # 
 # plt.savefig(saveDir + '/' + name)
 
-def parameterPlotterSoloMain(generalPhysics, axis, xlims, relPath, **kwargs):
+def sorter(xlist, ylist):
+    '''
+    Sort xlist first in terms of magnitude. Then sort ylist according to the sorting of xlist.
+    returns sorted xlist and ylist as np.arrays
+    '''
+
+    xlist = np.array(xlist)
+    ylist = np.array(ylist)
+    idx = np.argsort(xlist)
+    xlist = xlist[idx]
+    ylist = ylist[idx]
+    
+    return xlist, ylist
+
+
+
+def definer(generalPhysics, axis, path, sort, **kwargs):
+    '''
+    produces all the list elements in a nice format
+    '''
+
+    # user decides the desired decay mode           (S -> bb, H -> gamgam) or (H -> bb, S -> gamgam)
+    # default is set to both decay modes summed     (S -> bb, H -> gamgam) + (H -> bb, S -> gamgam)
+    if generalPhysics == 'ppXNPSM':
+
+        if 'modeSM' in kwargs:
+            modeSM = kwargs['modeSM']
+
+        else:
+            modeSM = 3
+
+    H1H2, H1H1, H2H2 = dataGenerator(generalPhysics, axis, path, **kwargs)
+
+    xlist_H1H2 = H1H2[0]
+    ylist_H1H2 = H1H2[modeSM]
+    #name_H1H2 = 'H1H2'
+
+    xlist_H1H1 = H1H1[0]
+    ylist_H1H1 = H1H1[3]
+    #name_H1H1 = 'H1H1'
+
+    xlist_H2H2 = H2H2[0]
+    ylist_H2H2 = H2H2[3]
+    #name_H2H2 = 'H2H2'
+
+    return (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2)
+                
+
+
+def parameterPlotterSolo(generalPhysics, axis, xlims, relPath, **kwargs):
 
     outputPaths = directorySearcher(relPath, '/**/output_*.tsv')
 
-    for path in outputPaths:
+    H1H2 = []
+    H1H1 = []
+    H2H2 = []
 
-        H1H2, H1H1, H2H2 = dataGenerator(generalPhysics, axis, path, **kwargs)
-        
-        xlist_H1H2 = H1H2[0]
-        ylist_H1H2 = H1H2[3]
-        #name_H1H2 = 'H1H2'
+    if 'solo' in kwargs:
 
-        xlist_H1H1 = H1H1[0]
-        ylist_H1H1 = H1H1[3]
-        #name_H1H1 = 'H1H1'
-        
-        xlist_H2H2 = H2H2[0]
-        ylist_H2H2 = H2H2[3]
-        #name_H2H2 = 'H2H2'
+        if kwargs['solo'] == True:
+            for path in outputPaths:
 
-        plt.close()
-        parameterPlot(xlist_H1H2, ylist_H1H2, xlims, **kwargs)
-        plt.savefig(os.path.dirname(path) + '/' + 'parameterPlot_H1H2')
-        plt.show()
-        plt.close()
-        
-        parameterPlot(xlist_H1H1, ylist_H1H1, xlims, **kwargs)
-        plt.savefig(os.path.dirname(path) + '/' + 'parameterPlot_H1H1')
-        plt.show()
-        plt.close()
+                # returns lists in nice format
+                (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = definer(generalPhysics, axis, path, sort, **kwargs)
 
-        parameterPlot(xlist_H2H2, ylist_H2H2, xlims, **kwargs)
-        plt.savefig(os.path.dirname(path) + '/' + 'parameterPlot_H2H2')
-        plt.show()
-        plt.close()
+                # sort according to xlist
+                (xlist_H1H2, ylist_H1H2) = sorter(xlist_H1H2, ylist_H1H2)
+                (xlist_H1H1, ylist_H1H1) = sorter(xlist_H1H1, ylist_H1H1)
+                (xlist_H2H2, ylist_H2H2) = sorter(xlist_H2H2, ylist_H2H2)
+                
+                
+                plt.close()
+                parameterPlot(xlist_H1H2, ylist_H1H2, xlims, **kwargs)
+                filename_H1H2 = os.path.dirname(path) + '/' + generalPhysics + '_solo_parameterPlot_H1H2'
+                plt.title(filename_H1H2)
+                plt.savefig(filename)
+                plt.show()
+                plt.close()
+                
+                parameterPlot(xlist_H1H1, ylist_H1H1, xlims, **kwargs)
+                filename_H1H1 = os.path.dirname(path) + '/' + generalPhysics + '_solo_parameterPlot_H1H1'
+                plt.title(filename_H1H1)
+                plt.savefig(filename_H1H1)
+                plt.show()
+                plt.close()
+
+                parameterPlot(xlist_H2H2, ylist_H2H2, xlims, **kwargs)
+                filename_H2H2 = os.path.dirname(path) + '/' + generalPhysics + '_solo_parameterPlot_H2H2'
+                plt.title(filename_H2H2)
+                plt.savefig(filename_H2H2)
+                plt.show()
+                plt.close()
+
+                H1H2.append((xlist_H1H2, ylist_H1H2))
+                H1H1.append((xlist_H1H1, ylist_H1H1))
+                H2H2.append((xlist_H2H2, ylist_H2H2))
+
+        elif kwargs['solo'] == False:
+            pass
+
+        else:
+            raise Exception('solo set to invalid value')
+
+    if 'together' in kwargs:
+
+        if kwargs['together'] == True:
+
+            def togetherPlot(iterable, xlims, relPath, filename, generalPhysics, **kwargs):
+            
+                plt.close()
+                for x, y in iterable:
+                    parameterPlot(x,y, xlims, **kwargs)
+
+                filename_H1H2 = relPath + '/' + generalPhysics + filename
+            plt.title(filename_H1H2)
+            plt.savefig(relPath)
+            
+
+                
+
+        elif kwargs['together'] == False:
+
+            # if both solo and togher set to false then script is not doing anythying
+            if kwargs['solo'] == False:
+                raise Exception('Both solo and together set to False. Script doing nothing')
+            # otherwise just continue
+            pass
+
+        else:
+            raise Exception('together set to invalid value')
         
     
 if __name__ == "__main__":
