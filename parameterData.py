@@ -17,6 +17,7 @@ import datetime
 import multiprocessing
 import sys
 import json
+import copy
 
 
 
@@ -45,6 +46,7 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
         
     else:
         programParametersDict = {
+            'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply',
             'mHa_lb': 80, 'mHa_ub': 80, 'mHb_lb': 125.09, 'mHb_ub': 125.09, 'mHc_lb': 375, 'mHc_ub': 375,
             'ths_lb': 1.352, 'ths_ub': 1.352, 'thx_lb': 1.175, 'thx_ub': 1.175, 'tsx_lb': -0.407, 'tsx_ub': -0.407,
             'vs_lb': 120, 'vs_ub': 120, 'vx_lb': 890, 'vx_ub': 890,
@@ -55,13 +57,15 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
         
         if kwargs['BP'] == 'BP2':
             programParametersDict = {
+                'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply',
                 'mHa_lb': 80, 'mHa_ub': 80, 'mHb_lb': 125.09, 'mHb_ub': 125.09, 'mHc_lb': 375, 'mHc_ub': 375,
                 'ths_lb': 1.352, 'ths_ub': 1.352, 'thx_lb': 1.175, 'thx_ub': 1.175, 'tsx_lb': -0.407, 'tsx_ub': -0.407,
                 'vs_lb': 120, 'vs_ub': 120, 'vx_lb': 890, 'vx_ub': 890,
                 }
         
         elif kwargs['BP'] == 'BP3':
-            programParametersDict = { 
+            programParametersDict = {
+                'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply', 
                 "mHa_lb": 125.09, "mHa_ub": 125.09, "mHb_lb": 200, "mHb_ub": 200, "mHc_lb": 400, "mHc_ub": 400, 
                 "ths_lb": -0.129, "ths_ub": -0.129, "thx_lb": 0.226, "thx_ub": 0.226, "tsx_lb": -0.899, "tsx_ub": -0.899, 
                 "vs_lb": 140, "vs_ub": 140, "vx_lb": 100, "vx_ub": 100, 
@@ -93,17 +97,11 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
 
 
 
-def createJSON(programParametersDict, programConstraints, paramFree, dataId, paths, filename):
+def createJSON(programParametersDict, path, filename):
 
-    dictJSON = {}
-    dictJSON['programParametersDict'] = programParametersDict
-    dictJSON['programConstraints'] = programConstraints
-    dictJSON['free'] = paramFree
-    dictJSON['dataId'] = dataId
-    dictJSON['paths'] = paths
-
-    with open('filename', 'w') as f:
-        json.dump(dictJSON, f)
+    dictJSON = programParametersDict
+    with open(path + '/' + filename, 'w') as f:
+        json.dump(dictJSON, f, indent = 4)
 
 
 
@@ -188,19 +186,30 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
     else:
         raise Exception('error occurred in createDir in param')
 
-
+    # for .ini (config) file
     config = configparser.ConfigParser()
 
-    config['DEFAULT'] = {'bfb': 'apply',
-                         'uni': 'apply',
-                         'stu': 'apply',
-                         'Higgs': 'apply'}
+    # used to save programParametersDict (and additional stuff) to JSON later
+    # deepcopy used so that eg. elements of the dictionary is also copied.
+    save2JSON = copy.deepcopy(programParametersDict)
+    
+    # set constraints
+    config['DEFAULT'] = {
+                        'bfb': str(programParametersDict['bfb']),
+                        'uni': str(programParametersDict['uni']),
+                        'stu': str(programParametersDict['stu']),
+                        'Higgs': str(programParametersDict['Higgs'])
+                         }  
 
+    # set parameters in .ini (config)
+    # save the free parameter values to programParametersDict
     config['scan'] = {'mHa': str(programParametersDict['mHa_lb']) + ' ' + str(programParametersDict['mHa_ub']),
                       'mHb': str(programParametersDict['mHb_lb']) + ' ' + str(programParametersDict['mHb_ub']),
                       'mHc': str(programParametersDict['mHc_lb']) + ' ' + str(programParametersDict['mHc_ub'])}
                       
     if paramFree == 'ths':
+        save2JSON['ths_lb'], save2JSON['ths_ub'] = -np.pi/2, np.pi/2
+        
         config['scan']['t1'] = str(-np.pi/2) + ' ' + str(np.pi/2)
         config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
         config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
@@ -209,6 +218,8 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
         config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
 
     elif paramFree == 'thx':
+        save2JSON['thx_lb'], save2JSON['thx_ub'] = -np.pi/2, np.pi/2
+        
         config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
         config['scan']['t2'] = str(-np.pi/2) + ' ' + str(np.pi/2)
         config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
@@ -217,6 +228,8 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
         config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
 
     elif paramFree == 'tsx':
+        save2JSON['tsx_lb'], save2JSON['tsx_ub'] = -np.pi/2, np.pi/2
+        
         config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
         config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
         config['scan']['t3'] = str(-np.pi/2) + ' ' + str(np.pi/2)
@@ -225,6 +238,8 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
         config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
     
     elif paramFree == 'vs':
+        save2JSON['vs_lb'], save2JSON['vs_ub'] = 1, 1000
+        
         config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
         config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
         config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
@@ -233,23 +248,54 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
         config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
 
     elif paramFree == 'vx':
+        save2JSON['vx_lb'], save2JSON['vx_ub'] = 1, 1000
+    
         config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
         config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
         config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
+
         config['scan']['vs'] = str(programParametersDict['vs_lb']) + ' ' + str(programParametersDict['vs_ub'])
         config['scan']['vx'] = '1 1000'
+
+    # if paramFree is set to None, then all parameters are fixed according to the user given parameters.
+    elif paramFree == 'None':
+        config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
+        config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
+        config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
+
+        config['scan']['vs'] = str(programParametersDict['vs_lb']) + ' ' + str(programParametersDict['vs_ub'])
+        config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
         
     else:
         raise Exception('No paramFree chosen in function vev')
-    
+
+    # define the paths to .ini (config) file and .tsv (output) file
     configDir = paramDir + '/' + 'config_' + paramFree + '_' + dataId + '.ini'
+    outputDir = paramDir + '/' + 'output_' + paramFree + '_' + dataId + '.tsv'
     
+    # save .ini (config) file to the directory paramDir
     with open(configDir, 'w') as configfile:
         config.write(configfile)
-    
+
+    # save programParametersDict as JSON in the directory paramDir and add the paths of the config and output to the JSON
+    if 'extra' in save2JSON:
+        pass
+    else:
+        save2JSON['extra'] = {}
+
+    # additional metadata saved to programParametersDict and then converted to a JSON file in the directory paramDir
+    save2JSON['extra']['path2output'] = outputDir
+    save2JSON['extra']['path2config'] = configDir
+    createJSON(save2JSON, paramDir, 'settings_' + paramFree + '_' + dataId + '.json')
+
+    # delete dictionary so no conflict is caused for future or concurrent runs
+    del save2JSON 
+
+    # redefine the config and output files for running in current working directory (see cwd in subprocess.run below)
     configDir = 'config_' + paramFree + '_' + dataId + '.ini'
     outputDir = 'output_' + paramFree + '_' + dataId + '.tsv'
-    
+
+    # conditional for the appropriate relative path to the executable TRSMBroken
     if createDir == True:
         runTRSM = ['../../../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
 
@@ -259,44 +305,40 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
     else:
         raise Exception('createDir is not working in runTRSM')
 
+    # run TRSMBroken executable
     try:
 
         shell_output = subprocess.run(runTRSM, timeout = 180, capture_output = True, cwd = paramDir)
         shell_output = shell_output.stdout.decode('utf-8')
         shell_output_short = (shell_output.splitlines())[-17:]
-        
+
+        # print the important part of the shell output as .txt if shortLog == True
         if shortLog == True:
             
             for line in shell_output_short:
                 print(line)
-        
+
+        # save the full shell output as .txt
         with open(paramDir + '/' 'full_log_' + paramFree + '_' + dataId + '.txt', 'w') as text_file:
             text_file.write(shell_output)
-        
-#        shell_output = shell_output.splitlines()
 
+        # save the important part of the shell output as .txt
         with open(paramDir + '/' + 'short_log_' + paramFree + '_' + dataId + '.txt', 'w') as text_file:
             
             for line in shell_output_short:
                 text_file.write(line + '\n')
-                
+
+    # if TRSMBroken executable does not find points within 180 seconds, timeout and save the dud point
     except subprocess.TimeoutExpired:
 
         print('Process timed out for taking too long. ')
 #        Write down faulty point in duds.txt
         # with open(targetDir + '/' + 'duds.txt', 'a') as dud:
             # dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
+        # saves the dud point
         with open(targetDir + '/' + dataId + '_' + paramFree + '_' + str(datetime.datetime.now()) + '.txt', 'a') as dud:
             dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
 
-    # paths = {}
-    # paths['config'] = paramDir + '/' + configDir
-    # paths['output'] = paramDir + '/' + outputDir
-    # paths['directory'] = paramDir
-    # programConstraints = config['DEFAULT']
-    # filename = paramDir + '/' + 'settings_' + paramFree + dataId + '.json'
-    # 
-    # createJSON(programParametersDict, programConstraints, paramFree, dataId, paths, filename)
 
 
 def parameterMain(listUserParametersDict, targetDir, **kwargs):
@@ -327,6 +369,8 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
         param(programParametersDict, targetDir, dataId, 'vs', **kwargs)
         param(programParametersDict, targetDir, dataId, 'vx', **kwargs)
 
+        param(programParametersDict, targetDir, dataId, 'None', **kwargs)
+
         print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
         loadingstep = loadingstep + 1
     
@@ -343,7 +387,7 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
 
 def mProcWrapper(userParametersDict, dataId, mprocBP, targetDir, mprocPoints):
 
-#        reformats user given dictionary to usable format for param
+    # reformats user given dictionary to usable format for param
     programParametersDict = repackingProgramParamDict(userParametersDict, BP = mprocBP, points = mprocPoints)
 
     param(programParametersDict, targetDir, dataId, 'ths', BP = mprocBP, points = mprocPoints)
@@ -352,9 +396,8 @@ def mProcWrapper(userParametersDict, dataId, mprocBP, targetDir, mprocPoints):
     
     param(programParametersDict, targetDir, dataId, 'vs',  BP = mprocBP, points = mprocPoints)
     param(programParametersDict, targetDir, dataId, 'vx',  BP = mprocBP, points = mprocPoints)
-
-    # print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
-    # loadingstep = loadingstep + 1
+    
+    param(programParametersDict, targetDir, dataId, 'None',BP = mprocBP, points = 5) # could set points = 1 as it seems the values in the outputs are identical (?)
 
 
 
@@ -386,7 +429,6 @@ def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints):
 
     except KeyboardInterrupt:
         # code from StackExchange: https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool
-        # **** THIS PART NEVER EXECUTES. ****
         pool.terminate()
         print('You cancelled the script!')
         sys.exit('Script exiting')
@@ -413,7 +455,7 @@ if __name__ == '__main__':
     mx_BP2 = df2['mx_BP2']
     limit_obs_BP2 = df2['limit_obs_BP2']
 
-    BP2_dictPointlistAtlas = [{ "ms": ms_BP2[i], "mx": mx_BP2[i]} for i in  range(len(ms_BP2))]
+    BP2_dictPointlistAtlas = [{'bfb': 0, 'stu': 0, "ms": ms_BP2[i], "mx": mx_BP2[i], 'extra': {'ObservedLimit': 10**(-3) * limit_obs_BP2[i]} } for i in  range(len(ms_BP2))]
     
     # BP2 settings: 
     programParametersDictBP2 = { 
@@ -442,7 +484,7 @@ if __name__ == '__main__':
     # parameterMain(BP2_dictPointlistAtlas[0:3], 'test3', points = 100, BP = 'BP2')
     # 
 
-    mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'ATLAS2023_BP2_prel', 100)
+    mProcParameterMain(BP2_dictPointlistAtlas[0:2], 'BP2', 'ATLAS2023_BP2_prel', 100)
 
 
 
