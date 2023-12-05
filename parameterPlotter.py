@@ -112,7 +112,7 @@ def directorySearcher(relPath, globPathname):
 def auxSoloPlot(xlims, ylims, path, filename_H1H2, **kwargs):
     '''
     Plots and saves figure in the ranges xlims and ylims.
-
+    
     path. string. directory to save figure. Saves the plot in the directory path.
 
     filename. name of the file. Saves the figure with file name filename.
@@ -191,6 +191,7 @@ def auxSoloPlot(xlims, ylims, path, filename_H1H2, **kwargs):
         plt.close()
 
 
+
 def sorter(xlist, ylist):
     '''
     Sort xlist first in terms of magnitude. Then sort ylist according to the sorting of xlist.
@@ -209,7 +210,7 @@ def sorter(xlist, ylist):
 
 def definer(generalPhysics, axis, path, **kwargs):
     '''
-    produces all the list elements in a nice format
+    produces all list elements from dataGenerator in a nice format
     '''
 
     # user decides the desired decay mode           (S -> bb, H -> gamgam) or (H -> bb, S -> gamgam)
@@ -237,7 +238,7 @@ def definer(generalPhysics, axis, path, **kwargs):
     #name_H2H2 = 'H2H2'
 
     return (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2)
-                
+
 
 
 def parameterPlotterSolo(relPath, generalPhysics, axis, xlims, ylims, **kwargs):
