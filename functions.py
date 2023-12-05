@@ -15,6 +15,33 @@ from scipy.interpolate import CubicSpline
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
 from numpy import ma
 
+
+def massAndBrs(dataFrame, axes1, axes2, axes3):
+
+    mH1_H1H2 = [i for i in dataFrame[axes1]]
+    mH2_H1H2 = [i for i in dataFrame[axes2]]
+    mH3_H1H2 = [i for i in dataFrame[axes3]]
+    
+    mH1_H1H1 = mH1_H1H2.copy()
+    mH2_H1H1 = mH2_H1H2.copy()
+    mH3_H1H1 = mH3_H1H2.copy()
+    
+    mH1_H2H2 = mH1_H1H2.copy()
+    mH2_H2H2 = mH2_H1H2.copy()
+    mH3_H2H2 = mH3_H1H2.copy()
+
+    massH1H2 = [mH1_H1H2, mH2_H1H2, mH3_H1H2]
+    massH1H1 = [mH1_H1H1, mH2_H1H1, mH3_H1H1]
+    massH2H2 = [mH1_H2H2, mH2_H2H2, mH3_H2H2]
+    
+    b_H3_H1H2 = [i for i in dataFrame["b_H3_H1H2"]]
+    b_H3_H1H1 = [i for i in dataFrame["b_H3_H1H1"]]
+    b_H3_H2H2 = [i for i in dataFrame["b_H3_H2H2"]]
+
+    return massH1H2, massH1H1, massH2H2, b_H3_H1H2, b_H3_H1H1, b_H3_H2H2
+
+
+
 def XNP_massfree(BPdirectory, axes1, axes2, axes3):
     
     df = pandas.read_table(BPdirectory, index_col = 0)
