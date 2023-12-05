@@ -98,14 +98,46 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
 
 
 def createJSON(programParametersDict, path, filename):
+    '''
+    create JSON file from the given input dictionary programParametersDict.
 
+    programParametersDict dict. dictionary which is converted to JSON.
+    path string. directory where the json file is saved
+    filename string. name of the JSON file (needs to end with .JSON)
+    '''
     dictJSON = programParametersDict
     with open(path + '/' + filename, 'w') as f:
         json.dump(dictJSON, f, indent = 4)
 
 
 
-def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
+def checkCreator(configDir, inputDict, points):
+    '''
+    Used for when scannerSmode == 'check' to create an input .tsv file for checking.
+
+    configDir string. name of .tsv file (needs to end with .tsv)
+    inputDict dict. dictionary with input settings.
+    points int/float. used for the number of rows in the .tsv file (created by using linspace).
+    returns nothing.
+    '''
+    mH1 = np.linspace(inputDict['mHa_lb'], inputDict['mHa_ub'], num = points)
+    mH2 = np.linspace(inputDict['mHb_lb'], inputDict['mHb_ub'], num = points)
+    mH3 = np.linspace(inputDict['mHc_lb'], inputDict['mHc_ub'], num = points)
+    thetahS = np.linspace(inputDict['ths_lb'], inputDict['ths_ub'], num = points)
+    thetahX = np.linspace(inputDict['thx_lb'], inputDict['thx_ub'], num = points)
+    thetaSX = np.linspace(inputDict['tsx_lb'], inputDict['tsx_ub'], num = points)
+    vs = np.linspace(inputDict['vs_lb'], inputDict['vs_ub'], num = points)
+    vx = np.linspace(inputDict['vx_lb'], inputDict['vx_ub'], num = points)
+    
+    pandasDict = {'mH1': mH1, 'mH2': mH2, 'mH3': mH3, 'thetahS': thetahS, 'thetahX': thetahX, 'thetaSX': thetaSX, 'vs': vs, 'vx': vx}
+
+    df = pandas.DataFrame(data = pandasDict, dtype = np.float64)
+
+    df.to_csv(configDir, sep = "\t")
+
+
+
+def param(programParametersDict, targetDir, dataId, paramFree, scannerSmode, **kwargs):
 
     ########################    kwargs    ########################
 
@@ -270,13 +302,62 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
         raise Exception('No paramFree chosen in function vev')
 
     # define the paths to .ini (config) file and .tsv (output) file
-    configDir = paramDir + '/' + 'config_' + paramFree + '_' + dataId + '.ini'
-    outputDir = paramDir + '/' + 'output_' + paramFree + '_' + dataId + '.tsv'
-    
-    # save .ini (config) file to the directory paramDir
-    with open(configDir, 'w') as configfile:
-        config.write(configfile)
+    # configDir = paramDir + '/' + 'config_' + paramFree + '_' + dataId + '.ini'
+    # outputDir = paramDir + '/' + 'output_' + paramFree + '_' + dataId + '.tsv'
 
+    # either randomly generate points within freeParam interval (scan) or...
+    if scannerSmode == 'scan':
+
+        # save .ini (config) file to the directory paramDir
+        configDir = paramDir + '/' + 'configScan_' + paramFree + '_' + dataId + '.ini'
+        with open(configDir, 'w') as configfile:
+            config.write(configfile)
+
+        # (re)define the config and output files for running in current working directory (see cwd in subprocess.run below)
+        configDir = 'configScan_' + paramFree + '_' + dataId + '.ini'
+        outputDir = 'outputScan_' + paramFree + '_' + dataId + '.tsv'
+
+        # conditional for the appropriate relative path to the executable TRSMBroken
+        if createDir == True:
+            runTRSM = ['../../../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
+
+        elif CreateDir == False:
+            runTRSM = ['../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
+
+        else:
+            raise Exception('createDir is not working in runTRSM')
+
+        # for length of shell output
+        loglines = -17
+
+    # ...generate a constantly spaced number of points in the paramFree interval (interval hardcoded into the script)
+    elif scannerSmode == 'check':
+
+        # save .tsv (config) file to the directory paramDir
+        configDir = paramDir + '/' + 'configCheck_' + paramFree + '_' + dataId + '.tsv'
+        checkCreator(configDir, save2JSON, points)
+
+        # (re)define the config and output files for running in current working directory (see cwd in subprocess.run below)
+        configDir = 'configCheck_' + paramFree + '_' + dataId + '.tsv'
+        outputDir = 'outputCheck_' + paramFree + '_' + dataId + '.tsv'
+
+        
+        # conditional for the appropriate relative path to the executable TRSMBroken
+        if createDir == True:
+            runTRSM = ['../../../../TRSMBroken', outputDir, 'check', configDir]
+
+        elif CreateDir == False:
+            runTRSM = ['../../TRSMBroken', outputDir, 'check', configDir]
+
+        else:
+            raise Exception('createDir is not working in runTRSM')
+
+        # for length of shell output
+        loglines = -9
+
+    else:
+        raise Exception('scannerSmode not given or invalid value (allowed \'scan\' or \'check\')')
+    
     # save programParametersDict as JSON in the directory paramDir and add the paths of the config and output to the JSON
     if 'extra' in save2JSON:
         pass
@@ -286,31 +367,18 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
     # additional metadata saved to programParametersDict and then converted to a JSON file in the directory paramDir
     save2JSON['extra']['path2output'] = outputDir
     save2JSON['extra']['path2config'] = configDir
+    save2JSON['extra']['points'] = points
+    save2JSON['extra']['scannerSmode'] = scannerSmode
     createJSON(save2JSON, paramDir, 'settings_' + paramFree + '_' + dataId + '.json')
-
     # delete dictionary so no conflict is caused for future or concurrent runs
     del save2JSON 
-
-    # redefine the config and output files for running in current working directory (see cwd in subprocess.run below)
-    configDir = 'config_' + paramFree + '_' + dataId + '.ini'
-    outputDir = 'output_' + paramFree + '_' + dataId + '.tsv'
-
-    # conditional for the appropriate relative path to the executable TRSMBroken
-    if createDir == True:
-        runTRSM = ['../../../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
-
-    elif CreateDir == False:
-        runTRSM = ['../../TRSMBroken', outputDir, '--config', configDir, 'scan', '-n', str(points)]
-
-    else:
-        raise Exception('createDir is not working in runTRSM')
 
     # run TRSMBroken executable
     try:
 
         shell_output = subprocess.run(runTRSM, timeout = 180, capture_output = True, cwd = paramDir)
         shell_output = shell_output.stdout.decode('utf-8')
-        shell_output_short = (shell_output.splitlines())[-17:]
+        shell_output_short = (shell_output.splitlines())[loglines:]
 
         # print the important part of the shell output as .txt if shortLog == True
         if shortLog == True:
@@ -341,13 +409,15 @@ def param(programParametersDict, targetDir, dataId, paramFree, **kwargs):
 
 
 
-def parameterMain(listUserParametersDict, targetDir, **kwargs):
+def parameterMain(listUserParametersDict, targetDir, scannerSmode, **kwargs):
     '''Main function'''
 
     startTime = str(datetime.datetime.now())
     
     print('+---------------+')
     print(' Starting script')
+    print('+---------------+')
+    print(scannerSmode.center(17))
     print('+---------------+')
     
     loading = len(listUserParametersDict)
@@ -362,14 +432,14 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
 #        reformats user given dictionary to usable format for param
         programParametersDict = repackingProgramParamDict(userParametersDict, **kwargs)
 
-        param(programParametersDict, targetDir, dataId, 'ths', **kwargs)
-        param(programParametersDict, targetDir, dataId, 'thx', **kwargs)
-        param(programParametersDict, targetDir, dataId, 'tsx', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'ths', scannerSmode, **kwargs)
+        param(programParametersDict, targetDir, dataId, 'thx', scannerSmode, **kwargs)
+        param(programParametersDict, targetDir, dataId, 'tsx', scannerSmode, **kwargs)
         
-        param(programParametersDict, targetDir, dataId, 'vs', **kwargs)
-        param(programParametersDict, targetDir, dataId, 'vx', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'vs', scannerSmode, **kwargs)
+        param(programParametersDict, targetDir, dataId, 'vx', scannerSmode, **kwargs)
 
-        param(programParametersDict, targetDir, dataId, 'None', **kwargs)
+        param(programParametersDict, targetDir, dataId, 'None', scannerSmode, **kwargs)
 
         print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
         loadingstep = loadingstep + 1
@@ -385,23 +455,23 @@ def parameterMain(listUserParametersDict, targetDir, **kwargs):
 
 
 
-def mProcWrapper(userParametersDict, dataId, mprocBP, targetDir, mprocPoints):
+def mProcWrapper(userParametersDict, dataId, mprocBP, targetDir, mprocPoints, scannerSmode):
 
     # reformats user given dictionary to usable format for param
     programParametersDict = repackingProgramParamDict(userParametersDict, BP = mprocBP, points = mprocPoints)
 
-    param(programParametersDict, targetDir, dataId, 'ths', BP = mprocBP, points = mprocPoints)
-    param(programParametersDict, targetDir, dataId, 'thx', BP = mprocBP, points = mprocPoints)
-    param(programParametersDict, targetDir, dataId, 'tsx', BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'ths', scannerSmode, BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'thx', scannerSmode, BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'tsx', scannerSmode, BP = mprocBP, points = mprocPoints)
     
-    param(programParametersDict, targetDir, dataId, 'vs',  BP = mprocBP, points = mprocPoints)
-    param(programParametersDict, targetDir, dataId, 'vx',  BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'vs', scannerSmode,  BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, dataId, 'vx', scannerSmode,  BP = mprocBP, points = mprocPoints)
     
-    param(programParametersDict, targetDir, dataId, 'None',BP = mprocBP, points = 5) # could set points = 1 as it seems the values in the outputs are identical (?)
+    param(programParametersDict, targetDir, dataId, 'None',scannerSmode, BP = mprocBP, points = 5) # could set points = 1 as it seems the values in the outputs are identical (?)
 
 
 
-def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints):
+def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode):
     '''Main function (multiprocessing)'''
 
     dataIdList = [paramDirCreator(listUserParametersDict[i], targetDir) for i in range(len(listUserParametersDict))]
@@ -415,17 +485,19 @@ def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints):
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
     print(' Starting script (multiprocessing)')
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
-
+    print(scannerSmode.center(35))
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    
     # for userParametersDict in listUserParametersDict:
         # starmapIter.append( (userParametersDict, BP, targetDir, mprocMainPoints) )
     
-    starmapIter = [(listUserParametersDict[i], dataIdList[i], BP, targetDir, mprocMainPoints) for i in range(len(listUserParametersDict))]
+    starmapIter = [(listUserParametersDict[i], dataIdList[i], BP, targetDir, mprocMainPoints, scannerSmode) for i in range(len(listUserParametersDict))]
     
     pool = multiprocessing.Pool()
 
     try:
         pool.starmap(mProcWrapper, starmapIter)
-        
+        # pool.terminate()
 
     except KeyboardInterrupt:
         # code from StackExchange: https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool
@@ -484,9 +556,10 @@ if __name__ == '__main__':
     # parameterMain(BP2_dictPointlistAtlas[0:3], 'test3', points = 100, BP = 'BP2')
     # 
 
-    mProcParameterMain(BP2_dictPointlistAtlas[0:2], 'BP2', 'ATLAS2023_BP2_prel', 100)
+    mProcParameterMain(BP2_dictPointlistAtlas[0:2], 'BP2', 'ATLAS2023_BP2_prel_scan', 100, 'scan')
+    mProcParameterMain(BP2_dictPointlistAtlas[0:2], 'BP2', 'ATLAS2023_BP2_prel_check', 100, 'check')
 
-
+    # (listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode)
 
 
 
