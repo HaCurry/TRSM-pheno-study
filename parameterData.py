@@ -412,6 +412,7 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
     save2JSON['extra']['path2config'] = configDir
     save2JSON['extra']['points'] = points
     save2JSON['extra']['scannerSmode'] = scannerSmode
+    save2JSON['extra']['scannerSmode'] = paramFree
     createJSON(save2JSON, paramDir, 'settings_' + paramFree + '_' + dataId + '.json')
     # delete dictionary so no conflict is caused for future or concurrent runs
     del save2JSON 
