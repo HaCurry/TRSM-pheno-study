@@ -408,11 +408,12 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
         save2JSON['extra'] = {}
 
     # additional metadata saved to programParametersDict and then converted to a JSON file in the directory paramDir
-    save2JSON['extra']['path2output'] = outputDir
-    save2JSON['extra']['path2config'] = configDir
+    save2JSON['extra']['pathDataOutput'] = paramDir + '/' + outputDir
+    save2JSON['extra']['pathDataConfig'] = paramDir + '/' + configDir
     save2JSON['extra']['points'] = points
     save2JSON['extra']['scannerSmode'] = scannerSmode
-    save2JSON['extra']['scannerSmode'] = paramFree
+    paramFreeTranslate = {'ths': 'thetahS', 'thx': 'thetahX', 'tsx': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'None': 'None'}
+    save2JSON['extra']['paramFree'] = paramFreeTranslate[paramFree]
     createJSON(save2JSON, paramDir, 'settings_' + paramFree + '_' + dataId + '.json')
     # delete dictionary so no conflict is caused for future or concurrent runs
     del save2JSON 
@@ -614,10 +615,10 @@ if __name__ == '__main__':
 
     # parameterMain([BP3_dictPointlistAtlas[0]], 'tjolahopp2', 'scan', BP = 'BP3', createDir = False, points = 12)
     # # (listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode)
-    print(BP3_dictPointlistAtlas[0])
 
-    mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
-    mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
+
+    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
+    # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
     
-    mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_scan_prel', 50, 'scan')
-    mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_scan_prel', 50, 'scan')
+    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_scan_prel', 50, 'scan')
+    # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_scan_prel', 50, 'scan')

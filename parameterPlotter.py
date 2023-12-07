@@ -29,7 +29,7 @@ def dataGenerator(generalPhysics, axis, path, **kwargs):
     Pulls data from path with an assumed free axis and calculates physical
     quantities defined by generalPhysics using the module functions.py.
     Returns as lists of lists.
-    
+
     generalPhysics can be XNP, ppXNP, ppXNPSM
     axis is the desired axis of the physical quantity
     path is the path to the data
@@ -110,11 +110,12 @@ def directorySearcher(relPath, globPathname):
 
     returns: relative paths in listPaths.
     '''
-    relListPaths = glob.glob(relPath + '/**/output_*.tsv', recursive=True)
+    relListPaths = glob.glob(relPath + '/' + globPathname, recursive=True)
+
     return relListPaths
 
 
-def auxSoloPlot(xlims, ylims, path, filename, **kwargs):
+def auxSoloPlot(xlims, ylims, path, filename, yConst, **kwargs):
     '''
     Plots and saves figure in the ranges xlims and ylims.
 
@@ -140,7 +141,10 @@ def auxSoloPlot(xlims, ylims, path, filename, **kwargs):
     #################################### kwargs ####################################
     
     # for observed limits
-    if 'yConst' in kwargs:
+    if yConst is None:
+        pass
+
+    else:
 
         if 'yConstLs' in kwargs:
             linestyle = kwargs['yConstLs']
@@ -154,7 +158,7 @@ def auxSoloPlot(xlims, ylims, path, filename, **kwargs):
         else:
             clr = 'r'
 
-        plt.axhline(y=kwargs['yConst'], color=clr, linestyle=ls)    
+        plt.axhline(y=yConst, color=clr, linestyle=ls)    
 
     # for cross-sections
     if 'yscale' in kwargs:
@@ -180,13 +184,20 @@ def auxSoloPlot(xlims, ylims, path, filename, **kwargs):
     else:
         show = False
 
+    if 'fext' in kwargs:
+        fext = kwargs['fext']
+
+    else:
+        fext = '.png'
+        
+
 ################################################################################
 
     # if one of the bounds set to none then use matplotlib auto settings
     plt.xlim(left=xlims[0], right=xlims[1])
-    plt.ylim(left=ylims[0], right=ylims[1])
+    plt.ylim(bottom=ylims[0], top=ylims[1])
 
-    plt.savefig(path + '/' + filename)
+    plt.savefig(path + '/' + filename + fext)
 
     if show == True:
         plt.show()
@@ -226,19 +237,27 @@ def definer(generalPhysics, axis, path, **kwargs):
         else:
             modeSM = 3
 
+    elif generalPhysics != 'ppXNPSM':
+
+        if 'modeSM' in kwargs:
+            raise Exception('modeSM decided but general physics is not ppXNPSM.\nPlease remove modeSM from function call if \ngeneralPhysics!=ppXNPSM')
+
+        else:
+            pass
+
+    else:
+        pass
+
     H1H2, H1H1, H2H2 = dataGenerator(generalPhysics, axis, path, **kwargs)
 
-    xlist_H1H2 = H1H2[0]
-    ylist_H1H2 = H1H2[modeSM]
-    #name_H1H2 = 'H1H2'
+    xlist_H1H2, ylist_H1H2 = sorter(H1H2[0], H1H2[modeSM])
+    # ylist_H1H2 = H1H2[modeSM]
 
-    xlist_H1H1 = H1H1[0]
-    ylist_H1H1 = H1H1[3]
-    #name_H1H1 = 'H1H1'
+    xlist_H1H1, ylist_H1H1 = sorter(H1H1[0], H1H1[3])
+    # ylist_H1H1 = H1H1[3]
 
-    xlist_H2H2 = H2H2[0]
-    ylist_H2H2 = H2H2[3]
-    #name_H2H2 = 'H2H2'
+    xlist_H2H2, ylist_H2H2 = sorter(H2H2[0], H2H2[3])
+    # ylist_H2H2 = H2H2[3]
 
     return (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2)
 
@@ -246,30 +265,47 @@ def definer(generalPhysics, axis, path, **kwargs):
 def dictConstruct(paths, key):
 
     dictList = []
-
+    
     for pathVar in paths:
-
+        
         with open(pathVar) as f:
             contentsJSON = json.load(f)
-
+        
         dictList.append(contentsJSON[key])
 
     return dictList
 
 
-def solo(generalPhysics, axis, xlims, ylims, dataPath, outputPath, ObservedLimit, dataId, **kwargs):
+def soloPlot(generalPhysics, axis, xlims, ylims, dataPath, outputPath, yConst, dataId, **kwargs):
 
     # fix this: this is not a nice solution
-    kwargs['yConst'] = ObservedLimit
-    
-    # returns lists in nice format
-    # fix this: put sorter in definer so this becomes one line
-    (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = definer(generalPhysics, axis, dataPath, **kwargs)
+    # if 'yConst' in kwargs:
+    #     kwargs['yConst'] = ObservedLimit
 
-    # sort according to xlist
-    (xlist_H1H2, ylist_H1H2) = sorter(xlist_H1H2, ylist_H1H2)
-    (xlist_H1H1, ylist_H1H1) = sorter(xlist_H1H1, ylist_H1H1)
-    (xlist_H2H2, ylist_H2H2) = sorter(xlist_H2H2, ylist_H2H2)
+    # else:
+    #     pass
+
+    # if yConst is None:
+    #     pass
+
+    # else:
+    #     kwargs['yConst'] = yConst
+
+    if 'ls' in kwargs:
+        ls = kwargs['ls']
+
+    else:
+        ls = 'None'
+
+    if 'marker' in kwargs:
+        marker = kwargs['marker']
+
+    else:
+        marker = 'None'
+    
+
+    # repackages data from dataGenerator to a nice format and sorts the lists according to the xlists
+    (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = definer(generalPhysics, axis, dataPath, **kwargs)
 
     # from stackexchange:  https://stackoverflow.com/a/1274436/17456342
     if not os.path.isdir(outputPath):
@@ -278,9 +314,9 @@ def solo(generalPhysics, axis, xlims, ylims, dataPath, outputPath, ObservedLimit
     else:
         pass
 
-    outputPathH1H2 = outputPath + '/' + '_H1H2'
-    outputPathH1H1 = outputPath + '/' + '_H1H1'
-    outputPathH2H2 = outputPath + '/' + '_H2H2'
+    outputPathH1H2 = outputPath + '/' + 'H1H2'
+    outputPathH1H1 = outputPath + '/' + 'H1H1'
+    outputPathH2H2 = outputPath + '/' + 'H2H2'
 
     if not os.path.isdir(outputPathH1H2):
        os.makedirs(outputPathH1H2)
@@ -300,52 +336,99 @@ def solo(generalPhysics, axis, xlims, ylims, dataPath, outputPath, ObservedLimit
     else:
         pass
     # fix this: maybe make function out this repeated process 
-    filename_H1H2 = outputPathH1H2 + '/' + dataId + '_' + generalPhysics+ '_' + axis + '_H1H2'
-    filename_H1H1 = outputPathH1H1 + '/' + dataId + '_' + generalPhysics+ '_' + axis + '_H1H1'
-    filename_H2H2 = outputPathH2H2 + '/' + dataId + '_' + generalPhysics+ '_' + axis + '_H2H2'
+    filename_H1H2 = dataId + '_' + generalPhysics+ '_' + axis + '_H1H2'
+    filename_H1H1 = dataId + '_' + generalPhysics+ '_' + axis + '_H1H1'
+    filename_H2H2 = dataId + '_' + generalPhysics+ '_' + axis + '_H2H2'
 
+    # if yConst == 'None':
+    #     pass
+
+    # else:
+    #     kwargs['yConst'] = yConst
+    
     # fix this: maybe make function out this repeated process 
     plt.close()
     plt.plot(xlist_H1H2, ylist_H1H2, marker=marker, ls=ls)
-    auxSoloPlot(xlims, ylims, outputPathH1H2 , filename_H1H2, **kwargs)
+    auxSoloPlot(xlims, ylims, outputPathH1H2 , filename_H1H2, yConst, **kwargs)
 
     plt.close()
     plt.plot(xlist_H1H1, ylist_H1H1, marker=marker, ls=ls)
-    auxSoloPlot(xlims, ylims, outputPathH1H1 , filename_H1H1, **kwargs)
+    auxSoloPlot(xlims, ylims, outputPathH1H1 , filename_H1H1, yConst, **kwargs)
 
     plt.close()
     plt.plot(xlist_H2H2, ylist_H2H2, marker=marker, ls=ls)
-    auxSoloPlot(xlims, ylims, outputPathH2H2 , filename_H2H2, **kwargs)
+    auxSoloPlot(xlims, ylims, outputPathH2H2 , filename_H2H2, yConst, **kwargs)
 
 
-def parameterPlotterMain(relPath, outputPath, generalPhysics, xlims, ylims, solo, together, **kwargs):
+def parameterPlotterMain(relPath, outputPath, settingsGlob, generalPhysics, xlims, ylims, solo, together, **kwargs):
 
     #################################### kwargs ####################################
 
-    if 'ls' in kwargs:
-        ls = kwargs['ls']
+    # For debugging purposes, not necessary for the user
+    # sets the number of tuples to loop over. For testing 
+    # set numFigs to a small integer.
+    if ('figStart' in kwargs) and ('figEnd' in kwargs):
+        figStart, figEnd = kwargs['figStart'], kwargs['figEnd']
 
     else:
-        ls = 'None'
+        figStart, figEnd = None, None
 
-    if 'marker' in kwargs:
-        marker = kwargs['marker']
+    if 'ObsLim' in kwargs:
+        ObsLim = kwargs['ObsLim']
+
+        if isinstance(ObsLim, bool) == True:
+            pass
+
+        else:
+            raise Exception('ObsLim should be of type Bool')
 
     else:
-        marker = 'None'
+        ObsLim = True
 
     ################################################################################
 
-    outputPaths = directorySearcher(relPath, '/**/settings_*.json')
-
+    outputPaths = directorySearcher(relPath, settingsGlob)
     dictList = dictConstruct(outputPaths, 'extra')
 
-    tuples = [( (dictList[i])['path2output'], (dictList[i])['dataId'],  (dictList[i])['ObservedLimit'], ) for i in range(len(dictList))]
+    if ObsLim == True:
+                    # axis                     # dataPath                    # ObservedLimit                 # dataId
+        tuples = [( (dictList[i])['paramFree'], (dictList[i])['pathDataOutput'], (dictList[i])['ObservedLimit'], (dictList[i])['dataId'] ) for i in range(len( dictList))]
+        # print(tuples[0:2])
+    else:
+                    # axis                     # dataPath                    # ObservedLimit                 # dataId
+        tuples = [( (dictList[i])['paramFree'], (dictList[i])['pathDataOutput'], None, (dictList[i])['dataId'] ) for i in range(len( dictList))]
 
+    tuples = tuples[figStart:figEnd]
+
+    loading = len(tuples)
+    loadstep = 1
+    
     if solo == True:
         for (axis, dataPath, ObservedLimit, dataId) in tuples:
-            solo(generalPhysics, axis, xlims, ylims, dataPath, outputPath, ObservedLimit, dataId, **kwargs)
 
+            if (axis == 'thetahS') or (axis == 'thetahX') or (axis == 'thetaSX'): xlims = (-np.pi/2, np.pi/2)
+
+            elif (axis == 'vs') or (axis == 'vx'): xlims = (1, 1000)
+
+            elif (axis == 'None'): axis, xlims = 'mH1', (None, None)
+
+            else:
+                raise Exception('axis has invalid value in parameterPlotterMain')
+
+            try:
+                soloPlot(generalPhysics, axis, xlims, ylims, dataPath, outputPath, ObservedLimit, dataId, **kwargs)
+
+            except pandas.errors.EmptyDataError:
+                x = np.linspace(1,5)
+                plt.plot(x,x)
+                plt.title('pandas.EmptyDataError')
+                plt.savefig(outputPath + '/' + dataId + '_' + generalPhysics 
+                            + '_' + axis + '_dud' + '.png')
+                plt.close()
+
+            print('Loading {}'.format(int(loadstep/loading * 100)))
+            loadstep = loadstep + 1
+            
     elif solo == False:
         pass
 
@@ -355,18 +438,20 @@ def parameterPlotterMain(relPath, outputPath, generalPhysics, xlims, ylims, solo
 
     if together == True:
 
-        def togetherPlot(iterable, xlims, ylims, relPath, filename, generalPhysics, **kwargs):
+        def togetherPlot(iterable, xlims, ylims, filename, generalPhysics, **kwargs):
 
             plt.close()
+            # axis                     # dataPath                    # ObservedLimit                 # dataId
+
             for x, y in iterable:
                 plt.plot(x,y)
 
                 plt.xlim(left = xlims[0], right = xlims[1])
-                plt.ylim(left = ylims[0], right = ylims[1])
+                plt.ylim(bottom=ylims[0], top=ylims[1])
 
             filename = relPath + '/' + generalPhysics + filename
 
-            plt.title(filename_H1H2)
+            # plt.title(filename_H1H2)
             plt.savefig(relPath)
 
     elif together == False:
@@ -377,9 +462,14 @@ def parameterPlotterMain(relPath, outputPath, generalPhysics, xlims, ylims, solo
     
 
     if (solo == False) and (together == False):
-    together   raise Exception('solo and together set to false, script is doing nothing.')
+       raise Exception('solo and together set to false, script is doing nothing.')
 
 
 if __name__ == "__main__":
 
-    parameterPlotterSoloMain('ppXNPSM', 'thetahS', (-np.pi/2, np.pi/2), 'test5', SM1 = 'bb', SM2 = 'gamgam')
+    parameterPlotterMain('AtlasBP2_check_prel', 'testPlott', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None), True, False, 
+                         marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log') 
+
+    # parameterPlotterMain('AtlasBP3_check_prel', 'plot_AtlasBP3_check_prel', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None), True, False, 
+    #                      marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=5) 
+    

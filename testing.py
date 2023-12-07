@@ -26,13 +26,13 @@ import functions as TRSM
 # print(test[-450:])
 
 # test = (-0.1,0.1)
-def test():
-    TRSM.mixingMatrix(1.352, 1.175, -0.407, np.linspace(-np.pi/2, np.pi, 100), 'ths')
+# def test():
+    # TRSM.mixingMatrix(1.352, 1.175, -0.407, np.linspace(-np.pi/2, np.pi, 100), 'ths')
 # plt.xlim(test)
 
-test()
-plt.show()
-plt.close()
+# test()
+# plt.show()
+# plt.close()
 # plt.plot(np.linspace(-np.pi/2, np.pi, 100), np.linspace(-np.pi/2, np.pi, 100))
 # plt.show()
 
@@ -45,3 +45,8 @@ plt.close()
 
 #0.24757907662653156
 #0.099353079531563693
+
+x = np.linspace(1,10)
+plt.plot(x,x)
+print('hejsan', flush = True)
+plt.show()
