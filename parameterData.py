@@ -332,8 +332,8 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
         config['scan']['vs'] = str(programParametersDict['vs_lb']) + ' ' + str(programParametersDict['vs_ub'])
         config['scan']['vx'] = '1 1000'
 
-    # if paramFree is set to None, then all parameters are fixed according to the user given parameters.
-    elif paramFree == 'None':
+    # if paramFree is set to Nofree, then all parameters are fixed according to the user given parameters.
+    elif paramFree == 'Nofree':
         config['scan']['t1'] = str(programParametersDict['ths_lb']) + ' ' + str(programParametersDict['ths_ub'])
         config['scan']['t2'] = str(programParametersDict['thx_lb']) + ' ' + str(programParametersDict['thx_ub'])
         config['scan']['t3'] = str(programParametersDict['tsx_lb']) + ' ' + str(programParametersDict['tsx_ub'])
@@ -342,7 +342,7 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
         config['scan']['vx'] = str(programParametersDict['vx_lb']) + ' ' + str(programParametersDict['vx_ub'])
 
     else:
-        raise Exception('No paramFree chosen in function vev')
+        raise Exception('No paramFree defined in function vev')
 
     # define the paths to .ini (config) file and .tsv (output) file
     # configDir = paramDir + '/' + 'config_' + paramFree + '_' + dataId + '.ini'
@@ -412,7 +412,7 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
     save2JSON['extra']['pathDataConfig'] = paramDir + '/' + configDir
     save2JSON['extra']['points'] = points
     save2JSON['extra']['scannerSmode'] = scannerSmode
-    paramFreeTranslate = {'ths': 'thetahS', 'thx': 'thetahX', 'tsx': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'None': 'None'}
+    paramFreeTranslate = {'ths': 'thetahS', 'thx': 'thetahX', 'tsx': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'Nofree'}
     save2JSON['extra']['paramFree'] = paramFreeTranslate[paramFree]
     createJSON(save2JSON, paramDir, 'settings_' + paramFree + '_' + dataId + '.json')
     # delete dictionary so no conflict is caused for future or concurrent runs
@@ -488,7 +488,7 @@ def parameterMain(listUserParametersDict, targetDir, scannerSmode, **kwargs):
         param(programParametersDict, targetDir, 'vs',  scannerSmode, **kwargs)
         param(programParametersDict, targetDir, 'vx',  scannerSmode, **kwargs)
 
-        param(programParametersDict, targetDir, 'None',scannerSmode, **kwargs)
+        param(programParametersDict, targetDir, 'Nofree',scannerSmode, **kwargs)
 
         print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
         loadingstep = loadingstep + 1
@@ -516,7 +516,7 @@ def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints, scannerSmo
     param(programParametersDict, targetDir, 'vs',  scannerSmode, BP = mprocBP, points = mprocPoints)
     param(programParametersDict, targetDir, 'vx',  scannerSmode, BP = mprocBP, points = mprocPoints)
     
-    param(programParametersDict, targetDir, 'None',scannerSmode, BP = mprocBP, points = 5) # could set points = 1 as it seems the values in the outputs are identical (?)
+    param(programParametersDict, targetDir, 'Nofree',scannerSmode, BP = mprocBP, points = 5) # could set points = 1 as it seems the values in the outputs are identical (?)
 
 
 
@@ -617,7 +617,7 @@ if __name__ == '__main__':
     # # (listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode)
 
 
-    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
+    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel2', 50, 'check')
     # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
     
     # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_scan_prel', 50, 'scan')

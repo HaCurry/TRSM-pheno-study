@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-import csv
 import pandas
 
 import numpy as np
-from scipy.interpolate import CubicSpline
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -42,8 +40,9 @@ def dataGenerator(generalPhysics, axis, path, **kwargs):
              list and the physical quantity
              eg. for XNP, H1H2 = np.array([axis, axis2, axis3, b_H3_H1H2])
     '''
-    
+
     ########################    kwargs    ########################
+
     if (generalPhysics == 'ppXNPSM'):
 
         if 'SM1' and 'SM2' in kwargs:
@@ -57,7 +56,6 @@ def dataGenerator(generalPhysics, axis, path, **kwargs):
 
     else:
         axis2 = 'mH2'
-
 
     if 'axis3' in kwargs:
         axis3 = kwargs['axis3']
@@ -83,6 +81,7 @@ def dataGenerator(generalPhysics, axis, path, **kwargs):
 
     else:
         ggF_xs_SM_Higgs_SM1SM2 = 1
+
     ##############################################################
 
     if generalPhysics == 'XNP':
@@ -139,7 +138,7 @@ def auxSoloPlot(xlims, ylims, path, filename, yConst, **kwargs):
     '''
 
     #################################### kwargs ####################################
-    
+
     # for observed limits
     if yConst is None:
         pass
@@ -147,18 +146,21 @@ def auxSoloPlot(xlims, ylims, path, filename, yConst, **kwargs):
     else:
 
         if 'yConstLs' in kwargs:
-            linestyle = kwargs['yConstLs']
+            yConstLs = kwargs['yConstLs']
+            if isinstance(yConstLs, str):
+                raise Exception('yConstLs must be of type string in matplotlib linestyle format,\n see matplotlib documentation for more')
 
         else:
-            ls = 'dashed'
+            yConstLs = 'dashed'
 
         if 'yConstClr' in kwargs:
-            clr = kwargs['yConstClr']
-
+            yConstClr = kwargs['yConstClr']
+            if isinstance(yConstClr, str):
+                raise Exception('yConstClr must be of type string in matplotlib linestyle format,\n see matplotlib documentation for more')
         else:
-            clr = 'r'
+            yConstClr = 'r'
 
-        plt.axhline(y=yConst, color=clr, linestyle=ls)    
+        plt.axhline(y=yConst, color=yConstClr, linestyle=yConstLs)    
 
     # for cross-sections
     if 'yscale' in kwargs:
@@ -167,7 +169,7 @@ def auxSoloPlot(xlims, ylims, path, filename, yConst, **kwargs):
             plt.yscale('log')
 
         else:
-            raise Exception('invalid log scale parameterPlot')
+            raise Exception('invalid yscale value, only yscale = \'log\' is valid.')
 
     # plots figure using gui
     if 'show' in kwargs:
@@ -276,20 +278,68 @@ def dictConstruct(paths, key):
     return dictList
 
 
+def tupleConstruct(dictList, **kwargs):
+   
+    if 'ShowObsLimit' in kwargs:
+        ShowObsLimit = kwargs['ShowObsLimit']
+
+        if isinstance(ShowObsLimit, bool) == True:
+            pass
+
+        else:
+            raise Exception('ShowObsLimit should be of type Bool')
+
+    else:
+        ShowObsLimit = True
+
+    tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree = [], [], [], [], [], []
+    for dictElement in dictList:
+        paramFree        = (dictElement)['paramFree']
+        pathDataOutput   = (dictElement)['pathDataOutput']
+        ObservedLimit    = (dictElement)['ObservedLimit']
+        dataId           = (dictElement)['dataId']
+
+        if ShowObsLimit == True: pass
+
+        elif ShowObsLimit == False: ObservedLimit = None
+
+        else: raise Exception('ObsLim invalid value. ObsLim is of type bool')
+
+        if paramFree == 'thetahS':
+            tuplesThs.append((paramFree, pathDataOutput, ObservedLimit, dataId))
+
+        elif paramFree == 'thetahX':
+            tuplesThx.append((paramFree, pathDataOutput, ObservedLimit, dataId))
+
+        elif paramFree == 'thetaSX':
+            tuplesTsx.append((paramFree, pathDataOutput, ObservedLimit, dataId))
+
+        elif paramFree == 'vs':
+            tuplesVs.append((paramFree, pathDataOutput, ObservedLimit, dataId))
+
+        elif paramFree == 'vx':
+            tuplesVx.append((paramFree, pathDataOutput, ObservedLimit, dataId))
+
+        elif paramFree == 'Nofree':
+            tuplesNofree.append((paramFree, pathDataOutput, ObservedLimit, dataId))
+
+        else:
+            raise Exception('invalid value of paramFree found in tupleConstruct')
+
+    return tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree 
+
+
+
+def dudPlot(outputPath, dataId, generalPhysics, axis):
+    x = np.linspace(1,5)
+    plt.plot(x,x)
+    plt.title('pandas.EmptyDataError')
+    plt.savefig(outputPath + '/' + dataId + '_' + generalPhysics 
+                + '_' + axis + '_dud' + '.png')
+    plt.close()
+    
+
 def soloPlot(generalPhysics, axis, xlims, ylims, dataPath, outputPath, yConst, dataId, **kwargs):
-
-    # fix this: this is not a nice solution
-    # if 'yConst' in kwargs:
-    #     kwargs['yConst'] = ObservedLimit
-
-    # else:
-    #     pass
-
-    # if yConst is None:
-    #     pass
-
-    # else:
-    #     kwargs['yConst'] = yConst
 
     if 'ls' in kwargs:
         ls = kwargs['ls']
@@ -360,7 +410,7 @@ def soloPlot(generalPhysics, axis, xlims, ylims, dataPath, outputPath, yConst, d
     auxSoloPlot(xlims, ylims, outputPathH2H2 , filename_H2H2, yConst, **kwargs)
 
 
-def parameterPlotterMain(relPath, outputPath, settingsGlob, generalPhysics, xlims, ylims, solo, together, **kwargs):
+def parameterPlotterSolo(relPath, outputPath, settingsGlob, generalPhysics, xlims, ylims, **kwargs):
 
     #################################### kwargs ####################################
 
@@ -373,103 +423,330 @@ def parameterPlotterMain(relPath, outputPath, settingsGlob, generalPhysics, xlim
     else:
         figStart, figEnd = None, None
 
-    if 'ObsLim' in kwargs:
-        ObsLim = kwargs['ObsLim']
+    if 'ShowObsLimit' in kwargs:
+        ShowObsLimit = kwargs['ShowObsLimit']
 
-        if isinstance(ObsLim, bool) == True:
+        if isinstance(ShowObsLimit, bool) == True:
             pass
 
         else:
-            raise Exception('ObsLim should be of type Bool')
+            raise Exception('ShowObsLimit should be of type Bool')
 
     else:
-        ObsLim = True
+        ShowObsLimit = True
+
+    ################################################################################
+
+    outputPaths = directorySearcher(relPath, settingsGlob)
+    if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
+    dictList = dictConstruct(outputPaths, 'extra')
+
+    tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree = tupleConstruct(dictList, ShowObsLimit)
+    allTuples = [tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree]
+
+    xlimsDict = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 'vs': (1, 1000), 'vx': (1, 1000), 'Nofree': (None, None)}
+    axisDict = {'thetahS': 'thetahS', 'thetahX': 'thetahX', 'thetaSX': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'mH1'}
+    loadstep, loading = 1, len(tuplesThs) + len(tuplesThx) + len(tuplesTsx) + len(tuplesVs) + len(tuplesVx) + len(tuplesNofree)
+    for tupleVar in allTuples:
+
+        for (axis, dataPath, ObservedLimit, dataId) in tupleVar:
+
+            try:
+                soloPlot(generalPhysics, axisDict[axis], xlimsDict[axis], ylims, dataPath, outputPath, ObservedLimit, dataId, **kwargs)
+
+            except pandas.errors.EmptyDataError:
+                dudPlot(outputPath, dataId, generalPhysics, axis)
+
+            print('Loading {}'.format(int(loadstep/loading * 100)))
+            loadstep = loadstep + 1
+
+
+def listAppender(tuples, generalPhysics, **kwargs):
+
+    axisDict = {'thetahS': 'thetahS', 'thetahX': 'thetahX', 'thetaSX': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'mH1'}
+    together_H1H2, together_H1H1, together_H2H2 = [], [], []
+
+    for (axis, dataPath, ObservedLimit, dataId) in tuples:
+
+        try:
+            (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = definer(generalPhysics, axisDict[axis], dataPath, **kwargs)
+
+        except pandas.errors.EmptyDataError:
+            (xlist_H1H2, ylist_H1H2), (xlist_H1H1, ylist_H1H1), (xlist_H2H2, ylist_H2H2) = ([],[]), ([],[]), ([], [])
+
+        together_H1H2.append((xlist_H1H2, ylist_H1H2, axis, ObservedLimit, dataId))
+        together_H1H1.append((xlist_H1H1, ylist_H1H1, axis, ObservedLimit, dataId))
+        together_H2H2.append((xlist_H2H2, ylist_H2H2, axis, ObservedLimit, dataId))
+
+    return together_H1H2, together_H1H1, together_H2H2
+
+
+def togetherPlot(together_HiggsHiggs, outputPath, generalPhysics, title, **kwargs):
+
+    #################################### kwargs ####################################
+
+    # for observed limits
+    if 'ShowObsLimit' in kwargs:
+        ShowObsLimit = kwargs['ShowObsLimit']
+
+        if isinstance(ShowObsLimit, bool) == False:
+            raise Exception('ObsLim must be of type bool.')
+
+    else:
+        ShowObsLimit = False
+
+
+    if 'yConstLs' in kwargs:
+        yConstLs = kwargs['yConstLs']
+
+        if isinstance(yConstLs, str) == False:
+            raise Exception('yConstLs must be of type string in matplotlib linestyle format,\n see matplotlib documentation for more')
+
+    else:
+        yConstLs = 'dashed'
+
+    if 'yConstClr' in kwargs:
+        yConstClr = kwargs['yConstClr']
+
+        if isinstance(yConstClr, str) == False:
+            raise Exception('yConstClr must be of type string in matplotlib linestyle format,\n see matplotlib documentation for more')
+
+    else:
+        yConstClr = 'r'
+
+    if 'ls' in kwargs:
+        ls = kwargs['ls']
+
+    else:
+        ls = 'solid'
+
+    if 'marker' in kwargs:
+        marker = kwargs['marker']
+
+    else:
+        marker = '.'
+
+    if 'yscale' in kwargs:
+
+        if kwargs['yscale'] == 'log':
+            yscaleLog = True
+
+        else:
+            raise Exception('invalid yscale value, only yscale = \'log\' is valid.')
+
+    else:
+        yscaleLog = False
+
+    if 'saveStep' in kwargs:
+        saveStep = kwargs['saveStep']
+        if isinstance(saveStep, bool) == False:
+            raise Exception('saveStep needs to be of type bool')
+
+    else:
+        saveStep = False
+
+    if 'fext' in kwargs:
+        fext = kwargs['fext']
+        if isinstance(fext, str) == False:
+            raise Exception('fext needs to be a string in the format .[fileextension (pdf, png, etc.)] .')
+
+    else:
+        fext = '.png'
+
+    if 'ylims' in kwargs:
+        ylims = kwargs['ylims']
+
+    else:
+        ylims = (None, None)
+
+    ################################################################################
+
+    if not os.path.isdir(outputPath):
+       os.makedirs(outputPath)
+
+    xlimsDict = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 'vs': (1, 1000), 'vx': (1, 1000), 'Nofree': (None, None)}
+    axisDict = {'thetahS': 'thetahS', 'thetahX': 'thetahX', 'thetaSX': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'mH1'}
+
+    for (x, y, axis, ObservedLimit, dataId) in together_HiggsHiggs:
+        plt.plot(x,y, ls=ls, marker=marker)
+        plt.xlim(xlimsDict[axis])
+
+    if 'ylims' in kwargs:
+        ylims = kwargs['ylims']
+        plt.ylim(ylims[0], ylims[1])
+
+    else:
+        ylims = plt.gca().get_ylim()    # will be used in saveStep
+
+    if yscaleLog == True: 
+        plt.yscale('log')
+
+    plt.savefig(outputPath + '/' + generalPhysics + '_' + title + fext )
+    plt.close()
+
+    # this one complains: UserWarning: Attempt to set non-positive ylim on a log-scaled axis will be ignored.
+    # but the above one does not, investigate this!
+    if saveStep == True: 
+        figNr = 0
+
+        for (x, y, axis, ObservedLimit, dataId) in together_HiggsHiggs:
+
+            plt.plot(x,y, ls=ls, marker=marker)
+            if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
+
+            plt.xlim(xlimsDict[axis])
+            plt.ylim(ylims[0], ylims[1])
+            if yscaleLog == True: 
+                plt.yscale('log')
+
+            plt.title(axis + ' ' + dataId)
+            plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + str(figNr) + fext)
+            if ShowObsLimit == True: yaxis.remove()
+            figNr = figNr + 1
+
+        plt.close()
+
+
+
+def togetherPlotWrapper(tuplesVar, outputPath, generalPhysics, title, **kwargs):
+
+    togetherVar_H1H2, togetherVar_H1H1, togetherVar_H2H2 = listAppender(tuplesVar, generalPhysics, **kwargs)
+    togetherPlot(togetherVar_H1H2, outputPath, generalPhysics, 'H1H2_' + title, **kwargs)
+    togetherPlot(togetherVar_H1H1, outputPath, generalPhysics, 'H1H1_' + title, **kwargs)
+    togetherPlot(togetherVar_H2H2, outputPath, generalPhysics, 'H2H2_' + title, **kwargs)
+
+
+def parameterPlotterTogether(relPath, outputPath, settingsGlob, generalPhysics, **kwargs):
+
+    #################################### kwargs ####################################
+
+    # For debugging purposes, not necessary for the user
+    # sets the number of tuples to loop over. For testing 
+    # set numFigs to a small integer.
+    if ('figStart' in kwargs) and ('figEnd' in kwargs):
+        figStart, figEnd = kwargs['figStart'], kwargs['figEnd']
+
+    else:
+        figStart, figEnd = None, None
+
+    
+    if ('thetahS' in kwargs) or ('thetahX' in kwargs) or ('thetaSX' in kwargs) or ('vs' in kwargs) or ('vx' in kwargs) or ('Nofree' in kwargs) or ('all' in kwargs):
+
+        if 'thetahS' in kwargs:
+            thetahS = kwargs['thetahS']
+            if isinstance(thetahS, bool) == False:
+                raise Exception('thetahS set to non bool value')
+        else: thetahS = False
+
+        if 'thetahX' in kwargs:
+            thetahX = kwargs['thetahX']
+            if isinstance(thetahX, bool) == False:
+                raise Exception('thetahX set to non bool value')
+        else: thetahX = False
+
+        if 'thetaSX' in kwargs:
+            thetaSX = kwargs['thetaSX']
+            if isinstance(thetaSX, bool) == False:
+                raise Exception('thetaSX set to non bool value')
+        else: thetaSX = False
+
+        if 'vs' in kwargs: 
+            vs = kwargs['vs']
+            if isinstance(vs, bool) == False:
+                raise Exception('vs set to non bool value')
+        else: vs = False
+
+        if 'vx' in kwargs: 
+            vx = kwargs['vx']
+            if isinstance(vx, bool) == False:
+                raise Exception('vx set to non bool value')
+        else: vx = False
+
+        if 'Nofree' in kwargs: 
+            Nofree = kwargs['Nofree']
+            if isinstance(Nofree, bool) == False:
+                raise Exception('Nofree set to non bool value')
+        else: Nofree = False
+
+        if 'all' in kwargs: 
+            all = kwargs['all']
+            if isinstance(all, bool) == False:
+                raise Exception('all set to non bool value')
+        else: all = False
+
+    else:
+        raise Exception('no free parameter given. \nPlease specify a boolean value to either or some of thetahS, thetahX, thetaSX, vs, vx, Nofree \nor specif all = True for all paramters.')
+
+    
 
     ################################################################################
 
     outputPaths = directorySearcher(relPath, settingsGlob)
     dictList = dictConstruct(outputPaths, 'extra')
+    tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree = tupleConstruct(dictList, **kwargs)
+    allTuples = [tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree]
 
-    if ObsLim == True:
-                    # axis                     # dataPath                    # ObservedLimit                 # dataId
-        tuples = [( (dictList[i])['paramFree'], (dictList[i])['pathDataOutput'], (dictList[i])['ObservedLimit'], (dictList[i])['dataId'] ) for i in range(len( dictList))]
-        # print(tuples[0:2])
+    if thetahS == True:
+
+        togetherPlotWrapper(tuplesThs, outputPath, generalPhysics, 'thetahS', **kwargs)
+
     else:
-                    # axis                     # dataPath                    # ObservedLimit                 # dataId
-        tuples = [( (dictList[i])['paramFree'], (dictList[i])['pathDataOutput'], None, (dictList[i])['dataId'] ) for i in range(len( dictList))]
-
-    tuples = tuples[figStart:figEnd]
-
-    loading = len(tuples)
-    loadstep = 1
-    
-    if solo == True:
-        for (axis, dataPath, ObservedLimit, dataId) in tuples:
-
-            if (axis == 'thetahS') or (axis == 'thetahX') or (axis == 'thetaSX'): xlims = (-np.pi/2, np.pi/2)
-
-            elif (axis == 'vs') or (axis == 'vx'): xlims = (1, 1000)
-
-            elif (axis == 'None'): axis, xlims = 'mH1', (None, None)
-
-            else:
-                raise Exception('axis has invalid value in parameterPlotterMain')
-
-            try:
-                soloPlot(generalPhysics, axis, xlims, ylims, dataPath, outputPath, ObservedLimit, dataId, **kwargs)
-
-            except pandas.errors.EmptyDataError:
-                x = np.linspace(1,5)
-                plt.plot(x,x)
-                plt.title('pandas.EmptyDataError')
-                plt.savefig(outputPath + '/' + dataId + '_' + generalPhysics 
-                            + '_' + axis + '_dud' + '.png')
-                plt.close()
-
-            print('Loading {}'.format(int(loadstep/loading * 100)))
-            loadstep = loadstep + 1
-            
-    elif solo == False:
         pass
 
+    if thetahX == True:
+        togetherPlotWrapper(tuplesThx, outputPath, generalPhysics, 'thetahX', **kwargs)
+
     else:
-        raise Exception('solo set to invalid value.')
-
-
-    if together == True:
-
-        def togetherPlot(iterable, xlims, ylims, filename, generalPhysics, **kwargs):
-
-            plt.close()
-            # axis                     # dataPath                    # ObservedLimit                 # dataId
-
-            for x, y in iterable:
-                plt.plot(x,y)
-
-                plt.xlim(left = xlims[0], right = xlims[1])
-                plt.ylim(bottom=ylims[0], top=ylims[1])
-
-            filename = relPath + '/' + generalPhysics + filename
-
-            # plt.title(filename_H1H2)
-            plt.savefig(relPath)
-
-    elif together == False:
         pass
 
-    else:
-        raise Exception('together set to invalid value.')
-    
+    if thetaSX == True:
+        togetherPlotWrapper(tuplesTsx, outputPath, generalPhysics, 'thetaSX', **kwargs)
 
-    if (solo == False) and (together == False):
-       raise Exception('solo and together set to false, script is doing nothing.')
+    else:
+        pass
+
+    if vs == True:
+        togetherPlotWrapper(tuplesVs, outputPath, generalPhysics, 'vs', **kwargs)
+
+    else:
+        pass
+    
+    if vx == True:
+        togetherPlotWrapper(tuplesVx, outputPath, generalPhysics, 'vx', **kwargs)
+        
+    else:
+        pass
+
+    if Nofree == True:
+        togetherPlotWrapper(tuplesNofree, outputPath, generalPhysics, 'Nofree', **kwargs)
+
+    else:
+        pass
+
+    if all == True:
+        togetherPlotWrapper(tuplesThs, outputPath, generalPhysics, 'thetahS', **kwargs)
+        togetherPlotWrapper(tuplesThx, outputPath, generalPhysics, 'thetahX', **kwargs)
+        togetherPlotWrapper(tuplesTsx, outputPath, generalPhysics, 'thetaSX', **kwargs)
+        togetherPlotWrapper(tuplesVs, outputPath, generalPhysics, 'vs', **kwargs)
+        togetherPlotWrapper(tuplesVx, outputPath, generalPhysics, 'vx', **kwargs)
+        togetherPlotWrapper(tuplesNofree, outputPath, generalPhysics, 'Nofree', **kwargs)
+
+    else:
+        pass
+
 
 
 if __name__ == "__main__":
 
-    parameterPlotterMain('AtlasBP2_check_prel', 'testPlott', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None), True, False, 
-                         marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log') 
+    # parameterPlotterSolo('AtlasBP2_check_prel2', 'plot_AtlasBP2_check_prel2', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None),
+                         # marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log') 
+
+    parameterPlotterTogether('AtlasBP2_check_prel2', 'togetherTest4','/**/settings_*.json', 'ppXNPSM', SM1='bb', SM2='gamgam', 
+                             all=True, saveStep=True, ShowObsLimit=True, ylims=(0, 2 * 3.9 * 10**(-2)), yscale='log')
+
+    # parameterPlotterSolo('AtlasBP2_check_prel2', 'tabort', '/**/settings_Nofree_S70.0-X300.0.json', 'ppXNPSM', (None, None), (None, None),
+                         # marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log', show=True) 
+
 
     # parameterPlotterMain('AtlasBP3_check_prel', 'plot_AtlasBP3_check_prel', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None), True, False, 
-    #                      marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=5) 
-    
+    #                      marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=5)
