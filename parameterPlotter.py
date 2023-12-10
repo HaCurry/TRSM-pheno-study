@@ -567,16 +567,23 @@ def togetherPlot(together_HiggsHiggs, outputPath, generalPhysics, title, **kwarg
     xlimsDict = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 'vs': (1, 1000), 'vx': (1, 1000), 'Nofree': (None, None)}
     axisDict = {'thetahS': 'thetahS', 'thetahX': 'thetahX', 'thetaSX': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'mH1'}
 
-    for (x, y, axis, ObservedLimit, dataId) in together_HiggsHiggs:
+    ymin, ymax = 0
+    for (x, y, axisDicts, ObservedLimit, dataId) in together_HiggsHiggs:
+
         plt.plot(x,y, ls=ls, marker=marker)
-        plt.xlim(xlimsDict[axis])
 
-    if 'ylims' in kwargs:
-        ylims = kwargs['ylims']
-        plt.ylim(ylims[0], ylims[1])
+        if (not ObservedLimit is None) and (2 * ObservedLimit > ymax):
+            ymax = 2 * ObservedLimit
 
-    else:
-        ylims = plt.gca().get_ylim()    # will be used in saveStep
+        elif (ObservedLimit is None) and (2 * max(y) > ymax):
+            ymax = 2 * max(y)
+            
+
+    xmin, xmax = plt.xlim(xlimsDict[axis])
+    ylims = plt.gca().get_ylim()
+    # ybounds = plt.gca().get_ylim()
+
+    print(xlims, ylims)
 
     if yscaleLog == True: 
         plt.yscale('log')
@@ -584,20 +591,19 @@ def togetherPlot(together_HiggsHiggs, outputPath, generalPhysics, title, **kwarg
     plt.savefig(outputPath + '/' + generalPhysics + '_' + title + fext )
     plt.close()
 
-    # this one complains: UserWarning: Attempt to set non-positive ylim on a log-scaled axis will be ignored.
-    # but the above one does not, investigate this!
     if saveStep == True: 
-        figNr = 0
+        plt.figure()
+        plt.xlim(xlims)
+        plt.ylim(ylims)
+        if yscaleLog == True: 
+            plt.yscale('log')
 
+        figNr = 0
         for (x, y, axis, ObservedLimit, dataId) in together_HiggsHiggs:
 
             plt.plot(x,y, ls=ls, marker=marker)
             if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
 
-            plt.xlim(xlimsDict[axis])
-            plt.ylim(ylims[0], ylims[1])
-            if yscaleLog == True: 
-                plt.yscale('log')
 
             plt.title(axis + ' ' + dataId)
             plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + str(figNr) + fext)
@@ -730,7 +736,7 @@ def parameterPlotterTogether(relPath, outputPath, settingsGlob, generalPhysics, 
         togetherPlotWrapper(tuplesVs, outputPath, generalPhysics, 'vs', **kwargs)
         togetherPlotWrapper(tuplesVx, outputPath, generalPhysics, 'vx', **kwargs)
         togetherPlotWrapper(tuplesNofree, outputPath, generalPhysics, 'Nofree', **kwargs)
-
+        print(tuplesNofree)
     else:
         pass
 
@@ -742,11 +748,11 @@ if __name__ == "__main__":
                          # marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log') 
 
     parameterPlotterTogether('AtlasBP2_check_prel2', 'togetherTest4','/**/settings_*.json', 'ppXNPSM', SM1='bb', SM2='gamgam', 
-                             all=True, saveStep=True, ShowObsLimit=True, ylims=(0, 2 * 3.9 * 10**(-2)), yscale='log')
+                             thetahS=True, saveStep=True, ShowObsLimit=True, ylims=(None, 2 * 3.9 * 10**(-2)), yscale='log')
 
     # parameterPlotterSolo('AtlasBP2_check_prel2', 'tabort', '/**/settings_Nofree_S70.0-X300.0.json', 'ppXNPSM', (None, None), (None, None),
                          # marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log', show=True) 
 
 
     # parameterPlotterMain('AtlasBP3_check_prel', 'plot_AtlasBP3_check_prel', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None), True, False, 
-    #                      marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=5)
+	   #                      marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=5)
