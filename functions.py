@@ -67,7 +67,7 @@ def XNP_massfree(BPdirectory, axes1, axes2, axes3):
     b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
     x_H3_gg = [i for i in df["x_H3_gg"]]
     
-    w_H3 = [i for i in df[""]]
+    # w_H3 = [i for i in df[""]]
     
     
     

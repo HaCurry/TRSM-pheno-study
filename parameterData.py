@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 import csv
 import pandas
 
@@ -18,7 +18,9 @@ import multiprocessing
 import sys
 import json
 import copy
+import glob
 
+import functions as TRSM
 
 
 def paramDirCreator(userParametersDict, targetDir, **kwargs):
@@ -565,6 +567,211 @@ def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints, s
         text_file.write('mProc start:' + mprocStartTime + '\nmProc end:' + mprocEndTime + '\n\n\n')
 
 
+# NOTE the dominant SMmode changes in BP3 to SMmode = 2!
+def dataCalculator(generalPhysics, axis, path, **kwargs):
+    '''
+    Pulls data from path with an assumed free axis and calculates physical
+    quantities defined by generalPhysics using the module functions.py.
+    Returns as lists of lists.
+
+    generalPhysics can be XNP, ppXNP, ppXNPSM
+    axis is the desired axis of the physical quantity
+    path is the path to the data
+    **kwargs need to define SM1 SM2 if generalPhysics = ppXNPSM.
+             User can also give additional axes in axis2, axis3.
+             User can give normalization of ppXNP, default set to 1.
+             User can give normalization of ppXNPSM, default set to 1.
+
+    returns: H1H2, H1H1, H2H2, where each array contains elements with the axis
+             list and the physical quantity
+             eg. for XNP, H1H2 = np.array([axis, axis2, axis3, b_H3_H1H2])
+    '''
+
+    ########################    kwargs    ########################
+
+    if (generalPhysics == 'ppXNPSM'):
+
+        if 'SM1' and 'SM2' in kwargs:
+            SM1, SM2 = kwargs['SM1'], kwargs['SM2']
+
+        else:
+            raise Exception('No SM final state chosen in plotter, please define SM1 and SM2 in kwargs')
+
+    if 'axis2' in kwargs:
+        axis2 = kwargs['axis2']
+
+    else:
+        axis2 = 'mH2'
+
+    if 'axis3' in kwargs:
+        axis3 = kwargs['axis3']
+
+    else:
+        axis3 = 'mH3'
+
+    # rescale ppXSH, ppXHH, ppXSS cross-section.  
+    # Default set to SM di-Higgs cross-section 31.02 * 10**(-3)
+    if 'ggF_xs_SM_Higgs' in kwargs:
+        ggF_xs_SM_Higgs = kwargs['ggF_xs_SM_Higgs']
+
+    else:
+        # rescaled SM dihiggs cross-section (ggF): 31.02 * 10**(-3)
+        # https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
+        # Default set to 1
+        ggF_xs_SM_Higgs = 1
+
+    # Rescale SM1SM2 cross-section
+    # Default set to 1 (no rescaling ocurrs)
+    if 'ggF_xs_SM_Higgs_SM1SM2' in kwargs:
+        ggF_xs_SM_Higgs_SM1SM2 = kwargs['ggF_xs_SM_Higgs_SM1SM2']
+
+    else:
+        ggF_xs_SM_Higgs_SM1SM2 = 1
+
+    ##############################################################
+
+    if generalPhysics == 'XNP':
+        H1H2, H1H1, H2H2, x_H3_gg = TRSM.XNP_massfree(path, axis, axis2, axis3)
+
+    elif generalPhysics == 'ppXNP':
+        H1H2, H1H1, H2H2 = TRSM.ppXNP_massfree(path, axis, axis2, axis3, 
+                                               normalizationNP=ggF_xs_SM_Higgs)
+
+    elif generalPhysics == 'ppXNPSM':
+        H1H2, H1H1, H2H2 = TRSM.ppXNPSM_massfree(path, axis, axis2, axis3, 
+                                                 SM1, SM2, 
+                                                 normalizationSM=ggF_xs_SM_Higgs_SM1SM2)
+
+    else:
+        raise Exception('No general physics chosen')
+
+    return H1H2, H1H1, H2H2
+
+
+def directorySearcher(relPath, globPathname):
+    '''
+    relPath string. relative path to directory where glob searches.
+    globPathname string. the files in glob format.
+
+    returns: relative paths in listPaths.
+    '''
+    relListPaths = glob.glob(relPath + '/' + globPathname, recursive=True)
+
+    return relListPaths
+
+
+def dictConstruct(paths):
+
+    dictList = []
+    
+    for pathVar in paths:
+        
+        with open(pathVar) as f:
+            contentsJSON = json.load(f)
+        
+        dictList.append(contentsJSON)
+
+    return dictList
+
+
+def calculateSort(locOutputPath, dictList, **kwargs):
+
+    if 'createDir' in kwargs:
+        createDir = kwargs['createDir']
+
+        if isinstance(createDir, bool) == False:
+            raise Exception('createDir need to be of type bool.')
+
+    else:
+        createDir = True
+    
+    for dictElement in dictList:
+
+        paramFree, pathDataOutput, dataId = dictElement['extra']['paramFree'], dictElement['extra']['pathDataOutput'], dictElement['extra']['dataId']
+        print(paramFree)
+        XNP_H1H2, XNP_H1H1, XNP_H2H2 = dataCalculator('XNP', paramFree, pathDataOutput, **kwargs)
+        ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2 = dataCalculator('ppXNP', paramFree, pathDataOutput, **kwargs)
+        ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2 = dataCalculator('ppXNPSM', paramFree, pathDataOutput, **kwargs)
+
+        # create directory structure
+        if createDir == True:
+
+            # if dataId directory does not exist, create dirDataId and create dirParamfree
+            dirDataId = locOutputPath + '/' + dataId
+            if not os.path.isdir(dirDataId):
+                os.makedirs(dirDataId)
+                dirParamfree = dirDataId + '/' + paramFree
+                os.makedirs(dirParamfree)
+                outputPath = dirParamfree
+
+            # if dataId directory exists, check if dirParamfree directory exists
+            else:
+                dirParamfree = dirDataId + '/' + paramFree
+                if not os.path.isdir(dirParamfree):
+                    os.makedirs(dirParamfree)
+
+                    outputPath = dirParamfree
+
+                else:
+                    outputPath = dirParamfree
+
+        # otherwise output directly into locOutputPath
+        else:
+
+            if not os.path.isdir(locOutputPath):
+                os.makedirs(locOutputPath)
+                outputPath = locOutputPath
+
+            else:
+                outputPath = locOutputPath
+
+        # save calculated data to tsv files
+        save2TSV_XNP     = {'mH1_H1H2': XNP_H1H2[0], 'mH2_H1H2': XNP_H1H2[1], 'mH3_H1H2': XNP_H1H2[2], 
+                            'b_H3_H1H2': XNP_H1H2[3]}
+        save2TSV_XNP_path = outputPath + '/' + 'outputXNP_' + paramFree + '_' + dataId + '.tsv'
+
+        df_XNP = pandas.DataFrame(data = save2TSV_XNP)
+        df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
+
+
+        save2TSV_ppXNP   = {'mH1_H1H2': ppXNP_H1H2[0], 'mH2_H1H2': ppXNP_H1H2[1], 'mH3_H1H2': ppXNP_H1H2[2], 
+                            'x_H3_H1H2': ppXNP_H1H2[4]}
+        save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_' + paramFree + '_' + dataId + '.tsv'
+
+        df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
+        df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
+
+
+        save2TSV_ppXNPSM = {'mH1_H1H2': ppXNPSM_H1H2[0], 'mH2_H1H2': ppXNPSM_H1H2[1], 'mH3_H1H2': ppXNPSM_H1H2[2], 
+                            'x_H3_H1H2_SM_tot': ppXNPSM_H1H2[3], 'x_H3_H1H2_SM_1': ppXNPSM_H1H2[4], 'x_H3_H1H2_SM_2': ppXNPSM_H1H2[5]}
+        save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_' + paramFree + '_' + dataId + '.tsv'
+
+        df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
+        df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
+
+        # save paths to calculated data in a dict
+        dict2JSON = copy.deepcopy(dictElement)
+        print(dict2JSON)
+        dict2JSON['extra']['pathCalcXNP'] = save2TSV_XNP_path
+        dict2JSON['extra']['pathCalcppXNP'] = save2TSV_ppXNP_path
+        dict2JSON['extra']['pathCalcppXNPSM'] = save2TSV_ppXNPSM_path
+
+        # convert the dict to a JSON and save it to the directory outputPath
+        createJSON(dict2JSON, outputPath, 'settingsCalc_' + paramFree + '_' + dataId + '.json')
+
+
+# dataCalculatorWrapper(relPath, locOutputPath, dictList, cc)
+
+
+def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
+
+    outputPaths = directorySearcher(relPath, settingsGlob)
+    if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
+    dictList = dictConstruct(outputPaths)
+
+    calculateSort(locOutputPath, dictList[0:2], **kwargs)
+
+
 
 
 
@@ -622,3 +829,6 @@ if __name__ == '__main__':
     
     # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_scan_prel', 50, 'scan')
     # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_scan_prel', 50, 'scan')
+
+    dataCalculatorMain('AtlasBP2_check_prel2', 'calcTest3', '/**/settings_*.json', 
+                       SM1='bb', SM2='gamgam', createDir=False)
