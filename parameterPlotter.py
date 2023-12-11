@@ -553,37 +553,79 @@ def togetherPlot(together_HiggsHiggs, outputPath, generalPhysics, title, **kwarg
     else:
         fext = '.png'
 
-    if 'ylims' in kwargs:
-        ylims = kwargs['ylims']
+    if 'thetahS' in kwargs:
+        if 'thetahSLims' not in kwargs:
+            raise Exception('thetahS provided but not the bounds thetahSLims for plotting.')
 
-    else:
-        ylims = (None, None)
+        else:
+            thetahSLims = kwargs['thetahSLims']
+        
+    if 'thetahX' in kwargs:
+        if 'thetahXLims' not in kwargs:
+            raise Exception('thetahX provided but not the bounds thetahXLims for plotting.')
 
-    ################################################################################
+        else:
+            thetahXLims = kwargs['thetahXLims']
+        
+    if 'thetaSX' in kwargs:
+        if 'thetaSXLims' not in kwargs:
+            raise Exception('thetaSX provided but not the bounds thetaSXLims for plotting.')
+
+        else:
+            thetaSXLims = kwargs['thetaSXLims']
+        
+    if 'vs' in kwargs:
+        if 'vsLims' not in kwargs:
+            raise Exception('vs provided but not the bounds vsLims for plotting.')
+
+        else:
+            vsLims = kwargs['vsLims']
+
+    if 'vx' in kwargs:
+        if 'vxLims' not in kwargs:
+            raise Exception('vx provided but not the bounds vxLims for plotting.')
+
+        else:
+            vxLims = kwargs['vxLims']
+
+    if 'Nofree' in kwargs:
+        if 'NofreeLims' not in kwargs:
+            raise Exception('Nofree provided but not the bounds NofreeLims for plotting.')
+
+        else:
+            NofreeLims = kwargs['NofreeLims']
+
+    if 'all' in kwargs:
+        if ('thetahSLims' not in kwargs) and ('thetahXLims' not in kwargs) and ('thetaSXLims' not in kwargs) and ('vsLims' not in kwargs) and ('vxLims' not in kwargs) and ('NofreeLims' not in kwargs):
+            raise Exception('all provided but no bounds for plotting.')
+
+        else:
+            thetahSLims = kwargs['thetahSLims']        
+            thetahXLims = kwargs['thetahXLims']
+            thetaSXLims = kwargs['thetaSXLims']
+            vsLims = kwargs['vsLims']
+            vxLims = kwargs['vxLims']
+            NofreeLims = kwargs['NofreeLims']
+
+################################################################################
 
     if not os.path.isdir(outputPath):
        os.makedirs(outputPath)
 
-    xlimsDict = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 'vs': (1, 1000), 'vx': (1, 1000), 'Nofree': (None, None)}
+    xlimsDict = {'thetahS': thetahSLims, 'thetahX': thetahXLims, 'thetaSX': thetaSXLims, 'vs': vsLims, 'vx': vxLims, 'Nofree': NofreeLims}
     axisDict = {'thetahS': 'thetahS', 'thetahX': 'thetahX', 'thetaSX': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'mH1'}
 
-    ymin, ymax = 0
-    for (x, y, axisDicts, ObservedLimit, dataId) in together_HiggsHiggs:
-
+    for (x, y, axis, ObservedLimit, dataId) in together_HiggsHiggs:
         plt.plot(x,y, ls=ls, marker=marker)
 
-        if (not ObservedLimit is None) and (2 * ObservedLimit > ymax):
-            ymax = 2 * ObservedLimit
+        if 'ylims' in kwargs:
+            ylims = kwargs['ylims']
+            plt.ylim(ylims)
 
-        elif (ObservedLimit is None) and (2 * max(y) > ymax):
-            ymax = 2 * max(y)
-            
+        else:
+            pass
 
-    xmin, xmax = plt.xlim(xlimsDict[axis])
-    ylims = plt.gca().get_ylim()
-    # ybounds = plt.gca().get_ylim()
-
-    print(xlims, ylims)
+        plt.xlim(xlimsDict[axis])
 
     if yscaleLog == True: 
         plt.yscale('log')
@@ -592,9 +634,17 @@ def togetherPlot(together_HiggsHiggs, outputPath, generalPhysics, title, **kwarg
     plt.close()
 
     if saveStep == True: 
+
         plt.figure()
-        plt.xlim(xlims)
-        plt.ylim(ylims)
+        if 'ylims' in kwargs:
+            ylims = kwargs['ylims']
+            plt.ylim(ylims)
+
+        else:
+            pass
+
+        plt.xlim(xlimsDict[axis])
+
         if yscaleLog == True: 
             plt.yscale('log')
 
@@ -744,11 +794,13 @@ def parameterPlotterTogether(relPath, outputPath, settingsGlob, generalPhysics, 
 
 if __name__ == "__main__":
 
+    # THIS AN OLD DEPRECATED VERSION, NOTE THAT THE LIMITS OF THE FIGURES MAY GIVE WEIRD BEHAVIOUR
+    
     # parameterPlotterSolo('AtlasBP2_check_prel2', 'plot_AtlasBP2_check_prel2', '/**/settings_*.json', 'ppXNPSM', (None, None), (None, None),
                          # marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log') 
 
     parameterPlotterTogether('AtlasBP2_check_prel2', 'togetherTest4','/**/settings_*.json', 'ppXNPSM', SM1='bb', SM2='gamgam', 
-                             thetahS=True, saveStep=True, ShowObsLimit=True, ylims=(None, 2 * 3.9 * 10**(-2)), yscale='log')
+                             all=True, thetahSLims=(-np.pi/2,np.pi/2), thetahXLims=(-np.pi/2,np.pi/2), thetaSXLims=(-np.pi/2,np.pi/2), vsLims=(1, 1000), vxLims=(1,1000), NofreeLims=(10,115), saveStep=True, ShowObsLimit=True, ylims=(10**(-6), 2 * 3.9 * 10**(-2)), yscale='log')
 
     # parameterPlotterSolo('AtlasBP2_check_prel2', 'tabort', '/**/settings_Nofree_S70.0-X300.0.json', 'ppXNPSM', (None, None), (None, None),
                          # marker='.', ls='solid', SM1='bb', SM2='gamgam', figStart=None, figEnd=None, SMmode=4, yscale='log', show=True) 
