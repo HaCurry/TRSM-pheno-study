@@ -13,8 +13,6 @@ import matplotlib.patheffects
 import scipy.interpolate
 from scipy.interpolate import CubicSpline
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
-from numpy import ma
-
 
 def massAndBrs(dataFrame, axes1, axes2, axes3):
 

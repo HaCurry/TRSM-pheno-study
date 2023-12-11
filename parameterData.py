@@ -676,6 +676,37 @@ def dictConstruct(paths):
 
 def calculateSort(locOutputPath, dictList, **kwargs):
 
+    if 'generateH1H2' in kwargs:
+        generateH1H2 = kwargs['generateH1H2']
+
+        if isinstance(generateH1H2, bool) == False:
+            raise Exception('generateH1H2 need to be of type bool')
+
+    else:
+        generateH1H2 = False
+
+    if 'generateH1H1' in kwargs:
+        generateH1H1 = kwargs['generateH1H1']
+
+        if isinstance(generateH1H1, bool) == False:
+            raise Exception('generateH1H1 need to be of type bool')
+
+    else:
+        generateH1H1 = False
+
+    if 'generateH2H2' in kwargs:
+        generateH2H2 = kwargs['generateH2H2']
+
+        if isinstance(generateH2H2, bool) == False:
+            raise Exception('generateH2H2 need to be of type bool')
+
+    else:
+        generateH2H2 = False
+
+    if ('generateH1H2' not in kwargs) and ('generateH1H1' not in kwargs) and ('generateH2H2' not in kwargs):
+        raise Exception('Neither generateH1H2, generateH1H1 or generateH2H2 is given, \nplease set at least one of them to True')
+
+    
     if 'createDir' in kwargs:
         createDir = kwargs['createDir']
 
@@ -684,14 +715,11 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
     else:
         createDir = True
-    
+
     for dictElement in dictList:
 
+        # store data from dict (JSON) as variables
         paramFree, pathDataOutput, dataId = dictElement['extra']['paramFree'], dictElement['extra']['pathDataOutput'], dictElement['extra']['dataId']
-        print(paramFree)
-        XNP_H1H2, XNP_H1H1, XNP_H2H2 = dataCalculator('XNP', paramFree, pathDataOutput, **kwargs)
-        ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2 = dataCalculator('ppXNP', paramFree, pathDataOutput, **kwargs)
-        ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2 = dataCalculator('ppXNPSM', paramFree, pathDataOutput, **kwargs)
 
         # create directory structure
         if createDir == True:
@@ -725,42 +753,131 @@ def calculateSort(locOutputPath, dictList, **kwargs):
             else:
                 outputPath = locOutputPath
 
-        # save calculated data to tsv files
-        save2TSV_XNP     = {'mH1_H1H2': XNP_H1H2[0], 'mH2_H1H2': XNP_H1H2[1], 'mH3_H1H2': XNP_H1H2[2], 
-                            'b_H3_H1H2': XNP_H1H2[3]}
-        save2TSV_XNP_path = outputPath + '/' + 'outputXNP_' + paramFree + '_' + dataId + '.tsv'
+        
+        # calculate data
+        try:
+            axisDict = {'thetahS': 'thetahS', 'thetahX': 'thetahX', 'thetaSX': 'thetaSX', 'vs': 'vs', 'vx': 'vx', 'Nofree': 'mH1'}
+            XNP_H1H2, XNP_H1H1, XNP_H2H2 = dataCalculator('XNP', axisDict[paramFree], pathDataOutput, **kwargs)
+            ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2 = dataCalculator('ppXNP', axisDict[paramFree], pathDataOutput, **kwargs)
+            ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2 = dataCalculator('ppXNPSM', axisDict[paramFree], pathDataOutput, **kwargs)
+            # if dataId == 'S30.0-X300.0':
+            #     print(paramFree, dataId)
+            #     print(ppXNPSM_H1H2[0][:5], ppXNPSM_H1H2[4][:5])
+            # save calculated data to tsv files
 
-        df_XNP = pandas.DataFrame(data = save2TSV_XNP)
-        df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
+            if generateH1H2 == True:
+                save2TSV_XNP     = {paramFree: XNP_H1H2[0],
+                                    'b_H3_H1H2': XNP_H1H2[3]}
+                save2TSV_XNP_path = outputPath + '/' + 'outputXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
 
-
-        save2TSV_ppXNP   = {'mH1_H1H2': ppXNP_H1H2[0], 'mH2_H1H2': ppXNP_H1H2[1], 'mH3_H1H2': ppXNP_H1H2[2], 
-                            'x_H3_H1H2': ppXNP_H1H2[4]}
-        save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_' + paramFree + '_' + dataId + '.tsv'
-
-        df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
-        df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
-
-
-        save2TSV_ppXNPSM = {'mH1_H1H2': ppXNPSM_H1H2[0], 'mH2_H1H2': ppXNPSM_H1H2[1], 'mH3_H1H2': ppXNPSM_H1H2[2], 
-                            'x_H3_H1H2_SM_tot': ppXNPSM_H1H2[3], 'x_H3_H1H2_SM_1': ppXNPSM_H1H2[4], 'x_H3_H1H2_SM_2': ppXNPSM_H1H2[5]}
-        save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_' + paramFree + '_' + dataId + '.tsv'
-
-        df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
-        df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
-
-        # save paths to calculated data in a dict
-        dict2JSON = copy.deepcopy(dictElement)
-        print(dict2JSON)
-        dict2JSON['extra']['pathCalcXNP'] = save2TSV_XNP_path
-        dict2JSON['extra']['pathCalcppXNP'] = save2TSV_ppXNP_path
-        dict2JSON['extra']['pathCalcppXNPSM'] = save2TSV_ppXNPSM_path
-
-        # convert the dict to a JSON and save it to the directory outputPath
-        createJSON(dict2JSON, outputPath, 'settingsCalc_' + paramFree + '_' + dataId + '.json')
+                df_XNP = pandas.DataFrame(data = save2TSV_XNP)
+                df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
 
 
-# dataCalculatorWrapper(relPath, locOutputPath, dictList, cc)
+                save2TSV_ppXNP   = {paramFree: ppXNP_H1H2[0],
+                                    'x_H3_H1H2': ppXNP_H1H2[4]}
+                save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
+
+                df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
+                df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
+
+
+                save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H2[0],
+                                    'x_H3_H1H2_SM_tot': ppXNPSM_H1H2[3], 'x_H3_H1H2_SM_1': ppXNPSM_H1H2[4], 'x_H3_H1H2_SM_2': ppXNPSM_H1H2[5]}
+                save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H2_' + paramFree + '_' + dataId + '.tsv'
+
+                df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
+                df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
+
+                # save paths to calculated data in a dict
+                dict2JSON = copy.deepcopy(dictElement)
+                dict2JSON['extra']['pathCalcXNP_H1H2_'] = save2TSV_XNP_path
+                dict2JSON['extra']['pathCalcppXNP_H1H2_'] = save2TSV_ppXNP_path
+                dict2JSON['extra']['pathCalcppXNPSM_H1H2_'] = save2TSV_ppXNPSM_path
+
+                # convert the dict to a JSON and save it to the directory outputPath
+                createJSON(dict2JSON, outputPath, 'settingsCalc_' + paramFree + '_' + dataId + '.json')
+
+            if generateH1H1 == True:
+                save2TSV_XNP     = {paramFree: XNP_H1H1[0],
+                                    'b_H3_H1H1': XNP_H1H1[3]}
+                save2TSV_XNP_path = outputPath + '/' + 'outputXNP_H1H1_' + paramFree + '_' + dataId + '.tsv'
+
+                df_XNP = pandas.DataFrame(data = save2TSV_XNP)
+                df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
+
+
+                save2TSV_ppXNP   = {paramFree: ppXNP_H1H1[0],
+                                    'x_H3_H1H1': ppXNP_H1H1[4]}
+                save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_H1H1_' + paramFree + '_' + dataId + '.tsv'
+
+                df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
+                df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
+
+
+                save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H1[0],
+                                    'x_H3_H1H1_SM_tot': ppXNPSM_H1H1[3]}
+                save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H1_' + paramFree + '_' + dataId + '.tsv'
+
+                df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
+                df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
+
+                # save paths to calculated data in a dict
+                dict2JSON = copy.deepcopy(dictElement)
+                print(dict2JSON)
+                dict2JSON['extra']['pathCalcXNP_H1H1_'] = save2TSV_XNP_path
+                dict2JSON['extra']['pathCalcppXNP_H1H1_'] = save2TSV_ppXNP_path
+                dict2JSON['extra']['pathCalcppXNPSM_H1H1_'] = save2TSV_ppXNPSM_path
+
+                # convert the dict to a JSON and save it to the directory outputPath
+                createJSON(dict2JSON, outputPath, 'settingsCalc_' + paramFree + '_' + dataId + '.json')
+
+            if generateH2H2 == True:
+                save2TSV_XNP     = {paramFree: XNP_H2H2[0],
+                                    'b_H3_H2H2': XNP_H2H2[3]}
+                save2TSV_XNP_path = outputPath + '/' + 'outputXNP_H2H2_' + paramFree + '_' + dataId + '.tsv'
+
+                df_XNP = pandas.DataFrame(data = save2TSV_XNP)
+                df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
+
+
+                save2TSV_ppXNP   = {paramFree: ppXNP_H2H2[0],
+                                    'x_H3_H2H2': ppXNP_H2H2[4]}
+                save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_H2H2_' + paramFree + '_' + dataId + '.tsv'
+
+                df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
+                df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
+
+
+                save2TSV_ppXNPSM = {paramFree: ppXNPSM_H2H2[0],
+                                    'x_H3_H2H2_SM_tot': ppXNPSM_H2H2[3]}
+                save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H2H2_' + paramFree + '_' + dataId + '.tsv'
+
+                df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
+                df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
+
+                # save paths to calculated data in a dict
+                dict2JSON = copy.deepcopy(dictElement)
+                print(dict2JSON)
+                dict2JSON['extra']['pathCalcXNP_H2H2_'] = save2TSV_XNP_path
+                dict2JSON['extra']['pathCalcppXNP_H2H2_'] = save2TSV_ppXNP_path
+                dict2JSON['extra']['pathCalcppXNPSM_H2H2_'] = save2TSV_ppXNPSM_path
+
+                # convert the dict to a JSON and save it to the directory outputPath
+                createJSON(dict2JSON, outputPath, 'settingsCalc_' + paramFree + '_' + dataId + '.json')
+
+                del XNP_H1H2, XNP_H1H1, XNP_H2H2 
+                del ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2
+                del ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2
+
+        # except if data files are empty, write a file with title dataId + paramFree + '_' +...
+        # indicating that this set of setting is a dud
+        except pandas.errors.EmptyDataError:
+            # del XNP_H1H2 
+            # del XNP_H1H1 
+            # del XNP_H2H2 
+            with open(locOutputPath + '/' + dataId + '_' + paramFree + '_' + str(datetime.datetime.now()) + '.txt', 'a') as dud:
+                dud.write(dataId + '_' + paramFree + '_dud_' + str(datetime.datetime.now()) + '\n')
 
 
 def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
@@ -769,7 +886,7 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
     dictList = dictConstruct(outputPaths)
 
-    calculateSort(locOutputPath, dictList[0:2], **kwargs)
+    calculateSort(locOutputPath, dictList, **kwargs)
 
 
 
@@ -820,15 +937,8 @@ if __name__ == '__main__':
                                 }
 
 
-    # parameterMain([BP3_dictPointlistAtlas[0]], 'tjolahopp2', 'scan', BP = 'BP3', createDir = False, points = 12)
-    # # (listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode)
-
 
     # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel2', 50, 'check')
-    # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
-    
-    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_scan_prel', 50, 'scan')
-    # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_scan_prel', 50, 'scan')
 
-    dataCalculatorMain('AtlasBP2_check_prel2', 'calcTest3', '/**/settings_*.json', 
-                       SM1='bb', SM2='gamgam', createDir=False)
+    # dataCalculatorMain('AtlasBP2_check_prel2', 'calcTest5', '/**/settings_*.json', 
+                       # SM1='bb', SM2='gamgam', generateH1H2=True)
