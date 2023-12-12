@@ -22,7 +22,6 @@ import glob
 
 import functions as TRSM
 
-
 def paramDirCreator(userParametersDict, targetDir, **kwargs):
 
     ############################# kwargs #############################
@@ -894,7 +893,7 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
 
 if __name__ == '__main__':
 
-    df2 = pandas.read_table('Atlas2023Limits_BP2lessThanOrEqualToTrue.tsv', index_col = 0)
+    df2 = pandas.read_table('Atlas2023Limits_BP2.tsv', index_col = 0)
 
     ms_BP2 = df2['ms']
     mx_BP2 = df2['mx']
@@ -906,7 +905,7 @@ if __name__ == '__main__':
                                'mHc_lb': mx_BP2[i], 'mHc_ub': mx_BP2[i],
                                'extra': {'ObservedLimit': 10**(-3) * limit_obs_BP2[i], 'dataId': 'S' + str(ms_BP2[i]) + '-' + 'X' + str(mx_BP2[i]) } } for i in  range(len(ms_BP2))]
 
-    df3 = pandas.read_table('Atlas2023Limits_BP3lessThanOrEqualToTrue.tsv', index_col = 0)
+    df3 = pandas.read_table('Atlas2023Limits_BP3.tsv', index_col = 0)
      
     ms_BP3 = df3['ms']
     mx_BP3 = df3['mx']
@@ -938,7 +937,7 @@ if __name__ == '__main__':
 
 
 
-    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel2', 50, 'check')
+    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
 
-    # dataCalculatorMain('AtlasBP2_check_prel2', 'calcTest5', '/**/settings_*.json', 
-                       # SM1='bb', SM2='gamgam', generateH1H2=True)
+    dataCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
+                       SM1='bb', SM2='gamgam', generateH1H2=True)

@@ -443,6 +443,6 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
 
 if __name__ == "__main__":
 
-    parameterPlot('calcTest5', '/**/settingsCalc_*.json', 'newParamPlot', 'H1H2', True, True, 
+    parameterPlot('calc_AtlasBP2_check_prel', '/**/settingsCalc_*.json', 'plot_AtlasBP2_check_prel', 'H1H2', True, True, 
                   ppXNPSM=True,ShowObsLimit=True, SM1='bb', SM2='gamgam', SMmode='1', saveStep=True, yscale='log', ylims=(10**(-6),8*10**(-2)))
 # ppXNPSM

@@ -2,6 +2,7 @@
 import json
 import pandas
 import numpy as np
+import matplotlib.pyplot as plt
 
 # !!IMPORTANT: ALL VALUES FROM Atlas2023Limits.json ARE IN FB SO ARE ALSO THE CONVERTED .tsv FILES!!
 
@@ -97,8 +98,40 @@ def convert(path, output, constraint, constraintLessThanOrEqualTo = True, **kwar
     
 if __name__ == "__main__":
 
-    # BP2 mass points in Atlas2023Limits
-    dfBP2 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP2lessThanOrEqualToTrue.tsv', True, constraintLessThanOrEqualTo = True, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500)
 
+    # BP1 mass points in Atlas2023Limits -- NO POINTS IN THIS RANGE!
+    dfBP1 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP1.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 62, mx_lb = 1, mx_ub = 124)
+
+    plt.scatter(dfBP1['ms'], dfBP1['mx'])
+    plt.show()
+
+    # BP2 mass points in Atlas2023Limits
+    dfBP2 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP2.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500)
+
+    plt.scatter(dfBP2['ms'], dfBP2['mx'])
+    plt.show()
+    
     # BP3 mass points in Atlas2023Limits
-    dfBP3 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP3lessThanOrEqualToTrue.tsv', True, constraintLessThanOrEqualTo = True, ms_lb = 126, ms_ub = 500, mx_lb = 255, mx_ub = 650)
+    dfBP3 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP3.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 126, ms_ub = 500, mx_lb = 255, mx_ub = 650)
+
+    plt.scatter(dfBP3['ms'], dfBP3['mx'])
+    plt.show()
+
+    # BP4 mass points in Atlas2023Limits -- NO POINTS IN THIS RANGE! (same range as BP1)
+    dfBP4 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP4.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 62, mx_lb = 1, mx_ub = 124)
+
+    plt.scatter(dfBP4['ms'], dfBP4['mx'])
+    plt.show()
+
+    # BP5 mass points in Atlas2023Limits -- (same range as BP2)
+    dfBP5 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP5.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500)
+
+    plt.scatter(dfBP5['ms'], dfBP5['mx'])
+    plt.show()
+
+    # BP6 mass points in Atlas2023Limits
+    dfBP6 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP6.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 126, ms_ub = 500, mx_lb = 255, mx_ub = 1000)
+
+    plt.scatter(dfBP6['ms'], dfBP6['mx'])
+    plt.show()
+
