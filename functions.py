@@ -191,9 +191,12 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
     b_H3_H1H2 = [i for i in df["b_H3_H1H2"]]
     b_H3_H1H1 = [i for i in df["b_H3_H1H1"]]
     b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
+    # if energy == 13
     x_H3_gg_H1H2 = [i for i in df["x_H3_gg"]]
     x_H3_gg_H1H1 = x_H3_gg_H1H2.copy()
     x_H3_gg_H2H2 = x_H3_gg_H1H2.copy()
+    # elif energy == 13.6
+    # x_H3_gg_H1H2 = run3Interp(massList)
     
     b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
     b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
@@ -252,6 +255,78 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
     
     return H1H2, H1H1, H2H2
 
+
+def run3Interp(massList, **kwargs):
+
+    # TO DO: 
+    # 1. check that if you use 13 TeV data that you get the same results
+    #    as in scannerS
+    # 2. the way to implement this is to implement kwargs in all the functions
+    #    where you need this (really only ppXNPSM and maybe ppXNP), which is
+    #    sort of already done through the normalization factors.
+    # 3. This function will only be called if you set the kwarg as energy=13
+    #    thus older code which the ppXNPSM and ppXNP functions will not be 
+    #    affected.
+    # 4. This then means that you also need to set the settings to the desired
+    #    settings.
+    
+   
+    #################################### kwargs ####################################
+    
+    if 'keySushi' in kwargs:
+        keySushi = kwargs['keySushi']
+    else:
+        keySushi = '..'
+
+    if 'keyX' in kwargs:
+        keyX = kwargs['keyX']
+    else:
+        keyX = '..' 
+
+    if 'keyY' in kwargs:
+        keyY = kwargs['keyY']
+    else:
+        keyY = '..' 
+
+
+    if 'BP' in kwargs:
+        if kwargs['BP'] == 'BP2'
+            ths = 1.352
+            thx = 1.175
+            tsx = -0.407
+        
+        elif kwargs['BP'] == 'BP3'
+            ths = -0.129
+            thx = 0.226
+            tsx = -0.899
+
+        elif kwargs['BP'] == 'BP5'
+            ths = -1.498
+            thx = 0.251
+            tsx = 0.271
+
+        elif kwargs['BP'] == 'BP6'
+            ths = 0.207
+            thx = 0.146
+            tsx = 0.782
+
+        else:
+            raise Exception('invalid value of BP. Can be either \'BP2\', \'BP3\', \'BP5\' or \'BP6\'')
+
+    ################################################################################
+    
+    kappa = np.cos(ths)*np.sin(thx)*np.cos(tsx) + np.sin(ths)*np.sin(tsx)
+        
+    dataPath = keySushi  
+    df = pandas.read_table(dataPath)
+    x = np.array([i for i in df[keyX]])
+    y = np.array([i for i in df[keyY]])
+    interpFunc = CubicSpline(x, y)
+    interpValue = pow(kappa, 2) * interpFunc(massList)
+
+    return interpValue
+
+    
 
 def mixingMatrix(ths, thx, tsx, angles, plotangle):
     

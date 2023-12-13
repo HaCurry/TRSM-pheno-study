@@ -1,4 +1,6 @@
 #-*- coding: utf-8 -*-
+    # dataCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
+                       # SM1='bb', SM2='gamgam', generateH1H2=True)
 import csv
 import pandas
 
@@ -19,6 +21,7 @@ import sys
 import json
 import copy
 import glob
+from pathlib import Path
 
 import functions as TRSM
 
@@ -85,17 +88,53 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
         if kwargs['BP'] == 'BP2':
             programParametersDict = {
                 'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply',
-                'mHa_lb': 80, 'mHa_ub': 80, 'mHb_lb': 125.09, 'mHb_ub': 125.09, 'mHc_lb': 375, 'mHc_ub': 375,
-                'ths_lb': 1.352, 'ths_ub': 1.352, 'thx_lb': 1.175, 'thx_ub': 1.175, 'tsx_lb': -0.407, 'tsx_ub': -0.407,
-                'vs_lb': 120, 'vs_ub': 120, 'vx_lb': 890, 'vx_ub': 890,
+                'mHa_lb': 80, 'mHa_ub': 80, 
+                'mHb_lb': 125.09, 'mHb_ub': 125.09, 
+                'mHc_lb': 375, 'mHc_ub': 375,
+                'ths_lb': 1.352, 'ths_ub': 1.352, 
+                'thx_lb': 1.175, 'thx_ub': 1.175, 
+                'tsx_lb': -0.407, 'tsx_ub': -0.407,
+                'vs_lb': 120, 'vs_ub': 120, 
+                'vx_lb': 890, 'vx_ub': 890,
                 }
         
         elif kwargs['BP'] == 'BP3':
             programParametersDict = {
                 'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply', 
-                "mHa_lb": 125.09, "mHa_ub": 125.09, "mHb_lb": 200, "mHb_ub": 200, "mHc_lb": 400, "mHc_ub": 400, 
-                "ths_lb": -0.129, "ths_ub": -0.129, "thx_lb": 0.226, "thx_ub": 0.226, "tsx_lb": -0.899, "tsx_ub": -0.899, 
-                "vs_lb": 140, "vs_ub": 140, "vx_lb": 100, "vx_ub": 100, 
+                "mHa_lb": 125.09, "mHa_ub": 125.09, 
+                "mHb_lb": 200, "mHb_ub": 200, 
+                "mHc_lb": 400, "mHc_ub": 400, 
+                "ths_lb": -0.129, "ths_ub": -0.129, 
+                "thx_lb": 0.226, "thx_ub": 0.226, 
+                "tsx_lb": -0.899, "tsx_ub": -0.899, 
+                "vs_lb": 140, "vs_ub": 140, 
+                "vx_lb": 100, "vx_ub": 100, 
+                }
+
+        elif kwargs['BP'] == 'BP5':
+            programParametersDict = {
+                'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply', 
+                "mHa_lb": 75, "mHa_ub": 75, 
+                "mHb_lb": 125.09, "mHb_ub": 125.09, 
+                "mHc_lb": 300, "mHc_ub": 300, 
+                "ths_lb": -1.498, "ths_ub": -1.498, 
+                "thx_lb": 0.251, "thx_ub": 0.251, 
+                "tsx_lb": 0.271, "tsx_ub": 0.271, 
+                "vs_lb": 50, "vs_ub": 50, 
+                "vx_lb": 720, "vx_ub": 720, 
+                }
+
+        elif kwargs['BP'] == 'BP6':
+            programParametersDict = {
+                'bfb': 'apply', 'uni': 'apply', 'stu': 'apply', 'Higgs': 'apply', 
+                "mHa_lb": 125.09, "mHa_ub": 125.09, 
+                "mHb_lb": 75, "mHb_ub": 75, 
+                "mHc_lb": 300, "mHc_ub": 300, 
+                "ths_lb": 0.207, "ths_ub": 0.207, 
+                "thx_lb": 0.146, "thx_ub": 0.146, 
+                "tsx_lb": 0.782, "tsx_ub": 0.782, 
+                "vs_lb": 220, "vs_ub": 220, 
+                "vx_lb": 150, "vx_ub": 150, 
                 }
 
     # raise exception if user specifies programParametersDict and specifies BP at the same time
@@ -869,23 +908,65 @@ def calculateSort(locOutputPath, dictList, **kwargs):
                 del ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2
                 del ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2
 
-        # except if data files are empty, write a file with title dataId + paramFree + '_' +...
-        # indicating that this set of setting is a dud
+        # except files are empty then create empty .tsv files so that we can use error handling (pandas.errors.EmptyDataError) later
+        # for any future script. 
+        # Create also a txt file with title dud in the parent directory for user to directly see which parameter settings did not give any data output
         except pandas.errors.EmptyDataError:
-            # del XNP_H1H2 
-            # del XNP_H1H1 
-            # del XNP_H2H2 
+
+
+            # save2TSV_XNP     = {paramFree: XNP_H1H2[0],
+            #                     'b_H3_H1H2': XNP_H1H2[3]}
+            save2TSV_XNP_path = outputPath + '/' + 'outputXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
+            Path(save2TSV_XNP_path).touch()
+            # df_XNP = pandas.DataFrame(data = save2TSV_XNP)
+            # df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
+
+
+            # save2TSV_ppXNP   = {paramFree: ppXNP_H1H2[0],
+            #                     'x_H3_H1H2': ppXNP_H1H2[4]}
+            save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
+            Path(save2TSV_ppXNP_path).touch()
+
+            # df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
+            # df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
+
+
+            # save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H2[0],
+            #                     'x_H3_H1H2_SM_tot': ppXNPSM_H1H2[3], 'x_H3_H1H2_SM_1': ppXNPSM_H1H2[4], 'x_H3_H1H2_SM_2': ppXNPSM_H1H2[5]}
+            save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H2_' + paramFree + '_' + dataId + '.tsv'
+            Path(save2TSV_ppXNPSM_path).touch()
+            # df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
+            # df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
+
+            # # save paths to calculated data in a dict
+            dict2JSON = copy.deepcopy(dictElement)
+            dict2JSON['extra']['pathCalcXNP_H1H2_'] = save2TSV_XNP_path
+            dict2JSON['extra']['pathCalcppXNP_H1H2_'] = save2TSV_ppXNP_path
+            dict2JSON['extra']['pathCalcppXNPSM_H1H2_'] = save2TSV_ppXNPSM_path
+
+            # convert the dict to a JSON and save it to the directory outputPath
+            createJSON(dict2JSON, outputPath, 'settingsCalc_' + paramFree + '_' + dataId + '.json')
+
             with open(locOutputPath + '/' + dataId + '_' + paramFree + '_' + str(datetime.datetime.now()) + '.txt', 'a') as dud:
                 dud.write(dataId + '_' + paramFree + '_dud_' + str(datetime.datetime.now()) + '\n')
 
 
 def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
 
+    print('*~~~~~~~~~~~~~~~~~~~~*')
+    print(' Starting calculation')
+    print('*~~~~~~~~~~~~~~~~~~~~*')
+    
     outputPaths = directorySearcher(relPath, settingsGlob)
     if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
     dictList = dictConstruct(outputPaths)
 
     calculateSort(locOutputPath, dictList, **kwargs)
+
+    print('*~~~~~~~~~~~~~~~~~~~~*')
+    print(' calculation finished')
+    print('*~~~~~~~~~~~~~~~~~~~~*')
+
 
 
 
@@ -893,6 +974,7 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
 
 if __name__ == '__main__':
 
+    # BP2 Observed limits
     df2 = pandas.read_table('Atlas2023Limits_BP2.tsv', index_col = 0)
 
     ms_BP2 = df2['ms']
@@ -905,6 +987,8 @@ if __name__ == '__main__':
                                'mHc_lb': mx_BP2[i], 'mHc_ub': mx_BP2[i],
                                'extra': {'ObservedLimit': 10**(-3) * limit_obs_BP2[i], 'dataId': 'S' + str(ms_BP2[i]) + '-' + 'X' + str(mx_BP2[i]) } } for i in  range(len(ms_BP2))]
 
+
+    # BP3 Observed limits
     df3 = pandas.read_table('Atlas2023Limits_BP3.tsv', index_col = 0)
      
     ms_BP3 = df3['ms']
@@ -920,6 +1004,43 @@ if __name__ == '__main__':
                                          'dataId': 'S' + str(ms_BP3[i]) + '-' + 'X' + str(mx_BP3[i]) 
                                         } 
                               } for i in  range(len(ms_BP3))]
+
+
+    # BP5 Observed limits
+    df3 = pandas.read_table('Atlas2023Limits_BP5.tsv', index_col = 0)
+     
+    ms_BP5 = df3['ms']
+    mx_BP5 = df3['mx']
+    limit_obs_BP5 = df3['limit_obs']
+
+    BP5_dictPointlistAtlas = [{
+                               'mHa_lb': ms_BP5[i], 'mHa_ub': ms_BP5[i],
+                               'mHb_lb': 125.09,    'mHb_ub': 125.09,
+                               'mHc_lb': mx_BP5[i], 'mHc_ub': mx_BP5[i], 
+                               'extra': {
+                                         'ObservedLimit': 10**(-3) * limit_obs_BP5[i], 
+                                         'dataId': 'S' + str(ms_BP5[i]) + '-' + 'X' + str(mx_BP5[i]) 
+                                        } 
+                              } for i in  range(len(ms_BP5))]
+
+
+    # BP6 Observed limits
+    df3 = pandas.read_table('Atlas2023Limits_BP6.tsv', index_col = 0)
+     
+    ms_BP6 = df3['ms']
+    mx_BP6 = df3['mx']
+    limit_obs_BP6 = df3['limit_obs']
+
+    BP6_dictPointlistAtlas = [{
+                               'mHa_lb': 125.09,    'mHa_ub': 125.09,
+                               'mHb_lb': ms_BP6[i], 'mHb_ub': ms_BP6[i],
+                               'mHc_lb': mx_BP6[i], 'mHc_ub': mx_BP6[i], 
+                               'extra': {
+                                         'ObservedLimit': 10**(-3) * limit_obs_BP6[i], 
+                                         'dataId': 'S' + str(ms_BP6[i]) + '-' + 'X' + str(mx_BP6[i]) 
+                                        } 
+                              } for i in  range(len(ms_BP6))]
+
 
     # BP2 settings: 
     programParametersDictBP2 = { 
@@ -939,5 +1060,21 @@ if __name__ == '__main__':
 
     # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
 
-    dataCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
-                       SM1='bb', SM2='gamgam', generateH1H2=True)
+    # dataCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
+                       # SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
+
+    # dataCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel', '/**/settings_*.json', 
+    #                  SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
+
+    dataCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel', '/**/settings_*.json', 
+                     SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
+
+    dataCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel', '/**/settings_*.json', 
+                     SM1='bb', SM2='gamgam', generateH1H2=True)
+

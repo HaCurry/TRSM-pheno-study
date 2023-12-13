@@ -133,24 +133,32 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
         # save the TRSM XS values in a variable
         dataPath = dictElement['extra'][dataPathKey]
         # df = pandas.DataFrame(data = dataPath)
-        df = pandas.read_table(dataPath, index_col = 0)
-        # print(df)
-        listXStot = [i for i in df[XStotKey]]
-        listXS1 = [i for i in df[XS1Key]]
-        listXS2 = [i for i in df[XS2Key]]
-
-        # check if the scannerS or calculation produced any error
-        for element in listXStot:
-            if abs(listXStot[0] - element) > 10**(-8):
-                raise Exception('theoryXStot not equal everywhere')
+        try:
+            df = pandas.read_table(dataPath, index_col = 0)
+            # print(df)
+            listXStot = [i for i in df[XStotKey]]
+            listXS1 = [i for i in df[XS1Key]]
+            listXS2 = [i for i in df[XS2Key]]
+     
+            # check if the scannerS or calculation produced any error
+            for element in listXStot:
+                if abs(listXStot[0] - element) > 10**(-8):
+                    raise Exception('theoryXStot not equal everywhere')
         
-        for element in listXS1:
-            if abs(listXS1[0] - element) > 10**(-8):
-                raise Exception('theoryXS1 not equal everywhere')
+            for element in listXS1:
+                if abs(listXS1[0] - element) > 10**(-8):
+                    raise Exception('theoryXS1 not equal everywhere')
 
-        for element in listXS2:
-            if abs(listXS2[0] - element) > 10**(-8):
-                raise Exception('theoryXS2 not equal everywhere')
+            for element in listXS2:
+                if abs(listXS2[0] - element) > 10**(-8):
+                    raise Exception('theoryXS2 not equal everywhere')
+
+        except pandas.errors.EmptyDataError:
+            listXStot = [np.nan]
+            listXS1 = [np.nan]
+            listXS2 = [np.nan]
+
+            
 
         XStot = listXStot[0]
         XS1 = listXS1[0]
@@ -162,9 +170,10 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
         saveTable[XStotKey].append(XStot)
         saveTable[XS1Key].append(XS1)
         saveTable[XS2Key].append(XS2)
-        print(saveTable['ms'])
 
+    # print(saveTable)
     df = pandas.DataFrame(data = saveTable)
+    print(df)
     df.to_csv(locOutputData, sep = "\t")
 
 
@@ -210,6 +219,19 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
 
     else:
         ObsLimKey = 'ObservedLimit'
+
+    if 'xlims' in kwargs:
+        xlims = kwargs['xlims']
+
+    else:
+        raise Exception('please provide xlim bounds')
+
+    if 'ylims' in kwargs:
+        ylims = kwargs['ylims']
+
+    else:
+        raise Exception('please provide ylim bounds')
+
     
     ################################################################################
 
@@ -227,7 +249,7 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     XStotList = df[XStotKey]
     XS1List = df[XS1Key]
     XS2List = df[XS2Key]
-
+    
     # store everything in a dictionary for the last figure
     values = {msKey: msList, mxKey: mxList, 
               ObsLimKey: ObsLimList, 
@@ -255,13 +277,14 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
             excl2List.append({msKey: msList[i], mxKey: mxList[i], ObsLimKey: ObsLimList[i], XS2Key: XS2List[i]})
     
     # print the excluded mass points
+    print('=============================================')
     print('Excluded points ' + XStotKey + ': ' + str(exclTotList))
     print('=============================================')
     print('Excluded points ' + XS1Key + ': ' + str(excl1List))
     print('=============================================')
     print('Excluded points ' + XS2Key + ': ' + str(excl2List))
     print('=============================================')
-
+       
     # plot Observed Limits or anything with the column name ObsLimKey
     plt.scatter(msList, mxList, c=ObsLimList, cmap='viridis')
     for i in range(len(ObsLimList)):
@@ -270,6 +293,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
                      textcoords = 'offset points', xytext= (0,0), fontsize = 10, rotation = 0, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground="w")])
     plt.title(ObsLimKey)
+    plt.xlim(xlims)
+    plt.ylim(ylims)
     plt.show()
     plt.savefig(locOutputData + '/' + ObsLimKey)
     plt.close()
@@ -282,6 +307,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
                      textcoords = 'offset points', xytext= (0,0), fontsize = 10, rotation = 0, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground="w")])
     plt.title(XStotKey)
+    plt.xlim(xlims)
+    plt.ylim(ylims)
     plt.show()
     plt.savefig(locOutputData + '/' + XStotKey)
     plt.close()
@@ -294,6 +321,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
                      textcoords = 'offset points', xytext= (0,0), fontsize = 10, rotation = 0, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground="w")])
     plt.title(XS1Key)
+    plt.xlim(xlims)
+    plt.ylim(ylims)
     plt.show()
     plt.savefig(locOutputData + '/' + XS1Key)
     plt.close()
@@ -306,6 +335,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
                      textcoords = 'offset points', xytext= (0,0), fontsize = 10, rotation = 0, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground="w")])
     plt.title(XS2Key)
+    plt.xlim(xlims)
+    plt.ylim(ylims)
     plt.show()
     plt.savefig(locOutputData + '/' + XS2Key)
     plt.close()
@@ -321,7 +352,10 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
         X = values[keyX]
         Y = values[keyY]
         C = np.array(values[keyA])/np.array(values[keyB])
-        
+
+        print('{}/{}: '.format(keyA, keyB) + str(C))
+        print('=============================================')
+
         plt.scatter(X, Y, c = C, cmap='viridis')
         for i in range(len(X)):
             # plt.text(ms[i], mx[i], '{:.3}'.format(limit_obs[i]), fontsize = 8)
@@ -330,6 +364,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
                          path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground="w")])
 
         plt.title('{}/{}'.format(keyA, keyB))
+        plt.xlim(xlims)
+        plt.ylim(ylims)
         plt.show()
         plt.savefig(locOutputData + '/' + keyA + '_dividedBy_' + keyB)
         plt.close()
@@ -341,5 +377,5 @@ if __name__ == "__main__":
     exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel', 'compiled_AtlasBP2_check_prel.tsv',
                       msKey='mHa_ub', mxKey='mHc_ub')   
 
-    exclusionPlotter('compiled_AtlasBP2_check_prel.tsv', 0, 
-                     keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1H2_SM_1')
+    exclusionPlotter('compiled_AtlasBP2_check_prel.tsv', 'plots', 0, 
+                     xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1H2_SM_1')

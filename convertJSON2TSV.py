@@ -103,35 +103,45 @@ if __name__ == "__main__":
     dfBP1 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP1.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 62, mx_lb = 1, mx_ub = 124)
 
     plt.scatter(dfBP1['ms'], dfBP1['mx'])
+    plt.title('BP1')
     plt.show()
 
     # BP2 mass points in Atlas2023Limits
     dfBP2 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP2.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500)
 
     plt.scatter(dfBP2['ms'], dfBP2['mx'])
+    plt.title('BP2')
     plt.show()
     
     # BP3 mass points in Atlas2023Limits
     dfBP3 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP3.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 126, ms_ub = 500, mx_lb = 255, mx_ub = 650)
 
     plt.scatter(dfBP3['ms'], dfBP3['mx'])
+    plt.title('BP3')
     plt.show()
 
     # BP4 mass points in Atlas2023Limits -- NO POINTS IN THIS RANGE! (same range as BP1)
     dfBP4 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP4.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 62, mx_lb = 1, mx_ub = 124)
 
     plt.scatter(dfBP4['ms'], dfBP4['mx'])
+    plt.title('BP4')
     plt.show()
 
     # BP5 mass points in Atlas2023Limits -- (same range as BP2)
     dfBP5 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP5.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 1, ms_ub = 124, mx_lb = 126, mx_ub = 500)
 
     plt.scatter(dfBP5['ms'], dfBP5['mx'])
+    plt.title('BP5')
+    plt.xlim(1,124)
+    plt.ylim(126,500)
     plt.show()
 
     # BP6 mass points in Atlas2023Limits
     dfBP6 = convert('Atlas2023Limits.json', 'Atlas2023Limits_BP6.tsv', True, constraintLessThanOrEqualTo = False, ms_lb = 126, ms_ub = 500, mx_lb = 255, mx_ub = 1000)
 
     plt.scatter(dfBP6['ms'], dfBP6['mx'])
+    plt.title('BP6')
+    plt.xlim(126,500)
+    plt.ylim(255,1000)
     plt.show()
 
