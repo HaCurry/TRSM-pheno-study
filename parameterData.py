@@ -761,16 +761,12 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
     else:
         createDir = True
-
-    print('hej')
-    
+   
     for dictElement in dictList:
 
         # store data from dict (JSON) as variables
         paramFree, pathDataOutput, dataId = dictElement['extra']['paramFree'], dictElement['extra']['pathDataOutput'], dictElement['extra']['dataId']
-
-        print(dataId)
-        
+      
         # create directory structure
         if createDir == True:
 
@@ -810,10 +806,6 @@ def calculateSort(locOutputPath, dictList, **kwargs):
             XNP_H1H2, XNP_H1H1, XNP_H2H2 = dataCalculator('XNP', axisDict[paramFree], pathDataOutput, **kwargs)
             ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2 = dataCalculator('ppXNP', axisDict[paramFree], pathDataOutput, **kwargs)
             ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2 = dataCalculator('ppXNPSM', axisDict[paramFree], pathDataOutput, **kwargs)
-            # if dataId == 'S30.0-X300.0':
-            #     print(paramFree, dataId)
-            #     print(ppXNPSM_H1H2[0][:5], ppXNPSM_H1H2[4][:5])
-            # save calculated data to tsv files
 
             if generateH1H2 == True:
                 save2TSV_XNP     = {paramFree: XNP_H1H2[0],
@@ -965,15 +957,9 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     print('*~~~~~~~~~~~~~~~~~~~~*')
 
 
-# def mProcWrapperCalculator(relPath, locOutputPath, settingsGlob, 
-#                            generateH1H2 = True, generalPhysics = generalPhysicsProc, 
-#                            SM1 = SM1proc, SM2 = SM2proc, axis2 = axis2Proc, axis3 = axis3Proc,
-#                            ggF_xs_SM_Higgs = proc_xs_SM_Higgs, ggF_xs_SM_Higgs_SM1SM2 = proc_xs_SM_Higgs_SM1SM2):
-
 # from stackexchange: https://stackoverflow.com/a/53173433/17456342
 def starmap_with_kwargs(pool, fn, args_iter, kwargs_iter):
     args_for_starmap = zip(repeat(fn), args_iter, kwargs_iter)
-    # print(len((list(args_for_starmap))))
     return pool.starmap(apply_args_and_kwargs, args_for_starmap)
 
 
@@ -993,17 +979,12 @@ def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
     dictList = dictConstruct(outputPaths)
     dictList = [[dictElement] for dictElement in dictList]
-    print(len(dictList))
-    args_iter = zip(repeat(locOutputPath), dictList)
-    # print(list(args_iter))
-    # print(type(args_iter))
-    # print(list(args_iter))
-    # list(args_iter)
-    # print(type(args_iter))
-    kwargs_iter = repeat(kwargs)#, times=len(dictList))
-    pool = multiprocessing.Pool()
-    x = starmap_with_kwargs(pool, calculateSort, args_iter, kwargs_iter)
 
+    args_iter = zip(repeat(locOutputPath), dictList)
+    kwargs_iter = repeat(kwargs)
+
+    pool = multiprocessing.Pool()
+    starmap_with_kwargs(pool, calculateSort, args_iter, kwargs_iter)
    
     print('*~~~~~~~~~~~~~~~~~~~~*')
     print(' calculation finished')
@@ -1102,22 +1083,36 @@ if __name__ == '__main__':
                        # SM1='bb', SM2='gamgam', generateH1H2=True)
 
 
-    mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
-                       SM1='bb', SM2='gamgam', generateH1H2=True)
-
-
     # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
 
     # dataCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel', '/**/settings_*.json', 
     #                  SM1='bb', SM2='gamgam', generateH1H2=True)
+
 
     # mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
 
     # dataCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel', '/**/settings_*.json', 
     #                  SM1='bb', SM2='gamgam', generateH1H2=True)
 
+
     # mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
 
     # dataCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel', '/**/settings_*.json', 
-    #                  SM1='bb', SM2='gamgam', generateH1H2=True)
+                     # SM1='bb', SM2='gamgam', generateH1H2=True)
 
+
+    # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
+    mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel_Mproc', '/**/settings_*.json', 
+                    SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
+    mProcCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel_Mproc', '/**/settings_*.json', 
+                    SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
+    mProcCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel_Mproc', '/**/settings_*.json', 
+                    SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
+    mProcCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel_Mproc', '/**/settings_*.json', 
+                    SM1='bb', SM2='gamgam', generateH1H2=True)
