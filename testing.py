@@ -43,10 +43,47 @@ import functions as TRSM
 
 #subprocess.run(toShell, timeout = 180)
 
-#0.24757907662653156
-#0.099353079531563693
+# 0.24757907662653156
+# 0.099353079531563693
 
-x = np.linspace(1,10)
-plt.plot(x,x)
-print('hejsan', flush = True)
-plt.show()
+# x = np.linspace(1,10)
+# plt.plot(x,x)
+# print('hejsan', flush = True)
+# plt.show()
+
+from itertools import repeat
+import multiprocessing
+
+# from stackexchange: https://stackoverflow.com/a/53173433/17456342
+def starmap_with_kwargs(pool, fn, args_iter, kwargs_iter):
+    args_for_starmap = zip(repeat(fn), args_iter, kwargs_iter)
+    print(args_iter)
+    return pool.starmap(apply_args_and_kwargs, args_for_starmap)
+
+
+# from stackexchange: https://stackoverflow.com/a/53173433/17456342
+def apply_args_and_kwargs(fn, args, kwargs):
+    print('test')
+    return fn(*args, **kwargs)
+
+def func(path, dictArg, **kwargs):
+    for i in dictArg:
+        print(i['a'])
+        print(kwargs['yes'])
+
+def funcWrapper(path, dictList, **kwargs):
+
+    args_iter = zip(repeat(path), dictList)
+    kwargs_iter = repeat(kwargs)
+
+    # list(args_iter)
+
+    pool = multiprocessing.Pool()
+    starmap_with_kwargs(pool, func, args_iter, kwargs_iter)
+       
+    
+dictList = [{'a: 2'}, {'a': 65}, {'a': 213}, {'a': 3218}]
+path = 'some/path/to/something'
+
+funcWrapper(path, dictList, yes=1)
+

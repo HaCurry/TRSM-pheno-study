@@ -290,22 +290,22 @@ def run3Interp(massList, **kwargs):
 
 
     if 'BP' in kwargs:
-        if kwargs['BP'] == 'BP2'
+        if kwargs['BP'] == 'BP2':
             ths = 1.352
             thx = 1.175
             tsx = -0.407
         
-        elif kwargs['BP'] == 'BP3'
+        elif kwargs['BP'] == 'BP3':
             ths = -0.129
             thx = 0.226
             tsx = -0.899
 
-        elif kwargs['BP'] == 'BP5'
+        elif kwargs['BP'] == 'BP5':
             ths = -1.498
             thx = 0.251
             tsx = 0.271
 
-        elif kwargs['BP'] == 'BP6'
+        elif kwargs['BP'] == 'BP6':
             ths = 0.207
             thx = 0.146
             tsx = 0.782

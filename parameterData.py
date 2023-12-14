@@ -22,6 +22,7 @@ import json
 import copy
 import glob
 from pathlib import Path
+from itertools import repeat
 
 import functions as TRSM
 
@@ -699,7 +700,14 @@ def directorySearcher(relPath, globPathname):
 
 
 def dictConstruct(paths):
+    '''
+    Create a list of dictionaries out of JSON files found in the list paths
+    and returns the dictionary.
 
+    paths list. list of strings where each element is a path to a JSON file
+
+    returns: dictList list. List of dictionaries.  
+    '''
     dictList = []
     
     for pathVar in paths:
@@ -754,11 +762,15 @@ def calculateSort(locOutputPath, dictList, **kwargs):
     else:
         createDir = True
 
+    print('hej')
+    
     for dictElement in dictList:
 
         # store data from dict (JSON) as variables
         paramFree, pathDataOutput, dataId = dictElement['extra']['paramFree'], dictElement['extra']['pathDataOutput'], dictElement['extra']['dataId']
 
+        print(dataId)
+        
         # create directory structure
         if createDir == True:
 
@@ -914,31 +926,16 @@ def calculateSort(locOutputPath, dictList, **kwargs):
         except pandas.errors.EmptyDataError:
 
 
-            # save2TSV_XNP     = {paramFree: XNP_H1H2[0],
-            #                     'b_H3_H1H2': XNP_H1H2[3]}
             save2TSV_XNP_path = outputPath + '/' + 'outputXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
             Path(save2TSV_XNP_path).touch()
-            # df_XNP = pandas.DataFrame(data = save2TSV_XNP)
-            # df_XNP.to_csv(save2TSV_XNP_path, sep = "\t")
 
-
-            # save2TSV_ppXNP   = {paramFree: ppXNP_H1H2[0],
-            #                     'x_H3_H1H2': ppXNP_H1H2[4]}
             save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
             Path(save2TSV_ppXNP_path).touch()
 
-            # df_ppXNP = pandas.DataFrame(data = save2TSV_ppXNP)
-            # df_ppXNP.to_csv(save2TSV_ppXNP_path, sep = "\t")
-
-
-            # save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H2[0],
-            #                     'x_H3_H1H2_SM_tot': ppXNPSM_H1H2[3], 'x_H3_H1H2_SM_1': ppXNPSM_H1H2[4], 'x_H3_H1H2_SM_2': ppXNPSM_H1H2[5]}
             save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H2_' + paramFree + '_' + dataId + '.tsv'
             Path(save2TSV_ppXNPSM_path).touch()
-            # df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
-            # df_ppXNPSM.to_csv(save2TSV_ppXNPSM_path, sep = "\t")
 
-            # # save paths to calculated data in a dict
+            # save paths to calculated data in a dict
             dict2JSON = copy.deepcopy(dictElement)
             dict2JSON['extra']['pathCalcXNP_H1H2_'] = save2TSV_XNP_path
             dict2JSON['extra']['pathCalcppXNP_H1H2_'] = save2TSV_ppXNP_path
@@ -968,8 +965,47 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     print('*~~~~~~~~~~~~~~~~~~~~*')
 
 
+# def mProcWrapperCalculator(relPath, locOutputPath, settingsGlob, 
+#                            generateH1H2 = True, generalPhysics = generalPhysicsProc, 
+#                            SM1 = SM1proc, SM2 = SM2proc, axis2 = axis2Proc, axis3 = axis3Proc,
+#                            ggF_xs_SM_Higgs = proc_xs_SM_Higgs, ggF_xs_SM_Higgs_SM1SM2 = proc_xs_SM_Higgs_SM1SM2):
+
+# from stackexchange: https://stackoverflow.com/a/53173433/17456342
+def starmap_with_kwargs(pool, fn, args_iter, kwargs_iter):
+    args_for_starmap = zip(repeat(fn), args_iter, kwargs_iter)
+    print(args_iter)
+    return pool.starmap(apply_args_and_kwargs, args_for_starmap)
 
 
+# from stackexchange: https://stackoverflow.com/a/53173433/17456342
+def apply_args_and_kwargs(fn, args, kwargs):
+    print('hej')
+    return fn(*args, **kwargs)
+
+
+# from stackexchange: https://stackoverflow.com/a/53173433/17456342
+def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
+    
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    print(' Starting calculation (multiprocessing)')
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+
+    outputPaths = directorySearcher(relPath, settingsGlob)
+    if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
+    dictList = dictConstruct(outputPaths)
+    args_iter = zip(repeat(locOutputPath), dictList)
+    print(type(args_iter))
+    # print(list(args_iter))
+    list(args_iter)
+    print(type(args_iter))
+    kwargs_iter = repeat(kwargs)#, times=len(dictList))
+    pool = multiprocessing.Pool()
+    x = starmap_with_kwargs(pool, calculateSort, args_iter, kwargs_iter)
+
+   
+    print('*~~~~~~~~~~~~~~~~~~~~*')
+    print(' calculation finished')
+    print('*~~~~~~~~~~~~~~~~~~~~*')
 
 
 if __name__ == '__main__':
@@ -1063,18 +1099,23 @@ if __name__ == '__main__':
     # dataCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
                        # SM1='bb', SM2='gamgam', generateH1H2=True)
 
+
+    mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
+                       SM1='bb', SM2='gamgam', generateH1H2=True)
+
+
     # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
 
     # dataCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel', '/**/settings_*.json', 
     #                  SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
+    # mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
 
-    dataCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel', '/**/settings_*.json', 
-                     SM1='bb', SM2='gamgam', generateH1H2=True)
+    # dataCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel', '/**/settings_*.json', 
+    #                  SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
+    # mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
 
-    dataCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel', '/**/settings_*.json', 
-                     SM1='bb', SM2='gamgam', generateH1H2=True)
+    # dataCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel', '/**/settings_*.json', 
+    #                  SM1='bb', SM2='gamgam', generateH1H2=True)
 
