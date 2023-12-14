@@ -973,13 +973,12 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
 # from stackexchange: https://stackoverflow.com/a/53173433/17456342
 def starmap_with_kwargs(pool, fn, args_iter, kwargs_iter):
     args_for_starmap = zip(repeat(fn), args_iter, kwargs_iter)
-    print(args_iter)
+    # print(len((list(args_for_starmap))))
     return pool.starmap(apply_args_and_kwargs, args_for_starmap)
 
 
 # from stackexchange: https://stackoverflow.com/a/53173433/17456342
 def apply_args_and_kwargs(fn, args, kwargs):
-    print('hej')
     return fn(*args, **kwargs)
 
 
@@ -993,11 +992,14 @@ def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     outputPaths = directorySearcher(relPath, settingsGlob)
     if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
     dictList = dictConstruct(outputPaths)
+    dictList = [[dictElement] for dictElement in dictList]
+    print(len(dictList))
     args_iter = zip(repeat(locOutputPath), dictList)
-    print(type(args_iter))
     # print(list(args_iter))
-    list(args_iter)
-    print(type(args_iter))
+    # print(type(args_iter))
+    # print(list(args_iter))
+    # list(args_iter)
+    # print(type(args_iter))
     kwargs_iter = repeat(kwargs)#, times=len(dictList))
     pool = multiprocessing.Pool()
     x = starmap_with_kwargs(pool, calculateSort, args_iter, kwargs_iter)
