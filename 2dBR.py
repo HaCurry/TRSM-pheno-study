@@ -20,7 +20,6 @@ import json
 import functions as TRSM
 import Exclusion_functions as excl
 import parameterData
-import 2dPlotter as 2dPlot
 
 
 def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
@@ -81,25 +80,25 @@ if __name__ == '__main__':
 
     #### BP2 ####
 
-    # 2dPlot.checkCreator2d(100, 'plots2D/BP2_BR_XSH/config_BP2_BR_XSH.tsv', (126, 500), (1, 124), 'mH3', 'mH1', 'mH2',
+    # checkCreator2d(100, 'plots2D/BP2_BR_XSH/config_BP2_BR_XSH.tsv', (126, 500), (1, 124), 'mH3', 'mH1', 'mH2',
                    # ths=1.352, thx=1.175, tsx=-0.407, vs=120, vx=890)
 
-    # 2dPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP2_BR_XSH', 'config_BP2_BR_XSH.tsv', 'output_BP2_BR_XSH.tsv', 'check')
+    # runTRSM('../../../TRSMBroken', 'plots2D/BP2_BR_XSH', 'config_BP2_BR_XSH.tsv', 'output_BP2_BR_XSH.tsv', 'check')
        
-    # 2dPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2', 'bb', 'gamgam')
+    # calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2', 'bb', 'gamgam')
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2 = 2dPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2 = pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
     
-    x, y, z, xi, yi = 2dPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_b_H3_H1H2)
+    x, y, z, xi, yi = plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_b_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     plt.imshow(zi, vmin=0.1, vmax=0.55, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    2dPlot.plotAuxTitleAndBounds2D(r"BP2: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    plotAuxTitleAndBounds2D(r"BP2: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
 
-    2dPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP2_BR_XSH/BP2_BR_XSH_fig.pdf')
@@ -116,16 +115,16 @@ if __name__ == '__main__':
 
     #### BP3 ####
 
-    # 2dPlot.checkCreator2d(100, 'plots2D/BP3_BR_XSH/config_BP3_BR_XSH.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
+    # checkCreator2d(100, 'plots2D/BP3_BR_XSH/config_BP3_BR_XSH.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
     #              # ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100)
 
-    # 2dPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP3_BR_XSH', 'config_BP3_BR_XSH.tsv', 'output_BP3_BR_XSH.tsv', 'check')
+    # runTRSM('../../../TRSMBroken', 'plots2D/BP3_BR_XSH', 'config_BP3_BR_XSH.tsv', 'output_BP3_BR_XSH.tsv', 'check')
 
-    # 2dPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3', 'bb', 'gamgam')
+    # calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3', 'bb', 'gamgam')
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = 2dPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
-    x, y, z, xi, yi = 2dPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
+    x, y, z, xi, yi = plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
@@ -135,9 +134,9 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    2dPlot.plotAuxTitleAndBounds2D(r"BP3: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+    plotAuxTitleAndBounds2D(r"BP3: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
 
-    2dPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP3_BR_XSH/BP3_BR_XSH_fig.pdf')
@@ -152,16 +151,16 @@ if __name__ == '__main__':
 
     #### BP5 ####
     
-    # 2dPlot.checkCreator2d(100, 'plots2D/BP5_BR_XSH/config_BP5_BR_XSH.tsv', (126, 500), (1, 124), 'mH3', 'mH1', 'mH2',
+    # checkCreator2d(100, 'plots2D/BP5_BR_XSH/config_BP5_BR_XSH.tsv', (126, 500), (1, 124), 'mH3', 'mH1', 'mH2',
     #                ths=-1.498, thx=0.251, tsx=0.271, vs=50, vx=720)
 
-    # 2dPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP5_BR_XSH/', 'config_BP5_BR_XSH.tsv', 'output_BP5_BR_XSH.tsv', 'check', capture_output=False)
+    # runTRSM('../../../TRSMBroken', 'plots2D/BP5_BR_XSH/', 'config_BP5_BR_XSH.tsv', 'output_BP5_BR_XSH.tsv', 'check', capture_output=False)
 
-    # 2dPlot.calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5', 'bb', 'gamgam')
+    # calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5', 'bb', 'gamgam')
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_b_H3_H1H2 = 2dPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_b_H3_H1H2 = pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
-    x, y, z, xi, yi = 2dPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_b_H3_H1H2)
+    x, y, z, xi, yi = plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_b_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
@@ -172,9 +171,9 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=0, vmax=1, origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    2dPlot.plotAuxTitleAndBounds2D(r"BP5: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    plotAuxTitleAndBounds2D(r"BP5: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
 
-    2dPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
 
     plt.savefig('plots2D/BP5_BR_XSH/BP5_BR_XSH_fig.pdf')
@@ -191,20 +190,20 @@ if __name__ == '__main__':
 
     #### BP6 ####
 
-    # 2dPlot.checkCreator2d(50, 'plots2D/BP6_BR_XSH/config_BP6_BR_XSH.tsv', (255, 850), (126, 400), 'mH3', 'mH2', 'mH1',
+    # checkCreator2d(50, 'plots2D/BP6_BR_XSH/config_BP6_BR_XSH.tsv', (255, 850), (126, 400), 'mH3', 'mH2', 'mH1',
     #                ths=0.207, thx=0.146, tsx=0.782, vs=220, vx=150)
 
-    # 2dPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP6_BR_XSH/', 'config_BP6_BR_XSH.tsv', 'output_BP6_BR_XSH.tsv', 'check', capture_output=False)
+    # runTRSM('../../../TRSMBroken', 'plots2D/BP6_BR_XSH/', 'config_BP6_BR_XSH.tsv', 'output_BP6_BR_XSH.tsv', 'check', capture_output=False)
 
-    # 2dPlot.calculateSort2D('plots2D/BP6_BR_XSH/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH', 'calc_BP6', 'bb', 'gamgam')
+    # calculateSort2D('plots2D/BP6_BR_XSH/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH', 'calc_BP6', 'bb', 'gamgam')
 
-    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = 2dPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
 
-    2dPlot.calculateSort2D('plots2D/BP6_BR_XSH_try2/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH_try2', 'calc_BP6', 'bb', 'gamgam')
+    calculateSort2D('plots2D/BP6_BR_XSH_try2/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH_try2', 'calc_BP6', 'bb', 'gamgam')
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = 2dPlot.pandasReader('plots2D/BP6_BR_XSH_try2/calc_BP6', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = pandasReader('plots2D/BP6_BR_XSH_try2/calc_BP6', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
-    x, y, z, xi, yi = 2dPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_b_H3_H1H2)
+    x, y, z, xi, yi = plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_b_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
@@ -213,9 +212,9 @@ if __name__ == '__main__':
     plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    2dPlot.plotAuxTitleAndBounds2D(r"BP6: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 1000))
+    plotAuxTitleAndBounds2D(r"BP6: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 1000))
 
-    2dPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     # plt.savefig('plots2D/BP6_BR_XSH/BP6_BR_XSH_fig.pdf')
