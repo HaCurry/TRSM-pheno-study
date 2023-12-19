@@ -254,8 +254,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(ObsLimKey)
     plt.xlim(xlims)
     plt.ylim(ylims)
+    plt.savefig(locOutputData + '/' + ObsLimKey + '.pdf')
     plt.show()
-    plt.savefig(locOutputData + '/' + ObsLimKey)
     plt.close()
 
     # plot total-cross section or anything with the column name XStotKey
@@ -268,8 +268,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(XStotKey)
     plt.xlim(xlims)
     plt.ylim(ylims)
+    plt.savefig(locOutputData + '/' + XStotKey + '.pdf')
     plt.show()
-    plt.savefig(locOutputData + '/' + XStotKey)
     plt.close()
 
     # plot cross-section of first mode or anything with the column name XS1Key
@@ -282,8 +282,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(XS1Key)
     plt.xlim(xlims)
     plt.ylim(ylims)
+    plt.savefig(locOutputData + '/' + XS1Key + '.pdf')
     plt.show()
-    plt.savefig(locOutputData + '/' + XS1Key)
     plt.close()
 
     # plot cross-section of second mode or anything with the column name XS2Key
@@ -296,8 +296,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(XS2Key)
     plt.xlim(xlims)
     plt.ylim(ylims)
+    plt.savefig(locOutputData + '/' + XS2Key + '.pdf')
     plt.show()
-    plt.savefig(locOutputData + '/' + XS2Key)
     plt.close()
 
     # if user gives the below key names then plot the keyX on x-axis, keyY on y-axis
@@ -325,8 +325,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
         plt.title('{}/{}'.format(keyA, keyB))
         plt.xlim(xlims)
         plt.ylim(ylims)
+        plt.savefig(locOutputData + '/' + keyA + '_dividedBy_' + keyB + '.pdf')
         plt.show()
-        plt.savefig(locOutputData + '/' + keyA + '_dividedBy_' + keyB)
         plt.close()
 
 
@@ -424,6 +424,8 @@ def checkCreator2d(pointsSq, locOutputData, mxBounds, msBounds, mxKey, msKey, mh
 
 def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
 
+    ############################# kwargs #############################
+
     if 'capture_output' in kwargs:
         capture_output = kwargs['capture_output']
 
@@ -436,6 +438,7 @@ def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
     else:
         capture_output = True
         
+    ##################################################################
     
     if scannerSmode == 'scan':
 
@@ -471,6 +474,8 @@ def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
 
 def calculateSort2D(dataPath, outputDir, outputName, SM1, SM2, **kwargs):
 
+    ############################# kwargs #############################
+
     if 'ppXNPnorm' in kwargs:
         ppXNPnorm = kwargs['ppXNPnorm']
 
@@ -483,6 +488,7 @@ def calculateSort2D(dataPath, outputDir, outputName, SM1, SM2, **kwargs):
     else:
         ppXNPSMnorm = 1
         
+    ##################################################################
     
     XNP_H1H2, XNP_H1H1, XNP_H2H2 = parameterData.dataCalculator('XNP', 'mH1', dataPath)
     ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2 = parameterData.dataCalculator('ppXNP', 'mH1', dataPath, ggF_xs_SM_Higgs=ppXNPnorm)
@@ -526,6 +532,8 @@ def calculateSort2D(dataPath, outputDir, outputName, SM1, SM2, **kwargs):
 
 def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
 
+    ############################# kwargs #############################
+
     if ('xlims' in kwargs) and ('ylims' in kwargs):
         plt.xlim(kwargs['xlims'])        
         plt.ylim(kwargs['ylims'])
@@ -536,6 +544,8 @@ def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
     else:
         pass
             
+    ##################################################################
+
     plt.title(title)
     plt.xlabel(xtitle)
     plt.ylabel(ytitle)
@@ -576,6 +586,83 @@ def pandasReader(path, axis1Key, axis2Key, axis3Key, zKey):
 
     return axis1, axis2, axis3, z 
 
+def pandasDynamicReader(path, listIndex):
+
+    df = pandas.read_table(path, index_col=0)
+
+    dynamicDict = {}
+    for key in listIndex:
+        dynamicDict[key] = np.array([i for i in df[key]])
+
+    return dynamicDict
+
+
+def exclusionCheck(ObsLimList, compareDict, compareKeys, epsilon):
+
+    for key in compareKeys:
+
+        exclList = []
+        for i in range(len(ObsLimList)):
+
+            if (compareDict[key])[i] - ObsLimList[i] > epsilon:
+                exclList.append({'index': i, 'ObservedLimit': ObsLimList[i], key: (compareDict[key])[i]})
+            else:
+                pass
+  
+            # print the excluded mass points
+            print('=============================================')
+            print('Excluded points ' + key + ': ' + str(exclList))
+            print('=============================================')
+   
+       
+
+def plotAuxAnnotator(xlist, ylist, zlist, fmt, **kwargs):
+
+    ############################# kwargs #############################
+
+    if 'txtcoord' in kwargs:
+        txtcoord = kwargs['txtcoord']
+
+    else:
+        txtcoord = 'offset points'
+
+    if 'xytxt' in kwargs:
+        xytxt = kwargs['xytxt']
+
+    else:
+        xytxt = (0,0)
+
+    if 'fontsize' in kwargs:
+        fsize = kwargs['fontsize']
+
+    else:
+        fsize = 10
+
+    if 'rot' in kwargs:
+        rot = kwargs['rot']
+
+    else: 
+        rot = 0
+
+    if 'lwidth' in kwargs:
+        lwidth = kwargs['lwidt']
+
+    else:
+        lwidth = 1.5
+
+    if 'fground' in kwargs:
+        fground = kwargs['fground']
+
+    else:
+        fground = 'w'
+    
+    ##################################################################
+    
+    for i in range(len(zlist)):
+        # plt.text(ms[i], mx[i], '{:.3}'.format(limit_obs[i]), fontsize = 8)
+        plt.annotate(fmt.format(zlist[i]), (xlist[i], ylist[i]),
+                     textcoords = txtcoord, xytext= xytxt, fontsize = fsize, rotation = rot, 
+                     path_effects=[mpl.patheffects.withStroke(linewidth=lwidth, foreground=fground)])
 
 if __name__ == "__main__":
 
