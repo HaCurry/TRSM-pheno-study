@@ -825,7 +825,7 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
 
                 save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H2[0],
-                                    'x_H3_H1H2_SM_tot': ppXNPSM_H1H2[3], 'x_H3_H1H2_SM_1': ppXNPSM_H1H2[4], 'x_H3_H1H2_SM_2': ppXNPSM_H1H2[5]}
+                                    'x_H3_H1H2_SM1SM2': ppXNPSM_H1H2[3], 'x_H3_H1_SM1_H2_SM2': ppXNPSM_H1H2[4], 'x_H3_H1_SM2_H2_SM1': ppXNPSM_H1H2[5]}
                 save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H2_' + paramFree + '_' + dataId + '.tsv'
 
                 df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
@@ -858,7 +858,7 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
 
                 save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H1[0],
-                                    'x_H3_H1H1_SM_tot': ppXNPSM_H1H1[3]}
+                                    'x_H3_H1H1_SM1SM2': ppXNPSM_H1H1[3]}
                 save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H1_' + paramFree + '_' + dataId + '.tsv'
 
                 df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
@@ -892,7 +892,7 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
 
                 save2TSV_ppXNPSM = {paramFree: ppXNPSM_H2H2[0],
-                                    'x_H3_H2H2_SM_tot': ppXNPSM_H2H2[3]}
+                                    'x_H3_H2H2_SM1SM2': ppXNPSM_H2H2[3]}
                 save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H2H2_' + paramFree + '_' + dataId + '.tsv'
 
                 df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
@@ -993,6 +993,8 @@ def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
 
 if __name__ == '__main__':
 
+    # NOTE: everything in this if __name__ == 'main' is deprecated, it has been moved to oneD_AtlasLimits.py, please use oneD_AtlasLimits.py instead
+    
     # BP2 Observed limits
     df2 = pandas.read_table('Atlas2023Limits_BP2.tsv', index_col = 0)
 
@@ -1076,43 +1078,51 @@ if __name__ == '__main__':
                                 }
 
 
-
+    # line below deprecated
     # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
 
+    # line below deprecated
     # dataCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel', '/**/settings_*.json', 
                        # SM1='bb', SM2='gamgam', generateH1H2=True)
 
-
+    # line below deprecated
     # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
 
+    # line below deprecated
     # dataCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel', '/**/settings_*.json', 
     #                  SM1='bb', SM2='gamgam', generateH1H2=True)
 
-
+    # line below deprecated
     # mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
 
+    # line below deprecated
     # dataCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel', '/**/settings_*.json', 
     #                  SM1='bb', SM2='gamgam', generateH1H2=True)
 
-
+    # line below deprecated
     # mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
 
+    # line below deprecated
     # dataCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel', '/**/settings_*.json', 
                      # SM1='bb', SM2='gamgam', generateH1H2=True)
+    
 
-
+    # 1D parameter plot for Atlas observed limits
+    
     # mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
-    mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
+    # mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
 
     # mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
-    mProcCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
+    # mProcCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
 
     # mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
-    mProcCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
+    # mProcCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
 
     # mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
-    mProcCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
+    # mProcCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # NOTE: everything in this if __name__ == 'main' is deprecated, it has been moved to oneD_AtlasLimits.py, please use oneD_AtlasLimits.py instead

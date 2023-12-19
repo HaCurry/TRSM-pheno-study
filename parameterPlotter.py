@@ -56,12 +56,13 @@ def tupleConstruct(dictList, **kwargs):
     for dictElement in dictList:
         paramFree        = (dictElement)['paramFree']
         pathDataOutput   = (dictElement)['pathDataOutput']
-        ObservedLimit    = (dictElement)['ObservedLimit']
+        if ShowObsLimit == True: ObservedLimit    = (dictElement)['ObservedLimit']
+        else: ObservedLimit = 'empty'
         dataId           = (dictElement)['dataId']
 
-        if ShowObsLimit == True: pass
+        # if ShowObsLimit == True: pass
 
-        elif ShowObsLimit == False: ObservedLimit = 'empty'
+        # elif ShowObsLimit == False: ObservedLimit = 'empty'
 
         else: raise Exception('ObsLim invalid value. ObsLim is of type bool')
 
@@ -111,7 +112,7 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
             raise Exception('ObsLim must be of type bool.')
 
     else:
-        ShowObsLimit = False
+        ShowObsLimit = True
 
 
     if 'yConstLs' in kwargs:

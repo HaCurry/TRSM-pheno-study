@@ -30,21 +30,21 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
         XStotKey = kwargs['XStotKey']
 
     else:
-        XStotKey = 'x_H3_H1H2_SM_tot'
+        XStotKey = 'x_H3_H1H2_SM1SM2'
 
 
     if 'XS1Key' in kwargs:
         XS1Key = kwargs['XS1Key']
 
     else:
-        XS1Key = 'x_H3_H1H2_SM_1'
+        XS1Key = 'x_H3_H1_SM1_H2_SM2'
 
 
     if 'XS2Key' in kwargs:
         XS2Key = kwargs['XS2Key']
 
     else:
-        XS2Key = 'x_H3_H1H2_SM_2'
+        XS2Key = 'x_H3_H1_SM2_H2_SM1'
 
     if 'ObsLimKey' in kwargs:
         ObsLimKey = kwargs['ObsLimKey']
@@ -102,15 +102,15 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
             # check if the scannerS or calculation produced any error
             for element in listXStot:
                 if abs(listXStot[0] - element) > 10**(-8):
-                    raise Exception('theoryXStot not equal everywhere')
+                    raise Exception('{} not equal everywhere'.format(XStotKey))
         
             for element in listXS1:
                 if abs(listXS1[0] - element) > 10**(-8):
-                    raise Exception('theoryXS1 not equal everywhere')
+                    raise Exception('{} not equal everywhere'.format(XS1Key))
 
             for element in listXS2:
                 if abs(listXS2[0] - element) > 10**(-8):
-                    raise Exception('theoryXS2 not equal everywhere')
+                    raise Exception('{} not equal everywhere'.format(XS2Key))
 
         except pandas.errors.EmptyDataError:
             listXStot = [np.nan]
@@ -138,6 +138,8 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
 
 def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
 
+    ''' Deprecated '''
+    
     #################################### kwargs ####################################
 
     if 'msKey' in kwargs:
@@ -530,6 +532,46 @@ def calculateSort2D(dataPath, outputDir, outputName, SM1, SM2, **kwargs):
     return XNP, ppXNP, ppXNPSM
 
 
+def pandasReader(path, axis1Key, axis2Key, axis3Key, zKey):
+
+    BP2_df = pandas.read_table(path, index_col=0) 
+    axis1 = np.array([i for i in BP2_df[axis1Key]])
+    axis2 = np.array([i for i in BP2_df[axis2Key]])
+    axis3 = np.array([i for i in BP2_df[axis3Key]])
+    z = np.array([i for i in BP2_df[zKey]])
+
+    return axis1, axis2, axis3, z 
+
+
+def pandasDynamicReader(path, listIndex):
+
+    df = pandas.read_table(path, index_col=0)
+
+    dynamicDict = {}
+    for key in listIndex:
+        dynamicDict[key] = np.array([i for i in df[key]])
+
+    return dynamicDict
+
+
+def exclusionCheck(ObsLimList, compareDict, compareKeys, epsilon):
+
+    for key in compareKeys:
+
+        exclList = []
+        for i in range(len(ObsLimList)):
+
+            if (compareDict[key])[i] - ObsLimList[i] > epsilon:
+                exclList.append({'index': i, 'ObservedLimit': ObsLimList[i], key: (compareDict[key])[i]})
+            else:
+                pass
+  
+            # print the excluded mass points
+            print('=============================================')
+            print('Excluded points ' + key + ': ' + str(exclList))
+            print('=============================================')
+   
+
 def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
 
     ############################# kwargs #############################
@@ -574,49 +616,9 @@ def plotAuxRegion2D(label1, label2, label3, xyText1, xyText2, xyText3, plot1, pl
 
     plt.plot(plot3[0], plot3[1], ls = 'dashed')
     plt.text(xyText3[0], xyText3[1], label3, size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))#, rotation=32)
-
-
-def pandasReader(path, axis1Key, axis2Key, axis3Key, zKey):
-
-    BP2_df = pandas.read_table(path, index_col=0) 
-    axis1 = np.array([i for i in BP2_df[axis1Key]])
-    axis2 = np.array([i for i in BP2_df[axis2Key]])
-    axis3 = np.array([i for i in BP2_df[axis3Key]])
-    z = np.array([i for i in BP2_df[zKey]])
-
-    return axis1, axis2, axis3, z 
-
-def pandasDynamicReader(path, listIndex):
-
-    df = pandas.read_table(path, index_col=0)
-
-    dynamicDict = {}
-    for key in listIndex:
-        dynamicDict[key] = np.array([i for i in df[key]])
-
-    return dynamicDict
-
-
-def exclusionCheck(ObsLimList, compareDict, compareKeys, epsilon):
-
-    for key in compareKeys:
-
-        exclList = []
-        for i in range(len(ObsLimList)):
-
-            if (compareDict[key])[i] - ObsLimList[i] > epsilon:
-                exclList.append({'index': i, 'ObservedLimit': ObsLimList[i], key: (compareDict[key])[i]})
-            else:
-                pass
-  
-            # print the excluded mass points
-            print('=============================================')
-            print('Excluded points ' + key + ': ' + str(exclList))
-            print('=============================================')
-   
        
 
-def plotAuxAnnotator(xlist, ylist, zlist, fmt, **kwargs):
+def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):
 
     ############################# kwargs #############################
 
@@ -659,33 +661,10 @@ def plotAuxAnnotator(xlist, ylist, zlist, fmt, **kwargs):
     ##################################################################
     
     for i in range(len(zlist)):
-        # plt.text(ms[i], mx[i], '{:.3}'.format(limit_obs[i]), fontsize = 8)
         plt.annotate(fmt.format(zlist[i]), (xlist[i], ylist[i]),
                      textcoords = txtcoord, xytext= xytxt, fontsize = fsize, rotation = rot, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=lwidth, foreground=fground)])
 
 if __name__ == "__main__":
 
-    # exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel_Mproc', 'compiled_AtlasBP2_check_prel_Mproc.tsv',
-    #                   msKey='mHa_ub', mxKey='mHc_ub')   
-    # exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc.tsv', 'plots', 0, 
-    #                  xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1H2_SM_1')
-
-
-    # exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP3_check_prel_Mproc', 'compiled_AtlasBP3_check_prel_Mproc.tsv',
-    #                   msKey='mHb_ub', mxKey='mHc_ub')   
-    # exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc.tsv', 'plots', 0, 
-    #                  xlims=(126, 500), ylims=(255, 650), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1H2_SM_1')
-
-
-    # exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP5_check_prel_Mproc', 'compiled_AtlasBP5_check_prel_Mproc.tsv',
-    #                   msKey='mHa_ub', mxKey='mHc_ub')   
-    # exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc.tsv', 'plots', 0, 
-    #                  xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1H2_SM_1')
-
-
-    # exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP6_check_prel_Mproc', 'compiled_AtlasBP6_check_prel_Mproc.tsv',
-    #                   msKey='mHb_ub', mxKey='mHc_ub')   
-    # exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc.tsv', 'plots', 0, 
-    #                  xlims=(126, 500), ylims=(255, 1000), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1H2_SM_1')
     print('hejsan')
