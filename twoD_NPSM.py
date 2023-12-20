@@ -35,9 +35,9 @@ if __name__ == '__main__':
 
     ## BP2: SM TOT ##
 
-    twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2', 'bb', 'gamgam')
+    twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2.tsv', 'bb', 'gamgam')
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2_SM1SM2')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2_SM1SM2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_SM1SM2/norm)
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     ## BP2: SM H1 -> bb, H2 -> gamgam (1) ##
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2/norm)
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     ## BP2: SM H1 -> gamgam, H2 -> bb (2) ##
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1/norm)
 
@@ -120,8 +120,8 @@ if __name__ == '__main__':
     ## BP2: SM Ratio (1)/(2) ##
 
     
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
 
     print(BP2_mH1 == BP2_mH1_2)
     print(BP2_mH2 == BP2_mH2_2)
@@ -154,7 +154,9 @@ if __name__ == '__main__':
 
     ## BP3: SM H1 -> bb, H2 -> gamgam (1) ##
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
+
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
 
@@ -185,7 +187,7 @@ if __name__ == '__main__':
 
     ## BP3: SM H1 -> gamgam, H2 -> bb (2) ##
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1/norm)
 
@@ -218,8 +220,8 @@ if __name__ == '__main__':
 
     ## BP3: SM (1)/(2) ##
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    BP3_mH1_2, BP3_mH2_2, BP3_mH3_2, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    BP3_mH1_2, BP3_mH2_2, BP3_mH3_2, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
 
     print(BP3_mH1 == BP3_mH1_2)
     print(BP3_mH2 == BP3_mH2_2)
@@ -256,7 +258,7 @@ if __name__ == '__main__':
 
     # ## SM TOT ##
 
-    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2_SM1SM2')
+    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2_SM1SM2')
     
     # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_SM1SM2/norm)
 
@@ -283,7 +285,7 @@ if __name__ == '__main__':
 
     # ## SM H1 -> bb, H2 -> gamgam (1) ##
 
-    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
     
     # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2/norm)
 
@@ -310,7 +312,7 @@ if __name__ == '__main__':
 
     # ## SM H1 -> gamgam, H2 -> bb (2) ##
 
-    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
     
     # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1_SM2_H2_SM1/norm)
 
@@ -339,8 +341,8 @@ if __name__ == '__main__':
     # ## SM Ratio (1)/(2) ##
 
     
-    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    # BP5_mH1_2, BP5_mH2_2, BP5_mH3_2, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    # BP5_mH1_2, BP5_mH2_2, BP5_mH3_2, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
 
     # print(BP5_mH1 == BP5_mH1_2)
     # print(BP5_mH2 == BP5_mH2_2)
@@ -372,7 +374,7 @@ if __name__ == '__main__':
 
     # ## SM H1 -> bb, H2 -> gamgam (1) ##
 
-    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
       
     # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2/norm)
 
@@ -403,7 +405,7 @@ if __name__ == '__main__':
 
     # ## SM H1 -> gamgam, H2 -> bb (2) ##
 
-    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
       
     # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH1, BP6_mH3, BP6_x_H3_H1_SM2_H2_SM1/norm)
 
@@ -436,8 +438,8 @@ if __name__ == '__main__':
 
     # ## SM (1)/(2) ##
 
-    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    # BP6_mH1_2, BP6_mH2_2, BP6_mH3_2, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    # BP6_mH1_2, BP6_mH2_2, BP6_mH3_2, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
 
     # print(BP6_mH1 == BP6_mH1_2)
     # print(BP6_mH2 == BP6_mH2_2)
@@ -473,9 +475,9 @@ if __name__ == '__main__':
 
     ## BP5: SM TOT ##
 
-    twoDPlot.calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5', 'bb', 'gamgam')
+    twoDPlot.calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5.tsv', 'bb', 'gamgam')
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2_SM1SM2')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2_SM1SM2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_SM1SM2/norm)
 
@@ -502,7 +504,7 @@ if __name__ == '__main__':
 
     ## BP5: SM H1 -> bb, H2 -> gamgam (1) ##
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2/norm)
 
@@ -529,7 +531,7 @@ if __name__ == '__main__':
 
     ## BP5: SM H1 -> gamgam, H2 -> bb (2) ##
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1_SM2_H2_SM1/norm)
 
@@ -558,8 +560,8 @@ if __name__ == '__main__':
     ## BP5: SM Ratio (1)/(2) ##
 
     
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    BP5_mH1_2, BP5_mH2_2, BP5_mH3_2, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    BP5_mH1_2, BP5_mH2_2, BP5_mH3_2, BP5_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
 
     print(BP5_mH1 == BP5_mH1_2)
     print(BP5_mH2 == BP5_mH2_2)
@@ -592,7 +594,9 @@ if __name__ == '__main__':
 
     ## BP6: SM H1 -> bb, H2 -> gamgam (1) ##
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    twoDPlot.calculateSort2D('plots2D/BP6_BR_XSH/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH', 'calc_BP6.tsv', 'bb', 'gamgam')
+
+    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2/norm)
 
@@ -623,7 +627,7 @@ if __name__ == '__main__':
 
     ## BP6: SM H1 -> gamgam, H2 -> bb (2) ##
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM2_H2_SM1/norm)
 
@@ -656,8 +660,8 @@ if __name__ == '__main__':
 
     ## BP6: SM (1)/(2) ##
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    BP6_mH1_2, BP6_mH2_2, BP6_mH3_2, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+    BP6_mH1_2, BP6_mH2_2, BP6_mH3_2, BP6_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
 
     print(BP6_mH1 == BP6_mH1_2)
     print(BP6_mH2 == BP6_mH2_2)

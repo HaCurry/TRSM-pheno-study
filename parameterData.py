@@ -494,7 +494,6 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
             dud.write(dataId + ' ' + paramFree + ' ' + str(datetime.datetime.now()) + '\n')
 
 
-
 def parameterMain(listUserParametersDict, targetDir, scannerSmode, **kwargs):
     '''Main function'''
 

@@ -57,14 +57,14 @@ def tupleConstruct(dictList, **kwargs):
         paramFree        = (dictElement)['paramFree']
         pathDataOutput   = (dictElement)['pathDataOutput']
         if ShowObsLimit == True: ObservedLimit    = (dictElement)['ObservedLimit']
-        else: ObservedLimit = 'empty'
+        elif ShowObsLimit == False: ObservedLimit = 'empty'
+        else: raise Exception('ObsLim invalid value. ObsLim is of type bool')
         dataId           = (dictElement)['dataId']
 
         # if ShowObsLimit == True: pass
 
         # elif ShowObsLimit == False: ObservedLimit = 'empty'
 
-        else: raise Exception('ObsLim invalid value. ObsLim is of type bool')
 
         if paramFree == 'thetahS':
             tuplesThs.append((paramFree, pathDataOutput, ObservedLimit, dataId))
@@ -259,12 +259,6 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
             plt.close()
 
 
-
-
-
-
-
-
 def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, **kwargs):
 
     #################################### kwargs ####################################
@@ -318,7 +312,7 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
                 else:
                     SMmode = kwargs['SMmode']
                     if isinstance(SMmode, str) == False:
-                        raise Exception('SMmode need to be a string with the possible values \'1\', \'2\', \'tot\' ')
+                        raise Exception('SMmode need to be H1_SM1_H2_SM2 or H1H2_SM1SM2 if XNPNP = H1H2 and H1H1_SM1SM2 or H2H2_SM1SM2 if XNPNP = H1H1 or XNPNP = H2H2')
 
         else: ppXNPSM = False
 
@@ -330,6 +324,10 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
 
     ##############################################################
 
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    print(' Starting script parameterPlot ')
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    
     # find paths to JSON files and store them in a list as dicts
     pathList = parameterData.directorySearcher(relPath, settingsGlob)
     if len(pathList) == 0: raise Exception('No paths found')
@@ -342,6 +340,10 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
     tuplesVs = []
     tuplesVx = []
     tuplesNofree = []
+
+    print('Creating tuples ...')
+    loading = len(dictList)
+    loadingStep = 0
 
     # loop over the dicts and store the data in the appropriate list of tuples
     for dictElement in dictList:
@@ -384,7 +386,8 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
             path = path_ppXNP
 
         elif ppXNPSM == True:
-            yKey = 'x_H3_' + XNPNP + '_' + 'SM_' + SMmode
+            # yKey = 'x_H3_' + XNPNP + '_' + 'SM_' + SMmode
+            yKey = 'x_H3_' + SMmode
             path = path_ppXNPSM
 
         else:
@@ -417,6 +420,9 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
         else:
             raise Exception('Error ocurred in creating tuples')
 
+        print(str(loadingStep/loading))
+        loadingStep = loadingStep + 1
+
     # store all tuples together to be looped over for plotting
     tuplesAll = [tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree]
 
@@ -429,7 +435,7 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
 
     else: raise Exception('XNP, ppXNP, ppXNPSM not given')
 
-    # print(len(tuplesAll))
+    print('creating plots...')
     # for tuplesVar in tuplesAll:
     plotter(tuplesThs, locOutputPath, generalPhysics, XNPNP + '_thetahS', solo, together, **kwargs)
     plotter(tuplesThx, locOutputPath, generalPhysics, XNPNP + '_thetahX', solo, together, **kwargs)
@@ -438,12 +444,16 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
     plotter(tuplesVx, locOutputPath, generalPhysics, XNPNP + '_vx', solo, together, **kwargs)
     plotter(tuplesNofree, locOutputPath, generalPhysics, XNPNP + '_Nofree', solo, together, **kwargs)
 
-            
-        
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    print(' script finished parameterPlot ')
+    print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
+    
 
 
 if __name__ == "__main__":
 
-    parameterPlot('calc_AtlasBP2_check_prel', '/**/settingsCalc_*.json', 'plot_AtlasBP2_check_prel', 'H1H2', True, True, 
-                  ppXNPSM=True,ShowObsLimit=True, SM1='bb', SM2='gamgam', SMmode='1', saveStep=True, yscale='log', ylims=(10**(-6),8*10**(-2)))
+    # Deprecated, moved to oneD_AtlasLimitsPlot.py
+    # parameterPlot('calc_AtlasBP2_check_prel', '/**/settingsCalc_*.json', 'plot_AtlasBP2_check_prel', 'H1H2', True, True, 
+                  # ppXNPSM=True,ShowObsLimit=True, SM1='bb', SM2='gamgam', SMmode='1', saveStep=True, yscale='log', ylims=(10**(-6),8*10**(-2)))
+    print('tjenare')
 # ppXNPSM

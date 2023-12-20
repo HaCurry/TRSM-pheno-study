@@ -138,7 +138,6 @@ if __name__ == '__main__':
     # dataCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel', '/**/settings_*.json', 
                      # SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    # all above is deprecated
 
     # 1D parameter plot for Atlas observed limits
     
@@ -158,30 +157,3 @@ if __name__ == '__main__':
     # parameterData.mProcCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel_Mproc', '/**/settings_*.json', 
     #                 SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    del ms_BP2, ms_BP3, ms_BP5, ms_BP6, mx_BP2, mx_BP3, mx_BP5, mx_BP6, df2, df3
-
-    df2 = pandas.read_table('ownGridBP2_region1.tsv', index_col=0)
-
-    ms_BP2 = df2['ms']
-    mx_BP2 = df2['mx']
-
-    BP5_dictPointlistAtlas = [{
-                               'mHa_lb': ms_BP5[i], 'mHa_ub': ms_BP5[i],
-                               'mHb_lb': 125.09,    'mHb_ub': 125.09,
-                               'mHc_lb': mx_BP5[i], 'mHc_ub': mx_BP5[i], 
-                               'extra': {
-                                         'ObservedLimit': 10**(-3) * limit_obs_BP5[i], 
-                                         'dataId': 'S' + str(ms_BP5[i]) + '-' + 'X' + str(mx_BP5[i]) 
-                                        } 
-                              } for i in  range(len(ms_BP5))]
-    
-    
-    # 1D parameter plot for own grid
-
-    parameterData.mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
-
-    parameterData.mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
