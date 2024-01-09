@@ -224,131 +224,163 @@ def msmxToTable(points, path):
 
 if __name__ == '__main__':
 
-    norm = 1
+   #  norm = 1
  
-    ## BP2: ##
+   #  ## BP2: ##
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+   #  BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
     
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_SM1SM2/norm)
+   #  x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_SM1SM2/norm)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+   #  zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+   #  plt.imshow(zi, origin='lower',
+   #              extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    points_BP2_region1 = pointGen('BP2', 1, 25, 'grid')
-    print(len(points_BP2_region1))
-    # plotmarkerAuto(points_BP2_region1, [], True, 1, 8)#, x, y, n):
+   #  points_BP2_region1 = pointGen('BP2', 1, 25, 'grid')
+   #  print(len(points_BP2_region1))
+   #  # plotmarkerAuto(points_BP2_region1, [], True, 1, 8)#, x, y, n):
 
-    df = msmxToTable(points_BP2_region1, 'ownGridRegion1BP2.tsv')
+   #  df = msmxToTable(points_BP2_region1, 'ownGridRegion1BP2.tsv')
 
-    plt.scatter(df['ms'], df['mx'])
+   #  plt.scatter(df['ms'], df['mx'])
     
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+   #  twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
-                    ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
+   #  twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+   #                  ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
 
-    plt.savefig('BP2tb1.pdf')
-    # plt.show()
-    plt.close()
+   #  plt.savefig('BP2tb1.pdf')
+   #  # plt.show()
+   #  plt.close()
 
-    del x, y, z, xi, yi, points_BP2_region1, df
+   #  del x, y, z, xi, yi, points_BP2_region1, df
 
 
-   ## BP2: ##
+   # ## BP2: ##
 
-    twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2', 'bb', 'gamgam')
+   #  twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2', 'bb', 'gamgam')
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
+   #  BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_SM1SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
     
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_SM1SM2/norm)
+   #  x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_SM1SM2/norm)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+   #  zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+   #  plt.imshow(zi, origin='lower',
+   #              extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    points_BP2_region2 = pointGen('BP2', 2, 25, 'grid')
-    print(len(points_BP2_region2))
-    # plotmarkerAuto(points_BP2_region2, [], True, 2, 8)#, x, y, n):
+   #  points_BP2_region2 = pointGen('BP2', 2, 25, 'grid')
+   #  print(len(points_BP2_region2))
+   #  # plotmarkerAuto(points_BP2_region2, [], True, 2, 8)#, x, y, n):
 
-    df = msmxToTable(points_BP2_region2, 'ownGridRegion2BP2.tsv')
+   #  df = msmxToTable(points_BP2_region2, 'ownGridRegion2BP2.tsv')
 
-    plt.scatter(df['ms'], df['mx'])
+   #  plt.scatter(df['ms'], df['mx'])
     
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+   #  twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
-                    ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
+   #  twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+   #                  ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
 
-    plt.savefig('BP2tb2.pdf')
-    # plt.show()
-    plt.close()
+   #  plt.savefig('BP2tb2.pdf')
+   #  # plt.show()
+   #  plt.close()
 
-    del x, y, z, xi, yi, points_BP2_region2, df
+   #  del x, y, z, xi, yi, points_BP2_region2, df
 
 
-    ## BP3: ##
+   #  ## BP3: ##
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+   #  BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+      
+   #  x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
+
+   #  zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+
+   #  plt.imshow(zi, origin='lower',
+   #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+   #  points_BP3_region1 = pointGen('BP3', 1, 25, 'grid')
+   #  print(len(points_BP3_region1))
+   #  # plotmarkerAuto(points_BP3_region1, [], True, 2, 8)#, x, y, n):
+
+   #  df = msmxToTable(points_BP3_region1, 'ownGridRegion1BP3.tsv')
+
+   #  plt.scatter(df['ms'], df['mx'])
+    
+   #  twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+
+   #  twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+   #                  ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+   
+   #  plt.savefig('BP3tb1.pdf')
+   #  # plt.show()
+   #  plt.close()
+
+   #  del x, y, z, xi, yi, points_BP3_region1, df
+
+
+   #  ## BP3: ##
+
+   #  BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+      
+   #  x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
+
+   #  zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+
+   #  plt.imshow(zi, origin='lower',
+   #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+   #  points_BP3_region2 = pointGen('BP3', 2, 25, 'grid')
+   #  print(len(points_BP3_region2))
+   #  # plotmarkerAuto(points_BP3_region2, [], True, 2, 8)#, x, y, n):
+
+   #  df = msmxToTable(points_BP3_region2, 'ownGridRegion2BP3.tsv')
+
+   #  plt.scatter(df['ms'], df['mx'])
+    
+   #  twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+
+   #  twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+   #                  ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+   
+   #  plt.savefig('BP3tb2.pdf')
+   #  # plt.show()
+   #  plt.close()
+
+   #  del x, y, z, xi, yi, points_BP3_region2, df
+
+
+    twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
+
+    norm = 1
+    
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-
     plt.imshow(zi, origin='lower',
                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    points_BP3_region1 = pointGen('BP3', 1, 25, 'grid')
-    print(len(points_BP3_region1))
-    # plotmarkerAuto(points_BP3_region1, [], True, 2, 8)#, x, y, n):
-
-    df = msmxToTable(points_BP3_region1, 'ownGridRegion1BP3.tsv')
-
-    plt.scatter(df['ms'], df['mx'])
-    
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(\gamma\gamma)H(bb))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
-   
-    plt.savefig('BP3tb1.pdf')
-    # plt.show()
+        
+    plt.savefig('toRobensTB.pdf')
+    plt.show()
     plt.close()
 
-    del x, y, z, xi, yi, points_BP3_region1, df
-
-
-    ## BP3: ##
-
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
-      
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
-
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
-
-
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-
-    points_BP3_region2 = pointGen('BP3', 2, 25, 'grid')
-    print(len(points_BP3_region2))
-    # plotmarkerAuto(points_BP3_region2, [], True, 2, 8)#, x, y, n):
-
-    df = msmxToTable(points_BP3_region2, 'ownGridRegion2BP3.tsv')
-
-    plt.scatter(df['ms'], df['mx'])
-    
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(b\bar{b})H(\gamma\gamma))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
-
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
-                    ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
-   
-    plt.savefig('BP3tb2.pdf')
-    # plt.show()
+    plt.scatter(x, y, c=z, cmap='viridis')
+    plt.colorbar()
+    plt.show()
     plt.close()
 
-    del x, y, z, xi, yi, points_BP3_region2, df
+    del x, y, z, xi, yi

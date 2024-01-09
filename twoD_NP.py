@@ -90,9 +90,9 @@ if __name__ == '__main__':
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP2_BR_XSH', 'config_BP2_BR_XSH.tsv', 'output_BP2_BR_XSH.tsv', 'check', capture_output=False)
        
-    # twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2.tsv', 'bb', 'gamgam')
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_b_H3_H1H2)
 
@@ -101,9 +101,9 @@ if __name__ == '__main__':
     plt.imshow(zi, vmin=0.1, vmax=0.55, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\mathrm{BR} _{h _{3}\to h _{1}h _{2}}$", r"$M_{1}$", r"$M_{3}$", r"$\mathrm{BR} _{h _{3} \to h _{1}h _{2}}$", xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP2_BR_XSH/BP2_BR_XSH_fig.pdf')
@@ -125,9 +125,9 @@ if __name__ == '__main__':
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP3_BR_XSH', 'config_BP3_BR_XSH.tsv', 'output_BP3_BR_XSH.tsv', 'check', capture_output=False)
 
-    # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
@@ -139,9 +139,9 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\mathrm{BR} _{h _{3}\to h _{1}h _{2}}$", r"$M_{2}$", r"$M_{3}$", r"$\mathrm{BR} _{h _{3} \to h _{1}h _{2}}$", xlims=(126, 500), ylims=(255, 650))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP3_BR_XSH/BP3_BR_XSH_fig.pdf')
@@ -163,9 +163,9 @@ if __name__ == '__main__':
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP5_BR_XSH/', 'config_BP5_BR_XSH.tsv', 'output_BP5_BR_XSH.tsv', 'check', capture_output=False)
 
-    # twoDPlot.calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5.tsv', 'bb', 'gamgam')
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_b_H3_H1H2)
 
@@ -202,9 +202,9 @@ if __name__ == '__main__':
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP6_BR_XSH/', 'config_BP6_BR_XSH.tsv', 'output_BP6_BR_XSH.tsv', 'check', capture_output=False)
 
-    # twoDPlot.calculateSort2D('plots2D/BP6_BR_XSH/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH', 'calc_BP6', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP6_BR_XSH/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH', 'calc_BP6.tsv', 'bb', 'gamgam')
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
 
     # twoDPlot.calculateSort2D('plots2D/BP6_BR_XSH_try2/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH_try2', 'calc_BP6', 'bb', 'gamgam')
 
@@ -245,18 +245,18 @@ if __name__ == '__main__':
 
     #### BP2 ####
 
-    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower', norm=mpl.colors.LogNorm(vmin = 10**(-2), vmax = 7*10**(-1)),
+    plt.imshow(zi, origin='lower', vmin = 10**(-2), vmax = 7*10**(-1),#norm=mpl.colors.LogNorm(vmin = 10**(-2), vmax = 7*10**(-1)),
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma _{gg\to h _{3}} \cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3}}\cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_fig.pdf')
@@ -273,21 +273,21 @@ if __name__ == '__main__':
 
     #### BP3 ####
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
 
-    plt.imshow(zi, origin='lower', norm=mpl.colors.LogNorm(vmin = 6*10**(-3), vmax = 4*10**(-1)),
+    plt.imshow(zi, origin='lower', vmin = 6*10**(-3), vmax = 4*10**(-1),#norm=mpl.colors.LogNorm(vmin = 6*10**(-3), vmax = 4*10**(-1)),
                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma _{gg\to h _{3}}\cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{1}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3}} \cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(126, 500), ylims=(255, 650))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_fig.pdf')
