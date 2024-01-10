@@ -979,6 +979,13 @@ def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     dictList = dictConstruct(outputPaths)
     dictList = [[dictElement] for dictElement in dictList]
 
+    # here create all the directories and subdirectories (for the parameters
+    # too). This is because each subprocess is a freeparam directory which
+    # creates concurrency issues when creating the dataId directory I believe
+    # this is not a problem for mProcCalculatorMain because there each dataId
+    # directory is a subprocess
+    
+    
     args_iter = zip(repeat(locOutputPath), dictList)
     kwargs_iter = repeat(kwargs)
 
