@@ -770,23 +770,26 @@ def calculateSort(locOutputPath, dictList, **kwargs):
         if createDir == True:
 
             # if dataId directory does not exist, create dirDataId and create dirParamfree
-            dirDataId = locOutputPath + '/' + dataId
-            if not os.path.isdir(dirDataId):
-                os.makedirs(dirDataId)
-                dirParamfree = dirDataId + '/' + paramFree
-                os.makedirs(dirParamfree)
-                outputPath = dirParamfree
+            # dirDataId = locOutputPath + '/' + dataId
+            # dirParamfree = dirDataId + '/' + paramFree
+            # outputPath = dirParamfree
+            outputPath = locOutputPath + '/' + dataId + '/' + paramFree
+            # if not os.path.isdir(dirDataId):
+            #     os.makedirs(dirDataId)
+            #     dirParamfree = dirDataId + '/' + paramFree
+            #     os.makedirs(dirParamfree)
+            #     outputPath = dirParamfree
 
-            # if dataId directory exists, check if dirParamfree directory exists
-            else:
-                dirParamfree = dirDataId + '/' + paramFree
-                if not os.path.isdir(dirParamfree):
-                    os.makedirs(dirParamfree)
+            # # if dataId directory exists, check if dirParamfree directory exists
+            # else:
+            #     dirParamfree = dirDataId + '/' + paramFree
+            #     if not os.path.isdir(dirParamfree):
+            #         os.makedirs(dirParamfree)
 
-                    outputPath = dirParamfree
+            #         outputPath = dirParamfree
 
-                else:
-                    outputPath = dirParamfree
+            #     else:
+            #         outputPath = dirParamfree
 
         # otherwise output directly into locOutputPath
         else:
@@ -984,8 +987,21 @@ def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     # creates concurrency issues when creating the dataId directory I believe
     # this is not a problem for mProcCalculatorMain because there each dataId
     # directory is a subprocess
-    
-    
+
+    # dirList = set()
+    for dictListElement in dictList:
+        dictElement = dictListElement[0]
+        if len(dictListElement) != 1:
+            raise Exception('Something is wrong...')
+        # store data from dict (JSON) as variables
+        paramFree, pathDataOutput, dataId = dictElement['extra']['paramFree'], dictElement['extra']['pathDataOutput'], dictElement['extra']['dataId']
+        # create directory dataId
+        dirDataId = locOutputPath + '/' + dataId
+        dirParamfree = dirDataId + '/' + paramFree
+        print(dirParamfree)
+        os.makedirs(dirParamfree)
+
+
     args_iter = zip(repeat(locOutputPath), dictList)
     kwargs_iter = repeat(kwargs)
 
