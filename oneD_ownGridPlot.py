@@ -25,9 +25,15 @@ import parameterPlotter
 
 if __name__ == "__main__":
 
-    # parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel', 'H1H2', True, True, 
-    #               ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+    parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel_noconstraints', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
 
-    
-    parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel_noconstrTB', 'H1H2', True, True, 
+    parameterPlotter.parameterPlot('calc_ownGridRegion2BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP2_check_prel_noconstraints', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+
+
+    parameterPlotter.parameterPlot('calc_ownGridRegion1BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP3_check_prel_noconstraints', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+
+    parameterPlotter.parameterPlot('calc_ownGridRegion2BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP3_check_prel_noconstraints', 'H1H2', True, True, 
                   ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
