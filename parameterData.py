@@ -239,6 +239,30 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
     else:
         shortLog = True
 
+    if 'BFB' in kwargs:
+        BFB = kwargs['BFB']
+
+    else:
+        BFB = 1
+
+    if 'Uni' in kwargs:
+        Uni = kwargs['Uni']
+
+    else:
+        Uni = 1
+
+    if 'STU' in kwargs:
+        STU = kwargs['STU']
+
+    else:
+        STU = 1
+
+    if 'Higgs' in kwargs:
+        Higgs = kwargs['Higgs']
+
+    else:
+        Higgs = 1
+
     ##############################################################
     
     # check if dataId is in programParametersDict
@@ -428,10 +452,10 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
         
         # conditional for the appropriate relative path to the executable TRSMBroken
         if createDir == True:
-            runTRSM = ['../../../../TRSMBroken', outputDir, 'check', configDir]
+            runTRSM = ['../../../../TRSMBroken', '--BFB', str(BFB), '--Uni', str(Uni), '--STU', str(STU), '--Higgs', str(Higgs), outputDir, 'check', configDir]
 
         elif createDir == False:
-            runTRSM = ['../../TRSMBroken', outputDir, 'check', configDir]
+            runTRSM = ['../../TRSMBroken', '--BFB', str(BFB), '--Uni', str(Uni), '--STU', str(STU), '--Higgs', str(Higgs), outputDir, 'check', configDir]
 
         else:
             raise Exception('createDir is not working in runTRSM')
@@ -549,14 +573,14 @@ def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints, scannerSmo
     # reformats user given dictionary to usable format for param
     programParametersDict = repackingProgramParamDict(userParametersDict, BP = mprocBP, points = mprocPoints)
 
-    param(programParametersDict, targetDir, 'ths', scannerSmode, BP = mprocBP, points = mprocPoints)
-    param(programParametersDict, targetDir, 'thx', scannerSmode, BP = mprocBP, points = mprocPoints)
-    param(programParametersDict, targetDir, 'tsx', scannerSmode, BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, 'ths', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
+    param(programParametersDict, targetDir, 'thx', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
+    param(programParametersDict, targetDir, 'tsx', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
     
-    param(programParametersDict, targetDir, 'vs',  scannerSmode, BP = mprocBP, points = mprocPoints)
-    param(programParametersDict, targetDir, 'vx',  scannerSmode, BP = mprocBP, points = mprocPoints)
+    param(programParametersDict, targetDir, 'vs',  scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
+    param(programParametersDict, targetDir, 'vx',  scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
     
-    param(programParametersDict, targetDir, 'Nofree',scannerSmode, BP = mprocBP, points = 5) # could set points = 1 as it seems the values in the outputs are identical (?)
+    param(programParametersDict, targetDir, 'Nofree',scannerSmode, BP = mprocBP, points = 5, BFB=0, Uni=0, STU=0, Higgs=0) # could set points = 1 as it seems the values in the outputs are identical (?)
 
 
 

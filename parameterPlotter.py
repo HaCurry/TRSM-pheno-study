@@ -255,8 +255,46 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
             if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
 
             plt.title(axis + ' ' + dataId)
-            plt.savefig(soloDir + '/' + dataId + '_' + generalPhysics + '_' + title + '_' + axis + fext)
+            plt.savefig(soloDir + '/' + generalPhysics + '_' + title + '_' + dataId + fext)
             plt.close()
+
+    maxy = np.array((tuplesVar[0])[1])
+    miny = np.array((tuplesVar[0])[1])
+    normalx = np.array((tuplesVar[0])[0])
+    # print(maxy)
+    # print('---')
+    # print(miny)
+    # print('---')
+    # print(normalx)
+    # print('---')
+    # create the fill between plots, by finding max and min for every x point and filling inbetween
+    for tupleIndex in range(1, len(tuplesVar)):
+        (x, y, axis, ObservedLimit, dataId) = tuplesVar[tupleIndex]
+
+        for i in range(len(normalx)):
+
+            y = np.array(y)
+            maxy[i] = max(maxy[i], y[i])
+            miny[i] = min(miny[i], y[i])
+
+    plt.figure()
+    plt.xlim(xlimsDict[axis])
+    if 'ylims' in kwargs:
+        ylims = kwargs['ylims']
+        plt.ylim(ylims)
+
+    else:
+        pass
+
+    if yscaleLog == True: 
+        plt.yscale('log')
+
+    plt.fill_between(normalx, miny, maxy, alpha=0.2)
+    plt.title(axis + ' -- IN PROGRESS')
+    plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + fext)
+    plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + '.pdf')
+    plt.close()
+    print('its here!')
 
 
 def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, **kwargs):
