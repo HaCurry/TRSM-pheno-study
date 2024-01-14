@@ -456,11 +456,12 @@ def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
         else:
             raise Exception('points need to be defined if scannerSmode is set to scan')
         
-        runTRSM = ['../../../../TRSMBroken', outputName, '--config', configName, 'scan', '-n', str(points)]
+        # runTRSM = ['../../../../TRSMBroken', outputName, '--config', configName, 'scan', '-n', str(points)]
+        runTRSM = [TRSMpath, outputName, '--config', configName, 'scan', '-n', str(points)]
         loglines = -17
 
     elif scannerSmode == 'check':
-        runTRSM = ['../../../TRSMBroken', outputName, 'check', configName]
+        runTRSM = [TRSMpath, outputName, 'check', configName]
         loglines = -9
 
     shell_output = subprocess.run(runTRSM, capture_output = capture_output, cwd = cwd)

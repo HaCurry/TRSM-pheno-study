@@ -1012,7 +1012,7 @@ def mProcCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     # this is not a problem for mProcCalculatorMain because there each dataId
     # directory is a subprocess
 
-    # dirList = set()
+    # Create all directories before calculating
     for dictListElement in dictList:
         dictElement = dictListElement[0]
         if len(dictListElement) != 1:
