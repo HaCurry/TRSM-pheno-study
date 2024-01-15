@@ -74,11 +74,15 @@ ax.set_ylim(plotymin, plotymax)
 ampl.set_ylabel("$m_S$ [GeV]", ax=ax)
 ampl.set_xlabel("$m_X$ [GeV]", ax=ax)
 ampl.set_zlabel(r'$\sigma( pp \rightarrow X)\times$ BR$ (X \rightarrow SH  \rightarrow bb \gamma \gamma)$ [fb]', ax=ax, cbar=cbar)
+# plt.xlabel("$m_S$ [GeV]")
+# plt.ylabel("$m_X$ [GeV]")
+# plt.title(r'$\sigma( pp \rightarrow X)\times$ BR$ (X \rightarrow SH  \rightarrow bb \gamma \gamma)$ [fb]', cbar=cbar)
 
 
 plt.tight_layout()
 
-fig.savefig("plotting/AtlasMassplotTest_lowmass.png", format='png')
+fig.savefig("thesisAuxiliaryData/AtlasMassplotTest_lowmass.png", format='png')
+plt.show()
 
 plt.close()
 
@@ -114,7 +118,8 @@ ampl.set_zlabel(r'$\sigma( pp \rightarrow X)\times$ BR$ (X \rightarrow SH  \righ
 
 plt.tight_layout()
 
-fig.savefig("plotting/AtlasMassplotTest_highmass.png", format='png')
+fig.savefig("thesisAuxiliaryData/AtlasMassplotTest_highmass.png", format='png')
+plt.show()
 
 plt.close()
 
