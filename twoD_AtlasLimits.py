@@ -44,7 +44,7 @@ for element in limits:
 mx = np.array(mx)
 ms = np.array(ms)
 limit_exp = np.array(limit_exp)
-limit_obs = np.array(limit_obs)/norm
+limit_obs = np.array(limit_obs)
 
 x_min, x_max = mx.min(), mx.max()
 y_min, y_max = ms.min(), ms.max()
@@ -57,13 +57,13 @@ y_min, y_max = ms.min(), ms.max()
 # grid_limit = griddata((mx, ms), limit_obs, (grid_x, grid_y), method='cubic')
 
 
-### BP2:
+### Lowmass:
 
 BP2_xi_verif, BP2_yi_verif = np.linspace(ms.min(), ms.max(), 200), np.linspace(mx.min(), mx.max(), 100)
 BP2_grid_x_verif, BP2_grid_y_verif = np.meshgrid(BP2_xi_verif, BP2_yi_verif)
 
 ## BP2 Interpolate the limits on the grid
-BP2_grid_limit_verif = griddata((ms, mx), limit_obs, (BP2_grid_x_verif, BP2_grid_y_verif), method='cubic') 
+BP2_grid_limit_verif = griddata((ms, mx), limit_obs/norm, (BP2_grid_x_verif, BP2_grid_y_verif), method='cubic') 
 # cubic does exclude a small region around (100, 275) but I believe that is just the interpolation playing tricks,
 # because if you examine the datapoints (scatter plot below) you will see that all the data points are way above the  mass plots
 # i.e nothing excluded
@@ -139,14 +139,13 @@ plt.close()
 
 
 
-
-### BP3:
+### Highmass:
 
 BP3_xi_verif, BP3_yi_verif = np.linspace(ms.min(), ms.max(), 200), np.linspace(mx.min(), mx.max(), 100)
 BP3_grid_x_verif, BP3_grid_y_verif = np.meshgrid(BP3_xi_verif, BP3_yi_verif)
 
 ## BP3 Interpolate the limits on the grid
-BP3_grid_limit_verif = griddata((ms, mx), limit_obs, (BP3_grid_x_verif, BP3_grid_y_verif), method='cubic')
+BP3_grid_limit_verif = griddata((ms, mx), limit_obs/norm, (BP3_grid_x_verif, BP3_grid_y_verif), method='cubic')
 
 plt.imshow(BP3_grid_limit_verif,  origin='lower', vmin=0/norm, vmax=1/norm,
                 extent=[ms.min(), ms.max(), mx.min(), mx.max()], aspect='auto')
@@ -213,5 +212,49 @@ plt.tight_layout()
 plt.savefig("thesisAuxiliaryData/AtlasMassplotTest2_highmass.png", format='png')
 plt.savefig("thesisAuxiliaryData/AtlasMassplotTest2_highmass.pdf")
 
+plt.show()
+plt.close()
+
+
+
+
+### mass range BP2:
+
+plt.imshow(BP2_grid_limit_verif,  origin='lower', vmin=0/norm, vmax=15/norm,
+                extent=[ms.min(), ms.max(), mx.min(), mx.max()], aspect='auto')
+
+plt.xlim(1, 124)
+plt.ylim(126, 500)
+
+plt.xlabel(r'$M_{1}$ [GeV]')
+plt.ylabel(r'$M_{3}$ [GeV]')
+plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+plt.title(r'BP2: upper limits at 95% C.L normalized')
+plt.tight_layout()
+
+plt.savefig("thesisAuxiliaryData/AtlasMassplotTest3_BP2.png", format='png')
+plt.savefig("thesisAuxiliaryData/AtlasMassplotTest3_BP2.pdf")
+plt.show()
+plt.close()
+
+
+
+
+### mass range BP3:
+
+plt.imshow(BP2_grid_limit_verif,  origin='lower', vmin=0/norm, vmax=1/norm,
+                extent=[ms.min(), ms.max(), mx.min(), mx.max()], aspect='auto')
+
+plt.xlim(126, 500)
+plt.ylim(255, 650)
+
+plt.xlabel(r'$M_{2}$ [GeV]')
+plt.ylabel(r'$M_{3}$ [GeV]')
+plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+plt.title(r'BP3: upper limits at 95% C.L normalized')
+plt.tight_layout()
+
+plt.savefig("thesisAuxiliaryData/AtlasMassplotTest3_BP3.png", format='png')
+plt.savefig("thesisAuxiliaryData/AtlasMassplotTest3_BP3.pdf")
 plt.show()
 plt.close()
