@@ -27,11 +27,11 @@ if __name__ == "__main__":
 
     #### BP2: ####
 
-    # twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel_Mproc', 'compiled_AtlasBP2_check_prel_Mproc.tsv',
-    #                   msKey='mHa_ub', mxKey='mHc_ub')   
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel_Mproc', 'compiled_AtlasBP2_check_prel_Mproc.tsv',
+                      msKey='mHa_ub', mxKey='mHc_ub')   
 
-    # twoDPlot.exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc.tsv', 'plotsLimits/BP2', 0, 
-    #                  xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    twoDPlot.exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc.tsv', 'plotsLimits/BP2', 0, 
+                     xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
 
     dictBP2 = twoDPlot.pandasDynamicReader('compiled_AtlasBP2_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
     twoDPlot.exclusionCheck(dictBP2['ObservedLimit'], dictBP2, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
@@ -44,9 +44,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP2: Exclusion Limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP2: observed limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP2/ObservedLimit1.pdf')
+    plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_ObservedLimit.pdf')
     # plt.show()
     plt.close()
 
@@ -61,9 +62,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP2/x_H3_H1H2_SM1SM2.pdf')
+    plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_x_H3_H1H2_SM1SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -78,9 +80,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP2/x_H3_H1_SM1_H2_SM2.pdf')
+    plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_x_H3_H1_SM1_H2_SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -95,9 +98,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP2/x_H3_H1_SM2_H2_SM1.pdf')
+    plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_x_H3_H1_SM2_H2_SM1.pdf')
     # plt.show()
     plt.close()
 
@@ -105,16 +109,20 @@ if __name__ == "__main__":
 
 
     ## BP2: ObsLim/(1) ##
+
+    plt.figure(figsize=(8.5, 5.2)) 
+    # plt.figure(figsize=(6.4, 4.8)) # default figsize (6.4, 4.8)
    
     x = dictBP2['ms']
     y = dictBP2['mx']
     z = dictBP2['ObservedLimit']/dictBP2['x_H3_H1_SM1_H2_SM2']
     
     plt.scatter(x, y, c=z)
-    twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma_{obs}/\sigma(S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}')
+    twoDPlot.plotAuxTitleAndBounds2D(r'BP2: $\sigma_{\mathrm{lim}}/\sigma_{gg \ \to \ h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) }$', r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]', r'$\sigma_{\mathrm{lim}}/\sigma_{gg \ \to h _{3} \ \to h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) }$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP2/ObsDividedH1SM1H2SM2.pdf')
+    plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_ObsDividedH1SM1H2SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -123,11 +131,11 @@ if __name__ == "__main__":
 
     #### BP3: ####
 
-    # twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP3_check_prel_Mproc', 'compiled_AtlasBP3_check_prel_Mproc.tsv',
-    #                   msKey='mHb_ub', mxKey='mHc_ub')   
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP3_check_prel_Mproc', 'compiled_AtlasBP3_check_prel_Mproc.tsv',
+                      msKey='mHb_ub', mxKey='mHc_ub')   
 
-    # twoDPlot.exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc.tsv', 'plotsLimits/BP3', 0, 
-    #                  xlims=(126, 500), ylims=(255, 650), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    twoDPlot.exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc.tsv', 'plotsLimits/BP3', 0, 
+                     xlims=(126, 500), ylims=(255, 650), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
     
     dictBP3 = twoDPlot.pandasDynamicReader('compiled_AtlasBP3_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
 
@@ -141,9 +149,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP3: Exclusion Limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D('BP3: observed limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$ at ATLAS limit points', xlims=(126, 500), ylims=(255, 650))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP3/ObservedLimit1.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_ATLAS/BP3_ObservedLimit.pdf')
     # plt.show()
     plt.close()
 
@@ -158,9 +167,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP3/x_H3_H1H2_SM1SM2.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_ATLAS/BP3_x_H3_H1H2_SM1SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -175,9 +185,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP3/x_H3_H1_SM1_H2_SM2.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_ATLAS/BP3_x_H3_H1_SM1_H2_SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -192,9 +203,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP3/x_H3_H1_SM2_H2_SM1.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_ATLAS/BP3_x_H3_H1_SM2_H2_SM1.pdf')
     # plt.show()
     plt.close()
 
@@ -202,16 +214,20 @@ if __name__ == "__main__":
 
 
     ## BP3: ObsLim/(1) ##
+
+    plt.figure(figsize=(8.5, 5.2)) 
+    # plt.figure(figsize=(6.4, 4.8)) # default figsize (6.4, 4.8)
    
     x = dictBP3['ms']
     y = dictBP3['mx']
     z = dictBP3['ObservedLimit']/dictBP3['x_H3_H1_SM1_H2_SM2']
     
     plt.scatter(x, y, c=z)
-    twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP3: $\sigma_{obs}/\sigma(S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}', rot=45)
+    twoDPlot.plotAuxTitleAndBounds2D(r'BP3: $\sigma_{\mathrm{lim}}/\sigma_{gg \ \to \  h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) }$', r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]', r'$\sigma_{\mathrm{lim}}/\sigma_{gg \ \to \ h _{3} \ \to \ h _{1}(\gamma\gamma) \ h _{2}(b\bar{b}) }$', xlims=(126, 500), ylims=(255, 650))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP3/ObsDividedH1SM1H2SM2.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_ATLAS/BP3_ObsDividedH1SM1H2SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -220,11 +236,11 @@ if __name__ == "__main__":
 
     #### BP5: ####
 
-    # twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP5_check_prel_Mproc', 'compiled_AtlasBP5_check_prel_Mproc.tsv',
-    #                   msKey='mHa_ub', mxKey='mHc_ub')   
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP5_check_prel_Mproc', 'compiled_AtlasBP5_check_prel_Mproc.tsv',
+                      msKey='mHa_ub', mxKey='mHc_ub')   
 
-    # twoDPlot.exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc.tsv', 'plotsLimits/BP5', 0, 
-    #                  xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    twoDPlot.exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc.tsv', 'plotsLimits/BP5', 0, 
+                     xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
 
     dictBP5 = twoDPlot.pandasDynamicReader('compiled_AtlasBP5_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
     twoDPlot.exclusionCheck(dictBP5['ObservedLimit'], dictBP5, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
@@ -237,9 +253,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP5: Exclusion Limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP5: observed limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP5/ObservedLimit1.pdf')
+    plt.savefig('plots2D/BP5_BR_XSH/BP5_ATLAS/BP5_ObservedLimit.pdf')
     # plt.show()
     plt.close()
 
@@ -254,9 +271,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP5/x_H3_H1H2_SM1SM2.pdf')
+    plt.savefig('plots2D/BP5_BR_XSH/BP5_ATLAS/BP5_x_H3_H1H2_SM1SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -271,9 +289,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP5/x_H3_H1_SM1_H2_SM2.pdf')
+    plt.savefig('plots2D/BP5_BR_XSH/BP5_ATLAS/BP5_x_H3_H1_SM1_H2_SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -288,9 +307,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP5/x_H3_H1_SM2_H2_SM1.pdf')
+    plt.savefig('plots2D/BP5_BR_XSH/BP5_ATLAS/BP5_x_H3_H1_SM2_H2_SM1.pdf')
     # plt.show()
     plt.close()
 
@@ -306,8 +326,9 @@ if __name__ == "__main__":
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
     twoDPlot.plotAuxTitleAndBounds2D('BP5: $\sigma_{obs}/\sigma(S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP5/ObsDividedH1SM1H2SM2.pdf')
+    plt.savefig('plots2D/BP5_BR_XSH/BP5_ATLAS/BP5_ObsDividedH1SM1H2SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -316,11 +337,11 @@ if __name__ == "__main__":
 
     #### BP6: ####
 
-    # twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP6_check_prel_Mproc', 'compiled_AtlasBP6_check_prel_Mproc.tsv',
-    #                   msKey='mHb_ub', mxKey='mHc_ub')   
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP6_check_prel_Mproc', 'compiled_AtlasBP6_check_prel_Mproc.tsv',
+                      msKey='mHb_ub', mxKey='mHc_ub')   
 
-    # twoDPlot.exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc.tsv', 'plotsLimits/BP6', 0, 
-    #                  xlims=(126, 500), ylims=(255, 1000), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    twoDPlot.exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc.tsv', 'plotsLimits/BP6', 0, 
+                     xlims=(126, 500), ylims=(255, 1000), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
     
     dictBP6 = twoDPlot.pandasDynamicReader('compiled_AtlasBP6_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
 
@@ -335,9 +356,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP6: Exclusion Limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(126, 500), ylims=(255, 1000))
+    twoDPlot.plotAuxTitleAndBounds2D('BP6: observed limits', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{obs}$', xlims=(126, 500), ylims=(255, 1000))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP6/ObservedLimit1.pdf')
+    plt.savefig('plots2D/BP6_BR_XSH/BP6_ATLAS/BP6_ObservedLimit1.pdf')
     # plt.show()
     plt.close()
 
@@ -352,9 +374,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma(pp \\to X \\to SH \\to b\\bar{b}\gamma\gamma))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP6/x_H3_H1H2_SM1SM2.pdf')
+    plt.savefig('plots2D/BP6_BR_XSH/BP6_ATLAS/BP6_x_H3_H1H2_SM1SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -369,9 +392,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma(pp \\to X \\to S(b\\bar{b})H(\gamma\gamma)) at ATLAS limit points$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP6/x_H3_H1_SM1_H2_SM2.pdf')
+    plt.savefig('plots2D/BP6_BR_XSH/BP6_ATLAS/BP6_x_H3_H1_SM1_H2_SM2.pdf')
     # plt.show()
     plt.close()
 
@@ -386,9 +410,10 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP6/x_H3_H1_SM2_H2_SM1.pdf')
+    plt.savefig('plots2D/BP6_BR_XSH/BP6_ATLAS/BP6_x_H3_H1_SM2_H2_SM1.pdf')
     # plt.show()
     plt.close()
 
@@ -404,8 +429,9 @@ if __name__ == "__main__":
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
     twoDPlot.plotAuxTitleAndBounds2D('BP6: $\sigma_{obs}/\sigma(S(b\\bar{b})H(\gamma\gamma))$', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(126, 500), ylims=(255, 1000))
+    plt.tight_layout()
 
-    plt.savefig('plotsLimits/BP6/ObsDividedH1SM1H2SM2.pdf')
+    plt.savefig('plots2D/BP6_BR_XSH/BP6_ATLAS/BP6_ObsDividedH1SM1H2SM2.pdf')
     # plt.show()
     plt.close()
 

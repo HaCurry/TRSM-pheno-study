@@ -20,6 +20,7 @@ import json
 import functions as TRSM
 import Exclusion_functions as excl
 import parameterData
+import adjustText
 
 
 def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
@@ -158,21 +159,24 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
         XStotKey = kwargs['XStotKey']
 
     else:
-        XStotKey = 'x_H3_H1H2_SM_tot'
+        # XStotKey = 'x_H3_H1H2_SM_tot'
+        XStotKey = 'x_H3_H1H2_SM1SM2'
 
 
     if 'XS1Key' in kwargs:
         XS1Key = kwargs['XS1Key']
 
     else:
-        XS1Key = 'x_H3_H1H2_SM_1'
+        # XS1Key = 'x_H3_H1H2_SM_1'
+        XS1Key = 'x_H3_H1_SM1_H2_SM2'
 
 
     if 'XS2Key' in kwargs:
         XS2Key = kwargs['XS2Key']
 
     else:
-        XS2Key = 'x_H3_H1H2_SM_2'
+        # XS2Key = 'x_H3_H1H2_SM_2'
+        XS2Key = 'x_H3_H1_SM2_H2_SM1'
     
     
     if 'ObsLimKey' in kwargs:
@@ -256,8 +260,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(ObsLimKey)
     plt.xlim(xlims)
     plt.ylim(ylims)
-    plt.savefig(locOutputData + '/' + ObsLimKey + '.pdf')
-    plt.show()
+    # plt.savefig(locOutputData + '/' + ObsLimKey + '_RAW' + '.pdf')
+    # plt.show()
     plt.close()
 
     # plot total-cross section or anything with the column name XStotKey
@@ -270,8 +274,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(XStotKey)
     plt.xlim(xlims)
     plt.ylim(ylims)
-    plt.savefig(locOutputData + '/' + XStotKey + '.pdf')
-    plt.show()
+    # plt.savefig(locOutputData + '/' + XStotKey + '_RAW' + '.pdf')
+    # plt.show()
     plt.close()
 
     # plot cross-section of first mode or anything with the column name XS1Key
@@ -284,8 +288,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(XS1Key)
     plt.xlim(xlims)
     plt.ylim(ylims)
-    plt.savefig(locOutputData + '/' + XS1Key + '.pdf')
-    plt.show()
+    # plt.savefig(locOutputData + '/' + XS1Key  + '_RAW' +  '.pdf')
+    # plt.show()
     plt.close()
 
     # plot cross-section of second mode or anything with the column name XS2Key
@@ -298,8 +302,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
     plt.title(XS2Key)
     plt.xlim(xlims)
     plt.ylim(ylims)
-    plt.savefig(locOutputData + '/' + XS2Key + '.pdf')
-    plt.show()
+    # plt.savefig(locOutputData + '/' + XS2Key  + '_RAW' +  '.pdf')
+    # plt.show()
     plt.close()
 
     # if user gives the below key names then plot the keyX on x-axis, keyY on y-axis
@@ -327,8 +331,8 @@ def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
         plt.title('{}/{}'.format(keyA, keyB))
         plt.xlim(xlims)
         plt.ylim(ylims)
-        plt.savefig(locOutputData + '/' + keyA + '_dividedBy_' + keyB + '.pdf')
-        plt.show()
+        # plt.savefig(locOutputData + '/' + keyA + '_dividedBy_' + keyB   + '_RAW' +   '.pdf')
+        # plt.show()
         plt.close()
 
 
@@ -666,6 +670,9 @@ def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):
                      textcoords = txtcoord, xytext= xytxt, fontsize = fsize, rotation = rot, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=lwidth, foreground=fground)])
 
+    # texts = [plt.text(xlist[i], ylist[i], '{:.1e}'.format(zlist[i]), ha='center', va='center') for i in range(len(zlist))]
+    # adjustText.adjust_text(texts)
+    
 if __name__ == "__main__":
 
     print('hejsan')
