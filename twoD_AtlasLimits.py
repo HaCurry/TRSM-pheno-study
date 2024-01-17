@@ -119,16 +119,18 @@ plt.ylim(160, 420)
 
 # create a better x label
 # from stackexchange: https://stackoverflow.com/a/49239362/17456342
-ax = plt.gca()
-ax.xaxis.set_minor_locator(mticker.FixedLocator(( 124/2, (126 + 300)/2 )))
-ax.xaxis.set_minor_formatter(mticker.FixedFormatter((r"$M_{1}$ [GeV]", r"$M_{2}$ [GeV]")))
-plt.setp(ax.xaxis.get_minorticklabels(), rotation=0, size=10, va="center")
-ax.tick_params("x",which="minor",pad=25, left=False)
+# ax = plt.gca()
+# ax.xaxis.set_minor_locator(mticker.FixedLocator(( 124/2, (126 + 300)/2 )))
+# ax.xaxis.set_minor_formatter(mticker.FixedFormatter((r"$M_{1}$ [GeV]", r"$M_{2}$ [GeV]")))
+# plt.setp(ax.xaxis.get_minorticklabels(), rotation=0, size=10, va="center")
+# ax.tick_params("x",which="minor",pad=25, left=False)
 
-plt.ylabel(r'$M_{3}$ [GeV]')
+plt.ylabel(r'$M_{X}$ [GeV]')
+plt.xlabel(r'$M_{S}$ [GeV]')
 plt.title(r'Upper limits at 95% C.L normalized, low mass')
 
-plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1,2}(b\bar{b}) \ h_{2,1}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+# plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+plt.colorbar(label =r'$\sigma_{\mathrm{obs}} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
 
 plt.tight_layout()
 plt.savefig("thesisAuxiliaryData/AtlasMassplotTest2_lowmass.png", format='png')
@@ -196,17 +198,19 @@ plt.ylim(420, 1020)
 
 # create a better x label
 # from stackexchange: https://stackoverflow.com/a/49239362/17456342
-ax = plt.gca()
-ax.xaxis.set_minor_locator(mticker.FixedLocator(( 124/2, (126 + 500)/2 )))
-ax.xaxis.set_minor_formatter(mticker.FixedFormatter((r"$M_{1}$ [GeV]", r"$M_{2}$ [GeV]")))
-plt.setp(ax.xaxis.get_minorticklabels(), rotation=0, size=10, va="center")
-ax.tick_params("x",which="minor",pad=25, left=False)
+# ax = plt.gca()
+# ax.xaxis.set_minor_locator(mticker.FixedLocator(( 124/2, (126 + 500)/2 )))
+# ax.xaxis.set_minor_formatter(mticker.FixedFormatter((r"$M_{1}$ [GeV]", r"$M_{2}$ [GeV]")))
+# plt.setp(ax.xaxis.get_minorticklabels(), rotation=0, size=10, va="center")
+# ax.tick_params("x",which="minor",pad=25, left=False)
 
-plt.ylabel(r'$M_{3}$ [GeV]')
+plt.xlabel(r'$M_{S}$ [GeV]')
+plt.ylabel(r'$M_{X}$ [GeV]')
 
 plt.title(r'Upper limits at 95% C.L normalized, high mass')
 
-plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1,2}(b\bar{b}) \ h_{2,1}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+# plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+plt.colorbar(label =r'$\sigma_{\mathrm{obs}} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
 
 plt.tight_layout()
 plt.savefig("thesisAuxiliaryData/AtlasMassplotTest2_highmass.png", format='png')
