@@ -25,15 +25,31 @@ import parameterPlotter
 
 if __name__ == "__main__":
 
-    parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel_noconstraints', 'H1H2', True, True, 
-                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+    # parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel_noconstraints', 'H1H2', True, True, 
+    #               ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)), normNofree=True)
 
-    parameterPlotter.parameterPlot('calc_ownGridRegion2BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP2_check_prel_noconstraints', 'H1H2', True, True, 
-                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+    # parameterPlotter.parameterPlot('calc_ownGridRegion2BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP2_check_prel_noconstraints', 'H1H2', True, True, 
+    #               ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)), normNofree=True)
 
 
-    parameterPlotter.parameterPlot('calc_ownGridRegion1BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP3_check_prel_noconstraints', 'H1H2', True, True, 
-                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+    # parameterPlotter.parameterPlot('calc_ownGridRegion1BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP3_check_prel_noconstraints', 'H1H2', True, True, 
+    #               ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)), normNofree=True)
 
-    parameterPlotter.parameterPlot('calc_ownGridRegion2BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP3_check_prel_noconstraints', 'H1H2', True, True, 
-                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)))
+    # parameterPlotter.parameterPlot('calc_ownGridRegion2BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP3_check_prel_noconstraints', 'H1H2', True, True, 
+    #               ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', ylims=(10**(-8),8*10**(-2)), normNofree=True)
+
+    # parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel_noconstraints_Normed', 'H1H2', True, True, 
+    #               ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, yscale='log', normNofree=True)
+
+    parameterPlotter.parameterPlot('calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP2_check_prel_noconstraints_Normed_nolog', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, normNofree=True)
+
+    parameterPlotter.parameterPlot('calc_ownGridRegion2BP2_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP2_check_prel_noconstraints_Normed_nolog', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM1_H2_SM2', saveStep=True, normNofree=True)
+
+    parameterPlotter.parameterPlot('calc_ownGridRegion1BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion1BP3_check_prel_noconstraints_Normed_nolog', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM2_H2_SM1', saveStep=True, normNofree=True)
+
+    parameterPlotter.parameterPlot('calc_ownGridRegion2BP3_check_prel_Mproc', '/**/settingsCalc_*.json', 'plot_ownGridRegion2BP3_check_prel_noconstraints_Normed_nolog', 'H1H2', True, True, 
+                  ppXNPSM=True, ShowObsLimit=False, SM1='bb', SM2='gamgam', SMmode='H1_SM2_H2_SM1', saveStep=True, normNofree=True)
+

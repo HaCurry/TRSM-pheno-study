@@ -183,7 +183,9 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
     if together == True:
 
         plt.figure()
-        for (x, y, axis, ObservedLimit, dataId) in tuplesVar:
+        # for (x, y, axis, ObservedLimit, dataId) in tuplesVar:
+        for dictElement in tuplesVar:
+            x, y, axis, ObservedLimit, dataId = dictElement['x'], dictElement['y'], dictElement['paramFree'], dictElement['ObservedLimit'], dictElement['dataId']
             # print(x,y, dataId)
             plt.plot(x,y, ls=ls, marker=marker)
 
@@ -199,12 +201,18 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
         if yscaleLog == True: 
             plt.yscale('log')
 
+        # Remove after
+        plt.plot(1.352,1, 1.175,1, -0.407,1, 120,1, 890,1, marker ='o', color='black')
         plt.savefig(outputPath + '/' + generalPhysics + '_' + title + fext )
         plt.close()
 
         if saveStep == True: 
 
             plt.figure()
+
+            # Remove after
+            plt.plot(1.352,1, 1.175,1, -0.407,1, 120,1, 890,1, marker ='o', color='black')
+
             if 'ylims' in kwargs:
                 ylims = kwargs['ylims']
                 plt.ylim(ylims)
@@ -218,7 +226,9 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
                 plt.yscale('log')
 
             figNr = 0
-            for (x, y, axis, ObservedLimit, dataId) in tuplesVar:
+            # for (x, y, axis, ObservedLimit, dataId) in tuplesVar:
+            for dictElement in tuplesVar:
+                x, y, axis, ObservedLimit, dataId = dictElement['x'], dictElement['y'], dictElement['paramFree'], dictElement['ObservedLimit'], dictElement['dataId']
 
                 plt.plot(x,y, ls=ls, marker=marker)
                 if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
@@ -237,10 +247,15 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
         if not os.path.isdir(soloDir):
            os.makedirs(soloDir)
 
-        for (x, y, axis, ObservedLimit, dataId) in tuplesVar:
+        for dictElement in tuplesVar:
+            x, y, axis, ObservedLimit, dataId = dictElement['x'], dictElement['y'], dictElement['paramFree'], dictElement['ObservedLimit'], dictElement['dataId']
 
             plt.figure()
             plt.xlim(xlimsDict[axis])
+
+            # Remove after
+            plt.plot(1.352,1, 1.175,1, -0.407,1, 120,1, 890,1, marker ='o', color='black')
+
             if 'ylims' in kwargs:
                 ylims = kwargs['ylims']
                 plt.ylim(ylims)
@@ -258,18 +273,16 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
             plt.savefig(soloDir + '/' + generalPhysics + '_' + title + '_' + dataId + fext)
             plt.close()
 
-    maxy = np.array((tuplesVar[0])[1])
-    miny = np.array((tuplesVar[0])[1])
-    normalx = np.array((tuplesVar[0])[0])
-    # print(maxy)
-    # print('---')
-    # print(miny)
-    # print('---')
-    # print(normalx)
-    # print('---')
+    # maxy = np.array((tuplesVar[0])[1])
+    # miny = np.array((tuplesVar[0])[1])
+    # normalx = np.array((tuplesVar[0])[0])
+    maxy = np.array((tuplesVar[0])['y'])
+    miny = np.array((tuplesVar[0])['y'])
+    normalx = np.array((tuplesVar[0])['x'])
     # create the fill between plots, by finding max and min for every x point and filling inbetween
     for tupleIndex in range(1, len(tuplesVar)):
-        (x, y, axis, ObservedLimit, dataId) = tuplesVar[tupleIndex]
+        # (x, y, axis, ObservedLimit, dataId) = tuplesVar[tupleIndex]
+        x, y, axis, ObservedLimit, dataId = (tuplesVar[tupleIndex])['x'], (tuplesVar[tupleIndex])['y'], (tuplesVar[tupleIndex])['paramFree'], (tuplesVar[tupleIndex])['ObservedLimit'], (tuplesVar[tupleIndex])['dataId']
 
         for i in range(len(normalx)):
 
@@ -291,6 +304,8 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
 
     plt.fill_between(normalx, miny, maxy, alpha=0.2)
     plt.title(axis + ' -- IN PROGRESS')
+    # Remove after
+    plt.plot(1.352,1, 1.175,1, -0.407,1, 120,1, 890,1, marker ='o', color='black')
     plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + fext)
     plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + '.pdf')
     plt.close()
@@ -360,6 +375,13 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
     else:
         pass
 
+    if 'normNofree' in kwargs:
+        normNofree = kwargs['normNofree']
+        if isinstance(normNofree, bool) == False:
+            raise Exception('normNofree need to be of type bool')
+
+    else: normNofree = False
+
     ##############################################################
 
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
@@ -372,12 +394,18 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
     dictList = parameterData.dictConstruct(pathList)
 
     # will be used for the plotting
-    tuplesThs = []
-    tuplesThx = []
-    tuplesTsx = []
-    tuplesVs = []
-    tuplesVx = []
-    tuplesNofree = []
+    # tuplesThs = []
+    # tuplesThx = []
+    # tuplesTsx = []
+    # tuplesVs = []
+    # tuplesVx = []
+    # tuplesNofree = []
+    dictListThs = []
+    dictListThx = []
+    dictListTsx = []
+    dictListVs = []
+    dictListVx = []
+    dictListNofree = []
 
     print('Creating tuples ...')
     loading = len(dictList)
@@ -412,7 +440,7 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
             path_ppXNPSM = dictElement['extra']['pathCalcppXNPSM_H2H2_']
 
         else:
-            raise Exception('Invalid value for XNPNP not given. Possible values of XNPNP are \'H1H2\', \'H1H1\', \'H2H2\'')
+            raise Exception('Invalid value for XNPNP given. Possible values of XNPNP are \'H1H2\', \'H1H1\', \'H2H2\'')
 
         # variables needed when reading the data using pandas
         if XNP == True:
@@ -438,22 +466,28 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
         y = df[yKey]
 
         if paramFree == 'thetahS':
-            tuplesThs.append((x, y, paramFree, ObservedLimit, dataId))
+            # tuplesThs.append((x, y, paramFree, ObservedLimit, dataId))
+            dictListThs.append({'x': x, 'y': y, 'paramFree': paramFree, 'ObservedLimit': ObservedLimit, 'dataId': dataId})
 
         elif paramFree == 'thetahX':
-            tuplesThx.append((x, y, paramFree, ObservedLimit, dataId))
+            # tuplesThx.append((x, y, paramFree, ObservedLimit, dataId))
+            dictListThx.append({'x': x, 'y': y, 'paramFree': paramFree, 'ObservedLimit': ObservedLimit, 'dataId': dataId})
 
         elif paramFree == 'thetaSX':
-            tuplesTsx.append((x, y, paramFree, ObservedLimit, dataId))
+            # tuplesTsx.append((x, y, paramFree, ObservedLimit, dataId))
+            dictListTsx.append({'x': x, 'y': y, 'paramFree': paramFree, 'ObservedLimit': ObservedLimit, 'dataId': dataId})
 
         elif paramFree == 'vs':
-            tuplesVs.append((x, y, paramFree, ObservedLimit, dataId))
+            # tuplesVs.append((x, y, paramFree, ObservedLimit, dataId))
+            dictListVs.append({'x': x, 'y': y, 'paramFree': paramFree, 'ObservedLimit': ObservedLimit, 'dataId': dataId})
 
         elif paramFree == 'vx':
-            tuplesVx.append((x, y, paramFree, ObservedLimit, dataId))
+            # tuplesVx.append((x, y, paramFree, ObservedLimit, dataId))
+            dictListVx.append({'x': x, 'y': y, 'paramFree': paramFree, 'ObservedLimit': ObservedLimit, 'dataId': dataId})
 
         elif paramFree == 'Nofree':
-            tuplesNofree.append((x, y, paramFree, ObservedLimit, dataId))
+            # tuplesNofree.append((x, y, paramFree, ObservedLimit, dataId))
+            dictListNofree.append({'x': x, 'y': y, 'paramFree': paramFree, 'ObservedLimit': ObservedLimit, 'dataId': dataId})
 
         else:
             raise Exception('Error ocurred in creating tuples')
@@ -461,8 +495,51 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
         print(str(loadingStep/loading))
         loadingStep = loadingStep + 1
 
-    # store all tuples together to be looped over for plotting
-    tuplesAll = [tuplesThs, tuplesThx, tuplesTsx, tuplesVs, tuplesVx, tuplesNofree]
+    def foo(x):
+        print(x)
+        return x
+
+    # divide y-values in the tuples with the y-values in tuplesNofree if normNofree == True
+    if normNofree == True:
+        
+        # normNofree = tuplesNofree[0][1][0]
+        # tuplesThsNormed = [(tuplesThs[i][0], foo(tuplesThs[i][1]/normNofree), tuplesThs[i][2], tuplesThs[i][3], tuplesThs[i][4]) for i in range(len(tuplesThs))]
+        # tuplesThxNormed = [(tuplesThx[i][0], foo(tuplesThx[i][1]/normNofree), tuplesThx[i][2], tuplesThx[i][3], tuplesThx[i][4]) for i in range(len(tuplesThx))]
+        # tuplesTsxNormed = [(tuplesTsx[i][0], foo(tuplesTsx[i][1]/normNofree), tuplesTsx[i][2], tuplesTsx[i][3], tuplesTsx[i][4]) for i in range(len(tuplesTsx))]
+        # tuplesVsNormed = [(tuplesVs[i][0], foo(tuplesVs[i][1]/normNofree), tuplesVs[i][2], tuplesVs[i][3], tuplesVs[i][4]) for i in range(len(tuplesVs))]
+        # tuplesVxNormed = [(tuplesVx[i][0], foo(tuplesVx[i][1]/normNofree), tuplesVx[i][2], tuplesVx[i][3], tuplesVx[i][4]) for i in range(len(tuplesVx))]
+
+        # tuplesThs = tuplesThsNormed
+        # tuplesThx = tuplesThxNormed
+        # tuplesTsx = tuplesTsxNormed
+        # tuplesVs = tuplesVsNormed
+        # tuplesVx = tuplesVxNormed
+        # store all tuples together to be looped over for plotting
+        # tuplesAll = [tuplesThsNormed, tuplesThxNormed, tuplesTsxNormed, tuplesVsNormed, tuplesVxNormed, tuplesNofree]
+        allDicts = [dictListThs, dictListThx, dictListTsx, dictListVs, dictListVx]
+        for dictList in allDicts:
+            for dictElement in dictList:
+                y = dictElement['y']
+                dataId = dictElement['dataId']
+
+                foundNorm = False
+                for dictElementNorm in dictListNofree:
+                    if dictElementNorm['dataId'] == dataId:
+                        norm = (dictElementNorm['y'])[0]
+                        y = y/norm
+                        dictElement['y'] = y
+                        foundNorm = True
+                        break
+
+                    else: continue
+
+                if foundNorm == False: raise Exception('Something went wrong, did not find norm factor in dictListNofree')
+                else: pass
+
+    # otherwise store all tuples together without any normalization factor
+    else:
+        pass
+
 
     # part of the filename of the figures being saved
     if XNP == True: generalPhysics = 'XNP'
@@ -475,12 +552,18 @@ def parameterPlot(relPath, settingsGlob, locOutputPath, XNPNP, together, solo, *
 
     print('creating plots...')
     # for tuplesVar in tuplesAll:
-    plotter(tuplesThs, locOutputPath, generalPhysics, XNPNP + '_thetahS', solo, together, **kwargs)
-    plotter(tuplesThx, locOutputPath, generalPhysics, XNPNP + '_thetahX', solo, together, **kwargs)
-    plotter(tuplesTsx, locOutputPath, generalPhysics, XNPNP + '_thetaSX', solo, together, **kwargs)
-    plotter(tuplesVs, locOutputPath, generalPhysics, XNPNP + '_vs', solo, together, **kwargs)
-    plotter(tuplesVx, locOutputPath, generalPhysics, XNPNP + '_vx', solo, together, **kwargs)
-    plotter(tuplesNofree, locOutputPath, generalPhysics, XNPNP + '_Nofree', solo, together, **kwargs)
+    # plotter(tuplesThs, locOutputPath, generalPhysics, XNPNP + '_thetahS', solo, together, **kwargs)
+    # plotter(tuplesThx, locOutputPath, generalPhysics, XNPNP + '_thetahX', solo, together, **kwargs)
+    # plotter(tuplesTsx, locOutputPath, generalPhysics, XNPNP + '_thetaSX', solo, together, **kwargs)
+    # plotter(tuplesVs, locOutputPath, generalPhysics, XNPNP + '_vs', solo, together, **kwargs)
+    # plotter(tuplesVx, locOutputPath, generalPhysics, XNPNP + '_vx', solo, together, **kwargs)
+    # plotter(tuplesNofree, locOutputPath, generalPhysics, XNPNP + '_Nofree', solo, together, **kwargs)
+    plotter(dictListThs, locOutputPath, generalPhysics, XNPNP + '_thetahS', solo, together, **kwargs)
+    plotter(dictListThx, locOutputPath, generalPhysics, XNPNP + '_thetahX', solo, together, **kwargs)
+    plotter(dictListTsx, locOutputPath, generalPhysics, XNPNP + '_thetaSX', solo, together, **kwargs)
+    plotter(dictListVs, locOutputPath, generalPhysics, XNPNP + '_vs', solo, together, **kwargs)
+    plotter(dictListVx, locOutputPath, generalPhysics, XNPNP + '_vx', solo, together, **kwargs)
+    plotter(dictListNofree, locOutputPath, generalPhysics, XNPNP + '_Nofree', solo, together, **kwargs)
 
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
     print(' script finished parameterPlot ')
