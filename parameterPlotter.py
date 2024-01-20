@@ -164,13 +164,13 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
     else:
         saveStep = False
 
-    if 'fext' in kwargs:
-        fext = kwargs['fext']
-        if isinstance(fext, str) == False:
-            raise Exception('fext needs to be a string in the format .[fileextension (pdf, png, etc.)] .')
+    # if 'fext' in kwargs:
+    #     fext = kwargs['fext']
+    #     if isinstance(fext, str) == False:
+    #         raise Exception('fext needs to be a string in the format .[fileextension (pdf, png, etc.)] .')
 
-    else:
-        fext = '.png'
+    # else:
+    #     fext = '.png'
 
 ################################################################################
 
@@ -182,56 +182,71 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
 
     if together == True:
 
-        plt.figure()
-        for dictElement in tuplesVar:
-            x, y, axis, ObservedLimit, dataId = dictElement['x'], dictElement['y'], dictElement['paramFree'], dictElement['ObservedLimit'], dictElement['dataId']
-            plt.plot(x,y, ls=ls, marker=marker)
+        outputTogether = outputPath + '/' + 'together'
+        if not os.path.isdir(outputTogether):
+           os.makedirs(outputTogether)
 
-            if 'ylims' in kwargs:
-                ylims = kwargs['ylims']
-                plt.ylim(ylims)
+        fileOutputPath = outputTogether + '/' + generalPhysics + '_' + title
 
-            else:
-                pass
+        if 'plotAuxTogether1D' in kwargs:
+            (kwargs['plotAuxTogether1D'])(tuplesVar, fileOutputPath, **kwargs)
 
-            plt.xlim(xlimsDict[axis])
-
-        if yscaleLog == True: 
-            plt.yscale('log')
-
-        plt.savefig(outputPath + '/' + generalPhysics + '_' + title + fext )
-        plt.close()
-
-        if saveStep == True: 
+        else:
 
             plt.figure()
-
-            if 'ylims' in kwargs:
-                ylims = kwargs['ylims']
-                plt.ylim(ylims)
-
-            else:
-                pass
-
-            plt.xlim(xlimsDict[axis])
-
-            if yscaleLog == True: 
-                plt.yscale('log')
-
-            figNr = 0
             for dictElement in tuplesVar:
                 x, y, axis, ObservedLimit, dataId = dictElement['x'], dictElement['y'], dictElement['paramFree'], dictElement['ObservedLimit'], dictElement['dataId']
 
                 plt.plot(x,y, ls=ls, marker=marker)
-                if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
 
+                if 'ylims' in kwargs:
+                    ylims = kwargs['ylims']
+                    plt.ylim(ylims)
 
-                plt.title(axis + ' ' + dataId)
-                plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + str(figNr) + fext)
-                if ShowObsLimit == True: yaxis.remove()
-                figNr = figNr + 1
+                else:
+                    pass
 
+                plt.xlim(xlimsDict[axis])
+
+            if yscaleLog == True: 
+                plt.yscale('log')
+
+            # plt.savefig(outputPath + '/' + generalPhysics + '_' + title + fext )
+            plt.savefig(fileOutputPath + '.pdf')
+            plt.savefig(fileOutputPath + '.png')
             plt.close()
+
+    if saveStep == True: 
+
+        plt.figure()
+
+        if 'ylims' in kwargs:
+            ylims = kwargs['ylims']
+            plt.ylim(ylims)
+
+        else:
+            pass
+
+        axis = (tuplesVar[0])['paramFree']
+        plt.xlim(xlimsDict[axis])
+
+        if yscaleLog == True: 
+            plt.yscale('log')
+
+        figNr = 0
+        for dictElement in tuplesVar:
+            x, y, axis, ObservedLimit, dataId = dictElement['x'], dictElement['y'], dictElement['paramFree'], dictElement['ObservedLimit'], dictElement['dataId']
+
+            plt.plot(x,y, ls=ls, marker=marker)
+            if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
+
+
+            plt.title(axis + ' ' + dataId)
+            plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + str(figNr) + '.png')
+            if ShowObsLimit == True: yaxis.remove()
+            figNr = figNr + 1
+
+        plt.close()
 
     if solo == True:
 
@@ -259,7 +274,7 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
             if ShowObsLimit == True: yaxis = plt.axhline(y=ObservedLimit, ls=yConstLs, color=yConstClr)
 
             plt.title(axis + ' ' + dataId)
-            plt.savefig(soloDir + '/' + generalPhysics + '_' + title + '_' + dataId + fext)
+            plt.savefig(soloDir + '/' + generalPhysics + '_' + title + '_' + dataId + '.png')
             plt.close()
 
     maxy = np.array((tuplesVar[0])['y'])
@@ -293,8 +308,12 @@ def plotter(tuplesVar, outputPath, generalPhysics, title, solo, together, **kwar
         plt.fill_between(normalx, miny, maxy, alpha=0.2)
         plt.title(axis)
     
-    plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + fext)
-    plt.savefig(outputPath + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + '.pdf')
+    outputTogether = outputPath + '/' + 'together'
+    if not os.path.isdir(outputTogether):
+       os.makedirs(outputTogether)
+
+    plt.savefig(outputTogether + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + '.png')
+    plt.savefig(outputTogether + '/' + generalPhysics + '_' + title + '_' + 'fillbetween' + '.pdf')
     plt.close()
     print('its here!')
 
