@@ -354,33 +354,48 @@ if __name__ == '__main__':
    #  del x, y, z, xi, yi, points_BP3_region2, df
 
 
-    twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
 
-    norm = 1
+    # norm = 1
     
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    # BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
+    # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+    # zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
+    # #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(\gamma\gamma)H(bb))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(X\to S(\gamma\gamma)H(bb))$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 650))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
-                    ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+    # twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    #                 ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
-    plt.savefig('toRobensTB.pdf')
-    plt.show()
-    plt.close()
+    # plt.savefig('toRobensTB.pdf')
+    # plt.show()
+    # plt.close()
 
-    plt.scatter(x, y, c=z, cmap='viridis')
-    plt.colorbar()
-    plt.show()
-    plt.close()
+    # plt.scatter(x, y, c=z, cmap='viridis')
+    # plt.colorbar()
+    # plt.show()
+    # plt.close()
 
-    del x, y, z, xi, yi
+    # del x, y, z, xi, yi
+
+    def func(x,y):
+        plt.plot(x,y, ls = 'dashed', marker = 'o')
+        plt.yscale('log')
+        plt.show()
+
+
+    def test(func, somevar):
+        # do something
+        x = np.linspace(1,100)
+        y = np.sin(x)
+        
+        func(x,y)
+
+    test(func, 321)

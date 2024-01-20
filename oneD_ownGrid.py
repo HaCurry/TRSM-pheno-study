@@ -92,21 +92,38 @@ if __name__ == '__main__':
     del ms_BP3, mx_BP3
 
     
-    # 1D parameter plot for own grid
+    ### 1D parameter plot for own grid 50 points
 
-    parameterData.mProcParameterMain(BP2_dictPointlistOwnGridRegion1,  'BP2', 'ownGridRegion1BP2_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('ownGridRegion1BP2_check_prel', 'calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settings_*.json', 
+    # parameterData.mProcParameterMain(BP2_dictPointlistOwnGridRegion1,  'BP2', 'ownGridRegion1BP2_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('ownGridRegion1BP2_check_prel', 'calc_ownGridRegion1BP2_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP2_dictPointlistOwnGridRegion2,  'BP2', 'ownGridRegion2BP2_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('ownGridRegion2BP2_check_prel', 'calc_ownGridRegion2BP2_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP3_dictPointlistOwnGridRegion1,  'BP3', 'ownGridRegion1BP3_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('ownGridRegion1BP3_check_prel', 'calc_ownGridRegion1BP3_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP3_dictPointlistOwnGridRegion2,  'BP3', 'ownGridRegion2BP3_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('ownGridRegion2BP3_check_prel', 'calc_ownGridRegion2BP3_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    ### 1D parameter plot for own grid 100 points
+
+    # parameterData.mProcParameterMain(BP2_dictPointlistOwnGridRegion1,  'BP2', 'ownGridRegion1BP2_check_prel_100_TB', 100, 'check')
+    # parameterData.mProcCalculatorMain('ownGridRegion1BP2_check_prel_100_TB', 'calc_ownGridRegion1BP2_check_prel_Mproc_100_TB', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP2_dictPointlistOwnGridRegion2,  'BP2', 'ownGridRegion2BP2_check_prel_100_TB', 100, 'check')
+    # parameterData.mProcCalculatorMain('ownGridRegion2BP2_check_prel_100_TB', 'calc_ownGridRegion2BP2_check_prel_Mproc_100_TB', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    parameterData.mProcParameterMain(BP3_dictPointlistOwnGridRegion1,  'BP3', 'ownGridRegion1BP3_check_prel_100_TB', 100, 'check')
+    parameterData.mProcCalculatorMain('ownGridRegion1BP3_check_prel_100_TB', 'calc_ownGridRegion1BP3_check_prel_Mproc_100_TB', '/**/settings_*.json', 
                     SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    parameterData.mProcParameterMain(BP2_dictPointlistOwnGridRegion2,  'BP2', 'ownGridRegion2BP2_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('ownGridRegion2BP2_check_prel', 'calc_ownGridRegion2BP2_check_prel_Mproc', '/**/settings_*.json', 
+    parameterData.mProcParameterMain(BP3_dictPointlistOwnGridRegion2,  'BP3', 'ownGridRegion2BP3_check_prel_100_TB', 100, 'check')
+    parameterData.mProcCalculatorMain('ownGridRegion2BP3_check_prel_100_TB', 'calc_ownGridRegion2BP3_check_prel_Mproc_100_TB', '/**/settings_*.json', 
                     SM1='bb', SM2='gamgam', generateH1H2=True)
-
-    parameterData.mProcParameterMain(BP3_dictPointlistOwnGridRegion1,  'BP3', 'ownGridRegion1BP3_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('ownGridRegion1BP3_check_prel', 'calc_ownGridRegion1BP3_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
-
-    parameterData.mProcParameterMain(BP3_dictPointlistOwnGridRegion2,  'BP3', 'ownGridRegion2BP3_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('ownGridRegion2BP3_check_prel', 'calc_ownGridRegion2BP3_check_prel_Mproc', '/**/settings_*.json', 
-                    SM1='bb', SM2='gamgam', generateH1H2=True)
-

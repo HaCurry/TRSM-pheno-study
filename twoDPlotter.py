@@ -20,7 +20,7 @@ import json
 import functions as TRSM
 import Exclusion_functions as excl
 import parameterData
-import adjustText
+# import adjustText
 
 
 def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
