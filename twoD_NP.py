@@ -365,6 +365,15 @@ if __name__ == '__main__':
     #### NWA ####
     #############
 
+    plt.rcParams['axes.labelsize'] = 19
+    plt.rcParams['axes.titlesize'] = 19
+    mpl.rcParams["text.usetex"] = True
+    # mpl.rcParams['mathtext.fontset'] = 'cm'
+    mpl.rcParams['font.family'] = 'cm'
+    # mpl.rcParams['mathtext.fontset'] = 'cm'
+    # mpl.rcParams['font.family'] = 'STIXGeneral'
+    #### BP2: ####            
+
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H3')
 
     BP2_NWA_H3 = BP2_w_H3/BP2_mH3
@@ -373,10 +382,33 @@ if __name__ == '__main__':
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower', #norm=mpl.colors.LogNorm(),
+    plt.imshow(zi, origin='lower',
                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    plt.colorbar()
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\Gamma_{h_{3}}/M_{3}$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(1, 124), ylims=(126, 500))
+
+    plt.tight_layout()
+    plt.savefig('plots2D/BP2_BR_XSH/BP2_NWA.pdf')
     plt.show()
 
     # increase fontsize so that subsubscripts are visible, enable plt.tight_layout() and maybe flush the colorbar agains the figure border
+
+
+    #### BP3: ####            
+
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_w_H3 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H3')
+
+    BP3_NWA_H3 = BP3_w_H3/BP3_mH3
+
+    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_NWA_H3)
+
+    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+    plt.imshow(zi, origin='lower',
+               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma_{h_{3}}/M_{3}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(126, 500), ylims=(255, 650))
+
+    plt.tight_layout()
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA.pdf')
+    plt.show()

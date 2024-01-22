@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import scipy.interpolate
 mpl.rcParams.update(mpl.rcParamsDefault)
+# import atlas_mpl_style as ampl
+import mplhep as hep
 
 import subprocess
 import configparser
@@ -21,9 +23,21 @@ import functions as TRSM
 import Exclusion_functions as excl
 import parameterData
 import twoDPlotter as twoDPlot
-
+# print(ampl.__file__)
 
 if __name__ == '__main__':
+    # ampl.use_atlas_style()
+    # hep.style.use('ATLAS')
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    mpl.rcParams['axes.labelsize'] = 19
+    mpl.rcParams['axes.titlesize'] = 19
+    # plt.style.use('print')
+    # plt.rcParams['axes.labelsize'] = 19
+    # plt.rcParams['axes.titlesize'] = 19
+    # mpl.rcParams["text.usetex"] = True
+    # # mpl.rcParams['mathtext.fontset'] = 'cm'
+    # mpl.rcParams['font.family'] = 'cm'
 
     norm = (31.02 * 10**(-3)) * 0.0026
 
@@ -50,7 +64,9 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
-    
+
+    plt.text(60, 225, "test", size=20, color='black', path_effects=[mpl.patheffects.withStroke(linewidth=4, foreground='white')])    
+
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_tot_fig.pdf')
     plt.show()
     plt.close()
@@ -73,11 +89,13 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h_{3})\cdot\mathrm{BR}_{h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)}$", r"$M_{1}$", r"$M_{3}$", r"$\sigma(gg \ \to \ h_{3})\cdot\mathrm{BR}_{h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)}$", xlims=(1, 124), ylims=(126, 500))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left.\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(gg \ \to \ h_{3} \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left.\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
-    
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_1_fig.pdf')
     plt.show()
     plt.close()
@@ -100,7 +118,8 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h_{3})\cdot\mathrm{BR}_{h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$", r"$M_{1}$", r"$M_{3}$", r'$\sigma_{gg \ \to \  h_{3}}\cdot\mathrm{BR}_{h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(1, 124), ylims=(126, 500))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
@@ -135,7 +154,7 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)} / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$", r"$M_{1}$", r"$M_{3}$", r'$\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)} / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \  h_{2}(b\bar{b})}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(\left. h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma( h_{1}(\gamma\gamma) \  h_{2}(b\bar{b}))$', xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
@@ -168,7 +187,8 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma_{gg \ \to \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma_{gg \ \to \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)}$', xlims=(126, 500), ylims=(255, 650))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
@@ -199,7 +219,8 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma_{gg \ \to \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma_{gg \ \to \ h_{3}} \cdot \mathrm{BR}_{h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma)) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
@@ -237,7 +258,8 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)} / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)} / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
@@ -492,12 +514,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_bbgamgam_tot_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -519,12 +541,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_bbgamgam_1_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -546,12 +568,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_bbgamgam_2_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -581,12 +603,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_bbgamgam_ratio_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
 
@@ -614,12 +636,12 @@ if __name__ == '__main__':
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP6_BR_XSH/BP6_XS_XSH_bbgamgam_1_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -645,12 +667,12 @@ if __name__ == '__main__':
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP6_BR_XSH/BP6_XS_XSH_bbgamgam_2_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -683,12 +705,12 @@ if __name__ == '__main__':
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP6_BR_XSH/BP6_XS_XSH_bbgamgam_ratio_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
