@@ -107,12 +107,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP2_BR_XSH/BP2_BR_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -145,12 +145,12 @@ if __name__ == '__main__':
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP3_BR_XSH/BP3_BR_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -184,12 +184,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
 
     plt.savefig('plots2D/BP5_BR_XSH/BP5_BR_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -226,12 +226,12 @@ if __name__ == '__main__':
         
     plt.savefig('plots2D/BP6_BR_XSH/BP6_BR_XSH_fig.pdf')
     # plt.savefig('plots2D/BP6_BR_XSH_try2/BP6_BR_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -260,12 +260,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -291,12 +291,12 @@ if __name__ == '__main__':
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -304,7 +304,7 @@ if __name__ == '__main__':
 
     #### BP5 ####
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
+    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
     
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1H2)
 
@@ -319,12 +319,12 @@ if __name__ == '__main__':
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
     plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -332,7 +332,7 @@ if __name__ == '__main__':
 
     #### BP6 ####
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
+    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
       
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_x_H3_H1H2)
 
@@ -350,13 +350,33 @@ if __name__ == '__main__':
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
     plt.savefig('plots2D/BP6_BR_XSH/BP6_XS_XSH_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
 
+
+    #############
+    #### NWA ####
+    #############
+
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H3')
+
+    BP2_NWA_H3 = BP2_w_H3/BP2_mH3
+
+    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_NWA_H3)
+
+    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+    plt.imshow(zi, origin='lower', #norm=mpl.colors.LogNorm(),
+               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    plt.colorbar()
+    plt.show()
+
+    # increase fontsize so that subsubscripts are visible, enable plt.tight_layout() and maybe flush the colorbar agains the figure border
