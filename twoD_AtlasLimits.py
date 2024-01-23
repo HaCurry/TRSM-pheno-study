@@ -6,12 +6,17 @@ import numpy as np
 from scipy.interpolate import griddata
 import matplotlib.pyplot as plt
 import matplotlib
-import atlas_mpl_style as ampl
+import mplhep as hep
+# import atlas_mpl_style as ampl
 import pathlib
 import glob
 import matplotlib.ticker as mticker
 
 
+plt.style.use(hep.style.ATLAS)
+hep.style.use({"mathtext.default": "rm"})
+matplotlib.rcParams['axes.labelsize'] = 19
+matplotlib.rcParams['axes.titlesize'] = 19
 
 norm = (31.02 * 0.0026)
 
@@ -130,7 +135,7 @@ plt.xlabel(r'$M_{S}$ [GeV]')
 plt.title(r'Upper limits at 95% C.L normalized, low mass')
 
 # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
-plt.colorbar(label =r'$\sigma_{\mathrm{obs}} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+plt.colorbar(label =r'$\left. \sigma(\mathrm{obs}) \ \right/ \ \sigma(SM)$' )
 
 plt.tight_layout()
 plt.savefig("thesisAuxiliaryData/AtlasMassplotTest2_lowmass.png", format='png')
@@ -210,7 +215,7 @@ plt.ylabel(r'$M_{X}$ [GeV]')
 plt.title(r'Upper limits at 95% C.L normalized, high mass')
 
 # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
-plt.colorbar(label =r'$\sigma_{\mathrm{obs}} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+plt.colorbar(label =r'$\left. \sigma(\mathrm{obs}) \ \right/ \ \sigma(SM)$' )
 
 plt.tight_layout()
 plt.savefig("thesisAuxiliaryData/AtlasMassplotTest2_highmass.png", format='png')

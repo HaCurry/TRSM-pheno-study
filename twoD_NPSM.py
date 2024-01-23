@@ -118,12 +118,13 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", xlims=(1, 124), ylims=(126, 500))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
-    
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_2_fig.pdf')
     plt.show()
     plt.close()
@@ -156,9 +157,10 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(\left. h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma( h_{1}(\gamma\gamma) \  h_{2}(b\bar{b}))$', xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
-    
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_ratio_fig.pdf')
     plt.show()
     plt.close()
@@ -192,7 +194,8 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
-        
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_1_fig.pdf')
     plt.show()
     plt.close()
@@ -224,7 +227,8 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
-        
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_2_fig.pdf')
     plt.show()
     plt.close()
@@ -261,9 +265,10 @@ if __name__ == '__main__':
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
     twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
-        
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_ratio_fig.pdf')
     plt.show()
     plt.close()
