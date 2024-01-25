@@ -262,7 +262,7 @@ if __name__ == '__main__':
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
