@@ -13,10 +13,6 @@ import matplotlib.ticker as mticker
 import twoDPlotter as twoDPlot
 
 def cutter(ms, mx, z, xlim, ylim):
-
-    # msCopy = np.copy(ms)
-    # mxCopy = np.copy(mx)
-    # zCopy =  np.copy(z)
     msCopy = []
     mxCopy = []
     zCopy = [] 

@@ -3,6 +3,8 @@ import csv
 import pandas
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import mplhep as hep
 # import matplotlib as mpl
 import scipy
 # from scipy.interpolate import CubicSpline
@@ -281,6 +283,12 @@ if __name__ == '__main__':
 
 
     # norm = 1
+
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    mpl.rcParams['axes.labelsize'] = 19
+    mpl.rcParams['axes.titlesize'] = 19
+
     norm = (31.02 * 10**(-3)) * 0.0026
  
     ## BP2: ##
@@ -302,7 +310,7 @@ if __name__ == '__main__':
 
     df1 = msmxToTable(points_BP2_region1, 'ownGridRegion1BP2.tsv')
 
-    plt.plot(df1['ms'], df1['mx'], ls='none', marker='o', mfc='none', color = 'black', alpha=0.7, label='Region 1')
+    plt.plot(df1['ms'], df1['mx'], ls='none', marker='o', mfc='none', color = 'red', alpha=0.7, label='Region 1')
 
     ## Region 2 ##
     
@@ -312,9 +320,9 @@ if __name__ == '__main__':
 
     df2 = msmxToTable(points_BP2_region2, 'ownGridRegion2BP2.tsv')
 
-    plt.plot(df2['ms'], df2['mx'], ls='none', marker='o', mfc='none', color = 'white', alpha=0.7, label='Region 2')
+    plt.plot(df2['ms'], df2['mx'], ls='none', marker='o', mfc='none', color = 'blue', alpha=0.7, label='Region 2')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2 grid: $\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2 grid: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \ \right/ \ \sigma(SM)$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \ \right/ \ \sigma(SM)$', xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{2}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
@@ -348,7 +356,7 @@ if __name__ == '__main__':
 
     df1 = msmxToTable(points_BP3_region1, 'ownGridRegion1BP3.tsv')
 
-    plt.plot(df1['ms'], df1['mx'], ls='none', marker='o', mfc='none', color = 'black', alpha=0.7, label='Region 1')
+    plt.plot(df1['ms'], df1['mx'], ls='none', marker='o', mfc='none', color = 'red', alpha=0.7, label='Region 1')
 
     ## Region 2
 
@@ -358,9 +366,9 @@ if __name__ == '__main__':
 
     df2 = msmxToTable(points_BP3_region2, 'ownGridRegion2BP3.tsv')
 
-    plt.plot(df2['ms'], df2['mx'], ls='none', marker='o', mfc='none', color = 'white', alpha=0.7, label='Region2')
+    plt.plot(df2['ms'], df2['mx'], ls='none', marker='o', mfc='none', color = 'blue', alpha=0.7, label='Region 2')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3 grid: $\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$", r"$M_{2}$", r"$M_{3}$", r'$\sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})} \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3 grid: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})) \ \right/ \ \sigma(SM)$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})) \ \right/ \ \sigma(SM)$', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (337, 445), (353, 336),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
