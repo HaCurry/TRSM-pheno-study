@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import scipy.interpolate
 mpl.rcParams.update(mpl.rcParamsDefault)
-# import atlas_mpl_style as ampl
 import mplhep as hep
 
 import subprocess

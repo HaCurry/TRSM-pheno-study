@@ -590,13 +590,19 @@ def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
     
     else:
         pass
+
+    if 'cbarfmt' in kwargs:
+        plt.colorbar(label=ztitle, format=kwargs['cbarfmt'])
+
+    else:
+        plt.colorbar(label=ztitle)
+        
             
     ##################################################################
 
     plt.title(title)
     plt.xlabel(xtitle)
     plt.ylabel(ytitle)
-    plt.colorbar(label=ztitle)
 
 
 def plotAuxVar2D(x, y, n, nInterp=500):
@@ -667,7 +673,7 @@ def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):
     
     for i in range(len(zlist)):
         plt.annotate(fmt.format(zlist[i]), (xlist[i], ylist[i]),
-                     textcoords = txtcoord, xytext= xytxt, fontsize = fsize, rotation = rot, 
+                     textcoords=txtcoord, xytext=xytxt, fontsize=fsize, rotation=rot, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=lwidth, foreground=fground)])
 
     # texts = [plt.text(xlist[i], ylist[i], '{:.1e}'.format(zlist[i]), ha='center', va='center') for i in range(len(zlist))]

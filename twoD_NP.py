@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import scipy.interpolate
 mpl.rcParams.update(mpl.rcParamsDefault)
+import mplhep as hep
 
 import subprocess
 import configparser
@@ -79,6 +80,11 @@ import twoDPlotter as twoDPlot
 
 if __name__ == '__main__':
 
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    mpl.rcParams['axes.labelsize'] = 19
+    mpl.rcParams['axes.titlesize'] = 19
+
     ############
     #### BR ####
     ############
@@ -101,11 +107,12 @@ if __name__ == '__main__':
     plt.imshow(zi, vmin=0.1, vmax=0.55, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\mathrm{BR} _{h _{3}\to h _{1}h _{2}}$", r"$M_{1}$", r"$M_{3}$", r"$\mathrm{BR} _{h _{3} \to h _{1}h _{2}}$", xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\mathrm{BR}(h _{3}\to h _{1}h _{2})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\mathrm{BR}(h _{3} \to h _{1}h _{2})$", xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
-    
+
+    plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_BR_XSH_fig.pdf')
     # plt.show()
     plt.close()
@@ -139,11 +146,12 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\mathrm{BR} _{h _{3}\to h _{1}h _{2}}$", r"$M_{2}$", r"$M_{3}$", r"$\mathrm{BR} _{h _{3} \to h _{1}h _{2}}$", xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\mathrm{BR}(h _{3}\to h _{1}h _{2})$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r"$\mathrm{BR}(h _{3} \to h _{1}h _{2})$", xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
+    plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_BR_XSH_fig.pdf')
     # plt.show()
     plt.close()
@@ -254,11 +262,13 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower', vmin = 10**(-2), vmax = 7*10**(-1),#norm=mpl.colors.LogNorm(vmin = 10**(-2), vmax = 7*10**(-1)),
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma _{gg\to h _{3}} \cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3}}\cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(1, 124), ylims=(126, 500))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg\to h _{3}) \times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3}\times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h _{3} \ \to \ h _{1}h _{2})$", r"$M_{2}$", r"$M_{3}$", r'$\sigma( gg \ \to \ h _{3} \ \to \ h _{1}h _{2})$ [pb]', xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
+    plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_fig.pdf')
     # plt.show()
     plt.close()
@@ -285,11 +295,13 @@ if __name__ == '__main__':
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma _{gg\to h _{3}}\cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{1}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3}} \cdot \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(126, 500), ylims=(255, 650))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma _{gg\to h _{3}\times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{1}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3} \times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma (gg \ \to \ h _{3} \ \to \ h _{1}h _{2})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(gg \ \to \ h _{3} \ \to h _{1}h _{2})$ [pb]', xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
+    plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_fig.pdf')
     # plt.show()
     plt.close()
@@ -365,13 +377,19 @@ if __name__ == '__main__':
     #### NWA ####
     #############
 
-    plt.rcParams['axes.labelsize'] = 19
-    plt.rcParams['axes.titlesize'] = 19
-    mpl.rcParams["text.usetex"] = True
-    # mpl.rcParams['mathtext.fontset'] = 'cm'
-    mpl.rcParams['font.family'] = 'cm'
+    # plt.rcParams['axes.labelsize'] = 19
+    # plt.rcParams['axes.titlesize'] = 19
+    # mpl.rcParams["text.usetex"] = True
+    # # mpl.rcParams['mathtext.fontset'] = 'cm'
+    # mpl.rcParams['font.family'] = 'cm'
     # mpl.rcParams['mathtext.fontset'] = 'cm'
     # mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    mpl.rcParams['axes.labelsize'] = 19
+    mpl.rcParams['axes.titlesize'] = 19
+
     #### BP2: ####            
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H3')
@@ -385,8 +403,10 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\Gamma_{h_{3}}/M_{3}$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(1, 124), ylims=(126, 500))
-
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\Gamma_{h_{3}}/M_{3}$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(1, 124), ylims=(126, 500), cbarfmt='{x:.3f}')
+    # plt.title(r"BP2: $\Gamma_{h_{3}}/M_{3}$")
+    # plt.colorbar(label=r'$\Gamma_{h_{3}}/M_{3}$', format='{x:.3f}')
+    
     plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_NWA.pdf')
     plt.show()
@@ -407,7 +427,7 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma_{h_{3}}/M_{3}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma_{h_{3}}/M_{3}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(126, 500), ylims=(255, 650), cbarfmt='{x:.3f}')
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA.pdf')
