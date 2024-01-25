@@ -67,12 +67,12 @@ if __name__ == '__main__':
     plt.text(60, 225, "test", size=20, color='black', path_effects=[mpl.patheffects.withStroke(linewidth=4, foreground='white')])    
 
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_tot_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -96,12 +96,12 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_1_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -125,12 +125,12 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_2_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -151,22 +151,61 @@ if __name__ == '__main__':
         
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # im = plt.imshow(zi, origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(\left. h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma( h_{1}(\gamma\gamma) \  h_{2}(b\bar{b}))$', xlims=(1, 124), ylims=(126, 500))
+    # levels=[0,1,15,30,45,60,75,90,105,120]
+    levels = [0, 1, 30, 60, 90, 120]
+    # https://stackoverflow.com/a/52080168/17456342
+    # colors = list(plt.cm.viridis(np.linspace(0,1,len(levels))))
+    # colors[-1] = "red"
+    # print(colors)
+    # cmap = mpl.colors.ListedColormap(colors,"", len(colors))
+    contf = plt.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
+    plt.contour(xi, yi, zi, levels=[1], colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
+    
+    ax = plt.gca()
+                
+    from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+    from mpl_toolkits.axes_grid1.inset_locator import mark_inset   
+    axins = zoomed_inset_axes(ax, 3, loc = 'upper left', borderpad=1.2) # zoom = 6
+    axins.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
+    axins.contour(xi, yi, zi, levels=[1], colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
-                    ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
+    # sub region of the original image
+    x1, x2, y1, y2 = 1, 12, 130, 160
+    axins.set_xlim(x1, x2)
+    axins.set_ylim(y1, y2)
+    axins.yaxis.tick_right()
+    # axins.set_xticks([])
+    # axins.set_yticks([])
+
+    # draw a bbox of the region of the inset axes in the parent axes and
+    # connecting lines between the bbox and the inset axes area
+    mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
+
+
+    # plt.xlim(1, 124)
+    # plt.ylim(126, 500)
+    ax.set_xlim(1, 124)
+    ax.set_ylim(126, 500)
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", 
+    #                                  r'$\sigma(\left. h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma( h_{1}(\gamma\gamma) \  h_{2}(b\bar{b}))$', xlims=(1, 124), ylims=(126, 500),
+    #                                  cbarvisible=False)
+
+    # twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
+    #                 ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
+    fig = plt.gcf()
+    fig.colorbar(contf, ax=ax, label =r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$' )
 
     plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_ratio_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
-    plt.colorbar()
-    plt.show()
+    # plt.colorbar()
+    # plt.show()
     plt.close()
 
 
@@ -196,12 +235,12 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_1_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -229,12 +268,12 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_2_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi
@@ -269,12 +308,12 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_ratio_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del x, y, z, xi, yi

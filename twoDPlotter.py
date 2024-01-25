@@ -594,6 +594,9 @@ def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
     if 'cbarfmt' in kwargs:
         plt.colorbar(label=ztitle, format=kwargs['cbarfmt'])
 
+    elif 'cbarvisible' in kwargs and kwargs['cbarvisible'] == False:
+        pass
+
     else:
         plt.colorbar(label=ztitle)
         
