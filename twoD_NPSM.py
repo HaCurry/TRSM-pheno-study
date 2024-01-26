@@ -151,42 +151,43 @@ if __name__ == '__main__':
         
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    # im = plt.imshow(zi, origin='lower',
+    # contf = plt.imshow(zi, origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # levels=[0,1,15,30,45,60,75,90,105,120]
     levels = [0, 1, 30, 60, 90, 120]
-    # https://stackoverflow.com/a/52080168/17456342
-    # colors = list(plt.cm.viridis(np.linspace(0,1,len(levels))))
-    # colors[-1] = "red"
-    # print(colors)
-    # cmap = mpl.colors.ListedColormap(colors,"", len(colors))
-    contf = plt.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
-    plt.contour(xi, yi, zi, levels=[1], colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
+    # contf = plt.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
+    plt.contour(xi, yi, zi, levels=[1], colors='red', linewidths=0.5, extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
     
     ax = plt.gca()
-                
+    CS = ax.contour(xi, yi, zi, levels=[20, 60, 100], linewidths=0.5, colors='black', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
+
+    # from: https://matplotlib.org/2.0.2/examples/pylab_examples/patheffect_demo.html
+    # and chatGPT
+    from matplotlib import patheffects as pe
+    clbls = ax.clabel(CS, CS.levels, use_clabeltext=True)
+    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=3, foreground="w")])
+
+    ################################ zoom box ################################
     from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
     from mpl_toolkits.axes_grid1.inset_locator import mark_inset   
     axins = zoomed_inset_axes(ax, 3, loc = 'upper left', borderpad=1.2) # zoom = 6
-    axins.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
-    axins.contour(xi, yi, zi, levels=[1], colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
+    # axins.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
+    axins.imshow(zi, origin='lower',
+                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    axins.contour(xi, yi, zi, levels=[1], linewidths=0.5, colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
 
     # sub region of the original image
     x1, x2, y1, y2 = 1, 12, 130, 160
     axins.set_xlim(x1, x2)
     axins.set_ylim(y1, y2)
     axins.yaxis.tick_right()
-    # axins.set_xticks([])
-    # axins.set_yticks([])
 
     # draw a bbox of the region of the inset axes in the parent axes and
     # connecting lines between the bbox and the inset axes area
     mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
+    ##########################################################################
 
-
-    # plt.xlim(1, 124)
-    # plt.ylim(126, 500)
     ax.set_xlim(1, 124)
     ax.set_ylim(126, 500)
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", 
@@ -290,25 +291,26 @@ if __name__ == '__main__':
     print(BP3_mH2 == BP3_mH2_2)
     print(BP3_mH3 == BP3_mH3_2)
 
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/BP3_x_H3_H1_SM2_H2_SM1)
-
+    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/BP3_x_H3_H1_SM2_H2_SM1) 
+       
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
-
 
     plt.imshow(zi, origin='lower',
                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
     # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
+    # plt.contour(xi, yi, zi, levels=[1.05], colors='red', linewidths=0.5, extent=(x.min(), x.max(), y.min(), y.max()))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
-                    ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
+
+    # twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
+    #                 ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_ratio_fig.pdf')
-    # plt.show()
+    plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
