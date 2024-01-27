@@ -95,17 +95,19 @@ if __name__ == '__main__':
     #              ths=1.352, thx=1.175, tsx=-0.407, vs=120, vx=890)
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP2_BR_XSH', 'config_BP2_BR_XSH.tsv', 'output_BP2_BR_XSH.tsv', 'check', capture_output=False)
-       
+
     # twoDPlot.calculateSort2D('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'plots2D/BP2_BR_XSH', 'calc_BP2.tsv', 'bb', 'gamgam')
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
-    
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2 = twoDPlot.kineticExcluder(BP2_mH1, BP2_mH2, BP2_mH3, BP2_b_H3_H1H2)
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_b_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, vmin=0.1, vmax=0.55, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, vmin=0.1, vmax=0.55, origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\mathrm{BR}(h _{3}\to h _{1}h _{2})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\mathrm{BR}(h _{3} \to h _{1}h _{2})$", xlims=(1, 124), ylims=(126, 500))
 
@@ -135,16 +137,15 @@ if __name__ == '__main__':
     # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
-      
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-
-    plt.imshow(zi, vmin=0, vmax=0.6, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, vmin=0, vmax=0.6, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\mathrm{BR}(h _{3}\to h _{1}h _{2})$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r"$\mathrm{BR}(h _{3} \to h _{1}h _{2})$", xlims=(126, 500), ylims=(255, 650))
 
@@ -254,13 +255,16 @@ if __name__ == '__main__':
     #### BP2 ####
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
-    
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1H2 = twoDPlot.kineticExcluder(BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1H2)
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower', vmin = 10**(-2), vmax = 7*10**(-1),#norm=mpl.colors.LogNorm(vmin = 10**(-2), vmax = 7*10**(-1)),
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower', vmin = 10**(-2), vmax = 7*10**(-1),#norm=mpl.colors.LogNorm(vmin = 10**(-2), vmax = 7*10**(-1)),
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg\to h _{3}) \times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{2}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3}\times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(1, 124), ylims=(126, 500))
     twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h _{3} \ \to \ h _{1}h _{2})$", r"$M_{2}$", r"$M_{3}$", r'$\sigma( gg \ \to \ h _{3} \ \to \ h _{1}h _{2})$ [pb]', xlims=(1, 124), ylims=(126, 500))
@@ -284,16 +288,17 @@ if __name__ == '__main__':
     #### BP3 ####
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
-      
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1H2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1H2) 
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1H2)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
 
-    plt.imshow(zi, origin='lower', vmin = 6*10**(-3), vmax = 4*10**(-1),#norm=mpl.colors.LogNorm(vmin = 6*10**(-3), vmax = 4*10**(-1)),
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower', vmin = 6*10**(-3), vmax = 4*10**(-1),#norm=mpl.colors.LogNorm(vmin = 6*10**(-3), vmax = 4*10**(-1)),
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma _{gg\to h _{3}\times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$", r"$M_{1}$", r"$M_{3}$", r'$\sigma _{gg\to h _{3} \times \mathrm{BR}_{h _{3}\to h _{1}h _{2}}$ [pb]', xlims=(126, 500), ylims=(255, 650))
     twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma (gg \ \to \ h _{3} \ \to \ h _{1}h _{2})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(gg \ \to \ h _{3} \ \to h _{1}h _{2})$ [pb]', xlims=(126, 500), ylims=(255, 650))
@@ -393,6 +398,7 @@ if __name__ == '__main__':
     #### BP2: ####            
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H3')
+    # BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3 = twoDPlot.kineticExcluder(BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3)
 
     BP2_NWA_H3 = BP2_w_H3/BP2_mH3
 
@@ -400,8 +406,10 @@ if __name__ == '__main__':
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\Gamma_{h_{3}}/M_{3}$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(1, 124), ylims=(126, 500), cbarfmt='{x:.3f}')
     # plt.title(r"BP2: $\Gamma_{h_{3}}/M_{3}$")
@@ -409,14 +417,15 @@ if __name__ == '__main__':
     
     plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_NWA.pdf')
-    plt.show()
-
+    # plt.show()
     # increase fontsize so that subsubscripts are visible, enable plt.tight_layout() and maybe flush the colorbar agains the figure border
+    plt.close()
 
 
     #### BP3: ####            
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_w_H3 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H3')
+    # BP3_mH1, BP3_mH2, BP3_mH3, BP3_w_H3 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_w_H3)
 
     BP3_NWA_H3 = BP3_w_H3/BP3_mH3
 
@@ -424,11 +433,13 @@ if __name__ == '__main__':
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma_{h_{3}}/M_{3}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma_{h_{3}}/M_{3}$', xlims=(126, 500), ylims=(255, 650), cbarfmt='{x:.3f}')
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA.pdf')
-    plt.show()
+    # plt.show()

@@ -616,8 +616,10 @@ def kineticExcluder(mH1, mH2, mH3, zlist, **kwargs):
 
         else:
             continue
-    print(len(mH1),len(mH2),len(mH2),len(zlist),)
-    print(len(mH1Copy),len(mH2Copy),len(mH3Copy),len(zlistCopy),)
+
+    # print(len(mH1),len(mH2),len(mH2),len(zlist),)
+    # print(len(mH1Copy),len(mH2Copy),len(mH3Copy),len(zlistCopy),)
+
     return np.array(mH1Copy), np.array(mH2Copy), np.array(mH3Copy), np.array(zlistCopy)
 
 
