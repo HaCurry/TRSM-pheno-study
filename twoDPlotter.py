@@ -570,12 +570,56 @@ def exclusionCheck(ObsLimList, compareDict, compareKeys, epsilon):
                 exclList.append({'index': i, 'ObservedLimit': ObsLimList[i], key: (compareDict[key])[i]})
             else:
                 pass
-  
+
             # print the excluded mass points
             print('=============================================')
             print('Excluded points ' + key + ': ' + str(exclList))
             print('=============================================')
-   
+
+
+def kineticExcluder(mH1, mH2, mH3, zlist, **kwargs):
+
+    ############################# kwargs #############################
+
+    if 'lenEpsilon' in kwargs:
+        lenEpsilon = kwargs['lenEpsilon']
+
+    else: lenEpsilon = 10**(-11)
+
+    if 'kinEpsilon' in kwargs:
+        kinEpsilon = kwargs['kinEpsilon']
+
+    else: kinEpsilon = 10**(-11)
+
+    ##################################################################
+
+    lenlist = [mH1, mH2, mH3, zlist]
+    lenChecker = 0
+
+    for listElement in lenlist:
+        lenChecker = lenChecker + len(listElement)
+
+    if abs(lenChecker / (len(lenlist) * len(mH1)) - 1) > lenEpsilon:
+        raise Exception('Something is wrong, input lists are not of equal length in kineticExcluder...')
+
+    else: pass
+
+    mH1Copy, mH2Copy, mH3Copy, zlistCopy = [], [], [], []
+
+    for i in range(len(mH1)):
+
+        if (mH3[i] - (mH1[i] + mH2[i])) > kinEpsilon:
+            mH1Copy.append(mH1[i])
+            mH2Copy.append(mH2[i])
+            mH3Copy.append(mH3[i])
+            zlistCopy.append(zlist[i])
+
+        else:
+            continue
+    print(len(mH1),len(mH2),len(mH2),len(zlist),)
+    print(len(mH1Copy),len(mH2Copy),len(mH3Copy),len(zlistCopy),)
+    return np.array(mH1Copy), np.array(mH2Copy), np.array(mH3Copy), np.array(zlistCopy)
+
 
 def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
 

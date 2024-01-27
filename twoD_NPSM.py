@@ -82,7 +82,8 @@ if __name__ == '__main__':
     ## BP2: SM H1 -> bb, H2 -> gamgam (1) ##
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.kineticExcluder(BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2) 
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2/norm)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
@@ -116,7 +117,8 @@ if __name__ == '__main__':
     ## BP2: SM H1 -> gamgam, H2 -> bb (2) ##
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
-    
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.kineticExcluder(BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1)
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1_SM2_H2_SM1/norm)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
@@ -151,11 +153,14 @@ if __name__ == '__main__':
     ## BP2: SM Ratio (1)/(2) ##
     
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.kineticExcluder(BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2)
 
-    print(BP2_mH1 == BP2_mH1_2)
-    print(BP2_mH2 == BP2_mH2_2)
-    print(BP2_mH3 == BP2_mH3_2)
+    BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.kineticExcluder(BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1)
+
+    print((BP2_mH1 == BP2_mH1_2).all())
+    print((BP2_mH2 == BP2_mH2_2).all())
+    print((BP2_mH3 == BP2_mH3_2).all())
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2/BP2_x_H3_H1_SM2_H2_SM1)
 
@@ -164,18 +169,20 @@ if __name__ == '__main__':
     # contf = plt.imshow(zi, origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    levels=[0, 1, 30, 60, 90, np.nanmax(zi)]
-    contf = plt.contourf(xi, yi, zi, levels=levels, extent=[x.min(), x.max(), y.min(), y.max()])
-    
+    # levels=[0, 1, 30, 60, 90, np.nanmax(zi)]
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
+
     plt.contour(xi, yi, zi, levels=[1], colors='red', linewidths=0.5, extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
 
     ax = plt.gca()
-    
+
     ################################ zoom box ################################
     axins = zoomed_inset_axes(ax, 3, loc = 'upper left', borderpad=1.2) # zoom = 6
+
     # axins.imshow(zi, origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    axins.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
+
+    axins.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()]) # levels)
     axins.contour(xi, yi, zi, levels=[1], linewidths=0.5, colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
 
     # sub region of the original image
@@ -206,7 +213,7 @@ if __name__ == '__main__':
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
-    # plt.colorbar()
+    plt.colorbar()
     # plt.show()
     plt.close()
 
@@ -218,7 +225,8 @@ if __name__ == '__main__':
     twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/output_BP3_BR_XSH.tsv', 'plots2D/BP3_BR_XSH', 'calc_BP3.tsv', 'bb', 'gamgam')
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-      
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2) 
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/norm)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
@@ -227,8 +235,7 @@ if __name__ == '__main__':
     # plt.imshow(zi, origin='lower',
     #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    # if levels is removed, the points below the line M3=M1+M2 bugs (some regions disappear), therefore let the lowest level be the minimum
-    contf = plt.contourf(xi, yi, zi, levels=[-1*pow(10,-16),0.8,1.6,2.4,3.2,4,4.8], extent=[x.min(), x.max(), y.min(), y.max()])
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$', xlims=(126, 500), ylims=(255, 650))
     twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", 
@@ -255,7 +262,8 @@ if __name__ == '__main__':
     ## BP3: SM H1 -> gamgam, H2 -> bb (2) ##
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
-      
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1) 
+
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM2_H2_SM1/norm)
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
@@ -263,10 +271,9 @@ if __name__ == '__main__':
 
     # plt.imshow(zi, origin='lower',
     #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # HERE!!!
-    # THIS IS NOT WORKING FIX THIS!
-    levels = [np.nanmin(zi), 0.8, 1.6, 2.4, 3.2, 4.0, 4.8]
-    contf = plt.contourf(xi, yi, zi, levels=levels, extent=[x.min(), x.max(), y.min(), y.max()])
+
+    # levels = np.linspace(np.nanmin(zi), np.nanmax(zi), 7) #[np.nanmin(zi), 0.8, 1.6, 2.4, 3.2, 4.0, 4.8]
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
     twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma)) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", 
@@ -284,6 +291,7 @@ if __name__ == '__main__':
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_2_fig_scatter.pdf')
     # plt.show()
     plt.close()
 
@@ -293,11 +301,14 @@ if __name__ == '__main__':
     ## BP3: SM (1)/(2) ##
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
-    BP3_mH1_2, BP3_mH2_2, BP3_mH3_2, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2) 
 
-    print(BP3_mH1 == BP3_mH1_2)
-    print(BP3_mH2 == BP3_mH2_2)
-    print(BP3_mH3 == BP3_mH3_2)
+    BP3_mH1_2, BP3_mH2_2, BP3_mH3_2, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
+    BP3_mH1_2, BP3_mH2_2, BP3_mH3_2, BP3_x_H3_H1_SM2_H2_SM1 = twoDPlot.kineticExcluder(BP3_mH1_2, BP3_mH2_2, BP3_mH3_2, BP3_x_H3_H1_SM2_H2_SM1) 
+
+    print((BP3_mH1 == BP3_mH1_2).all())
+    print((BP3_mH2 == BP3_mH2_2).all())
+    print((BP3_mH3 == BP3_mH3_2).all())
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2/BP3_x_H3_H1_SM2_H2_SM1) 
        
@@ -306,7 +317,10 @@ if __name__ == '__main__':
     # plt.imshow(zi, origin='lower',
     #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    levels=[1, 1.6, 2.4, 3.2, 4.0, 4.8, 5.6, np.nanmax(zi)]
+    # if no levels is given matplotlib sets the lowerbound to 0.8
+    # misleading the reader that there is data below 1
+    levels=[1, 1.6, 2.4, 3.2, 4.0, 4.8, 5.6, 6.4]
+    # levels = np.array([round(i,1) for i in np.linspace(np.nanmin(zi), np.nanmax(zi), 6)]) #[np.nanmin(zi), 0.8, 1.6, 2.4, 3.2, 4.0, 4.8]
     contf = plt.contourf(xi, yi, zi, levels=levels, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # no value below 1, so no contour needed like in BP2:
