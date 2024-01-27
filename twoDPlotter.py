@@ -579,33 +579,67 @@ def exclusionCheck(ObsLimList, compareDict, compareKeys, epsilon):
 
 def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
 
-    ############################# kwargs #############################
+    ### OOP: ###
+    if 'ax' in kwargs:
+        print('OOP enabled')
+        ax = kwargs['ax']
 
-    if ('xlims' in kwargs) and ('ylims' in kwargs):
-        plt.xlim(kwargs['xlims'])        
-        plt.ylim(kwargs['ylims'])
+        if ('xlims' in kwargs) and ('ylims' in kwargs):
+            ax.set_xlim(kwargs['xlims'])
+            ax.set_ylim(kwargs['ylims'])
 
-    elif ('xlims' in kwargs) or ('ylims' in kwargs):
-        raise Exception('Either specify both xlims and ylims or none')
-    
-    else:
-        pass
+        elif ('xlims' in kwargs) or ('ylims' in kwargs):
+            raise Exception('Either specify both xlims and ylims or none')
 
-    if 'cbarfmt' in kwargs:
-        plt.colorbar(label=ztitle, format=kwargs['cbarfmt'])
-
-    elif 'cbarvisible' in kwargs and kwargs['cbarvisible'] == False:
-        pass
-
-    else:
-        plt.colorbar(label=ztitle)
+        else: pass
         
-            
-    ##################################################################
+        ax.set_title(title)
+        ax.set_xlabel(xtitle)
+        ax.set_ylabel(ytitle)
 
-    plt.title(title)
-    plt.xlabel(xtitle)
-    plt.ylabel(ytitle)
+        if 'cbarvisible' in kwargs and kwargs['cbarvisible'] == False:
+            pass
+
+        else:
+
+            if 'fig' in kwargs and 'im' in kwargs and 'ax' in kwargs:
+
+                if 'cbarfmt' in kwargs:
+                    kwargs['fig'].colorbar(kwargs['im'], ax=kwargs['ax'], label=ztitle, format=kwargs['cbarfmt'])
+
+                else:
+                    kwargs['fig'].colorbar(kwargs['im'], ax=kwargs['ax'], label=ztitle)
+
+            else: raise Exception('To enable OOP please input fig, im and ax')
+
+    ### FUNCTIONAL: ###
+    else:
+
+        if ('xlims' in kwargs) and ('ylims' in kwargs):
+            plt.xlim(kwargs['xlims'])        
+            plt.ylim(kwargs['ylims'])
+
+        elif ('xlims' in kwargs) or ('ylims' in kwargs):
+            raise Exception('Either specify both xlims and ylims or none')
+    
+        else:
+            pass
+
+        if 'cbarvisible' in kwargs and kwargs['cbarvisible'] == False:
+            pass
+
+        else:
+
+            if 'cbarfmt' in kwargs:
+                plt.colorbar(label=ztitle, format=kwargs['cbarfmt'])
+
+            else:
+                plt.colorbar(label=ztitle)
+
+        plt.title(title)
+        plt.xlabel(xtitle)
+        plt.ylabel(ytitle)
+    
 
 
 def plotAuxVar2D(x, y, n, nInterp=500):
@@ -620,16 +654,29 @@ def plotAuxVar2D(x, y, n, nInterp=500):
     return x, y, z, xi, yi
 
 
-def plotAuxRegion2D(label1, label2, label3, xyText1, xyText2, xyText3, plot1, plot2, plot3):
+def plotAuxRegion2D(label1, label2, label3, xyText1, xyText2, xyText3, plot1, plot2, plot3, **kwargs):
+
+    if 'ax' in kwargs:
+        ax = kwargs['ax']
+        ax.plot(plot1[0], plot1[1], ls = 'dashed')
+        ax.text(xyText1[0], xyText1[1], label1, size = 9, bbox =dict(facecolor='C0', alpha=0.5, pad=0.7))
+
+        ax.plot(plot2[0], plot2[1], ls = 'dashed')
+        ax.text(xyText2[0], xyText2[1], label2, size = 9, bbox =dict(facecolor='C1', alpha=0.5, pad=0.7))#, rotation=18)
+
+        ax.plot(plot3[0], plot3[1], ls = 'dashed')
+        ax.text(xyText3[0], xyText3[1], label3, size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))#, rotation=32)
+
+    else:
+        plt.plot(plot1[0], plot1[1], ls = 'dashed')
+        plt.text(xyText1[0], xyText1[1], label1, size = 9, bbox =dict(facecolor='C0', alpha=0.5, pad=0.7))
+
+        plt.plot(plot2[0], plot2[1], ls = 'dashed')
+        plt.text(xyText2[0], xyText2[1], label2, size = 9, bbox =dict(facecolor='C1', alpha=0.5, pad=0.7))#, rotation=18)
+
+        plt.plot(plot3[0], plot3[1], ls = 'dashed')
+        plt.text(xyText3[0], xyText3[1], label3, size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))#, rotation=32)
     
-    plt.plot(plot1[0], plot1[1], ls = 'dashed')
-    plt.text(xyText1[0], xyText1[1], label1, size = 9, bbox =dict(facecolor='C0', alpha=0.5, pad=0.7))
-
-    plt.plot(plot2[0], plot2[1], ls = 'dashed')
-    plt.text(xyText2[0], xyText2[1], label2, size = 9, bbox =dict(facecolor='C1', alpha=0.5, pad=0.7))#, rotation=18)
-
-    plt.plot(plot3[0], plot3[1], ls = 'dashed')
-    plt.text(xyText3[0], xyText3[1], label3, size = 9, bbox =dict(facecolor='C2', alpha=0.5, pad=0.7))#, rotation=32)
        
 
 def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):

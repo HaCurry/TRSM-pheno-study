@@ -8,6 +8,8 @@ import matplotlib as mpl
 import scipy.interpolate
 mpl.rcParams.update(mpl.rcParamsDefault)
 import mplhep as hep
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset   
 
 import subprocess
 import configparser
@@ -22,7 +24,6 @@ import functions as TRSM
 import Exclusion_functions as excl
 import parameterData
 import twoDPlotter as twoDPlot
-# print(ampl.__file__)
 
 if __name__ == '__main__':
     # ampl.use_atlas_style()
@@ -59,7 +60,8 @@ if __name__ == '__main__':
     plt.imshow(zi, origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to SH \to bb\gamma\gamma)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(X\to SH \to bb\gamma\gamma)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 
+                                     'test', xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
@@ -85,11 +87,16 @@ if __name__ == '__main__':
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left.\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(gg \ \to \ h_{3} \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left.\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(gg \ \to \ h_{3} \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma(\mathrm{SM})$", 
+                                     r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", 
+                                     r"$\left.\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", 
+                                     xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
@@ -114,11 +121,16 @@ if __name__ == '__main__':
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\sigma(gg \ \to \ h_{3})\times\mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", xlims=(1, 124), ylims=(126, 500))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r"$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", 
+                                     r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", 
+                                     r"$\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", 
+                                     xlims=(1, 124), ylims=(126, 500))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
                     ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
@@ -137,7 +149,6 @@ if __name__ == '__main__':
 
 
     ## BP2: SM Ratio (1)/(2) ##
-
     
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
     BP2_mH1_2, BP2_mH2_2, BP2_mH3_2, BP2_x_H3_H1_SM2_H2_SM1 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/calc_BP2.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM2_H2_SM1')
@@ -147,34 +158,24 @@ if __name__ == '__main__':
     print(BP2_mH3 == BP2_mH3_2)
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP2_mH1, BP2_mH3, BP2_x_H3_H1_SM1_H2_SM2/BP2_x_H3_H1_SM2_H2_SM1)
-    
-        
+
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     # contf = plt.imshow(zi, origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    # levels=[0,1,15,30,45,60,75,90,105,120]
-    levels = [0, 1, 30, 60, 90, 120]
-    # contf = plt.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
-    plt.contour(xi, yi, zi, levels=[1], colors='red', linewidths=0.5, extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
+    levels=[0, 1, 30, 60, 90, np.nanmax(zi)]
+    contf = plt.contourf(xi, yi, zi, levels=levels, extent=[x.min(), x.max(), y.min(), y.max()])
     
+    plt.contour(xi, yi, zi, levels=[1], colors='red', linewidths=0.5, extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
+
     ax = plt.gca()
-    CS = ax.contour(xi, yi, zi, levels=[20, 60, 100], linewidths=0.5, colors='black', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
-
-    # from: https://matplotlib.org/2.0.2/examples/pylab_examples/patheffect_demo.html
-    # and chatGPT
-    from matplotlib import patheffects as pe
-    clbls = ax.clabel(CS, CS.levels, use_clabeltext=True)
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=3, foreground="w")])
-
+    
     ################################ zoom box ################################
-    from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-    from mpl_toolkits.axes_grid1.inset_locator import mark_inset   
     axins = zoomed_inset_axes(ax, 3, loc = 'upper left', borderpad=1.2) # zoom = 6
-    # axins.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
-    axins.imshow(zi, origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # axins.imshow(zi, origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    axins.contourf(xi, yi, zi, levels=levels)#, cmap=cmap)
     axins.contour(xi, yi, zi, levels=[1], linewidths=0.5, colors='red', extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
 
     # sub region of the original image
@@ -188,16 +189,16 @@ if __name__ == '__main__':
     mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
     ##########################################################################
 
-    ax.set_xlim(1, 124)
-    ax.set_ylim(126, 500)
-    # twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", 
-    #                                  r'$\sigma(\left. h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma( h_{1}(\gamma\gamma) \  h_{2}(b\bar{b}))$', xlims=(1, 124), ylims=(126, 500),
-    #                                  cbarvisible=False)
-
-    # twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
-    #                 ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     fig = plt.gcf()
-    fig.colorbar(contf, ax=ax, label =r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$' )
+
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", 
+                                     r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", 
+                                     r'$\sigma(\left. h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma)) \right/ \sigma( h_{1}(\gamma\gamma) \  h_{2}(b\bar{b}))$', 
+                                     xlims=(1, 124), ylims=(126, 500),
+                                     cbarvisible=True, ax=ax, im=contf, fig=fig)
+
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = 2 M_{1}$', (3, 235), (26, 134), (75, 134),
+                    ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]), ax=ax)
 
     plt.tight_layout()
     plt.savefig('plots2D/BP2_BR_XSH/BP2_XS_XSH_bbgamgam_ratio_fig.pdf')
@@ -222,14 +223,18 @@ if __name__ == '__main__':
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
+    print('here it is!', np.nanmin(zi))            
+    # plt.imshow(zi, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # if levels is removed, the points below the line M3=M1+M2 bugs (some regions disappear), therefore let the lowest level be the minimum
+    contf = plt.contourf(xi, yi, zi, levels=[-1*pow(10,-16),0.8,1.6,2.4,3.2,4,4.8], extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))$', xlims=(126, 500), ylims=(255, 650))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$", 
+                                     r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", 
+                                     r'$\left.\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$', 
+                                     xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
@@ -256,13 +261,18 @@ if __name__ == '__main__':
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
 
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # HERE!!!
+    # THIS IS NOT WORKING FIX THIS!
+    levels = [np.nanmin(zi), 0.8, 1.6, 2.4, 3.2, 4.0, 4.8]
+    contf = plt.contourf(xi, yi, zi, levels=levels, extent=[x.min(), x.max(), y.min(), y.max()])
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma(gg \ \to \ h_{3}) \times \mathrm{BR}(h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma)) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left. \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma)) \ h_{2}(b\bar{b}))\right/ \sigma(\mathrm{SM})$", 
+                                     r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", 
+                                     r'$\left.\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \ h_{2}(\gamma\gamma))\right/ \sigma(\mathrm{SM})$', 
+                                     xlims=(126, 500), ylims=(255, 650))
 
     twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
                     ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
@@ -280,8 +290,6 @@ if __name__ == '__main__':
     del x, y, z, xi, yi
 
 
-    #### BP3: ####
-
     ## BP3: SM (1)/(2) ##
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_x_H3_H1_SM1_H2_SM2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/calc_BP3.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1_SM1_H2_SM2')
@@ -295,22 +303,28 @@ if __name__ == '__main__':
        
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower',
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    # plt.contour(xi, yi, zi, levels=[1.05], colors='red', linewidths=0.5, extent=(x.min(), x.max(), y.min(), y.max()))
+    levels=[1, 1.6, 2.4, 3.2, 4.0, 4.8, 5.6, np.nanmax(zi)]
+    contf = plt.contourf(xi, yi, zi, levels=levels, extent=[x.min(), x.max(), y.min(), y.max()])
+
+    # no value below 1, so no contour needed like in BP2:
+    print('minsta bror ingen interp', np.nanmin(z))
+    print('minsta bror interp', np.nanmin(zi))
 
     # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\sigma(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma(gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\sigma_(gg \ \to \ h_{3} \ \to \ h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) / \sigma_{gg \ \to \ h_{3} \ \to \ h_{1}(\gamma\gamma) \ h_{2}(b\bar{b})}$', xlims=(126, 500), ylims=(255, 650))
-    # twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', xlims=(126, 500), ylims=(255, 650))
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$", 
+                                     r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", 
+                                     r'$\left.\sigma(h_{1}(b\bar{b}) \  h_{2}(\gamma\gamma)) \right/ \sigma(h_{1}(\gamma\gamma) \ h_{2}(b\bar{b}))$', 
+                                     xlims=(126, 500), ylims=(255, 650))
 
-    # twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
-    #                 ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+    twoDPlot.plotAuxRegion2D(r'$M_{3} = 2 M_{2}$', r'$M_{3} = M_{1} + M_{2}$', r'$M_{3} = M_{2}$', (298, 575), (405, 514), (440, 424),
+                    ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_ratio_fig.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x, y, c=z, cmap='viridis')
