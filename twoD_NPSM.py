@@ -290,7 +290,6 @@ if __name__ == '__main__':
 
     plt.scatter(x, y, c=z, cmap='viridis')
     plt.colorbar()
-    plt.savefig('plots2D/BP3_BR_XSH/BP3_XS_XSH_bbgamgam_2_fig_scatter.pdf')
     # plt.show()
     plt.close()
 
