@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import scipy.interpolate
 mpl.rcParams.update(mpl.rcParamsDefault)
+import mplhep as hep
 
 import subprocess
 import configparser
@@ -25,15 +26,20 @@ import twoDPlotter as twoDPlot
 
 if __name__ == "__main__":
 
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    mpl.rcParams['axes.labelsize'] = 19
+    mpl.rcParams['axes.titlesize'] = 19
+
     #### BP2: ####
 
-    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel_Mproc', 'compiled_AtlasBP2_check_prel_Mproc.tsv',
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel_Mproc_constraint', 'compiled_AtlasBP2_check_prel_Mproc_constraint.tsv',
                       msKey='mHa_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc.tsv', 'plotsLimits/BP2', 0, 
+    twoDPlot.exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP2', 0, 
                      xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
 
-    dictBP2 = twoDPlot.pandasDynamicReader('compiled_AtlasBP2_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
+    dictBP2 = twoDPlot.pandasDynamicReader('compiled_AtlasBP2_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
     twoDPlot.exclusionCheck(dictBP2['ObservedLimit'], dictBP2, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
 
     ## BP2: Observed Limits ##
@@ -98,7 +104,7 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.1e}')
-    twoDPlot.plotAuxTitleAndBounds2D('BP2: $\sigma(pp \\to X \\to S(\gamma\gamma)H(b\\bar{b}))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r'BP2: $\sigma(pp \to X \to S(\gamma\gamma)H(b\bar{b}))$ at ATLAS limit points', '$M_{S}$ [GeV]', '$M_{X}$', '$\sigma_{excl}$', xlims=(1, 124), ylims=(126, 500))
     plt.tight_layout()
 
     plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_x_H3_H1_SM2_H2_SM1.pdf')
@@ -110,7 +116,7 @@ if __name__ == "__main__":
 
     ## BP2: ObsLim/(1) ##
 
-    plt.figure(figsize=(8.5, 5.2)) 
+    # plt.figure(figsize=(8.5, 5.2)) 
     # plt.figure(figsize=(6.4, 4.8)) # default figsize (6.4, 4.8)
    
     x = dictBP2['ms']
@@ -119,7 +125,9 @@ if __name__ == "__main__":
     
     plt.scatter(x, y, c=z)
     twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}')
-    twoDPlot.plotAuxTitleAndBounds2D(r'BP2: $\sigma_{\mathrm{lim}}/\sigma_{gg \ \to \ h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) }$', r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]', r'$\sigma_{\mathrm{lim}}/\sigma_{gg \ \to h _{3} \ \to h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) }$', xlims=(1, 124), ylims=(126, 500))
+    twoDPlot.plotAuxTitleAndBounds2D(r'BP2: $\sigma(\mathrm{lim})/\sigma(gg \ \to \ h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) )$', 
+                                     r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]', 
+                                     r'$\sigma(\mathrm{lim})/\sigma(gg \ \to \ h _{3} \ \to h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) )$', xlims=(1, 124), ylims=(126, 500))
     plt.tight_layout()
 
     plt.savefig('plots2D/BP2_BR_XSH/BP2_ATLAS/BP2_ObsDividedH1SM1H2SM2.pdf')
@@ -131,13 +139,13 @@ if __name__ == "__main__":
 
     #### BP3: ####
 
-    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP3_check_prel_Mproc', 'compiled_AtlasBP3_check_prel_Mproc.tsv',
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP3_check_prel_Mproc_constraint', 'compiled_AtlasBP3_check_prel_Mproc_constraint.tsv',
                       msKey='mHb_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc.tsv', 'plotsLimits/BP3', 0, 
+    twoDPlot.exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP3', 0, 
                      xlims=(126, 500), ylims=(255, 650), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
     
-    dictBP3 = twoDPlot.pandasDynamicReader('compiled_AtlasBP3_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
+    dictBP3 = twoDPlot.pandasDynamicReader('compiled_AtlasBP3_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
 
     twoDPlot.exclusionCheck(dictBP3['ObservedLimit'], dictBP3, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
 
@@ -215,7 +223,7 @@ if __name__ == "__main__":
 
     ## BP3: ObsLim/(1) ##
 
-    plt.figure(figsize=(8.5, 5.2)) 
+    # plt.figure(figsize=(8.5, 5.2)) 
     # plt.figure(figsize=(6.4, 4.8)) # default figsize (6.4, 4.8)
    
     x = dictBP3['ms']
@@ -236,13 +244,13 @@ if __name__ == "__main__":
 
     #### BP5: ####
 
-    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP5_check_prel_Mproc', 'compiled_AtlasBP5_check_prel_Mproc.tsv',
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP5_check_prel_Mproc_constraint', 'compiled_AtlasBP5_check_prel_Mproc_constraint.tsv',
                       msKey='mHa_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc.tsv', 'plotsLimits/BP5', 0, 
+    twoDPlot.exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP5', 0, 
                      xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
 
-    dictBP5 = twoDPlot.pandasDynamicReader('compiled_AtlasBP5_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
+    dictBP5 = twoDPlot.pandasDynamicReader('compiled_AtlasBP5_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
     twoDPlot.exclusionCheck(dictBP5['ObservedLimit'], dictBP5, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
 
     ## BP5: Observed Limits ##
@@ -337,13 +345,13 @@ if __name__ == "__main__":
 
     #### BP6: ####
 
-    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP6_check_prel_Mproc', 'compiled_AtlasBP6_check_prel_Mproc.tsv',
+    twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP6_check_prel_Mproc_constraint', 'compiled_AtlasBP6_check_prel_Mproc_constraint.tsv',
                       msKey='mHb_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc.tsv', 'plotsLimits/BP6', 0, 
+    twoDPlot.exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP6', 0, 
                      xlims=(126, 500), ylims=(255, 1000), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
     
-    dictBP6 = twoDPlot.pandasDynamicReader('compiled_AtlasBP6_check_prel_Mproc.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
+    dictBP6 = twoDPlot.pandasDynamicReader('compiled_AtlasBP6_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
 
     twoDPlot.exclusionCheck(dictBP6['ObservedLimit'], dictBP6, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
 

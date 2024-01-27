@@ -142,8 +142,6 @@ def repackingProgramParamDict(userParametersDict, **kwargs):
     if ('manualBP' in kwargs) and ('BP' in kwargs):
         raise Exception('Cannot specify BP (Benchmark plane) and manualBP at the same time in kwargs.')
 
-
-
     userParametersKeys = userParametersDict.keys()
 
     # additional parameters given by user inserted in programParametersDict
@@ -335,10 +333,14 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
     
     # set constraints
     config['DEFAULT'] = {
-                        'bfb': str(programParametersDict['bfb']),
-                        'uni': str(programParametersDict['uni']),
-                        'stu': str(programParametersDict['stu']),
-                        'Higgs': str(programParametersDict['Higgs'])
+                        # 'bfb': str(programParametersDict['bfb']),
+                        # 'uni': str(programParametersDict['uni']),
+                        # 'stu': str(programParametersDict['stu']),
+                        # 'Higgs': str(programParametersDict['Higgs'])
+                        'bfb': str(BFB),
+                        'uni': str(Uni),
+                        'stu': str(STU),
+                        'Higgs': str(Higgs)
                          }
 
     # set parameters in .ini (config)
@@ -567,45 +569,70 @@ def parameterMain(listUserParametersDict, targetDir, scannerSmode, **kwargs):
         text_file.write('normal start:' + startTime + '\nnormal end:' + endTime + '\n\n')
 
 
-
-def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints, scannerSmode):
+def mProcWrapper(userParametersDict, mprocBP, targetDir, mprocPoints, scannerSmode, mprocBFB, mprocUni, mprocSTU, mprocHiggs):
 
     # reformats user given dictionary to usable format for param
     programParametersDict = repackingProgramParamDict(userParametersDict, BP = mprocBP, points = mprocPoints)
 
-    param(programParametersDict, targetDir, 'ths', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
-    param(programParametersDict, targetDir, 'thx', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
-    param(programParametersDict, targetDir, 'tsx', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
-    
-    param(programParametersDict, targetDir, 'vs',  scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
-    param(programParametersDict, targetDir, 'vx',  scannerSmode, BP = mprocBP, points = mprocPoints, BFB=0, Uni=0, STU=0, Higgs=0)
-    
-    param(programParametersDict, targetDir, 'Nofree',scannerSmode, BP = mprocBP, points = 5, BFB=0, Uni=0, STU=0, Higgs=0) # could set points = 1 as it seems the values in the outputs are identical (?)
+    param(programParametersDict, targetDir, 'ths', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=mprocBFB, Uni=mprocUni, STU=mprocSTU, Higgs=mprocHiggs)
+    param(programParametersDict, targetDir, 'thx', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=mprocBFB, Uni=mprocUni, STU=mprocSTU, Higgs=mprocHiggs)
+    param(programParametersDict, targetDir, 'tsx', scannerSmode, BP = mprocBP, points = mprocPoints, BFB=mprocBFB, Uni=mprocUni, STU=mprocSTU, Higgs=mprocHiggs)
+
+    param(programParametersDict, targetDir, 'vs',  scannerSmode, BP = mprocBP, points = mprocPoints, BFB=mprocBFB, Uni=mprocUni, STU=mprocSTU, Higgs=mprocHiggs)
+    param(programParametersDict, targetDir, 'vx',  scannerSmode, BP = mprocBP, points = mprocPoints, BFB=mprocBFB, Uni=mprocUni, STU=mprocSTU, Higgs=mprocHiggs)
+
+    param(programParametersDict, targetDir, 'Nofree',scannerSmode, BP = mprocBP, points = 5, BFB=mprocBFB, Uni=mprocUni, STU=mprocSTU, Higgs=mprocHiggs) # could set points = 1 as it seems the values in the outputs are identical (?)
 
 
 
-def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode):
+def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints, scannerSmode, **kwargs):
+
     '''Main function (multiprocessing)'''
 
+    ########################    kwargs    ########################
+
+    if 'BFB' in kwargs:
+        BFB = kwargs['BFB']
+
+    else: BFB = 1
+
+    if 'Uni' in kwargs:
+        Uni = kwargs['Uni']
+
+    else: Uni = 1
+
+    if 'STU' in kwargs:
+        STU = kwargs['STU']
+
+    else: STU = 1
+
+    if 'Higgs' in kwargs:
+        Higgs = kwargs['Higgs']
+
+    else: Higgs = 1
+
+    ##############################################################
+
+
     dataIdList = [paramDirCreator(listUserParametersDict[i], targetDir) for i in range(len(listUserParametersDict))]
-    
+
     # for userParametersDict in listUserParametersDict:
         # dataId = paramDirCreator(userParametersDict, targetDir)
         # dataIdList.append(dataId)
-        
+
     mprocStartTime = str(datetime.datetime.now())
-    
+
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
     print(' Starting script (multiprocessing)')
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
     print(scannerSmode.center(35))
     print('*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*')
-    
+
     # for userParametersDict in listUserParametersDict:
         # starmapIter.append( (userParametersDict, BP, targetDir, mprocMainPoints) )
-    
-    starmapIter = [(listUserParametersDict[i], BP, targetDir, mprocMainPoints, scannerSmode) for i in range(len(listUserParametersDict))]
-    
+
+    starmapIter = [(listUserParametersDict[i], BP, targetDir, mprocMainPoints, scannerSmode, BFB, Uni, STU, Higgs) for i in range(len(listUserParametersDict))]
+
     pool = multiprocessing.Pool()
 
     try:
@@ -624,7 +651,6 @@ def mProcParameterMain(listUserParametersDict, BP, targetDir, mprocMainPoints, s
 
     mprocEndTime = str(datetime.datetime.now())
 
-    
     with open('processTime.txt', 'a') as text_file:
         text_file.write('mProc start:' + mprocStartTime + '\nmProc end:' + mprocEndTime + '\n\n\n')
 

@@ -139,21 +139,41 @@ if __name__ == '__main__':
                      # SM1='bb', SM2='gamgam', generateH1H2=True)
 
 
-    # 1D parameter plot for Atlas observed limits
+    # 1D parameter plot for Atlas observed limits (This should be depraceted because this is also contraints enabled)
+    # (if constraints are not specified they are automatically enabled)
     
-    parameterData.mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel_Mproc', '/**/settings_*.json', 
+    # parameterData.mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('AtlasBP2_check_prel', 'calc_AtlasBP2_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+    # parameterData.mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
+    # parameterData.mProcCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel_Mproc', '/**/settings_*.json', 
+    #                 SM1='bb', SM2='gamgam', generateH1H2=True)
+
+
+    # 1D parameter plot for Atlas observed limits with constraints enabled
+
+    parameterData.mProcParameterMain(BP2_dictPointlistAtlas, 'BP2', 'AtlasBP2_check_prel_constraint', 50, 'check')
+    parameterData.mProcCalculatorMain('AtlasBP2_check_prel_constraint', 'calc_AtlasBP2_check_prel_Mproc_constraint', '/**/settings_*.json', 
                     SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    parameterData.mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('AtlasBP3_check_prel', 'calc_AtlasBP3_check_prel_Mproc', '/**/settings_*.json', 
+    parameterData.mProcParameterMain(BP3_dictPointlistAtlas, 'BP3', 'AtlasBP3_check_prel_constraint', 50, 'check')
+    parameterData.mProcCalculatorMain('AtlasBP3_check_prel_constraint', 'calc_AtlasBP3_check_prel_Mproc_constraint', '/**/settings_*.json', 
                     SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    parameterData.mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('AtlasBP5_check_prel', 'calc_AtlasBP5_check_prel_Mproc', '/**/settings_*.json', 
+    parameterData.mProcParameterMain(BP5_dictPointlistAtlas, 'BP5', 'AtlasBP5_check_prel_constraint', 50, 'check')
+    parameterData.mProcCalculatorMain('AtlasBP5_check_prel_constraint', 'calc_AtlasBP5_check_prel_Mproc_constraint', '/**/settings_*.json', 
                     SM1='bb', SM2='gamgam', generateH1H2=True)
 
-    parameterData.mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel', 50, 'check')
-    parameterData.mProcCalculatorMain('AtlasBP6_check_prel', 'calc_AtlasBP6_check_prel_Mproc', '/**/settings_*.json', 
+    parameterData.mProcParameterMain(BP6_dictPointlistAtlas, 'BP6', 'AtlasBP6_check_prel_constraint', 50, 'check')
+    parameterData.mProcCalculatorMain('AtlasBP6_check_prel_constraint', 'calc_AtlasBP6_check_prel_Mproc_constraint', '/**/settings_*.json', 
                     SM1='bb', SM2='gamgam', generateH1H2=True)
 
