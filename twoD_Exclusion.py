@@ -36,8 +36,8 @@ if __name__ == "__main__":
     twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP2_check_prel_Mproc_constraint', 'compiled_AtlasBP2_check_prel_Mproc_constraint.tsv',
                       msKey='mHa_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP2', 0, 
-                     xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    # twoDPlot.exclusionPlotter('compiled_AtlasBP2_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP2', 0, 
+    #                  xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
 
     dictBP2 = twoDPlot.pandasDynamicReader('compiled_AtlasBP2_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
     twoDPlot.exclusionCheck(dictBP2['ObservedLimit'], dictBP2, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
@@ -123,8 +123,22 @@ if __name__ == "__main__":
     y = dictBP2['mx']
     z = dictBP2['ObservedLimit']/dictBP2['x_H3_H1_SM1_H2_SM2']
     
+    # twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}')
+    nanmarkz, nanmarkx, nanmarky = [], [], []
+    for i in range(len(z)):
+        if np.isnan(z[i]):
+            nanmarkz.append(z[i])
+            nanmarkx.append(x[i])
+            nanmarky.append(y[i])
+        else:
+            plt.annotate('{:.0f}'.format(z[i]), (x[i], y[i]),
+                         textcoords='offset points', xytext=(-3,-2), fontsize=9, rotation=45, 
+                         path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground='w')])
+    plt.scatter(nanmarkx, nanmarky, facecolors='None', edgecolors='grey', linestyle='dotted', label='Excluded by ScannerS')
+    plt.legend()
+    
     plt.scatter(x, y, c=z)
-    twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}')
+
     twoDPlot.plotAuxTitleAndBounds2D(r'BP2: $\sigma(\mathrm{lim})/\sigma(gg \ \to \ h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) )$', 
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]', 
                                      r'$\sigma(\mathrm{lim})/\sigma(gg \ \to \ h _{3} \ \to h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) )$', xlims=(1, 124), ylims=(126, 500))
@@ -142,8 +156,8 @@ if __name__ == "__main__":
     twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP3_check_prel_Mproc_constraint', 'compiled_AtlasBP3_check_prel_Mproc_constraint.tsv',
                       msKey='mHb_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP3', 0, 
-                     xlims=(126, 500), ylims=(255, 650), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    # twoDPlot.exclusionPlotter('compiled_AtlasBP3_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP3', 0, 
+    #                  xlims=(126, 500), ylims=(255, 650), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
     
     dictBP3 = twoDPlot.pandasDynamicReader('compiled_AtlasBP3_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
 
@@ -230,9 +244,24 @@ if __name__ == "__main__":
     y = dictBP3['mx']
     z = dictBP3['ObservedLimit']/dictBP3['x_H3_H1_SM1_H2_SM2']
     
+
+    # twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}', rot=45, xytxt=(-3,-2), fontsize=9)
+    nanmarkz, nanmarkx, nanmarky = [], [], []
+    for i in range(len(z)):
+        if np.isnan(z[i]):
+            nanmarkz.append(z[i])
+            nanmarkx.append(x[i])
+            nanmarky.append(y[i])
+        else:
+            plt.annotate('{:.0f}'.format(z[i]), (x[i], y[i]),
+                         textcoords='offset points', xytext=(-3,-2), fontsize=9, rotation=45, 
+                         path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground='w')])
+    plt.scatter(nanmarkx, nanmarky, facecolors='None', edgecolors='grey', linestyle='dotted', label='Excluded by ScannerS')
+    plt.legend()
+
     plt.scatter(x, y, c=z)
-    twoDPlot.plotAuxAnnotator2D(x, y, z, '{:.0f}', rot=45)
-    twoDPlot.plotAuxTitleAndBounds2D(r'BP3: $\sigma_{\mathrm{lim}}/\sigma_{gg \ \to \  h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) }$', r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]', r'$\sigma_{\mathrm{lim}}/\sigma_{gg \ \to \ h _{3} \ \to \ h _{1}(\gamma\gamma) \ h _{2}(b\bar{b}) }$', xlims=(126, 500), ylims=(255, 650))
+
+    twoDPlot.plotAuxTitleAndBounds2D(r'BP3: $\left. \sigma(\mathrm{lim}) \right/ \sigma(gg \ \to \  h _{3} \ \to \ h _{1}(b\bar{b}) \ h _{2}(\gamma\gamma) )$', r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]', r'$\left. \sigma(\mathrm{lim}) \right/ \sigma(gg \ \to \ h _{3} \ \to \ h _{1}(\gamma\gamma) \ h _{2}(b\bar{b}) )$', xlims=(126, 500), ylims=(255, 650))
     plt.tight_layout()
 
     plt.savefig('plots2D/BP3_BR_XSH/BP3_ATLAS/BP3_ObsDividedH1SM1H2SM2.pdf')
@@ -247,8 +276,8 @@ if __name__ == "__main__":
     twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP5_check_prel_Mproc_constraint', 'compiled_AtlasBP5_check_prel_Mproc_constraint.tsv',
                       msKey='mHa_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP5', 0, 
-                     xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    # twoDPlot.exclusionPlotter('compiled_AtlasBP5_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP5', 0, 
+    #                  xlims=(1, 124), ylims=(126, 500), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
 
     dictBP5 = twoDPlot.pandasDynamicReader('compiled_AtlasBP5_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
     twoDPlot.exclusionCheck(dictBP5['ObservedLimit'], dictBP5, ['x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'], 10**(-8))
@@ -348,8 +377,8 @@ if __name__ == "__main__":
     twoDPlot.exclusionCompiler('/**/settingsCalc_Nofree*.json', 'calc_AtlasBP6_check_prel_Mproc_constraint', 'compiled_AtlasBP6_check_prel_Mproc_constraint.tsv',
                       msKey='mHb_ub', mxKey='mHc_ub')   
 
-    twoDPlot.exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP6', 0, 
-                     xlims=(126, 500), ylims=(255, 1000), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
+    # twoDPlot.exclusionPlotter('compiled_AtlasBP6_check_prel_Mproc_constraint.tsv', 'plotsLimits/BP6', 0, 
+    #                  xlims=(126, 500), ylims=(255, 1000), keyX='ms', keyY='mx', keyA='ObservedLimit', keyB='x_H3_H1_SM1_H2_SM2')
     
     dictBP6 = twoDPlot.pandasDynamicReader('compiled_AtlasBP6_check_prel_Mproc_constraint.tsv', ['ms', 'mx', 'ObservedLimit', 'x_H3_H1H2_SM1SM2', 'x_H3_H1_SM1_H2_SM2', 'x_H3_H1_SM2_H2_SM1'])
 

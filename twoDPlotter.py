@@ -133,7 +133,7 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
 
     # print(saveTable)
     df = pandas.DataFrame(data = saveTable)
-    print(df)
+    # print(df)
     df.to_csv(locOutputData, sep = "\t")
 
 
@@ -572,9 +572,10 @@ def exclusionCheck(ObsLimList, compareDict, compareKeys, epsilon):
                 pass
 
             # print the excluded mass points
-            print('=============================================')
-            print('Excluded points ' + key + ': ' + str(exclList))
-            print('=============================================')
+            if len(exclList) != 0:
+                print('=============================================')
+                print('Excluded points ' + key + ': ' + str(exclList))
+                print('=============================================')
 
 
 def kineticExcluder(mH1, mH2, mH3, zlist, **kwargs):
