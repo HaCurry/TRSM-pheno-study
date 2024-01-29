@@ -169,8 +169,9 @@ if __name__ == '__main__':
     # contf = plt.imshow(zi, origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    # levels=[0, 1, 30, 60, 90, np.nanmax(zi)]
+    # levels=[0, 0.1, 10, 100, 120]
     contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
+    # contf = plt.contourf(xi, yi, zi, norm=mpl.colors.LogNorm(), extent=[x.min(), x.max(), y.min(), y.max()])
 
     plt.contour(xi, yi, zi, levels=[1], colors='red', linewidths=0.5, extent=(min(BP2_mH1), max(BP2_mH1), min(BP2_mH3), max(BP2_mH3)))
 
