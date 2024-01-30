@@ -444,6 +444,30 @@ def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
     else:
         capture_output = True
         
+    if 'BFB' in kwargs:
+        BFB = kwargs['BFB']
+
+    else:
+        BFB = 1
+
+    if 'Uni' in kwargs:
+        Uni = kwargs['Uni']
+
+    else:
+        Uni = 1
+
+    if 'STU' in kwargs:
+        STU = kwargs['STU']
+
+    else:
+        STU = 1
+
+    if 'Higgs' in kwargs:
+        Higgs = kwargs['Higgs']
+
+    else:
+        Higgs = 1
+
     ##################################################################
     
     if scannerSmode == 'scan':
@@ -465,7 +489,7 @@ def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
         loglines = -17
 
     elif scannerSmode == 'check':
-        runTRSM = [TRSMpath, outputName, 'check', configName]
+        runTRSM = [TRSMpath, '--BFB', str(BFB), '--Uni', str(Uni), '--STU', str(STU), '--Higgs', str(Higgs), outputName, 'check', configName]
         loglines = -9
 
     shell_output = subprocess.run(runTRSM, capture_output = capture_output, cwd = cwd)
