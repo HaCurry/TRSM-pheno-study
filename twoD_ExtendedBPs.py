@@ -71,7 +71,7 @@ if __name__ == '__main__':
     plt.scatter(x, y, c=z)
     plt.colorbar()
     plt.xlim(126,500)
-    plt.ylim(255,1000)
+    plt.ylim(255,650)
     plt.savefig('plots2D/BP3_BR_XSH/BP3_extendedMass/BP2_BR_XSH_fig_extendedmass.pdf')
-    # plt.show()
+    plt.show()
 
