@@ -91,8 +91,9 @@ if __name__ == '__main__':
 
     #### BP2 ####
 
-    # twoDPlot.checkCreator2d(100, 'plots2D/BP2_BR_XSH/config_BP2_BR_XSH.tsv', (126, 500), (1, 124), 'mH3', 'mH1', 'mH2',
-    #              ths=1.352, thx=1.175, tsx=-0.407, vs=120, vx=890)
+    # twoDPlot.checkCreator2d(100, 'plots2D/BP2_BR_XSH/config_BP2_BR_XSH.tsv', (126, 500), (1, 124), 'mH3', 'mH1', 'mH2', 
+    #                         ths=1.352, thx=1.175, tsx=-0.407, vs=120, vx=890, 
+    #                         massOrder=True)
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP2_BR_XSH', 'config_BP2_BR_XSH.tsv', 'output_BP2_BR_XSH.tsv', 'check', capture_output=False)
 
@@ -129,8 +130,9 @@ if __name__ == '__main__':
 
     #### BP3 ####
 
-    # twoDPlot.checkCreator2d(100, 'plots2D/BP3_BR_XSH/config_BP3_BR_XSH.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
-    #              ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100)
+    # twoDPlot.checkCreator2d(100, 'plots2D/BP3_BR_XSH/config_BP3_BR_XSH.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1', 
+    #                         ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100,
+    #                         massOrder=True)
 
     # twoDPlot.runTRSM('../../../TRSMBroken', 'plots2D/BP3_BR_XSH', 'config_BP3_BR_XSH.tsv', 'output_BP3_BR_XSH.tsv', 'check', capture_output=False)
 
@@ -174,34 +176,34 @@ if __name__ == '__main__':
 
     # twoDPlot.calculateSort2D('plots2D/BP5_BR_XSH/output_BP5_BR_XSH.tsv', 'plots2D/BP5_BR_XSH', 'calc_BP5.tsv', 'bb', 'gamgam')
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_b_H3_H1H2)
+    # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_b_H3_H1H2)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+    # zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=0.80, vmax=1.0, origin='lower',
-    #           extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=0, vmax=1, origin='lower',
+    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
     #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # # plt.imshow(zi, vmin=0.80, vmax=1.0, origin='lower',
+    # #           extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # # plt.imshow(zi, vmin=0, vmax=1, origin='lower',
+    # #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP5: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP5: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
-                    ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
+    # twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    #                 ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
 
-    plt.savefig('plots2D/BP5_BR_XSH/BP5_BR_XSH_fig.pdf')
-    # plt.show()
-    plt.close()
+    # plt.savefig('plots2D/BP5_BR_XSH/BP5_BR_XSH_fig.pdf')
+    # # plt.show()
+    # plt.close()
 
-    plt.scatter(x, y, c=z, cmap='viridis')
-    plt.colorbar()
-    # plt.show()
-    plt.close()
+    # plt.scatter(x, y, c=z, cmap='viridis')
+    # plt.colorbar()
+    # # plt.show()
+    # plt.close()
 
-    del x, y, z, xi, yi
+    # del x, y, z, xi, yi
 
 
     #### BP6 ####
@@ -213,37 +215,37 @@ if __name__ == '__main__':
 
     # twoDPlot.calculateSort2D('plots2D/BP6_BR_XSH/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH', 'calc_BP6.tsv', 'bb', 'gamgam')
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
 
     # twoDPlot.calculateSort2D('plots2D/BP6_BR_XSH_try2/output_BP6_BR_XSH.tsv', 'plots2D/BP6_BR_XSH_try2', 'calc_BP6', 'bb', 'gamgam')
 
     # BP6_mH1, BP6_mH2, BP6_mH3, BP6_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH_try2/calc_BP6', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
       
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_b_H3_H1H2)
+    # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_b_H3_H1H2)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+    # zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    # plt.imshow(zi, vmin=0.50, vmax=0.85, origin='lower',
-               # extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # # plt.imshow(zi, vmin=0.50, vmax=0.85, origin='lower',
+    #            # extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP6: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 1000))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP6: $BR(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 1000))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
-                    ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+    # twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    #                 ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
-    plt.savefig('plots2D/BP6_BR_XSH/BP6_BR_XSH_fig.pdf')
-    # plt.savefig('plots2D/BP6_BR_XSH_try2/BP6_BR_XSH_fig.pdf')
-    # plt.show()
-    plt.close()
+    # plt.savefig('plots2D/BP6_BR_XSH/BP6_BR_XSH_fig.pdf')
+    # # plt.savefig('plots2D/BP6_BR_XSH_try2/BP6_BR_XSH_fig.pdf')
+    # # plt.show()
+    # plt.close()
 
-    plt.scatter(x, y, c=z, cmap='viridis')
-    plt.colorbar()
-    # plt.show()
-    plt.close()
+    # plt.scatter(x, y, c=z, cmap='viridis')
+    # plt.colorbar()
+    # # plt.show()
+    # plt.close()
 
-    del x, y, z, xi, yi
+    # del x, y, z, xi, yi
 
     ########################################################################################################################################################
     ########################################################################################################################################################
@@ -321,58 +323,58 @@ if __name__ == '__main__':
 
     #### BP5 ####
 
-    BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
+    # BP5_mH1, BP5_mH2, BP5_mH3, BP5_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP5_BR_XSH/calc_BP5.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
     
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1H2)
+    # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP5_mH1, BP5_mH3, BP5_x_H3_H1H2)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+    # zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    plt.imshow(zi, origin='lower', norm=mpl.colors.LogNorm(),
-                extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower', norm=mpl.colors.LogNorm(),
+    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP5: $\sigma(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP5: $\sigma(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(1, 124), ylims=(126, 500))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
-                    ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
+    # twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{H}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = 2 M_{S}$', (3, 235), (26, 134), (75, 134),
+    #                 ([0, 130], [2*125.09, 2*125.09]), ([0,130], [125.09, 130+125.09]), ([0,130],[0, 2*130]))
     
-    plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_fig.pdf')
-    # plt.show()
-    plt.close()
+    # plt.savefig('plots2D/BP5_BR_XSH/BP5_XS_XSH_fig.pdf')
+    # # plt.show()
+    # plt.close()
 
-    plt.scatter(x, y, c=z, cmap='viridis')
-    plt.colorbar()
-    # plt.show()
-    plt.close()
+    # plt.scatter(x, y, c=z, cmap='viridis')
+    # plt.colorbar()
+    # # plt.show()
+    # plt.close()
 
-    del x, y, z, xi, yi
+    # del x, y, z, xi, yi
 
 
     #### BP6 ####
 
-    BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
+    # BP6_mH1, BP6_mH2, BP6_mH3, BP6_x_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP6_BR_XSH/calc_BP6.tsv', 'mH1', 'mH2', 'mH3', 'x_H3_H1H2')
       
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_x_H3_H1H2)
+    # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP6_mH2, BP6_mH3, BP6_x_H3_H1H2)
 
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+    # zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
 
-    plt.imshow(zi, origin='lower', norm=mpl.colors.LogNorm(),
-               extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
-    #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # plt.imshow(zi, origin='lower', norm=mpl.colors.LogNorm(),
+    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+    # # plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
+    # #             extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP6: $\sigma(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 1000))
+    # twoDPlot.plotAuxTitleAndBounds2D(r"BP6: $\sigma(X\to SH)$ with $M_{S}$, $M_{X}$ free", r"$M_{S}$", r"$M_{X}$", 'test', xlims=(126, 500), ylims=(255, 1000))
 
-    twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
-                    ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
+    # twoDPlot.plotAuxRegion2D(r'$M_{X} = 2 M_{S}$', r'$M_{X} = M_{S} + M_{H}$', r'$M_{X} = M_{S}$', (298, 575), (337, 445), (353, 336),
+    #                 ([120, 510], [2*120, 2*510]), ([120, 510], [120+125.09, 510+125.09]), ([120, 510], [120, 510]))
         
-    plt.savefig('plots2D/BP6_BR_XSH/BP6_XS_XSH_fig.pdf')
-    # plt.show()
-    plt.close()
+    # plt.savefig('plots2D/BP6_BR_XSH/BP6_XS_XSH_fig.pdf')
+    # # plt.show()
+    # plt.close()
 
-    plt.scatter(x, y, c=z, cmap='viridis')
-    plt.colorbar()
-    # plt.show()
-    plt.close()
+    # plt.scatter(x, y, c=z, cmap='viridis')
+    # plt.colorbar()
+    # # plt.show()
+    # plt.close()
 
-    del x, y, z, xi, yi
+    # del x, y, z, xi, yi

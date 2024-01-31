@@ -175,8 +175,8 @@ if __name__ == '__main__':
     ax.set_xlim(0, 270)
     ax.set_ylim(160, 420)
 
-    ax.set_xlabel(r'$M_{X}$ [GeV]')
-    ax.set_ylabel(r'$M_{S}$ [GeV]')
+    ax.set_xlabel(r'$M_{S}$ [GeV]')
+    ax.set_ylabel(r'$M_{X}$ [GeV]')
     ax.set_title(r'Upper limits at 95% C.L normalized, small $M_{X}$')
 
     fig = plt.gcf()

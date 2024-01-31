@@ -152,19 +152,6 @@ if __name__ == '__main__':
     #### NWA h_1 ####
     #################
 
-    # plt.rcParams['axes.labelsize'] = 19
-    # plt.rcParams['axes.titlesize'] = 19
-    # mpl.rcParams["text.usetex"] = True
-    # # mpl.rcParams['mathtext.fontset'] = 'cm'
-    # mpl.rcParams['font.family'] = 'cm'
-    # mpl.rcParams['mathtext.fontset'] = 'cm'
-    # mpl.rcParams['font.family'] = 'STIXGeneral'
-
-    plt.style.use(hep.style.ATLAS)
-    hep.style.use({"mathtext.default": "rm"})
-    mpl.rcParams['axes.labelsize'] = 19
-    mpl.rcParams['axes.titlesize'] = 19
-
     #### BP2: ####            
 
     BP2_mH1, BP2_mH2, BP2_mH3, BP2_w_H3 = twoDPlot.pandasReader('plots2D/BP2_BR_XSH/output_BP2_BR_XSH.tsv', 'mH1', 'mH2', 'mH3', 'w_H1')
@@ -215,12 +202,12 @@ if __name__ == '__main__':
     plt.ylim(255, 650)
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA_h1.pdf')
-    plt.show()
+    # plt.show()
     plt.close()
 
     plt.scatter(x,y,c=z)
     plt.colorbar()
-    plt.show()
+    # plt.show()
     plt.close()
 
     del BP3_mH1, BP3_mH2, BP3_mH3, BP3_w_H3, x, y, z
