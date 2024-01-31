@@ -56,10 +56,12 @@ if __name__ == '__main__':
 
     ### BP3 ####
 
-    twoDPlot.checkCreator2d(5, 'plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMass.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
-                 ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100)
+    twoDPlot.checkCreator2d(50, 'plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMass.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
+                            ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100,
+                            massOrder=True)
 
-    twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'config_BP3_BR_XSH_extendedMass.tsv', 'output_BP3_BR_XSH_extendedMass.tsv', 'check', capture_output=False)
+    twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'config_BP3_BR_XSH_extendedMass.tsv', 'output_BP3_BR_XSH_extendedMass.tsv', 'check', capture_output=False,
+                     BFB=1, Uni=1, STU=1, Higgs=1)
 
     twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMass.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'calc_BP3_extendedMass.tsv', 'bb', 'gamgam')
 
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
     plt.scatter(x, y, c=z, vmin=0.0, vmax=0.7788997810065152)
-    [plt.annotate("{:.2f}".format(z[i]) ,(x[i],y[i])) for i in range(len(z))]
+    # [plt.annotate("{:.2f}".format(z[i]) ,(x[i],y[i])) for i in range(len(z))]
     print(np.nanmin(z), np.nanmax(z))
     plt.colorbar()
     plt.xlim(126,500)
@@ -77,24 +79,24 @@ if __name__ == '__main__':
     plt.savefig('plots2D/BP3_BR_XSH/BP3_extendedMass/BP2_BR_XSH_fig_extendedmass.pdf')
     plt.show()
 
-
+# 342.77777777777777	292
 
 ##### testing #####
 
-    twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'test.tsv', 'testoutput.tsv', 'check', capture_output=False)
+    # twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'test.tsv', 'testoutput.tsv', 'check', capture_output=False)
 
-    twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/testoutput.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'testcalc.tsv', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/testoutput.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'testcalc.tsv', 'bb', 'gamgam')
 
-    BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/BP3_extendedMass/testcalc.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
-    # BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
+    # BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/BP3_extendedMass/testcalc.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
+    # # BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
+    # x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
-    plt.scatter(x, y, c=z, vmin=0.0, vmax=0.7788997810065152)
-    [plt.annotate("{:.2f}".format(z[i]) ,(x[i],y[i])) for i in range(len(z))]
-    print(np.nanmin(z), np.nanmax(z))
-    plt.colorbar()
-    plt.xlim(126,500)
-    plt.ylim(255,650)
-    # plt.savefig('plots2D/BP3_BR_XSH/BP3_extendedMass/BP2_BR_XSH_fig_extendedmass.pdf')
-    plt.show()
+    # plt.scatter(x, y, c=z, vmin=0.0, vmax=0.7788997810065152)
+    # [plt.annotate("{:.2f}".format(z[i]) ,(x[i],y[i])) for i in range(len(z))]
+    # print(np.nanmin(z), np.nanmax(z))
+    # plt.colorbar()
+    # plt.xlim(126,500)
+    # plt.ylim(255,650)
+    # # plt.savefig('plots2D/BP3_BR_XSH/BP3_extendedMass/BP2_BR_XSH_fig_extendedmass.pdf')
+    # plt.show()

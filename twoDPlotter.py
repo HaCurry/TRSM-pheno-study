@@ -416,12 +416,30 @@ def checkCreator2d(pointsSq, locOutputData, mxBounds, msBounds, mxKey, msKey, mh
 
     configDict[mxKey] = mxToConfig
     configDict[msKey] = msToConfig
-    configDict[mhKey] = [mH for i in range(len(mxToConfig))]
-    configDict['thetahS'] = [ths for i in range(len(mxToConfig))]
-    configDict['thetahX'] = [thx for i in range(len(mxToConfig))]
-    configDict['thetaSX'] = [tsx for i in range(len(mxToConfig))]
-    configDict['vs'] = [vs for i in range(len(mxToConfig))]
-    configDict['vx'] = [vx for i in range(len(mxToConfig))]
+    configDict[mhKey] = [mH for i in range(len(configDict[mxKey]))]
+
+    if 'massOrder' in kwargs and kwargs['massOrder'] == True:
+
+        mH1Temp, mH2Temp, mH3Temp = [], [], []
+        for i in range(len(mxToConfig)):
+
+            if configDict['mH3'][i] > configDict['mH2'][i] and configDict['mH2'][i] > configDict['mH1'][i]:
+                mH1Temp.append(configDict['mH1'][i])
+                mH2Temp.append(configDict['mH2'][i])
+                mH3Temp.append(configDict['mH3'][i])
+
+            else: continue
+
+        configDict['mH1'] = mH1Temp
+        configDict['mH2'] = mH2Temp
+        configDict['mH3'] = mH3Temp
+
+    configDict['thetahS'] = [ths for i in range(len(configDict[mxKey]))]
+    configDict['thetahX'] = [thx for i in range(len(configDict[mxKey]))]
+    configDict['thetaSX'] = [tsx for i in range(len(configDict[mxKey]))]
+    configDict['vs'] = [vs for i in range(len(configDict[mxKey]))]
+    configDict['vx'] = [vx for i in range(len(configDict[mxKey]))]
+
 
     df = pandas.DataFrame(data = configDict, dtype = np.float64)
 
