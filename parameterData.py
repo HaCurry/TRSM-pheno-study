@@ -261,6 +261,12 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
     else:
         Higgs = 1
 
+    if 'timeout' in kwargs:
+        timeout = kwargs['timeout']
+
+    else: 
+        timeout = None
+  
     ##############################################################
     
     # check if dataId is in programParametersDict
@@ -488,7 +494,7 @@ def param(programParametersDict, targetDir, paramFree, scannerSmode, **kwargs):
     # run TRSMBroken executable
     try:
 
-        shell_output = subprocess.run(runTRSM, timeout = 180, capture_output = True, cwd = paramDir)
+        shell_output = subprocess.run(runTRSM, timeout=timeout, capture_output=True, cwd=paramDir)
         shell_output = shell_output.stdout.decode('utf-8')
         shell_output_short = (shell_output.splitlines())[loglines:]
 
@@ -547,17 +553,22 @@ def parameterMain(listUserParametersDict, targetDir, scannerSmode, **kwargs):
         # reformats user given dictionary to usable format for param
         programParametersDict = repackingProgramParamDict(userParametersDict, **kwargs)
 
-        param(programParametersDict, targetDir, 'ths', scannerSmode, **kwargs)
-        param(programParametersDict, targetDir, 'thx', scannerSmode, **kwargs)
-        param(programParametersDict, targetDir, 'tsx', scannerSmode, **kwargs)
-        
-        param(programParametersDict, targetDir, 'vs',  scannerSmode, **kwargs)
-        param(programParametersDict, targetDir, 'vx',  scannerSmode, **kwargs)
+        if 'modelParam' in kwargs:
+            param(programParametersDict, targetDir, kwargs['modelParam'], scannerSmode, **kwargs)
 
-        param(programParametersDict, targetDir, 'Nofree',scannerSmode, **kwargs)
+        else:
+            param(programParametersDict, targetDir, 'ths', scannerSmode, **kwargs)
+            param(programParametersDict, targetDir, 'thx', scannerSmode, **kwargs)
+            param(programParametersDict, targetDir, 'tsx', scannerSmode, **kwargs)
+        
+            param(programParametersDict, targetDir, 'vs',  scannerSmode, **kwargs)
+            param(programParametersDict, targetDir, 'vx',  scannerSmode, **kwargs)
+
+            param(programParametersDict, targetDir, 'Nofree',scannerSmode, **kwargs)
 
         print('completed ' + str(loadingstep) + '/' + str(loading) + ' mass points')
         loadingstep = loadingstep + 1
+        
     
     print('+----------------+')
     print(' Script complete!')
@@ -859,8 +870,20 @@ def calculateSort(locOutputPath, dictList, **kwargs):
             ppXNP_H1H2, ppXNP_H1H1, ppXNP_H2H2 = dataCalculator('ppXNP', axisDict[paramFree], pathDataOutput, **kwargs)
             ppXNPSM_H1H2, ppXNPSM_H1H1, ppXNPSM_H2H2 = dataCalculator('ppXNPSM', axisDict[paramFree], pathDataOutput, **kwargs)
 
+            # for saving the all the other model parameters in the calculation output
+            # specially useful for maximizing XS, when needing to recheck sets of model param.
+            modelparam = pandas.read_table(pathDataOutput)
+            
             if generateH1H2 == True:
                 save2TSV_XNP     = {paramFree: XNP_H1H2[0],
+                                    'mH1': modelparam['mH1'],
+                                    'mH2': modelparam['mH2'],
+                                    'mH3': modelparam['mH3'],
+                                    'thetahS': modelparam['thetahS'],
+                                    'thetahX': modelparam['thetahX'],
+                                    'thetaSX': modelparam['thetaSX'],
+                                    'vs': modelparam['vs'],
+                                    'vx': modelparam['vx'],
                                     'b_H3_H1H2': XNP_H1H2[3]}
                 save2TSV_XNP_path = outputPath + '/' + 'outputXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
 
@@ -869,6 +892,14 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
 
                 save2TSV_ppXNP   = {paramFree: ppXNP_H1H2[0],
+                                    'mH1': modelparam['mH1'],
+                                    'mH2': modelparam['mH2'],
+                                    'mH3': modelparam['mH3'],
+                                    'thetahS': modelparam['thetahS'],
+                                    'thetahX': modelparam['thetahX'],
+                                    'thetaSX': modelparam['thetaSX'],
+                                    'vs': modelparam['vs'],
+                                    'vx': modelparam['vx'],
                                     'x_H3_H1H2': ppXNP_H1H2[4]}
                 save2TSV_ppXNP_path = outputPath + '/' + 'outputppXNP_H1H2_' + paramFree + '_' + dataId + '.tsv'
 
@@ -877,7 +908,17 @@ def calculateSort(locOutputPath, dictList, **kwargs):
 
 
                 save2TSV_ppXNPSM = {paramFree: ppXNPSM_H1H2[0],
-                                    'x_H3_H1H2_SM1SM2': ppXNPSM_H1H2[3], 'x_H3_H1_SM1_H2_SM2': ppXNPSM_H1H2[4], 'x_H3_H1_SM2_H2_SM1': ppXNPSM_H1H2[5]}
+                                    'mH1': modelparam['mH1'],
+                                    'mH2': modelparam['mH2'],
+                                    'mH3': modelparam['mH3'],
+                                    'thetahS': modelparam['thetahS'],
+                                    'thetahX': modelparam['thetahX'],
+                                    'thetaSX': modelparam['thetaSX'],
+                                    'vs': modelparam['vs'],
+                                    'vx': modelparam['vx'],
+                                    'x_H3_H1H2_SM1SM2': ppXNPSM_H1H2[3], 
+                                    'x_H3_H1_SM1_H2_SM2': ppXNPSM_H1H2[4], 
+                                    'x_H3_H1_SM2_H2_SM1': ppXNPSM_H1H2[5]}
                 save2TSV_ppXNPSM_path = outputPath + '/' + 'outputppXNPSM_H1H2_' + paramFree + '_' + dataId + '.tsv'
 
                 df_ppXNPSM = pandas.DataFrame(data = save2TSV_ppXNPSM)
