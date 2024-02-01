@@ -39,9 +39,13 @@ if __name__ == '__main__':
                   'vx_lb': 1,          'vx_ub': 1000,
                   'extra': {'dataId': 'S{a}-X{b}'.format(a=90, b=300)}}]
     
-    # parameterData.parameterMain(dictPoint, 'test', 'scan', points=10, modelParam='Nofree')
-    parameterData.dataCalculatorMain('test/', 'testCalc/', '/**/settings_*.json', generateH1H2=True,
+    parameterData.parameterMain(dictPoint, 'test', 'scan', points=10, modelParam='Nofree')
+    parameterData.dataCalculatorMain('test', 'testCalc', '/**/settings_*.json', generateH1H2=True,
                                      SM1='bb', SM2='gamgam')
 
-    df = pandas.read_table('testCalc/S90-X300/Nofree/outputppXNPSM_H1H2_Nofree_S90-X300.tsv')
-    print(df)
+    
+    twoDPlot.maxCompiler('/**/settingsCalc_Nofree*.json', 'testCalc', 'testMax2.tsv',
+                         includeObsLim=False)
+    
+    # df = pandas.read_table('testCalc/S90-X300/Nofree/outputppXNPSM_H1H2_Nofree_S90-X300.tsv')
+    # print(df)

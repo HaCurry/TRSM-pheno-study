@@ -1043,6 +1043,18 @@ def dataCalculatorMain(relPath, locOutputPath, settingsGlob, **kwargs):
     if len(outputPaths) == 0: raise Exception('did not find any files with name ' + settingsGlob)
     dictList = dictConstruct(outputPaths)
 
+    for dictListElement in dictList:
+        # dictElement = dictListElement[0]
+        # if len(dictListElement) != 1:
+        #     raise Exception('Something is wrong...')
+        # store data from dict (JSON) as variables
+        paramFree, pathDataOutput, dataId = dictListElement['extra']['paramFree'], dictListElement['extra']['pathDataOutput'], dictListElement['extra']['dataId']
+        # create directory dataId
+        dirDataId = locOutputPath + '/' + dataId
+        dirParamfree = dirDataId + '/' + paramFree
+        print(dirParamfree)
+        os.makedirs(dirParamfree)
+
     calculateSort(locOutputPath, dictList, **kwargs)
 
     print('*~~~~~~~~~~~~~~~~~~~~*')

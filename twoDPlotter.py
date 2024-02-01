@@ -137,6 +137,148 @@ def exclusionCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
     df.to_csv(locOutputData, sep = "\t")
 
 
+def maxCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
+
+    #################################### kwargs ####################################
+
+    if 'XStotKey' in kwargs:
+        XStotKey = kwargs['XStotKey']
+
+    else:
+        XStotKey = 'x_H3_H1H2_SM1SM2'
+
+
+    if 'XS1Key' in kwargs:
+        XS1Key = kwargs['XS1Key']
+
+    else:
+        XS1Key = 'x_H3_H1_SM1_H2_SM2'
+
+
+    if 'XS2Key' in kwargs:
+        XS2Key = kwargs['XS2Key']
+
+    else:
+        XS2Key = 'x_H3_H1_SM2_H2_SM1'
+
+    if 'ObsLimKey' in kwargs:
+        ObsLimKey = kwargs['ObsLimKey']
+
+    else:
+        ObsLimKey = 'ObservedLimit'
+
+    if 'dataPathKey' in kwargs:
+        dataPathKey = kwargs['dataPathKey']
+
+    else:
+        dataPathKey = 'pathCalcppXNPSM_H1H2_'
+
+    if 'includeObsLim' in kwargs:
+        includeObsLim = kwargs['includeObsLim']
+
+    else:
+        includeObsLim = True
+
+    if includeObsLim == True:
+        if 'ObsLimKey' in kwargs:
+            ObsLimKey = kwargs['ObsLimKey']
+
+        else:
+            ObsLimKey = 'ObservedLimit'
+
+    ################################################################################
+    
+    pathList = parameterData.directorySearcher(dataPath, settingsGlob)
+    dictList = parameterData.dictConstruct(pathList)
+
+    if len(dictList) == 0: raise Exception('No files find with given settingsGlob = ' + settingsGlob + '\n and dataPath = ' + dataPath)
+
+    saveTable = {'mH1': [], 'mH2': [], 'mH3': [], 
+                 'thetahS': [], 'thetahX': [], 'thetaSX': [],
+                 'vs': [], 'vx': []}
+                 # XStotKey: [], XS1Key: [], XS2Key: []}
+
+    if includeObsLim == True: saveTable[ObsLimKey] = []
+
+    maxmH1, maxmH2, maxmH3 = [], [], []
+    maxthetahS, maxthetahX, maxthetaSX = [], [], []
+    maxvs, maxvx = [], [] 
+    maxXS = []
+    
+    for dictElement in dictList:
+        
+        # save the ObsLim values in a variable
+        if includeObsLim == True: 
+            saveTable[ObsLimKey].append(dictElement['extra'][ObsLimKey])
+
+        # save the TRSM XS values in a variable
+        dataPath = dictElement['extra'][dataPathKey]
+
+        try:
+            df = pandas.read_table(dataPath, index_col = 0)
+
+            # mass parameters assumed to be the same for all elements
+            mH1Comp = (df['mH1'])[0]
+            mH2Comp = (df['mH2'])[0]
+
+            # XS1Key = 'x_H3_H1_SM1_H2_SM2' 
+            # XS2Key = 'x_H3_H2_SM1_H1_SM2' 
+            # where it is assumed SM1 = bb, SM2 = gamgam
+            if abs(mH1Comp - 125.09) < 10**(-6):
+                XSKey = XS1Key
+
+            elif abs(mH2Comp - 125.09) < 10**(-6):
+                XSKey = XS2Key
+
+            else:
+                raise Exception ('Something went wrong...')
+            
+            listXS = [i for i in df[XSKey]]
+
+            print(listXS)            
+            
+            index = np.nanargmax(listXS)
+
+            maxmH1.append((df['mH1'])[index])
+            maxmH2.append((df['mH2'])[index])
+            maxmH3.append((df['mH3'])[index])
+            maxthetahS.append((df['thetahS'])[index])
+            maxthetahX.append((df['thetahX'])[index])
+            maxthetaSX.append((df['thetaSX'])[index])
+            maxvs.append((df['vs'])[index])
+            maxvx.append((df['vx'])[index])
+
+            maxXS.append((df[XSKey])[index])
+
+            del df
+     
+        except pandas.errors.EmptyDataError:
+            print('This file is empty with following mass parameters')
+            print('mHa_lb = {a}, mHa_ub = {b}'.format(a=dictElement['mHa_lb'], b=dictElement['mHa_ub']))
+            print('mHb_lb = {a}, mHb_ub = {b}'.format(a=dictElement['mHb_lb'], b=dictElement['mHb_ub']))
+            print('mHc_lb = {a}, mHc_ub = {b}'.format(a=dictElement['mHc_lb'], b=dictElement['mHc_ub']))
+            print('Appending np.nan in its place')
+            # listXStot = [np.nan]
+            # listXS1 = [np.nan]
+            # listXS2 = [np.nan]
+
+    saveTable['mH1'] = maxmH1
+    saveTable['mH2'] = maxmH2
+    saveTable['mH3'] = maxmH3
+    saveTable['thetahS'] = maxthetahS
+    saveTable['thetahX'] = maxthetahX
+    saveTable['thetaSX'] = maxthetaSX
+    saveTable['vs'] = maxvs
+    saveTable['vx'] = maxvx
+
+    saveTable['maxXS'] = maxXS
+
+    # print(saveTable)
+    df = pandas.DataFrame(data = saveTable)
+    # print(df)
+    df.to_csv(locOutputData, sep = "\t")
+
+
 def exclusionPlotter(dataPath, locOutputData, epsilon, **kwargs):
 
     ''' Deprecated '''
