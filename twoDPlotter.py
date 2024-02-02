@@ -222,13 +222,13 @@ def maxCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
             mH2Comp = (df['mH2'])[0]
 
             # XS1Key = 'x_H3_H1_SM1_H2_SM2' 
-            # XS2Key = 'x_H3_H2_SM1_H1_SM2' 
+            # XS2Key = 'x_H3_H1_SM2_H2_SM1'
             # where it is assumed SM1 = bb, SM2 = gamgam
             if abs(mH1Comp - 125.09) < 10**(-6):
-                XSKey = XS1Key
+                XSKey = XS2Key
 
             elif abs(mH2Comp - 125.09) < 10**(-6):
-                XSKey = XS2Key
+                XSKey = XS1Key
 
             else:
                 raise Exception ('Something went wrong...')
@@ -250,6 +250,8 @@ def maxCompiler(settingsGlob, dataPath, locOutputData, **kwargs):
 
             maxXS.append((df[XSKey])[index])
 
+            print(XSKey)
+            
             del df
      
         except pandas.errors.EmptyDataError:
