@@ -16,6 +16,7 @@ import multiprocessing
 import sys
 import glob
 import json
+from itertools import product
 
 import functions as TRSM
 import Exclusion_functions as excl
@@ -589,6 +590,84 @@ def checkCreator2d(pointsSq, locOutputData, mxBounds, msBounds, mxKey, msKey, mh
 
     df.to_csv(locOutputData, sep = "\t")
 
+
+def checkCreatorNew(locOutputData, configDict, **kwargs):
+
+    ############################# kwargs #############################
+
+    if 'modelParams' in kwargs:
+        modelParams = kwargs['modelParams']
+
+    # default TRSM
+    else: modelParams = ['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']
+
+    if 'forcePoints' in kwargs:
+        forcePoints = kwargs['forcePoints']
+
+    else: pass
+
+    ##################################################################
+
+    configTuples = [(param + '_lb', param + '_ub', param) for param in modelParams]
+
+    linspaceDict = {}
+
+    for (param_lb, param_ub, param) in configTuples:
+        
+        if param + 'Points' in configDict:
+            linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub], configDict[param + 'Points'])
+
+        elif abs(configDict[param_lb] - configDict[param_ub]) < 10**(-8):
+            linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub], 1)
+
+        else:
+            print('No points given for model parameter ' + param + 'using default np.linspace values. \
+                  \nPlease specify \'[model parameter]Points\' in configDictionary e.g. \'thetahSPoints\': 100 ')
+            linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub])
+    # can be used when lower bounds and upper bounds are equal and user desires
+    # to save the same set of model params kwargs['forcePoint'] number of times
+    # can be used to check if scannerS does not produce any bugs when generating
+    # the same point.
+    if 'forcePoints' in kwargs:
+        forceList = list(zip(*[linspaceDict[param] for param in modelParams]))
+        temp = []
+
+        for i in range(kwargs['forcePoints']):
+            temp.append(forceList[0])
+        
+        outputTuples = temp
+
+    # otherwise perform the cartesian product of all the lists in linspaceDict
+    else:
+        outputTuples = list(product(*[linspaceDict[param] for param in modelParams]))
+
+    # print(outputTuples)
+    # print("============{}============".format(len(outputTuples)))
+    
+    if 'massOrdering' in kwargs:
+
+        if kwargs['massOrdering'] == True:
+
+            cartProdTuplesTemp = []
+            for tupleElement in outputTuples:
+
+                if tupleElement[2] > tupleElement[1] and tupleElement[1] > tupleElement[0]:
+                    cartProdTuplesTemp.append(tupleElement)
+
+                else: continue
+
+            outputTuples = cartProdTuplesTemp
+
+    if 'filter' in kwargs:
+        outputTuples = kwargs['filter'](outputTuples)
+
+    # print(outputTuples)
+    # print("============{}============".format(len(outputTuples)))
+
+    df = pandas.DataFrame(outputTuples, columns=modelParams)
+            
+    df.to_csv(locOutputData, sep="\t")
+    
 
 def runTRSM(TRSMpath, cwd, configName, outputName, scannerSmode, **kwargs):
 
