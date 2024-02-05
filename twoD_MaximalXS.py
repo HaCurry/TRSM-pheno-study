@@ -39,13 +39,27 @@ if __name__ == '__main__':
                   'vx_lb': 1,          'vx_ub': 1000,
                   'extra': {'dataId': 'S{a}-X{b}'.format(a=90, b=300)}}]
     
-    parameterData.parameterMain(dictPoint, 'test', 'scan', points=10, modelParam='Nofree')
-    parameterData.dataCalculatorMain('test', 'testCalc', '/**/settings_*.json', generateH1H2=True,
-                                     SM1='bb', SM2='gamgam')
+    # parameterData.parameterMain(dictPoint, 'test', 'scan', points=10, modelParam='Nofree')
+    # parameterData.dataCalculatorMain('test', 'testCalc', '/**/settings_*.json', generateH1H2=True,
+    #                                  SM1='bb', SM2='gamgam')
 
     
-    twoDPlot.maxCompiler('/**/settingsCalc_Nofree*.json', 'testCalc', 'testMax2.tsv',
-                         includeObsLim=False)
+    # twoDPlot.maxCompiler('/**/settingsCalc_Nofree*.json', 'testCalc', 'testMax2.tsv',
+    #                      includeObsLim=False)
     
     # df = pandas.read_table('testCalc/S90-X300/Nofree/outputppXNPSM_H1H2_Nofree_S90-X300.tsv')
     # print(df)
+
+    test = {'mH1_lb': 90,        'mH1_ub': 90,
+            'mH2_lb': 125.09,    'mH2_ub': 125.09,
+            'mH3_lb': 300,       'mH3_ub': 300,
+            'thetahS_lb': -np.pi/2, 'thetahS_ub': np.pi/2, 'thetahSPoints':2,
+            'thetahX_lb': -np.pi/2, 'thetahX_ub': np.pi/2, 'thetahXPoints':2,
+            'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':2,
+            'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 2,
+            'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 2, } 
+
+    twoDPlot.checkCreatorNew('checkcreatorNewtest.tsv', test, massOrdering=True)
+
+    df = pandas.read_table('checkcreatorNewtest.tsv')
+    print(df)
