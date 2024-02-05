@@ -118,7 +118,7 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.xlim(126,500)
     plt.ylim(255,650)
-    plt.savefig('plots2D/BP3_BR_XSH/BP3_extendedMass/BP2_BR_XSH_fig_extendedmass.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_extendedMass/BP3_BR_XSH_fig_extendedmass.pdf')
     # plt.show()
 
     df_1_con = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMass.tsv')
