@@ -644,9 +644,9 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
     # print(outputTuples)
     # print("============{}============".format(len(outputTuples)))
     
-    if 'massOrdering' in kwargs:
+    if 'massOrder' in kwargs:
 
-        if kwargs['massOrdering'] == True:
+        if kwargs['massOrder'] == True:
 
             cartProdTuplesTemp = []
             for tupleElement in outputTuples:
@@ -661,6 +661,7 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
     if 'filter' in kwargs:
         outputTuples = kwargs['filter'](outputTuples)
 
+    # print('MassOrder', outputTuples)
     # print(outputTuples)
     # print("============{}============".format(len(outputTuples)))
 

@@ -90,25 +90,25 @@ if __name__ == '__main__':
             'vs_lb': 140, 'vs_ub': 140,
             'vx_lb': 100, 'vx_ub': 100, } 
 
-    twoDPlot.checkCreatorNew('plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMassTEST.tsv', BP3, 
-                             modelParams=['mH3', 'mH1', 'mH2', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx'])
+    # twoDPlot.checkCreatorNew('plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMassTEST.tsv', BP3, massOrder=True)
+    #                          # modelParams=['mH3', 'mH2', 'mH1', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx'], massOrder=True)
 
-    twoDPlot.checkCreator2d(100, 'plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMass.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
-                            ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100,
-                            massOrder=True)
+    # twoDPlot.checkCreator2d(100, 'plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMass.tsv', (255, 650), (126, 500), 'mH3', 'mH2', 'mH1',
+    #                         ths=-0.129, thx=0.226, tsx=-0.899, vs=140, vx=100,
+    #                         massOrder=True)
 
-    twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'config_BP3_BR_XSH_extendedMassTEST.tsv', 'output_BP3_BR_XSH_extendedMassTEST.tsv', 'check', capture_output=False,
-                     BFB=1, Uni=1, STU=1, Higgs=1)
+    # twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'config_BP3_BR_XSH_extendedMassTEST.tsv', 'output_BP3_BR_XSH_extendedMassTEST.tsv', 'check', capture_output=False,
+    #                  BFB=1, Uni=1, STU=1, Higgs=1)
 
-    twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'config_BP3_BR_XSH_extendedMass.tsv', 'output_BP3_BR_XSH_extendedMass.tsv', 'check', capture_output=False,
-                     BFB=1, Uni=1, STU=1, Higgs=1)
+    # twoDPlot.runTRSM('../../../../TRSMBroken', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'config_BP3_BR_XSH_extendedMass.tsv', 'output_BP3_BR_XSH_extendedMass.tsv', 'check', capture_output=False,
+    #                  BFB=1, Uni=1, STU=1, Higgs=1)
 
-    twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMassTEST.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'calc_BP3_extendedMassTEST.tsv', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMassTEST.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'calc_BP3_extendedMassTEST.tsv', 'bb', 'gamgam')
 
-    twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMass.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'calc_BP3_extendedMass.tsv', 'bb', 'gamgam')
+    # twoDPlot.calculateSort2D('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMass.tsv', 'plots2D/BP3_BR_XSH/BP3_extendedMass', 'calc_BP3_extendedMass.tsv', 'bb', 'gamgam')
 
     BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.pandasReader('plots2D/BP3_BR_XSH/BP3_extendedMass/calc_BP3_extendedMass.tsv', 'mH1', 'mH2', 'mH3', 'b_H3_H1H2')
-    # BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
+    # # BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2 = twoDPlot.kineticExcluder(BP3_mH1, BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(BP3_mH2, BP3_mH3, BP3_b_H3_H1H2)
 
@@ -122,24 +122,44 @@ if __name__ == '__main__':
     # plt.show()
 
     df_1_con = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMass.tsv')
+    df_1_con = df_1_con[['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']]
     df_2_con = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/config_BP3_BR_XSH_extendedMassTEST.tsv')
+    df_2_con = df_2_con[['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']]
+
     df_1_out = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMass.tsv')
+    df_1_out = df_1_out[['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']]
     df_2_out = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/output_BP3_BR_XSH_extendedMassTEST.tsv')
+    df_2_out = df_2_out[['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']]
+
     df_1_cal = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/calc_BP3_extendedMassTEST.tsv')
+    df_1_cal = df_1_cal[['mH1', 'mH2', 'mH3']]
     df_2_cal = pandas.read_table('plots2D/BP3_BR_XSH/BP3_extendedMass/calc_BP3_extendedMass.tsv')
-    # print(df_1.columns.tolist())
-    # print(df_2.columns.tolist())
+    df_2_cal = df_2_cal[['mH1', 'mH2', 'mH3']]
+
+    print(df_1_con.columns.tolist())
+    print(len(df_1_con))
+    print(df_2_con.columns.tolist())
+    print(len(df_2_con))
     # lines below are from
     # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reset_index.html
     # https://stackoverflow.com/a/55358370/17456342
     df11_con = df_1_con.sort_values(by=df_1_con.columns.tolist()).reset_index(drop=True)
     df21_con = df_2_con.sort_values(by=df_2_con.columns.tolist()).reset_index(drop=True)
-    print('config equal?', df11_con.equals(df21_con))
+
     df11_out = df_1_out.sort_values(by=df_1_out.columns.tolist()).reset_index(drop=True)
     df21_out = df_2_out.sort_values(by=df_2_out.columns.tolist()).reset_index(drop=True)
-    print('output equal?', df11_out.equals(df21_out))
+
     df11_cal = df_1_cal.sort_values(by=df_1_cal.columns.tolist()).reset_index(drop=True)
     df21_cal = df_2_cal.sort_values(by=df_2_cal.columns.tolist()).reset_index(drop=True)
+
+    print(df_1_con)
+    print(df_2_con)
+    print('config equal?', df11_con.equals(df21_con))
+    # df11_out = df_1_out.sort_values(by=df_1_out.columns.tolist()).reset_index(drop=True)
+    # df21_out = df_2_out.sort_values(by=df_2_out.columns.tolist()).reset_index(drop=True)
+    print('output equal?', df11_out.equals(df21_out))
+    # df11_cal = df_1_cal.sort_values(by=df_1_cal.columns.tolist()).reset_index(drop=True)
+    # df21_cal = df_2_cal.sort_values(by=df_2_cal.columns.tolist()).reset_index(drop=True)
     print('calculate equal?', df11_cal.equals(df21_cal))
 # 342.77777777777777	292
 
