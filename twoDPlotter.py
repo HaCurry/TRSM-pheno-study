@@ -621,8 +621,7 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
             linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub], 1)
 
         else:
-            print('No points given for model parameter ' + param + 'using default np.linspace values. \
-                  \nPlease specify \'[model parameter]Points\' in configDictionary e.g. \'thetahSPoints\': 100 ')
+            print('No points given for model parameter ' + param + 'using default np.linspace values.')
             linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub])
     # can be used when lower bounds and upper bounds are equal and user desires
     # to save the same set of model params kwargs['forcePoint'] number of times
