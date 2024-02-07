@@ -1,0 +1,19 @@
+# sleep.sub -- simple sleep job
+executable              = scannerS.sh
+getenv 			= True
+
+log                     = $(inputDirectory)/scannerS.log
+output                  = $(inputDirectory)/scannerS.out
+error                   = $(inputDirectory)/scannerS.err
+
+arguments		= $(inputDirectory)
+
+#should_transfer_files   = Yes
+#when_to_transfer_output = ON_EXIT
+#transfer_output_files	 = Hejsan.txt
+
+#request_cpus            = 1
+#request_memory          = 512M
+#request_disk            = 1G
+
+queue inputDirectory from ModelParams.txt 
