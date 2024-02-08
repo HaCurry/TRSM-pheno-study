@@ -1,4 +1,3 @@
-
 #-*- coding: utf-8 -*-
 import csv
 import pandas
@@ -29,64 +28,33 @@ import twoDPlotter as twoDPlot
 
 if __name__ == '__main__':
 
-    dictPoint = [{'mHa_lb': 90,        'mHa_ub': 90,
-                  'mHb_lb': 125.09,    'mHb_ub': 125.09,
-                  'mHc_lb': 300,       'mHc_ub': 300,
-                  'ths_lb': -np.pi/2,  'ths_ub': np.pi/2,
-                  'thx_lb': -np.pi/2,  'thx_ub': np.pi/2,
-                  'tsx_lb': -np.pi/2,  'tsx_ub': np.pi/2,
-                  'vs_lb': 1,          'vs_ub': 1000,
-                  'vx_lb': 1,          'vx_ub': 1000,
-                  'extra': {'dataId': 'S{a}-X{b}'.format(a=90, b=300)}}]
+    df = pandas.read_table('testMax/ModelParams.txt', header=None, usecols=[0], names=['col0'])
+    # pathList = ['testMax/40-200/40-200_output.tsv', 'testMax/70-400/70-400_output.tsv', 'testMax/90-300/90-300_output.tsv', 'testMax/90-450/90-450_output.tsv',]
+    pathList = ['testMax/{a}/{a}_output.tsv'.format(a=row) for row in df['col0']]
     
-    # parameterData.parameterMain(dictPoint, 'test', 'scan', points=10, modelParam='Nofree')
-    # parameterData.dataCalculatorMain('test', 'testCalc', '/**/settings_*.json', generateH1H2=True,
-    #                                  SM1='bb', SM2='gamgam')
+    for pathElement in pathList:
+    
+        H1H2, H1H1, H2H2 = TRSM.ppXNPSM_massfree(pathElement, 'mH1', 'mH2', 'mH3',  'bb', 'gamgam',  normalizationSM=1)
 
-    
-    # twoDPlot.maxCompiler('/**/settingsCalc_Nofree*.json', 'testCalc', 'testMax2.tsv',
+        # H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, pp_X_H1H2_bbgamgam, pp_X_H1_bb_H2_gamgam, pp_X_H1_gamgam_H2_bb])
+
+        mH1 = H1H2[0]
+        mH2 = H1H2[1]
+        mH3 = H1H2[2]
+        pp_X_H1H2_bbgamgam   = H1H2[3]
+        pp_X_H1_bb_H2_gamgam = H1H2[4] 
+        pp_X_H1_gamgam_H2_bb = H1H2[5]
+        print('printing cross sections of file', pathElement)
+        print('$-----------------------------$')
+        print('tot', np.nanmax(pp_X_H1H2_bbgamgam))
+        print('$-----------------------------$')
+        print('H1->bb, H2->yy',np.nanmax(pp_X_H1_bb_H2_gamgam))
+        print('$-----------------------------$')
+        print('H1->yy, H2->bb',np.nanmax(pp_X_H1_gamgam_H2_bb))
+        print('# of np.nans in list XS lists, {a}, {b}, {c} '.format(a=sum(np.isnan(pp_X_H1H2_bbgamgam)), b=sum(np.isnan(pp_X_H1_bb_H2_gamgam)), c=sum(np.isnan(pp_X_H1_gamgam_H2_bb))))
+        print('$-----------------------------$')
+        print('*******************************\n')
+       
+    # twoDPlot.maxCompiler(None, None, 'testMax2.tsv',
     #                      includeObsLim=False)
     
-    # df = pandas.read_table('testCalc/S90-X300/Nofree/outputppXNPSM_H1H2_Nofree_S90-X300.tsv')
-    # print(df)
-
-    test = {'mH1_lb': 90,        'mH1_ub': 90,
-            'mH2_lb': 125.09,    'mH2_ub': 125.09,
-            'mH3_lb': 300,       'mH3_ub': 300,
-            'thetahS_lb': -np.pi/2, 'thetahS_ub': np.pi/2, 'thetahSPoints':2,
-            'thetahX_lb': -np.pi/2, 'thetahX_ub': np.pi/2, 'thetahXPoints':2,
-            'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':2,
-            'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 2,
-            'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 2, } 
-
-    # os.makedirs()
-
-    # twoDPlot.checkCreatorNew('checkcreatorNewtest.tsv', test, massOrdering=True)
-
-    # df = pandas.read_table('checkcreatorNewtest.tsv')
-    # print(df)
-
-
-
-    listModelParams = [(90, 125.09, 300), (40, 125.09, 200), (70, 125.09, 400)]
-    listConfigParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
-                         'mH2_lb': mH2, 'mH2_ub': mH2,
-                         'mH3_lb': mH3, 'mH3_ub': mH3,
-                         'thetahS_lb': -np.pi/2, 'thetahS_ub': np.pi/2, 'thetahSPoints':2,
-                         'thetahX_lb': -np.pi/2, 'thetahX_ub': np.pi/2, 'thetahXPoints':2,
-                         'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':2,
-                         'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 2,
-                         'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 2, 
-                         'extra': {'dataId': '{a}-{b}'.format(a=mH1, b=mH3)} } for (mH1, mH2, mH3) in listModelParams]
-
-    mainDirectory = 'testMax'
-    mainModParFile = 'ModelParams.txt'
-
-    for element in listConfigParams:
-
-        makedirs(mainDirectory + '/' + (element['extra'])['dataId'])
-        twoDPlot.checkCreatorNew(mainDirectory + '/' + (element['extra'])['dataId'] + '/' + (element['extra'])['dataId'] + '_config.tsv', element)
-
-        with open(mainDirectory + '/' + mainModParFile, 'a') as myfile:
-            myfile.write((element['extra'])['dataId'] + '\n')
-
