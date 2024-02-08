@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\Gamma(h_{3})/M_{3}$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma(h_{3})/M_{3}$', xlims=(1, 124), ylims=(126, 500), cbarfmt='{x:.3f}')
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP2: $\Gamma(h_{3})/M_{3}$", r"$M_{1}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma(h_{3})/M_{3}$', xlims=(1, 124), ylims=(126, 500))
     # plt.title(r"BP2: $\Gamma_{h_{3}}/M_{3}$")
     # plt.colorbar(label=r'$\Gamma_{h_{3}}/M_{3}$', format='{x:.3f}')
     
@@ -78,11 +78,19 @@ if __name__ == '__main__':
 
     contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma(h_{3})/M_{3}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma(h_{3})/M_{3}$', xlims=(126, 500), ylims=(255, 650), cbarfmt='{x:.3f}')
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma(h_{3})/M_{3}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma(h_{3})/M_{3}$', xlims=(126, 500), ylims=(255, 650))
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA.png')
     # plt.show()
+    plt.close()
+
+    plt.scatter(x, y, c=z)
+    plt.xlim(126, 500), 
+    plt.ylim(255, 650)
+    plt.colorbar()
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA_scatter.png')
     plt.close()
 
     del BP3_mH1, BP3_mH2, BP3_mH3, BP3_w_H3, x, y, z
@@ -135,14 +143,18 @@ if __name__ == '__main__':
 
     contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
 
-    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma(h_{2})/M_{2}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma(h_{2})/M_{2}$', xlims=(126, 500), ylims=(255, 650), cbarfmt='{x:.3f}')
+    twoDPlot.plotAuxTitleAndBounds2D(r"BP3: $\Gamma(h_{2})/M_{2}$", r"$M_{2}$ [GeV]", r"$M_{3}$ [GeV]", r'$\Gamma(h_{2})/M_{2}$', xlims=(126, 500), ylims=(255, 650))
 
     plt.tight_layout()
     plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA_h2.pdf')
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA_h2.png')
     # plt.show()
     plt.close()
     plt.scatter(x, y, c=z)
     plt.colorbar()
+    plt.xlim(126, 500), 
+    plt.ylim(255, 650)
+    plt.savefig('plots2D/BP3_BR_XSH/BP3_NWA_h2_scatter.png')
     # plt.show()
     plt.close()
 
@@ -207,6 +219,8 @@ if __name__ == '__main__':
 
     plt.scatter(x,y,c=z)
     plt.colorbar()
+    plt.xlim(126, 500), 
+    plt.ylim(255, 650)
     # plt.show()
     plt.close()
 
