@@ -66,28 +66,55 @@ if __name__ == '__main__':
     # df = pandas.read_table('checkcreatorNewtest.tsv')
     # print(df)
 
+#40-200  70-400  90-300  90-450
 
 
-    listModelParams = [(90, 125.09, 300), (40, 125.09, 200), (70, 125.09, 400)]
+# #    Initial testing
+#    listModelParams = [(90, 125.09, 450), (90, 125.09, 300), (40, 125.09, 200), (70, 125.09, 400)]
+#    listConfigParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
+#                         'mH2_lb': mH2, 'mH2_ub': mH2,
+#                         'mH3_lb': mH3, 'mH3_ub': mH3,
+#                         'thetahS_lb': -np.pi/2, 'thetahS_ub': np.pi/2, 'thetahSPoints':10,
+#                         'thetahX_lb': -np.pi/2, 'thetahX_ub': np.pi/2, 'thetahXPoints':10,
+#                         'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':10,
+#                         'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 10,
+#                         'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 10, 
+#                         'extra': {'dataId': '{a}-{b}-{c}'.format(a=mH1, b=mH2, c=mH3)} } for (mH1, mH2, mH3) in listModelParams]
+#
+#    mainDirectory = 'testMax'
+
+ #    testing within 09-0.04
+    listModelParams = [(90, 125.09, 450), (100, 125.09, 550), (90, 125.09, 500), (125.09, 140, 500), (100, 125.09, 500)]
     listConfigParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
                          'mH2_lb': mH2, 'mH2_ub': mH2,
                          'mH3_lb': mH3, 'mH3_ub': mH3,
-                         'thetahS_lb': -np.pi/2, 'thetahS_ub': np.pi/2, 'thetahSPoints':2,
-                         'thetahX_lb': -np.pi/2, 'thetahX_ub': np.pi/2, 'thetahXPoints':2,
-                         'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':2,
-                         'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 2,
-                         'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 2, 
-                         'extra': {'dataId': '{a}-{b}'.format(a=mH1, b=mH3)} } for (mH1, mH2, mH3) in listModelParams]
+                         'thetahS_lb': -np.pi/2, 'thetahS_ub': np.pi/2, 'thetahSPoints':10,
+                         'thetahX_lb': -np.pi/2, 'thetahX_ub': np.pi/2, 'thetahXPoints':10,
+                         'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':10,
+                         'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 10,
+                         'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 10,
+                         'extra': {'dataId': '{a}-{b}-{c}'.format(a=mH1, b=mH2, c=mH3)} } for (mH1, mH2, mH3) in listModelParams]
 
-    mainDirectory = 'testMax'
+    mainDirectory = 'testMax0.9-0.04'
+
+
     mainModParFile = 'ModelParams.txt'
     exist_ok = True
+
+    pathMainModParFile = mainDirectory + '/' + mainModParFile
+
+    try:
+        # clear contents of old ModelParams.txt
+        open(pathMainModParFile, 'w').close()
+
+    except FileNotFoundError:
+        print('file not found, not clearing any file')
 
     for element in listConfigParams:
 
         makedirs(mainDirectory + '/' + (element['extra'])['dataId'], exist_ok=exist_ok)
         twoDPlot.checkCreatorNew(mainDirectory + '/' + (element['extra'])['dataId'] + '/' + (element['extra'])['dataId'] + '_config.tsv', element)
 
-        with open(mainDirectory + '/' + mainModParFile, 'a') as myfile:
+        with open(pathMainModParFile, 'a') as myfile:
             myfile.write((element['extra'])['dataId'] + '\n')
 
