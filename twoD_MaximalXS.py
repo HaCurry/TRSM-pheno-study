@@ -44,6 +44,11 @@ if __name__ == '__main__':
         pp_X_H1H2_bbgamgam   = H1H2[3]
         pp_X_H1_bb_H2_gamgam = H1H2[4] 
         pp_X_H1_gamgam_H2_bb = H1H2[5]
+
+        pp_X_H1H1_bbgamgam = H1H1[3]
+        pp_X_H2H2_bbgamgam = H1H1[3]
+        
+        
         print('printing cross sections of file', pathElement)
         print('$-----------------------------$')
         print('tot', np.nanmax(pp_X_H1H2_bbgamgam))
@@ -51,8 +56,10 @@ if __name__ == '__main__':
         print('H1->bb, H2->yy',np.nanmax(pp_X_H1_bb_H2_gamgam))
         print('$-----------------------------$')
         print('H1->yy, H2->bb',np.nanmax(pp_X_H1_gamgam_H2_bb))
-        print('# of np.nans in list XS lists, {a}, {b}, {c} '.format(a=sum(np.isnan(pp_X_H1H2_bbgamgam)), b=sum(np.isnan(pp_X_H1_bb_H2_gamgam)), c=sum(np.isnan(pp_X_H1_gamgam_H2_bb))))
         print('$-----------------------------$')
+        print('all: {all}'.format(all=np.nanargmax(pp_X_H1H2_bbgamgam + pp_X_H1H1_bbgamgam + pp_X_H2H2_bbgamgam)))
+        print('$-----------------------------$')
+        print('# of np.nans in list XS lists, {a}, {b}, {c} '.format(a=sum(np.isnan(pp_X_H1H2_bbgamgam)), b=sum(np.isnan(pp_X_H1_bb_H2_gamgam)), c=sum(np.isnan(pp_X_H1_gamgam_H2_bb))))
         print('*******************************\n')
        
     # twoDPlot.maxCompiler(None, None, 'testMax2.tsv',
