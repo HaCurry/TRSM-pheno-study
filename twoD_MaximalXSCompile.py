@@ -27,6 +27,9 @@ import functions as TRSM
 import parameterData
 import twoDPlotter as twoDPlot
 
+
+
+
 if __name__ == '__main__':
 
     dictPoint = [{'mHa_lb': 90,        'mHa_ub': 90,
@@ -95,102 +98,138 @@ if __name__ == '__main__':
                          'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 3,
                          'extra': {'dataId': '{a}-{b}-{c}'.format(a=mH1, b=mH2, c=mH3)} } for (mH1, mH2, mH3) in listModelParams]
 
-    mainDirectory = 'testMaxTryingToFindNaN'
+    # mainDirectory = 'testMaxTryingToFindNaN'
 
 
-    mainModParFile = 'ModelParams.txt'
-    exist_ok = True
+    # mainModParFile = 'ModelParams.txt'
+    # exist_ok = True
 
-    pathMainModParFile = mainDirectory + '/' + mainModParFile
+    # pathMainModParFile = mainDirectory + '/' + mainModParFile
 
-    try:
+    # try:
+    #     # clear contents of old ModelParams.txt
+    #     print('clearing contentss of ModelParams.txt')
+    #     open(pathMainModParFile, 'w').close()
+
+    # except FileNotFoundError:
+    #     print('file not found, not clearing any file')
+
+    # for element in listConfigParams:
+
+    #     makedirs(mainDirectory + '/' + (element['extra'])['dataId'], exist_ok=exist_ok)
+    #     twoDPlot.checkCreatorNew(mainDirectory + '/' + (element['extra'])['dataId'] + '/' + (element['extra'])['dataId'] + '_config.tsv', element)
+
+    #     with open(pathMainModParFile, 'a') as myfile:
+    #         myfile.write((element['extra'])['dataId'] + '\n')
+
+
+    def configureDirs(listModelParams, pathDir, **kwargs):
+
+        if 'existOk' in kwargs:
+            existOk = kwargs['existOk']
+
+        else: existOk = True
+       
+        # checks so that all ranges of the model parameters are given
+        for element in listModelParams:
+
+            if ('mH1_lb' in element and 'mH2_lb' in element and 'mH3_lb' in element 
+                and  'mH1_ub' in element and 'mH2_ub' in element and 'mH3_ub' in element 
+                and 'thetahS_lb' in element and 'thetahX_lb' in element and 'thetaSX_lb' in element 
+                and 'thetahS_ub' in element and 'thetahX_ub' in element and 'thetaSX_ub' in element 
+                and 'vs_lb' in element and 'vx_lb' in element 
+                and 'vs_ub' in element and 'vx_ub' in element):
+                pass
+            else: raise Exception('The ranges of all model parameters are not defined') 
+
+        makedirs(pathDir, exist_ok=existOk)
+        mainModParFile = 'ModelParamsId.txt'
+        pathMainModParFile = pathDir + '/' + mainModParFile
+
         # clear contents of old ModelParams.txt
         open(pathMainModParFile, 'w').close()
 
-    except FileNotFoundError:
-        print('file not found, not clearing any file')
+        for element in listModelParams:
 
-    for element in listConfigParams:
-
-        makedirs(mainDirectory + '/' + (element['extra'])['dataId'], exist_ok=exist_ok)
-        twoDPlot.checkCreatorNew(mainDirectory + '/' + (element['extra'])['dataId'] + '/' + (element['extra'])['dataId'] + '_config.tsv', element)
-
-        with open(pathMainModParFile, 'a') as myfile:
-            myfile.write((element['extra'])['dataId'] + '\n')
-
-
-#     def condorConfigure(listModelParams, pathDir, pathScannerS, **kwargs):
-
-#         if 'existOk' in kwargs:
-#             existOk = kwargs['existOk']
-
-#         else: existOk = True
-
-#         if 'condorScripts' in kwargs:
+            # name of each directory where each set of model parameter configs are stored
+            dataId = (element['extra'])['dataId']
             
+            makedirs(pathDir + '/' + dataId, exist_ok=existOk)
+
+            # create the configuration file (grid of all parameter combinations specified by element)
+            twoDPlot.checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
+
+            # store element in a JSON file in the directory (dataId)
+            parameterData.createJSON(element, pathDir + '/' + dataId, 'settings_' + dataId + '.json')
+
+            # store the name of the directory (dataId) in a txt file for later reference
+            with open(pathMainModParFile, 'a') as myfile:
+                myfile.write(dataId + '\n')
+
+    configureDirs(listConfigParams, 'scriptTesting')
+
+    def condorScriptCreator(pathExecutable, pathSubmit, **kwargs):
+
+        if 'pathScannerS' in kwargs:
+            pathScannerS = kwargs['pathScannerS']
+
+        else: 
+            pathScannerS = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken'
+
+        if pathExecutable.endswith('.sh'):
+            pass
         
-#         # checks so that all ranges of the model parameters are given
-#         for element in listModelParams:
-#             if \
-#             'mH1_lb' in element and 'mH2_lb' in element and 'mH3_lb' in element and \
-#             'mH1_ub' in element and 'mH2_ub' in element and 'mH3_ub' in element and \
-#             'thetahS_lb' in element and 'thetahX_lb' in element and 'thetaSX_lb' in element and \
-#             'thetahS_ub' in element and 'thetahX_ub' in element and 'thetaSX_ub' in element and \
-#             'vs_lb' in element and 'vx_lb' in element \
-#             'vs_ub' in element and 'vx_ub' in element:
-#                 pass
-#             else: raise Exception('The ranges of all model parameters are not defined') 
+        else:
+            raise Exception('File extension in pathExecutable need to be .sh')
 
-#         mainModParFile = 'ModelParamsId.txt'
-#         pathMainModParFile = mainDirectory + '/' + mainModParFile
+        if pathSubmit.endswith('.sub'):
+            pass
 
-#         try:
-#             # clear contents of old ModelParams.txt
-#             open(pathMainModParFile, 'w').close()
+        else:
+            raise Exception('File extension in pathSubmit need to be .sub')
 
-#         except FileNotFoundError:
-#             print('file not found, not clearing ModelParamsId.txt {a}'.format(a=pathDir))
-
-#         for element in listModelParams:
-
-#             # name of each directory where each set of model parameter configs are stored
-#             dataId = (element['extra'])['dataId']
+        if 'JobFlavour' in kwargs:
+            JobFlavour = kwargs['JobFlavour']
             
-#             makedirs(mainDirectory + '/' + dataId, exist_ok=existOk)
+        else:
+            JobFlavour = 'longlunch'
+           
+        # create executable (docstrings does not work properly with fstrings)
+        executable = ('#!/bin/bash\n\
+# condor executable\n\
+echo \"trying to run scannerS on HTcondor...\"\n\n\
+# where this executable is executed\n\
+startDir=$(pwd)\n\
+pathOutput=$1\n\n\
+# from https://stackoverflow.com/a/9333006/17456342\n\
+pathScannerS=${{2:-{pathScannerS}}}\n\n\
+# cd into pathOutput\n\
+echo \"Entering $pathOutput\"\n\
+cd ${{startDir}}/${{pathOutput}}\n\n\
+# execute ScannerS TRSM executable\n\
+${{pathScannerS}} ${{startDir}}/${{pathOutput}}/${{pathOutput}}_output.tsv check ${{startDir}}/${{pathOutput}}/${{pathOutput}}_config.tsv\n\
+echo \"Finished job in $pathOutput\"'.format(pathScannerS=pathScannerS))        
 
-#             # create the configuration file (grid of all parameter combinations specified by element)
-#             twoDPlot.checkCreatorNew(mainDirectory + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
+        with open(pathExecutable, 'w') as executableFile:
+            executableFile.write(executable)
 
-#             # store element in a JSON file in the directory (dataId)
-#             parameterData.createJSON(element, pathDir + '/' + dataId, 'Settings')
+        # create submit file for condor
+        submit = '# sleep.sub -- simple sleep job\n\
+executable              = scannerS.sh\n\
+getenv                  = True\n\n\
+log                     = $(inputDirectory)/scannerS.log\n\
+output                  = $(inputDirectory)/scannerS.out\n\
+error                   = $(inputDirectory)/scannerS.err\n\n\
+arguments               = $(inputDirectory) {pathScannerS}\n\n\
+# longlunch = 2 hrs\n\
++JobFlavour             = \"{JobFlavour}\"\n\n\
+queue inputDirectory from ModelParams.txt'.format(pathScannerS=pathScannerS, JobFlavour=JobFlavour)
 
-#             # store the name of the directory (dataId) in a txt file for later reference
-#             with open(pathMainModParFile, 'a') as myfile:
-#                 myfile.write(dataId + '\n')
+        with open(pathSubmit, 'w') as submitFile:
+            submitFile.write(submit)
 
-#             # create executable and submit file for condor if condorScripts == True
-#             if condorScripts == True:
-#                 executable = "#!/bin/bash\n\
-#                               echo \"trying to run scannerS on HTcondor...\"\n\
-#                               # cd into directory
-#                               cd {pathDir}/$1\n\
-#                               # run the scannerS TRSM executable with absolute paths to everything
-#                               {pathScannerS}\
-#                               # output file
-#                               {pathDir}/$1/$1_output.tsv \
-#                               # input file
-#                               check {pathDir}/$1/$1_config.tsv \
-#                               echo \"Finishing job in $1\"".format(pathDir=pathDir, pathScannerS=pathScannerS)
-# # "#!/bin/bash \
-# # echo \"trying to run scannerS on HTcondor...\"\n\
-# # # cd into directory
-# # cd /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testMax0.9-0.04/$1\n\
-# # # run the scannerS TRSM executable with absolute paths to everything
-# # /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken \
-# # # output file
-# # /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testMax0.9-0.04/$1/$1_output.tsv \
-# # # input file
-# # check /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testMax0.9-0.04/$1/$1_config.tsv \
-# # echo \"$1\""
-                
-                
+        print(executable)
+        print(submit)
+
+    condorScriptCreator('scriptTesting/scannerS.sh', 'scriptTesting/scannerS.sub', JobFlavour='longlunch')
+              
