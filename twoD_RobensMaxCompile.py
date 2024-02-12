@@ -54,6 +54,6 @@ if __name__ == '__main__':
                      'extra': {'dataId': '{dataId}'.format(dataId=dataId), 'XS': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
 
     twoDMax.configureDirs(listModelParams, 'RobensMax/RobensMax_configure')
-    twoDMax.condorScriptCreator('RobensMax/RobensMax_configure/scannerS.sh', 'RobensMax/RobensMax_configure/scannerS.sub')
+    twoDMax.condorScriptCreator('RobensMax/RobensMax_configure/scannerS.sh', 'RobensMax/RobensMax_configure/scannerS.sub', JobFlavour='testmatch')
 
     
