@@ -52,7 +52,7 @@ def configureDirs(listModelParams, pathDir, **kwargs):
         else: raise Exception('The ranges of all model parameters are not defined') 
 
     makedirs(pathDir, exist_ok=existOk)
-    mainModParFile = 'DataIds.txt'
+    mainModParFile = 'dataIds.txt'
     pathMainModParFile = pathDir + '/' + mainModParFile
 
     # clear contents of old ModelParams.txt
@@ -137,7 +137,7 @@ error                   = $(inputDirectory)/scannerS.err\n\n\
 arguments               = $(inputDirectory) {pathScannerS}\n\n\
 # longlunch = 2 hrs\n\
 +JobFlavour             = \"{JobFlavour}\"\n\n\
-queue inputDirectory from ModelParams.txt'.format(pathScannerS=pathScannerS, JobFlavour=JobFlavour)
+queue inputDirectory from dataIds.txt'.format(pathScannerS=pathScannerS, JobFlavour=JobFlavour)
 
     with open(pathSubmit, 'w') as submitFile:
         submitFile.write(submit)
