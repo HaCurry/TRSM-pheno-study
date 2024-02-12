@@ -52,7 +52,7 @@ def configureDirs(listModelParams, pathDir, **kwargs):
         else: raise Exception('The ranges of all model parameters are not defined') 
 
     makedirs(pathDir, exist_ok=existOk)
-    mainModParFile = 'ModelParamsId.txt'
+    mainModParFile = 'DataIds.txt'
     pathMainModParFile = pathDir + '/' + mainModParFile
 
     # clear contents of old ModelParams.txt
@@ -168,3 +168,6 @@ if __name__ == '__main__':
     configureDirs(listConfigParams, 'scriptTesting2')
     condorScriptCreator('scriptTesting2/scannerS.sh', 'scriptTesting2/scannerS.sub')
               
+    df = pandas.read_table('robens_bbgamgamXS.txt', sep='\s+', usecols=[0,1,2,3], names=['index', 'ms', 'mx', 'xs'])
+    df.to_csv('robens_bbgamgamXS.tsv', sep='\t', index=False)
+    print(df)
