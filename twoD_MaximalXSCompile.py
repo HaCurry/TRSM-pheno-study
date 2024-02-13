@@ -77,7 +77,7 @@ def configureDirs(listModelParams, pathDir, **kwargs):
 
 
 
-def condorScriptCreator(pathExecutable, pathSubmit, **kwargs):
+def condorScriptCreator(pathStartDir, pathExecutable, pathSubmit, **kwargs):
 
     ############################# kwargs #############################
 
@@ -109,20 +109,42 @@ def condorScriptCreator(pathExecutable, pathSubmit, **kwargs):
         raise Exception('File extension in pathSubmit need to be .sub')
            
     # create executable (docstrings does not work properly with fstrings)
-    executable = ('#!/bin/bash\n\
-# condor executable\n\
-echo \"trying to run scannerS on HTcondor...\"\n\n\
-# where this executable is executed\n\
-startDir=$(pwd)\n\
-pathOutput=$1\n\n\
-# from https://stackoverflow.com/a/9333006/17456342\n\
-pathScannerS=${{2:-{pathScannerS}}}\n\n\
-# cd into pathOutput\n\
-echo \"Entering $pathOutput\"\n\
-cd ${{startDir}}/${{pathOutput}}\n\n\
-# execute ScannerS TRSM executable\n\
-${{pathScannerS}} ${{startDir}}/${{pathOutput}}/output_${{pathOutput}}.tsv check ${{startDir}}/${{pathOutput}}/config_${{pathOutput}}.tsv\n\
-echo \"Finished job in $pathOutput\"'.format(pathScannerS=pathScannerS))        
+    executable = ('#!/bin/bash\n'+
+'# condor executable\n'+
+'\n'+
+'echo "trying to run scannerS on HTcondor..."\n'+
+'\n'+
+'# default values\n'+
+'startDir=$(pwd)\n'+
+'pathScannerS=/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken\n'+
+'\n'+
+'# user input values\n'+
+'# from https://www.redhat.com/sysadmin/arguments-options-bash-scripts\n'+
+'while getopts ":d:o:s:" option; do\n'+
+'  case $option in\n'+
+'    d) # starting directory path\n'+
+'      startDir=$OPTARG;;\n'+
+'    o) # ouput directory path\n'+
+'      pathOutput=$OPTARG;;\n'+
+'    s) # scannerS executable path\n'+
+'      pathScannerS=$OPTARG;;\n'+
+'    \?) # Invalid option\n'+
+'      echo "Error: Invalid option"\n'+
+'      exit;;\n'+
+'  esac\n'+
+'done\n'+
+'\n'+
+'# user needs to give path to output directory\n'+
+'# from https://unix.stackexchange.com/a/621007/590852\n'+
+': ${pathOutput:?Missing -o, please specify path to output directory}\n'+
+'\n'+
+'# cd into pathOutput\n'+
+'echo "Entering $pathOutput"\n'+
+'cd ${startDir}/${pathOutput}\n'+
+'\n'+
+'# execute ScannerS TRSM executable\n'+
+'${pathScannerS} ${startDir}/${pathOutput}/output_${pathOutput}.tsv check ${startDir}/${pathOutput}/config_${pathOutput}.tsv\n'+
+'echo "Finished job in $pathOutput"')        
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
@@ -134,10 +156,10 @@ getenv                  = True\n\n\
 log                     = $(inputDirectory)/scannerS.log\n\
 output                  = $(inputDirectory)/scannerS.out\n\
 error                   = $(inputDirectory)/scannerS.err\n\n\
-arguments               = $(inputDirectory) {pathScannerS}\n\n\
+arguments               = -o $(inputDirectory) -d {pathStartDir} -s {pathScannerS}\n\n\
 # longlunch = 2 hrs\n\
 +JobFlavour             = \"{JobFlavour}\"\n\n\
-queue inputDirectory from dataIds.txt'.format(pathScannerS=pathScannerS, JobFlavour=JobFlavour)
+queue inputDirectory from dataIds.txt'.format(pathStartDir=pathStartDir, pathScannerS=pathScannerS, JobFlavour=JobFlavour)
 
     with open(pathSubmit, 'w') as submitFile:
         submitFile.write(submit)

@@ -53,7 +53,12 @@ if __name__ == '__main__':
                      'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 10,
                      'extra': {'dataId': '{dataId}'.format(dataId=dataId), 'XS': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
 
-    twoDMax.configureDirs(listModelParams, 'RobensMax/RobensMax_configure2')
-    twoDMax.condorScriptCreator('RobensMax/RobensMax_configure2/scannerS.sh', 'RobensMax/RobensMax_configure2/scannerS.sub', JobFlavour='testmatch')
+    import os
+#     os.path.abspath("mydir/myfile.txt")
+# 'C:/example/cwd/mydir/myfile.txt'
+    twoDMax.configureDirs(listModelParams, 'RobensMax/RobensMax_configure3')
+    twoDMax.condorScriptCreator(os.path.abspath('RobensMax') + '/' + 'RobensMax_configure3', 
+                                'RobensMax/RobensMax_configure3/scannerS.sh', 
+                                'RobensMax/RobensMax_configure3/scannerS.sub', JobFlavour='testmatch')
 
     
