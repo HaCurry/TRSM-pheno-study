@@ -1,6 +1,6 @@
 import pandas
 import numpy as np
-import twoD_MaximalXSCompile as twoDMax
+import configurer as config
 
 if __name__ == '__main__':
 
@@ -56,8 +56,8 @@ if __name__ == '__main__':
     import os
 #     os.path.abspath("mydir/myfile.txt")
 # 'C:/example/cwd/mydir/myfile.txt'
-    twoDMax.configureDirs(listModelParams, 'RobensMax/RobensMax_configure3')
-    twoDMax.condorScriptCreator(os.path.abspath('RobensMax') + '/' + 'RobensMax_configure3', 
+    config.configureDirs(listModelParams, 'RobensMax/RobensMax_configure3')
+    config.condorScriptCreator(os.path.abspath('RobensMax') + '/' + 'RobensMax_configure3', 
                                 'RobensMax/RobensMax_configure3/scannerS.sh', 
                                 'RobensMax/RobensMax_configure3/scannerS.sub', JobFlavour='testmatch')
 
