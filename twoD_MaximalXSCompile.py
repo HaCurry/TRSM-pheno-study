@@ -121,7 +121,7 @@ pathScannerS=${{2:-{pathScannerS}}}\n\n\
 echo \"Entering $pathOutput\"\n\
 cd ${{startDir}}/${{pathOutput}}\n\n\
 # execute ScannerS TRSM executable\n\
-${{pathScannerS}} ${{startDir}}/${{pathOutput}}/${{pathOutput}}_output.tsv check ${{startDir}}/${{pathOutput}}/${{pathOutput}}_config.tsv\n\
+${{pathScannerS}} ${{startDir}}/${{pathOutput}}/output_${{pathOutput}}.tsv check ${{startDir}}/${{pathOutput}}/config_${{pathOutput}}.tsv\n\
 echo \"Finished job in $pathOutput\"'.format(pathScannerS=pathScannerS))        
 
     with open(pathExecutable, 'w') as executableFile:
@@ -163,7 +163,7 @@ if __name__ == '__main__':
                          'thetaSX_lb': -np.pi/2, 'thetaSX_ub': np.pi/2, 'thetaSXPoints':3,
                          'vs_lb': 1, 'vs_ub': 1000, 'vsPoints': 3,
                          'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 3,
-                         'extra': {'dataId': '{a}-{b}-{c}'.format(a=mH1, b=mH2, c=mH3)} } for (mH1, mH2, mH3) in listModelParams]
+                         'extra': {'dataId': '{a}-{b}-{c}'.format(a=mH1, b=mH2, c=mH3)}, 'ScannerSmode': 'check'} for (mH1, mH2, mH3) in listModelParams]
 
     configureDirs(listConfigParams, 'scriptTesting2')
     condorScriptCreator('scriptTesting2/scannerS.sh', 'scriptTesting2/scannerS.sub')
