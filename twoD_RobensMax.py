@@ -62,6 +62,33 @@ if __name__ == '__main__':
     # use settings glob to get paths to all outputfiles and then output the results into a RobensMax_calculate 
 
     
-    paths = directorySearcher('/home/iram/scannerS/ScannerS-master/build/regionTestingDirectory/testMax', '/**/*_output.tsv')
+    paths = directorySearcher('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04', '/**/*_output.tsv')
     print(paths)
     config.calculator(paths, 'bb', 'gamgam')
+
+    pathsCalc = directorySearcher('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04', '/**/*_calculation.tsv')
+
+    for path in pathsCalc:
+        
+        df = pandas.read_table(path)
+        pp_X_H1H2_bbgamgam = np.nanmax(df['pp_X_H1H2_bbgamgam'])
+        pp_X_H1_bb_H2_gamgam = np.nanmax(df['pp_X_H1_bb_H2_gamgam'])
+        pp_X_H1_gamgam_H2_bb = np.nanmax(df['pp_X_H1_gamgam_H2_bb'])
+        
+        pp_X_H1H1_bbgamgam = np.nanmax(df['pp_X_H1H1_bbgamgam'])
+        pp_X_H2H2_bbgamgam = np.nanmax(df['pp_X_H2H2_bbgamgam'])
+
+        print('printing cross sections of file', path)
+        print('$-----------------------------$')
+        print('tot', pp_X_H1H2_bbgamgam)
+        print('$-----------------------------$')
+        print('H1->bb, H2->yy', pp_X_H1_bb_H2_gamgam)
+        print('$-----------------------------$')
+        print('H1->yy, H2->bb', pp_X_H1_gamgam_H2_bb)
+        print('$-----------------------------$')
+        print('all: {all}'.format(all=np.nanmax(df['pp_X_H1H2_bbgamgam'] + df['pp_X_H1H1_bbgamgam'] + df['pp_X_H2H2_bbgamgam'])))
+        print('$-----------------------------$')
+        print('# of np.nans in list XS lists, {a}, {b}, {c} '.format(a=sum(np.isnan(df['pp_X_H1H2_bbgamgam'])), b=sum(np.isnan(df['pp_X_H1_bb_H2_gamgam'])), c=sum(np.isnan(df['pp_X_H1_gamgam_H2_bb'])) ))
+        print('*******************************\n')
+ 
+ 

@@ -194,7 +194,7 @@ def calculator(pathsInput, SM1, SM2, **kwargs):
         calculationsDict[f'pp_X_H1_{SM2}_H2_{SM1}'] = H1H2[5]
 
         calculationsDict[f'pp_X_H1H1_{SM1}{SM2}'] = H1H1[3]
-        calculationsDict[f'pp_X_H2H2_{SM1}{SM2}'] = H1H1[3]
+        calculationsDict[f'pp_X_H2H2_{SM1}{SM2}'] = H2H2[3]
 
         pathOutput = os.path.join(pathOutputDirectory, f'{os.path.basename(pathOutputDirectory)}_calculation.tsv')
 
