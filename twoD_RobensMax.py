@@ -95,3 +95,21 @@ if __name__ == '__main__':
     # print(paths)
     config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/all_max.tsv', 
                        'pp_X_H1H2_bbgamgam', 'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam')
+
+    config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/allIndividualModes_max.tsv', 
+                       'pp_X_H1_bb_H2_gamgam', 'pp_X_H1_gamgam_H2_bb', 'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam')
+
+    config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/H1_bb_H2_gamgam_max.tsv', 
+                       'pp_X_H1_bb_H2_gamgam')
+
+    config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/H1_gamgam_H2_bb_max.tsv', 
+                       'pp_X_H1_gamgam_H2_bb')
+
+    config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/H1H1_bbgamgam_max.tsv', 
+                       'pp_X_H1H1_bbgamgam')
+
+    config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/H2H2_bbgamgam_max.tsv', 
+                       'pp_X_H2H2_bbgamgam')
+
+
+

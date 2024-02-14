@@ -59,6 +59,8 @@ if __name__ == '__main__':
             print('H1->yy, H2->bb',np.nanmax(pp_X_H1_gamgam_H2_bb))
             print('$-----------------------------$')
             print('all: {all}'.format(all=np.nanmax(pp_X_H1H2_bbgamgam + pp_X_H1H1_bbgamgam + pp_X_H2H2_bbgamgam)))
+#            print('all: {all}'.format(all=np.nanmax(pp_X_H1H2_bbgamgam) + np.nanmax(pp_X_H1H1_bbgamgam) + np.nanmax(pp_X_H2H2_bbgamgam)))
+ 
             print('$-----------------------------$')
             print('# of np.nans in list XS lists, {a}, {b}, {c} '.format(a=sum(np.isnan(pp_X_H1H2_bbgamgam)), b=sum(np.isnan(pp_X_H1_bb_H2_gamgam)), c=sum(np.isnan(pp_X_H1_gamgam_H2_bb))))
             print('*******************************\n')

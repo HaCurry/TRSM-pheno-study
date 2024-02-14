@@ -258,7 +258,7 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
         modelParams = kwargs['modelParams']
 
     # default model parameters
-    else: modelParams = ['thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']
+    else: modelParams = ['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']
 
     ##################################################################
 
