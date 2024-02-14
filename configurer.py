@@ -201,9 +201,110 @@ def calculator(pathsInput, SM1, SM2, **kwargs):
         df = pandas.DataFrame(data=calculationsDict)
         df.to_csv(pathOutput, sep="\t")
 
+
+# def maxCompiler(pathsInput, pathOutput, *modelParams, **kwargs):
+
+#     if 'key1' in kwargs:
+#         key1 = kwargs['key1']
+
+#     else: key1 = 'pp_X_H1_bb_H2_gamgam'
+
+#     if 'key2' in kwargs:
+#         key2 = kwargs['key2']
+
+#     else: key2 = 'pp_X_H1_gamgam_H2_bb'
+
+#     if 'keyO' in kwargs:
+#         keyO = kwargs['keyO']
+
+#     else: keyO = ['pp_X_H1_bb_H2_gamgam', 'pp_X_H1_gamgam_H2_bb', 
+#                   'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam']
+
+#     # create dicts for key1 and create empty key-list pair
+#     key1DictOutput = {}
+#     key1DictOutput['key1'] = []
+
+#     # create empy key-list pairs where the keys are model params
+#     for param in modelParams:
+#         key1DictOutput[param] = []
+    
+#     # do similarly for key2
+#     key2DictOutput = {}
+#     key2DictOutput['key2'] = []
+
+#     for param in modelParams:
+#         key2DictOutput[param] = []
+
+#     for path in pathsInput:
+
+#         df = pandas.read_table(path)
+
+#         key1List = np.array(df['key1'])
+#         key2List = np.array(df['key2'])
+
+#         key1ListNaNMax = np.nanargmax(key1List)
+#         key2ListNaNMax = np.nanargmax(key2List)
+
+        
         
 
+def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
-        
+    ############################# kwargs #############################
+
+    # if user wants other model parameters (or some other quantity
+    # found in the input files from pathsInput). must be given as a list.
+    if 'modelParams' in kwargs:
+        modelParams = kwargs['modelParams']
+
+    # default model parameters
+    else: modelParams = ['thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']
+
+    ##################################################################
+
+    # maximal cross sections will be saved here and modelParams
+    dictOutput = {}
+
+    for key in keys:
+        dictOutput[key] = []
+
+    # if more keys are given a sum key is added where the maximum
+    # of the sum of the quantities from the keys are instead inserted
+    if len(keys) > 1:
+        dictOutput['sum'] = []
+
+    for param in modelParams:
+        dictOutput[param] = []
+
+    for path in pathsInput:
+
+        df = pandas.read_table(path)
+
+        # if len(key) > 1, the maximum of the sum of the quantities
+        # of the keys are considered
+        sumKeyArray = np.zeros(len(df))
+        for key in keys:
+            sumKeyArray = sumKeyArray + np.array(df[key])
+
+        # save index to store other keys and modelParam quantities
+        # individually
+        indexMax = np.nanargmax(sumKeyArray)
+
+        if len(keys) > 1:
+            dictOutput['sum'].append(sumKeyArray[indexMax])
+
+        else:
+            pass
+
+        for key in keys:
+            dictOutput[key].append(np.array(df[key])[indexMax])
+
+        for param in modelParams:
+            dictOutput[param].append(np.array(df[param])[indexMax])
+       
+    df = pandas.DataFrame(data=dictOutput)
+
+    df.to_csv(pathOutput, sep="\t")
+
         
         

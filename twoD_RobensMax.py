@@ -91,4 +91,7 @@ if __name__ == '__main__':
         print('# of np.nans in list XS lists, {a}, {b}, {c} '.format(a=sum(np.isnan(df['pp_X_H1H2_bbgamgam'])), b=sum(np.isnan(df['pp_X_H1_bb_H2_gamgam'])), c=sum(np.isnan(df['pp_X_H1_gamgam_H2_bb'])) ))
         print('*******************************\n')
  
- 
+    paths = directorySearcher('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04', '/**/*_calculation.tsv')
+    # print(paths)
+    config.maxCompiler(paths, '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/old/testMax0.9-0.04/all_max.tsv', 
+                       'pp_X_H1H2_bbgamgam', 'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam')
