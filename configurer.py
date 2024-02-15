@@ -138,7 +138,6 @@ def configureDirs(listModelParams, pathDir, **kwargs):
             myfile.write(os.path.join(pathDir, dataId) + '\n')
 
 
-
 def condorScriptCreator(pathStartDir, pathExecutable, pathSubmit, **kwargs):
 
     ############################# kwargs #############################
