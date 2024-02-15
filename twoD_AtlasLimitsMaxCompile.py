@@ -14,20 +14,23 @@ if __name__ == '__main__':
     ms = [element for element in limits['S']]
     mx = [element for element in limits['X']]
     XS = [element for element in 10**(-3) *limits['ObservedLimit']]
+    indices = [element for element in limits.index]
 
     listModelTuples = []
-    for i in range(len(XS)):
+    for i in range(len(indices)):
 
         if 125.09 < ms[i]:
-            listModelTuples.append((125.09, ms[i], mx[i], XS[i], f'X{mx[i]}_S{ms[i]}'))
+            listModelTuples.append((125.09, ms[i], mx[i], XS[i], indices[i]))
 
         elif ms[i] < 125.09:
-            listModelTuples.append((ms[i], 125.09, mx[i], XS[i], f'X{mx[i]}_S{ms[i]}'))
+            listModelTuples.append((ms[i], 125.09, mx[i], XS[i], indices[i]))
 
         else:
             raise Exception('Something went wrong')
 
     print(f"\nms: {len(ms)}", f"mx: {len(mx)}", f"XS: {len(XS)}", f"listModelTuples: {len(listModelTuples)}\n")
+
+    # print(listModelTuples[0:5])
 
     listModelParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
                         'mH2_lb': mH2, 'mH2_ub': mH2,
