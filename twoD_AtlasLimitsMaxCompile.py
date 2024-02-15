@@ -42,7 +42,7 @@ if __name__ == '__main__':
                         'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 10,
                         'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
     
-    config.configureDirs(listModelParams, 'AtlasLimitsMax/AtlasLimitsMax_configure')
-    config.condorScriptCreator(abspath('AtlasLimitsMax') + '/' + 'AtlasLimitsMax_configure', 
-                                'AtlasLimitsMax/AtlasLimitsMax_configure/scannerS.sh', 
-                                'AtlasLimitsMax/AtlasLimitsMax_configure/scannerS.sub', JobFlavour='testmatch')
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure')
+    config.condorScriptCreator('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure', 
+                               '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure/scannerS.sh', 
+                               '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure/scannerS.sub', JobFlavour='testmatch')
