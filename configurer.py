@@ -6,8 +6,88 @@ import os
 # from os import makedirs
 # from os.path import dirname
 # from os.path import join
+from itertools import product
 
 import functions as TRSM
+import parameterData
+
+
+def checkCreatorNew(locOutputData, configDict, **kwargs):
+
+    ############################# kwargs #############################
+
+    if 'modelParams' in kwargs:
+        modelParams = kwargs['modelParams']
+
+    # default TRSM
+    else: modelParams = ['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']
+
+    if 'forcePoints' in kwargs:
+        forcePoints = kwargs['forcePoints']
+
+    else: pass
+
+    ##################################################################
+
+    configTuples = [(param + '_lb', param + '_ub', param) for param in modelParams]
+
+    linspaceDict = {}
+
+    for (param_lb, param_ub, param) in configTuples:
+        
+        if param + 'Points' in configDict:
+            linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub], configDict[param + 'Points'])
+
+        elif abs(configDict[param_lb] - configDict[param_ub]) < 10**(-8):
+            linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub], 1)
+
+        else:
+            print('No points given for model parameter ' + param + 'using default np.linspace values.')
+            linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub])
+    # can be used when lower bounds and upper bounds are equal and user desires
+    # to save the same set of model params kwargs['forcePoint'] number of times
+    # can be used to check if scannerS does not produce any bugs when generating
+    # the same point.
+    if 'forcePoints' in kwargs:
+        forceList = list(zip(*[linspaceDict[param] for param in modelParams]))
+        temp = []
+
+        for i in range(kwargs['forcePoints']):
+            temp.append(forceList[0])
+        
+        outputTuples = temp
+
+    # otherwise perform the cartesian product of all the lists in linspaceDict
+    else:
+        outputTuples = list(product(*[linspaceDict[param] for param in modelParams]))
+
+    # print(outputTuples)
+    # print("============{}============".format(len(outputTuples)))
+    
+    if 'massOrder' in kwargs:
+
+        if kwargs['massOrder'] == True:
+
+            cartProdTuplesTemp = []
+            for tupleElement in outputTuples:
+
+                if tupleElement[2] > tupleElement[1] and tupleElement[1] > tupleElement[0]:
+                    cartProdTuplesTemp.append(tupleElement)
+
+                else: continue
+
+            outputTuples = cartProdTuplesTemp
+
+    if 'filter' in kwargs:
+        outputTuples = kwargs['filter'](outputTuples)
+
+    # print('MassOrder', outputTuples)
+    # print(outputTuples)
+    # print("============{}============".format(len(outputTuples)))
+
+    df = pandas.DataFrame(outputTuples, columns=modelParams)
+            
+    df.to_csv(locOutputData, sep="\t")
 
 
 def configureDirs(listModelParams, pathDir, **kwargs):
@@ -48,7 +128,7 @@ def configureDirs(listModelParams, pathDir, **kwargs):
         os.makedirs(pathDir + '/' + dataId, exist_ok=existOk)
 
         # create the configuration file (grid of all parameter combinations specified by element)
-        twoDPlot.checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
+        checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
 
         # store element in a JSON file in the directory (dataId)
         parameterData.createJSON(element, pathDir + '/' + dataId, 'settings_' + dataId + '.json')
