@@ -135,7 +135,7 @@ def configureDirs(listModelParams, pathDir, **kwargs):
 
         # store the name of the directory (dataId) in a txt file for later reference
         with open(pathMainModParFile, 'a') as myfile:
-            myfile.write(dataId + '\n')
+            myfile.write(os.path.join(pathDir, dataId) + '\n')
 
 
 
@@ -211,6 +211,8 @@ def condorScriptCreator(pathStartDir, pathExecutable, pathSubmit, **kwargs):
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
 
+    pathDataIds = os.path.join(pathStartDir, 'dataIds.txt')
+
     # create submit file for condor
     submit = '# sleep.sub -- simple sleep job\n\
 executable              = scannerS.sh\n\
@@ -221,7 +223,7 @@ error                   = $(inputDirectory)/scannerS.err\n\n\
 arguments               = -o $(inputDirectory) -d {pathStartDir} -s {pathScannerS}\n\n\
 # longlunch = 2 hrs\n\
 +JobFlavour             = \"{JobFlavour}\"\n\n\
-queue inputDirectory from dataIds.txt'.format(pathStartDir=pathStartDir, pathScannerS=pathScannerS, JobFlavour=JobFlavour)
+queue inputDirectory from {pathDataIds}'.format(pathStartDir=pathStartDir, pathScannerS=pathScannerS, JobFlavour=JobFlavour, pathDataIds=pathDataIds)
 
     with open(pathSubmit, 'w') as submitFile:
         submitFile.write(submit)
