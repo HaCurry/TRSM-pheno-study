@@ -61,11 +61,11 @@ if __name__ == '__main__':
     #                            'RobensMax/RobensMax_configure3/scannerS.sh', 
     #                            'RobensMax/RobensMax_configure3/scannerS.sub', JobFlavour='testmatch')
 
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/RobensMax/RobensMax_configure',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/dataIds.txt')
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/RobensMax/RobensMax_configure4',
+                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/dataIds.txt')
 
-    config.condorScriptCreator('/eos/user/i/ihaque/RobensMax/RobensMax_configure', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/scannerS.sh', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/scannerS.sub', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/dataIds.txt', 
+    config.condorScriptCreator('/eos/user/i/ihaque/RobensMax/RobensMax_configure4', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/scannerS.sh', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/scannerS.sub', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/dataIds.txt', 
                                JobFlavour='testmatch')
