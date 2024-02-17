@@ -112,7 +112,8 @@ def configureDirs(listModelParams, pathDir, pathDataIds, **kwargs):
             and 'vs_ub' in element and 'vx_ub' in element):
             pass
         else: raise Exception('The ranges of all model parameters are not defined') 
-
+    
+    # create directories in the path of pathDir if it does not exist
     os.makedirs(pathDir, exist_ok=existOk)
 
     # clear contents of old ModelParams.txt
@@ -168,7 +169,7 @@ def condorScriptCreator(pathOutputDirs, pathExecutable, pathSubmit, pathDataIds,
         raise Exception('File extension in pathSubmit need to be .sub')
 
     # create executable (docstrings does not work properly with fstrings)
-executable = (f'''#!/bin/bash
+    executable = (f'''#!/bin/bash
 # condor executable
 
 echo "trying to run scannerS on HTcondor..."
@@ -211,7 +212,7 @@ echo "Finished job in ${{pathOutputDirs}}/${{dataId}}"''')
         executableFile.write(executable)
 
     # create submit file for condor
-submit = f'''# sleep.sub -- simple sleep job
+    submit = f'''# sleep.sub -- simple sleep job
 executable              = {pathExecutable}
 getenv                  = True
 log                     = $(dataId)/scannerS.log
@@ -225,11 +226,11 @@ queue dataId from {pathDataIds}'''
     with open(pathSubmit, 'w') as submitFile:
         submitFile.write(submit)
 
-    print(f'creating script {pathExecutable}'
+    print(f'creating script {pathExecutable}')
     print('+------------------------------+')
     print(executable)
     print('\n')
-    print(f'creating script {pathSubmit}'
+    print(f'creating script {pathSubmit}')
     print('+------------------------------+')
     print(submit)
 
