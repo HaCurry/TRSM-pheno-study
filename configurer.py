@@ -214,7 +214,7 @@ def condorScriptCreator(pathStartDir, pathExecutable, pathSubmit, **kwargs):
 
     # create submit file for condor
     submit = '# sleep.sub -- simple sleep job\n\
-executable              = scannerS.sh\n\
+executable              = {pathExecutable}\n\
 getenv                  = True\n\n\
 log                     = $(inputDirectory)/scannerS.log\n\
 output                  = $(inputDirectory)/scannerS.out\n\
@@ -222,7 +222,7 @@ error                   = $(inputDirectory)/scannerS.err\n\n\
 arguments               = -o $(inputDirectory) -d {pathStartDir} -s {pathScannerS}\n\n\
 # longlunch = 2 hrs\n\
 +JobFlavour             = \"{JobFlavour}\"\n\n\
-queue inputDirectory from {pathDataIds}'.format(pathStartDir=pathStartDir, pathScannerS=pathScannerS, JobFlavour=JobFlavour, pathDataIds=pathDataIds)
+queue inputDirectory from {pathDataIds}'.format(pathExecutable=pathExecutable, pathStartDir=pathStartDir, pathScannerS=pathScannerS, JobFlavour=JobFlavour, pathDataIds=pathDataIds)
 
     with open(pathSubmit, 'w') as submitFile:
         submitFile.write(submit)
