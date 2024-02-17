@@ -215,9 +215,9 @@ echo "Finished job in ${{pathOutputDirs}}/${{dataId}}"''')
     submit = f'''# sleep.sub -- simple sleep job
 executable              = {pathExecutable}
 getenv                  = True
-log                     = $(dataId)/scannerS.log
-output                  = $(dataId)/scannerS.out
-error                   = $(dataId)/scannerS.errn
+log                     = $(dataId).$(ClusterId).$(ProcId).scannerS.log
+output                  = $(dataId).$(ClusterId).$(ProcId).scannerS.out
+error                   = $(dataId).$(ClusterId).$(ProcId).scannerS.err
 arguments               = -i $(dataId) -s {pathScannerS}
 # longlunch = 2 hrs
 +JobFlavour             = {JobFlavour}
@@ -280,53 +280,7 @@ def calculator(pathsInput, SM1, SM2, **kwargs):
 
         df = pandas.DataFrame(data=calculationsDict)
         df.to_csv(pathOutput, sep="\t")
-
-
-# def maxCompiler(pathsInput, pathOutput, *modelParams, **kwargs):
-
-#     if 'key1' in kwargs:
-#         key1 = kwargs['key1']
-
-#     else: key1 = 'pp_X_H1_bb_H2_gamgam'
-
-#     if 'key2' in kwargs:
-#         key2 = kwargs['key2']
-
-#     else: key2 = 'pp_X_H1_gamgam_H2_bb'
-
-#     if 'keyO' in kwargs:
-#         keyO = kwargs['keyO']
-
-#     else: keyO = ['pp_X_H1_bb_H2_gamgam', 'pp_X_H1_gamgam_H2_bb', 
-#                   'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam']
-
-#     # create dicts for key1 and create empty key-list pair
-#     key1DictOutput = {}
-#     key1DictOutput['key1'] = []
-
-#     # create empy key-list pairs where the keys are model params
-#     for param in modelParams:
-#         key1DictOutput[param] = []
-    
-#     # do similarly for key2
-#     key2DictOutput = {}
-#     key2DictOutput['key2'] = []
-
-#     for param in modelParams:
-#         key2DictOutput[param] = []
-
-#     for path in pathsInput:
-
-#         df = pandas.read_table(path)
-
-#         key1List = np.array(df['key1'])
-#         key2List = np.array(df['key2'])
-
-#         key1ListNaNMax = np.nanargmax(key1List)
-#         key2ListNaNMax = np.nanargmax(key2List)
-
-        
-        
+      
 
 def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
