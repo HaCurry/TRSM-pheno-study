@@ -90,7 +90,7 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
     df.to_csv(locOutputData, sep="\t")
 
 
-def configureDirs(listModelParams, pathDir, **kwargs):
+def configureDirs(listModelParams, pathDir, pathDataIds, **kwargs):
 
     ############################# kwargs #############################
 
@@ -114,11 +114,9 @@ def configureDirs(listModelParams, pathDir, **kwargs):
         else: raise Exception('The ranges of all model parameters are not defined') 
 
     os.makedirs(pathDir, exist_ok=existOk)
-    mainModParFile = 'dataIds.txt'
-    pathMainModParFile = pathDir + '/' + mainModParFile
 
     # clear contents of old ModelParams.txt
-    open(pathMainModParFile, 'w').close()
+    open(pathDataIds, 'w').close()
 
     for element in listModelParams:
 
@@ -134,11 +132,11 @@ def configureDirs(listModelParams, pathDir, **kwargs):
         parameterData.createJSON(element, pathDir + '/' + dataId, 'settings_' + dataId + '.json')
 
         # store the name of the directory (dataId) in a txt file for later reference
-        with open(pathMainModParFile, 'a') as myfile:
-            myfile.write(os.path.join(pathDir, dataId) + '\n')
+        with open(pathDataIds, 'a') as myfile:
+            myfile.write(dataId + '\n')
 
 
-def condorScriptCreator(pathStartDir, pathExecutable, pathSubmit, **kwargs):
+def condorScriptCreator(pathOutputDirs, pathExecutable, pathSubmit, pathDataIds, **kwargs):
 
     ############################# kwargs #############################
 
@@ -168,70 +166,70 @@ def condorScriptCreator(pathStartDir, pathExecutable, pathSubmit, **kwargs):
 
     else:
         raise Exception('File extension in pathSubmit need to be .sub')
-           
+
     # create executable (docstrings does not work properly with fstrings)
-    executable = ('#!/bin/bash\n'+
-'# condor executable\n'+
-'\n'+
-'echo "trying to run scannerS on HTcondor..."\n'+
-'\n'+
-'# default values\n'+
-'startDir=$(pwd)\n'+
-'pathScannerS=/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken\n'+
-'\n'+
-'# user input values\n'+
-'# from https://www.redhat.com/sysadmin/arguments-options-bash-scripts\n'+
-'while getopts ":d:o:s:" option; do\n'+
-'  case $option in\n'+
-'    d) # starting directory path\n'+
-'      startDir=$OPTARG;;\n'+
-'    o) # ouput directory path\n'+
-'      pathOutput=$OPTARG;;\n'+
-'    s) # scannerS executable path\n'+
-'      pathScannerS=$OPTARG;;\n'+
-'    \?) # Invalid option\n'+
-'      echo "Error: Invalid option"\n'+
-'      exit;;\n'+
-'  esac\n'+
-'done\n'+
-'\n'+
-'# user needs to give path to output directory\n'+
-'# from https://unix.stackexchange.com/a/621007/590852\n'+
-': ${pathOutput:?Missing -o, please specify path to output directory}\n'+
-'\n'+
-'# cd into pathOutput\n'+
-'echo "Entering $pathOutput"\n'+
-'cd ${startDir}/${pathOutput}\n'+
-'\n'+
-'# execute ScannerS TRSM executable\n'+
-'${pathScannerS} ${startDir}/${pathOutput}/output_${pathOutput}.tsv check ${startDir}/${pathOutput}/config_${pathOutput}.tsv\n'+
-'echo "Finished job in $pathOutput"')        
+executable = (f'''#!/bin/bash
+# condor executable
+
+echo "trying to run scannerS on HTcondor..."
+
+# default values
+# path to where all the directories with config files reside
+pathOutputDirs={pathOutputDirs}
+# path to ScannerS executable
+pathScannerS=/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken
+
+# for debugging purposes except -i which specifies the specific dataId
+# from https://www.redhat.com/sysadmin/arguments-options-bash-scripts
+while getopts ":o:i:s:" option; do
+  case $option in
+    o) # starting directory path
+      pathOutputDirs=$OPTARG;;
+    i) # ouput directory path
+      dataId=$OPTARG;;
+    s) # scannerS executable path
+      pathScannerS=$OPTARG;;
+    \?) # Invalid option
+      echo "Error: Invalid option"
+      exit;;
+  esac
+done
+
+# condor needs to give path to output directory
+# from https://unix.stackexchange.com/a/621007/590852
+: ${{dataId:?Missing -i, please specify dataId}}
+
+# cd into pathOutputDirs/dataId
+echo "Entering ${{pathOutputDirs}}/${{dataId}}"
+cd ${{pathOutputDirs}}/${{dataId}}
+
+# execute ScannerS TRSM executable
+${{pathScannerS}} ${{pathOutputDirs}}/${{dataId}}/output_${{dataId}}.tsv check ${{pathOutputDirs}}/${{dataId}}/config_${{dataId}}.tsv
+echo "Finished job in ${{pathOutputDirs}}/${{dataId}}"''')
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
 
-    pathDataIds = os.path.join(pathStartDir, 'dataIds.txt')
-
     # create submit file for condor
-    submit = '# sleep.sub -- simple sleep job\n\
-executable              = {pathExecutable}\n\
-getenv                  = True\n\n\
-log                     = $(inputDirectory)/scannerS.log\n\
-output                  = $(inputDirectory)/scannerS.out\n\
-error                   = $(inputDirectory)/scannerS.err\n\n\
-arguments               = -o $(inputDirectory) -d {pathStartDir} -s {pathScannerS}\n\n\
-# longlunch = 2 hrs\n\
-+JobFlavour             = \"{JobFlavour}\"\n\n\
-queue inputDirectory from {pathDataIds}'.format(pathExecutable=pathExecutable, pathStartDir=pathStartDir, pathScannerS=pathScannerS, JobFlavour=JobFlavour, pathDataIds=pathDataIds)
+submit = f'''# sleep.sub -- simple sleep job
+executable              = {pathExecutable}
+getenv                  = True
+log                     = $(dataId)/scannerS.log
+output                  = $(dataId)/scannerS.out
+error                   = $(dataId)/scannerS.errn
+arguments               = -i $(dataId) -s {pathScannerS}
+# longlunch = 2 hrs
++JobFlavour             = {JobFlavour}
+queue dataId from {pathDataIds}'''
 
     with open(pathSubmit, 'w') as submitFile:
         submitFile.write(submit)
 
-    print('creating script {pathExecutable}'.format(pathExecutable=pathExecutable))
+    print(f'creating script {pathExecutable}'
     print('+------------------------------+')
     print(executable)
     print('\n')
-    print('creating script {pathSubmit}'.format(pathSubmit=pathSubmit))
+    print(f'creating script {pathSubmit}'
     print('+------------------------------+')
     print(submit)
 
