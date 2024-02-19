@@ -5,6 +5,8 @@ from os.path import abspath
 
 
 if __name__ == '__main__':
+    
+    THIS IS WRITTEN SO THIS SCRIPT IS NOT ACCIDENTALLY RUN!
 
     limitsUntransposed = pandas.read_json('Atlas2023Limits.json')
     print(limitsUntransposed)

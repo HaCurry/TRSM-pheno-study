@@ -1,14 +1,14 @@
 import configurer as config
-
+from parameterData import directorySearcher
 
 
 
 if __name__ == '__main__':
 
     # calculate each dataId
-    paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3', '/**/*_output.tsv')
+    # paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3', '/**/output_*.tsv')
     # print(paths)
-    config.calculator(paths, 'bb', 'gamgam')
+    # config.calculator(paths, 'bb', 'gamgam')
 
     # find the max for each dataId and save it in AtlasLimitsMax_max
     paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3', '/**/*_calculation.tsv')

@@ -8,6 +8,7 @@ import os
 # from os.path import join
 from itertools import product
 from glob import glob
+from json import load
 
 import functions as TRSM
 import parameterData
@@ -247,13 +248,20 @@ def calculator(pathsInput, SM1, SM2, **kwargs):
     
     ##################################################################
 
-    for path in pathsInput:
+    loadingBar = len(pathsInput)
+    loadingStep = 0
 
+    for path in pathsInput:
+        
+        # Fix this if statement, pathOutput and pathOutpudDirectory should be the same...
         if 'pathOutput' in kwargs:
             pathOutput = kwargs['pathOutput']
 
         else:
             pathOutputDirectory = os.path.dirname(path)
+        
+        print(f'Calculating: {100 * loadingStep/loadingBar:.0f} %', end='\r', flush=True)
+        loadingStep = loadingStep + 1
 
         H1H2, H1H1, H2H2 = TRSM.ppXNPSM_massfree(path, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
         modelParams = pandas.read_table(path, index_col=0)
@@ -281,7 +289,9 @@ def calculator(pathsInput, SM1, SM2, **kwargs):
 
         df = pandas.DataFrame(data=calculationsDict)
         df.to_csv(pathOutput, sep="\t")
-      
+    
+    print(f'Calculations finished: 100 %')
+
 
 def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
@@ -308,7 +318,8 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
 
     ##################################################################
-
+    
+    # REORDER HTESE SO IT LOOKS BETTER IN TH DF!
     # maximal cross sections will be saved here and modelParams
     dictOutput = {}
 
@@ -316,7 +327,7 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
         dictOutput[key] = []
 
     if 'limitsKey' in kwargs:
-        dictOutput['limitsKey'] = []
+        dictOutput[kwargs['limitsKey']] = []
 
     # if more keys are given a sum key is added where the maximum
     # of the sum of the quantities from the keys are instead inserted
@@ -326,12 +337,19 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
     for param in modelParams:
         dictOutput[param] = []
 
+    loadingBar = len(pathsInput) 
+    loadingStep = 0 
+
     for path in pathsInput:
+        
+        # progress bar        
+        print(f'loading {pathOutput}: {100 * loadingStep/loadingBar:.0f} %', end='\r', flush=True)
+        loadingStep = loadingStep + 1
 
         df = pandas.read_table(path)
 
         # if len(key) > 1, the maximum of the sum of the quantities
-        # of the keys are considered
+        # specified by the keys are considered
         sumKeyArray = np.zeros(len(df))
         for key in keys:
             sumKeyArray = sumKeyArray + np.array(df[key])
@@ -361,14 +379,20 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
             # find the path to the limits, default is path/limitsGlob where
             # limitsGlob is settings_* (JSON file)
-            pathLimit = glob(os.path.join(path, limitsGlob))
-
-            with open(pathLimit) as p:
-                contentsJSON = json.load(p)
+            pathLimit = glob(os.path.join(dirContainingLimit, limitsGlob))
+            
+            # glob returns a list with paths. There should only be one such file with limits 
+            # in the directory
+            if len(pathLimit) > 1: raise Exception(f'Too many settings files in {path} to pick from')            
+            with open(pathLimit[0]) as p:
+                contentsJSON = load(p)
 
             # append limits to dictOutput
-            dictOutput[limitsKey] = (contentsJSON['extra'])[limitsKey]
-       
+            print('limits:', (contentsJSON["extra"])[limitsKey] )
+            dictOutput[limitsKey].append((contentsJSON['extra'])[limitsKey])
+
+    print(f'Finished loading {pathOutput}: 100 %\n')
+
     df = pandas.DataFrame(data=dictOutput)
 
     df.to_csv(pathOutput, sep="\t")

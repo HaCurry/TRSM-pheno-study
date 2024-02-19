@@ -3,6 +3,8 @@ import numpy as np
 import configurer as config
 
 if __name__ == '__main__':
+    
+    THIS IS WRITTEN SO THAT THIS SCRIPT IS NOT ACCIDENTALLY RUN!
 
     # from comment of user user171780 in https://stackoverflow.com/a/19633103/17456342
     df = pandas.read_table('RobensMax/RobensMaxNoDuplicates.txt', sep='\s+', usecols=[0,1,2,3], names=['index', 'ms', 'mx', 'xs'])
@@ -61,11 +63,11 @@ if __name__ == '__main__':
     #                            'RobensMax/RobensMax_configure3/scannerS.sh', 
     #                            'RobensMax/RobensMax_configure3/scannerS.sub', JobFlavour='testmatch')
 
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/RobensMax/RobensMax_configure4',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/dataIds.txt')
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/RobensMax/RobensMax_configure5',
+                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/dataIds.txt')
 
-    config.condorScriptCreator('/eos/user/i/ihaque/RobensMax/RobensMax_configure4', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/scannerS.sh', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/scannerS.sub', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure4/dataIds.txt', 
+    config.condorScriptCreator('/eos/user/i/ihaque/RobensMax/RobensMax_configure5', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/scannerS.sh', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/scannerS.sub', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/dataIds.txt', 
                                JobFlavour='testmatch')

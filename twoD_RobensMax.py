@@ -1,6 +1,5 @@
 import pandas
 import numpy as np
-import twoD_MaximalXSCompile as twoDMax
 import twoDPlotter as twoDPlot
 import configurer as config
 from parameterData import directorySearcher
@@ -114,7 +113,7 @@ if __name__ == '__main__':
 
 
     # calculate each dataId
-    paths = directorySearcher('/eos/user/i/ihaque/RobensMax/RobensMax_configure5', '/**/*_output.tsv')
+    paths = directorySearcher('/eos/user/i/ihaque/RobensMax/RobensMax_configure5', '/**/output_*.tsv')
     # print(paths)
     config.calculator(paths, 'bb', 'gamgam')
 
