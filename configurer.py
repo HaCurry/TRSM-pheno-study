@@ -323,19 +323,19 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
     # maximal cross sections will be saved here and modelParams
     dictOutput = {}
 
-    for key in keys:
-        dictOutput[key] = []
+    for param in modelParams:
+        dictOutput[param] = []
 
     if 'limitsKey' in kwargs:
         dictOutput[kwargs['limitsKey']] = []
+
+    for key in keys:
+        dictOutput[key] = []
 
     # if more keys are given a sum key is added where the maximum
     # of the sum of the quantities from the keys are instead inserted
     if len(keys) > 1:
         dictOutput['sum'] = []
-
-    for param in modelParams:
-        dictOutput[param] = []
 
     loadingBar = len(pathsInput) 
     loadingStep = 0 
