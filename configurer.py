@@ -7,6 +7,7 @@ import os
 # from os.path import dirname
 # from os.path import join
 from itertools import product
+from glob import glob
 
 import functions as TRSM
 import parameterData
@@ -294,6 +295,18 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
     # default model parameters
     else: modelParams = ['mH1', 'mH2', 'mH3', 'thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']
 
+    # if user wants to compare with observed limits (e.g. Atlas limits)
+    if 'limitsKey' in kwargs:
+        limitsKey = kwargs['limitsKey']
+
+        if 'limitsGlob' in kwargs:
+            limitsGlob = kwargs['limitsGlob']
+
+        else: limitsGlob = 'settings_*'
+
+    else: pass
+
+
     ##################################################################
 
     # maximal cross sections will be saved here and modelParams
@@ -301,6 +314,9 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
     for key in keys:
         dictOutput[key] = []
+
+    if 'limitsKey' in kwargs:
+        dictOutput['limitsKey'] = []
 
     # if more keys are given a sum key is added where the maximum
     # of the sum of the quantities from the keys are instead inserted
@@ -335,6 +351,23 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
 
         for param in modelParams:
             dictOutput[param].append(np.array(df[param])[indexMax])
+
+        # append limits (e.g. Atlas Observed limits) to dictOutput 
+        if 'limitsKey' in kwargs:
+            limitsKey = kwargs['limitsKey']
+
+            # limits are specified in the same directory as the input files
+            dirContainingLimit = os.path.dirname(path)
+
+            # find the path to the limits, default is path/limitsGlob where
+            # limitsGlob is settings_* (JSON file)
+            pathLimit = glob(os.path.join(path, limitsGlob))
+
+            with open(pathLimit) as p:
+                contentsJSON = json.load(p)
+
+            # append limits to dictOutput
+            dictOutput[limitsKey] = (contentsJSON['extra'])[limitsKey]
        
     df = pandas.DataFrame(data=dictOutput)
 
