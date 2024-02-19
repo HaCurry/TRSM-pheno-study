@@ -151,7 +151,7 @@ def condorScriptCreator(pathOutputDirs, pathExecutable, pathSubmit, pathDataIds,
         JobFlavour = kwargs['JobFlavour']
         
     else:
-        JobFlavour = 'longlunch'
+        JobFlavour = 'testmatch'
 
     ##################################################################
 
@@ -220,7 +220,7 @@ output                  = $(dataId).$(ClusterId).$(ProcId).scannerS.out
 error                   = $(dataId).$(ClusterId).$(ProcId).scannerS.err
 arguments               = -i $(dataId) -s {pathScannerS}
 # longlunch = 2 hrs
-+JobFlavour             = {JobFlavour}
++JobFlavour             = \"{JobFlavour}\"
 queue dataId from {pathDataIds}'''
 
     with open(pathSubmit, 'w') as submitFile:

@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     ms = [element for element in df['ms']]
     mx = [element for element in df['mx']]
-    XS = [element for element in df['xs']]
+    XS = [element * 10**(-3) for element in df['xs']]
     indices = [element for element in df['index']]
 
     listModelTuples = []
@@ -61,11 +61,11 @@ if __name__ == '__main__':
     #                            'RobensMax/RobensMax_configure3/scannerS.sh', 
     #                            'RobensMax/RobensMax_configure3/scannerS.sub', JobFlavour='testmatch')
 
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/RobensMax/RobensMax_configure',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/dataIds.txt')
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/RobensMax/RobensMax_configure5',
+                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/dataIds.txt')
 
-    config.condorScriptCreator('/eos/user/i/ihaque/RobensMax/RobensMax_configure', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/scannerS.sh', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/scannerS.sub', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure/dataIds.txt', 
+    config.condorScriptCreator('/eos/user/i/ihaque/RobensMax/RobensMax_configure5', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/scannerS.sh', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/scannerS.sub', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/dataIds.txt', 
                                JobFlavour='testmatch')

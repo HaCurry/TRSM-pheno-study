@@ -13,6 +13,7 @@ if __name__ == '__main__':
 
     ms = [element for element in limits['S']]
     mx = [element for element in limits['X']]
+    # save it in pb
     XS = [element for element in 10**(-3) *limits['ObservedLimit']]
     indices = [element for element in limits.index]
 
@@ -42,13 +43,11 @@ if __name__ == '__main__':
                         'vx_lb': 1, 'vx_ub': 1000, 'vxPoints': 10,
                         'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
     
-    listModelParams = listModelParams[0:4] 
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3',
+                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure3/dataIds.txt')
 
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure2',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure2/dataIds.txt')
-
-    config.condorScriptCreator('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure2', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure2/scannerS.sh', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure2/scannerS.sub', 
-                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure2/dataIds.txt', 
+    config.condorScriptCreator('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure3/scannerS.sh', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure3/scannerS.sub', 
+                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure3/dataIds.txt', 
                                JobFlavour='testmatch')
