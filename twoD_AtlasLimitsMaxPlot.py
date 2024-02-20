@@ -239,10 +239,15 @@ if __name__ == '__main__':
 
     for i in range(len(ObsLim/max)):
         if ms[i] < 85 or ms[i] > 115 or mx[i] < 210 or mx[i] > 260:
-            ax.annotate('{:.3f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
+            ax.annotate('{:.1f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
                          textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                          path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
         else: continue
+    
+    # mark the points which are excluded by a red circle
+    for i in range(len(ObsLim/max)):
+        if ObsLim[i]/max[i] < 1:
+            ax.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
 
     from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
     from mpl_toolkits.axes_grid1.inset_locator import mark_inset   
@@ -266,7 +271,9 @@ if __name__ == '__main__':
     mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
 
     for i in range(len(ObsLim/max)):
-        axins.annotate('{:.3f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
+        if ObsLim[i]/max[i] < 1:
+            axins.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+        axins.annotate('{:.1f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                      path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
 
@@ -275,7 +282,7 @@ if __name__ == '__main__':
 
     ax.set_xlabel(r'$M_{S}$ [GeV]')
     ax.set_ylabel(r'$M_{X}$ [GeV]')
-    ax.set_title(r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$, small $M_{X}$')
+    ax.set_title(r'$\sigma(S(lim))/\sigma(S(b\bar{b})H(\gamma\gamma))$, small $M_{X}$')
 
     fig = plt.gcf()
     fig.colorbar(im, ax=ax, label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
@@ -290,11 +297,16 @@ if __name__ == '__main__':
 
     plt.scatter(ms, mx, c=ObsLim/max)
     for i in range(len(ObsLim/max)):
-        plt.annotate('{:.3f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
+        plt.annotate('{:.1f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                      path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
     # msAnnotate, mxAnnotate, max_divNormAnnotate = cutter(ms, mx, ObsLim/max, (0, 585), (420, 1020))
     # twoDPlot.plotAuxAnnotator2D(msAnnotate, mxAnnotate, max_divNormAnnotate, '{:.1f}', rot=45, xytxt=(-3,-2), fontsize=8.9)
+
+    # mark the points which are excluded by a red circle
+    for i in range(len(ObsLim/max)):
+        if ObsLim[i]/max[i] < 1:
+            plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
 
     plt.xlim(0, 525)
     plt.ylim(420, 620)
@@ -320,11 +332,16 @@ if __name__ == '__main__':
 
     plt.scatter(ms, mx, c=ObsLim/max)
     for i in range(len(ObsLim/max)):
-        plt.annotate('{:.3f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
+        plt.annotate('{:.1f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                      path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
     # msAnnotate, mxAnnotate, max_divNormAnnotate = cutter(ms, mx, ObsLim/max, (0, 585), (420, 1020))
     # twoDPlot.plotAuxAnnotator2D(msAnnotate, mxAnnotate, max_divNormAnnotate, '{:.1f}', rot=45, xytxt=(-3,-2), fontsize=8.9)
+
+    # mark the points which are excluded by a red circle
+    for i in range(len(ObsLim/max)):
+        if ObsLim[i]/max[i] < 1:
+            plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
 
     plt.xlim(0, 525)
     plt.ylim(620, 1020)
