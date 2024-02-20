@@ -1,5 +1,6 @@
 import pandas
-import python
+import numpy
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
@@ -9,6 +10,8 @@ if __name__ == '__main__':
     ObsLim = []
 
     df_H1_bb_H2_gamgam = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv')
+    
+    print(df_H1_bb_H2_gamgam)
 
     mH1_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH1']]
     mH2_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH2']]
@@ -43,6 +46,8 @@ if __name__ == '__main__':
     del df_H1_bb_H2_gamgam, mH1_H1_bb_H2_gamgam, mH2_H1_bb_H2_gamgam, mH3_H1_bb_H2_gamgam, x_H1_bb_H2_gamgam, ObsLim_H1_bb_H2_gamgam
     
     df_H1_gamgam_H2_bb = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv')
+    
+    print(df_H1_gamgam_H2_bb)
 
     mH1_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH1']]
     mH2_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH2']]
@@ -76,6 +81,11 @@ if __name__ == '__main__':
                             ObsLim = {ObsLim_H1_gamgam_H2_bb}')
 
 
-    print(len(ms), len(mx), len(max), len())
+    print(f'# of elements: ms: {len(ms)}, mx: {len(mx)}, max: {len(max)}, ObsLim: {len(ObsLim)}')
 
     print('testing')
+
+    plt.scatter(ms, mx, c=ObsLim)
+    plt.savefig('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/scatter')
+    plt.close()
+

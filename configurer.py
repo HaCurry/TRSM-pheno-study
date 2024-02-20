@@ -388,7 +388,6 @@ def maxCompiler(pathsInput, pathOutput, *keys, **kwargs):
                 contentsJSON = load(p)
 
             # append limits to dictOutput
-            print('limits:', (contentsJSON["extra"])[limitsKey] )
             dictOutput[limitsKey].append((contentsJSON['extra'])[limitsKey])
 
     print(f'Finished loading {pathOutput}: 100 %\n')
