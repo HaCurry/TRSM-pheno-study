@@ -3,6 +3,7 @@ import numpy
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.patheffects
+import mplhep as hep
 
 if __name__ == '__main__':
 
@@ -87,6 +88,13 @@ if __name__ == '__main__':
 
     print('testing')
 
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    matplotlib.rcParams['axes.labelsize'] = 19
+    matplotlib.rcParams['axes.titlesize'] = 19
+
+    norm = (31.02 * 0.0026)
+
     ## Low mass
 
     # following was used for the zoom box and colorbar: 
@@ -95,13 +103,13 @@ if __name__ == '__main__':
     # https://stackoverflow.com/questions/12324877/creating-inset-in-matplot-lib?rq=3
     # https://stackoverflow.com/questions/24035118/different-x-and-y-scale-in-zoomed-inset-matplotlib
     # OOP way of color bar https://stackoverflow.com/a/55614650/17456342
-    im = plt.scatter(ms, mx, c=max)
+    im = plt.scatter(ms, mx, c=max/norm)
 
     ax = plt.gca()
 
-    for i in range(len(max)):
+    for i in range(len(max/norm)):
         if ms[i] < 85 or ms[i] > 115 or mx[i] < 210 or mx[i] > 260:
-            ax.annotate('{:.1f}'.format(max[i]), (ms[i], mx[i]),
+            ax.annotate('{:.1f}'.format(max/norm[i]), (ms[i], mx[i]),
                          textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                          path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
         else: continue
@@ -111,7 +119,7 @@ if __name__ == '__main__':
 
 
     axins = zoomed_inset_axes(ax, 2, loc = 'lower right', bbox_to_anchor=(445, 158)) # zoom = 6
-    axins.scatter(ms, mx, c=max, vmin=0, vmax=15, zorder=2)
+    axins.scatter(ms, mx, c=max/norm, zorder=2)
 
     
     # sub region of the original image
@@ -127,8 +135,8 @@ if __name__ == '__main__':
     # mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
     mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
 
-    for i in range(len(max)):
-        axins.annotate('{:.1f}'.format(max[i]), (ms[i], mx[i]),
+    for i in range(len(max/norm)):
+        axins.annotate('{:.1f}'.format(max/norm[i]), (ms[i], mx[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                      path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
 
@@ -137,21 +145,75 @@ if __name__ == '__main__':
 
     ax.set_xlabel(r'$M_{S}$ [GeV]')
     ax.set_ylabel(r'$M_{X}$ [GeV]')
-    ax.set_title(r'Upper limits at 95% C.L normalized, small $M_{X}$')
+    ax.set_title(r'BP-independent cross sections $\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$, small $M_{X}$')
 
     fig = plt.gcf()
-    fig.colorbar(im, ax=ax, label =r'$\left. \sigma(\mathrm{obs}) \ \right/ \ \sigma( \mathrm{SM})$' )
+    fig.colorbar(im, ax=ax, label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_lowmass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_lowmass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/AtlasLimitsMax_lowmass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/AtlasLimitsMax_lowmass.pdf")
 
     # DO NOT TURN ON SHOW, THE ZOOM BOX IS PLACE INCORRECTLY WHEN USING THE MATPLOTLIB WINDOW PANE OR SAVING IT AS A PNG  #  plt.close()
 
 
+    ### medium mass: ###
+
+    plt.scatter(ms, mx, c=max/norm)
+    for i in range(len(max/norm)):
+        axins.annotate('{:.1f}'.format(max/norm[i]), (ms[i], mx[i]),
+                     textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
+                     path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
+    # msAnnotate, mxAnnotate, max_divNormAnnotate = cutter(ms, mx, max/norm, (0, 585), (420, 1020))
+    # twoDPlot.plotAuxAnnotator2D(msAnnotate, mxAnnotate, max_divNormAnnotate, '{:.1f}', rot=45, xytxt=(-3,-2), fontsize=8.9)
+
+    plt.xlim(0, 525)
+    plt.ylim(420, 620)
+
+    plt.xlabel(r'$M_{S}$ [GeV]')
+    plt.ylabel(r'$M_{X}$ [GeV]')
+
+    plt.title(r'BP-independent cross sections $\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$, medium $M_{X}$')
+
+    # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+    plt.colorbar(label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
+
+    plt.tight_layout()
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/AtlasLimitsMax_mediummass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/AtlasLimitsMax_mediummass.pdf")
+
+    # plt.show()
+    plt.close()
 
 
+    # high mass
 
+    plt.scatter(ms, mx, c=max/norm)
+    for i in range(len(max/norm)):
+        axins.annotate('{:.1f}'.format(max/norm[i]), (ms[i], mx[i]),
+                     textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
+                     path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
+    # msAnnotate, mxAnnotate, max_divNormAnnotate = cutter(ms, mx, max/norm, (0, 585), (420, 1020))
+    # twoDPlot.plotAuxAnnotator2D(msAnnotate, mxAnnotate, max_divNormAnnotate, '{:.1f}', rot=45, xytxt=(-3,-2), fontsize=8.9)
+
+    plt.xlim(0, 525)
+    plt.ylim(620, 1020)
+
+    plt.xlabel(r'$M_{S}$ [GeV]')
+    plt.ylabel(r'$M_{X}$ [GeV]')
+
+    plt.title(r'BP-independent cross sections $\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$, large $M_{X}$')
+
+    # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
+    plt.colorbar(label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
+
+
+    plt.tight_layout()
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/AtlasLimitsMax_largemass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/AtlasLimitsMax_largemass.pdf")
+
+    # plt.show()
+    plt.close()
 
 
 
@@ -172,6 +234,6 @@ if __name__ == '__main__':
 
     
     plt.scatter(ms, mx, c=ObsLim)
-    plt.savefig('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/scatter')
+    plt.savefig('/eos/user/i/ihaque/AtlasLimitsMax/norm/AtlasLimitsMax/norm_configure3/plots/scatter')
     plt.close()
 
