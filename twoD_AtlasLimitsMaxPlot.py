@@ -6,101 +6,21 @@ import matplotlib.patheffects
 import mplhep as hep
 
 if __name__ == '__main__':
-
-    ms = []
-    mx = []
-    max = []
-    ObsLim = []
-
-    df_H1_bb_H2_gamgam = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv')
     
-    print(df_H1_bb_H2_gamgam)
-
-    mH1_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH1']]
-    mH2_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH2']]
-    mH3_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH3']]
+    df = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_AtlasNotation.tsv')
     
-    x_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['pp_X_H1_bb_H2_gamgam']]
-    ObsLim_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['ObservedLimit']]
-    
-    for i in range(len(x_H1_bb_H2_gamgam)):
-        if abs(mH1_H1_bb_H2_gamgam[i] - 125.09) < 10**(-10):
-            # ms.append(mH2_H1_bb_H2_gamgam[i])
-            # mx.append(mH3_H1_bb_H2_gamgam[i])
-            # max.append(x_H1_bb_H2_gamgam[i])
-            # ObsLim.append(ObsLim_H1_bb_H2_gamgam[i])
-            continue
-        
-        elif abs(mH2_H1_bb_H2_gamgam[i] - 125.09) < 10**(-10):
-            ms.append(mH1_H1_bb_H2_gamgam[i])
-            mx.append(mH3_H1_bb_H2_gamgam[i])
-            max.append(x_H1_bb_H2_gamgam[i])
-            ObsLim.append(ObsLim_H1_bb_H2_gamgam[i])
+    ms = np.array([element for element in df['ms']])
+    mx = np.array([element for element in df['mx']])
+    ObsLim = np.array([element for element in df['ObservedLimit']])
+    max = np.array([element for element in df['maximum']])
 
-        else:
-            raise Exception(f'Something went wrong at H1_bb_H2_gamgam at\n\
-                            index {i},\n\
-                            mH1 = {mH1_H1_bb_H2_gamgam[i]}\n\
-                            mH2 = {mH2_H1_bb_H2_gamgam}\n\
-                            mH3 = {mH3_H1_bb_H2_gamgam}\n\
-                            max = {x_H1_bb_H2_gamgam}\n\
-                            ObsLim = {ObsLim_H1_bb_H2_gamgam}')
-
-    del df_H1_bb_H2_gamgam, mH1_H1_bb_H2_gamgam, mH2_H1_bb_H2_gamgam, mH3_H1_bb_H2_gamgam, x_H1_bb_H2_gamgam, ObsLim_H1_bb_H2_gamgam
-    
-    df_H1_gamgam_H2_bb = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv')
-    
-    print(df_H1_gamgam_H2_bb)
-
-    mH1_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH1']]
-    mH2_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH2']]
-    mH3_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH3']]
-
-    x_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['pp_X_H1_gamgam_H2_bb']]
-    ObsLim_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['ObservedLimit']]
-
-
-    for i in range(len(x_H1_gamgam_H2_bb)):
-        if abs(mH1_H1_gamgam_H2_bb[i] - 125.09) < 10**(-10):
-            ms.append(mH2_H1_gamgam_H2_bb[i])
-            mx.append(mH3_H1_gamgam_H2_bb[i])
-            max.append(x_H1_gamgam_H2_bb[i])
-            ObsLim.append(ObsLim_H1_gamgam_H2_bb[i])
-        
-        elif abs(mH2_H1_gamgam_H2_bb[i] - 125.09) < 10**(-10):
-            # ms.append(mH1_H1_gamgam_H2_bb[i])
-            # mx.append(mH3_H1_gamgam_H2_bb[i])
-            # max.append(x_H1_gamgam_H2_bb[i])
-            # ObsLim.append(ObsLim_H1_gamgam_H2_bb[i])
-            continue
-
-        else:
-            raise Exception(f'Something went wrong at H1_gamgam_H2_bb at\n\
-                            index {i},\n\
-                            mH1 = {mH1_H1_gamgam_H2_bb[i]}\n\
-                            mH2 = {mH2_H1_gamgam_H2_bb}\n\
-                            mH3 = {mH3_H1_gamgam_H2_bb}\n\
-                            max = {x_H1_gamgam_H2_bb}\n\
-                            ObsLim = {ObsLim_H1_gamgam_H2_bb}')
-
-    print(f'# of elements: ms: {len(ms)}, mx: {len(mx)}, max: {len(max)}, ObsLim: {len(ObsLim)}')
-
-    ms = np.array(ms)
-    mx = np.array(mx)
-    max = np.array(max)
-    ObsLim = np.array(ObsLim)
-
-    # save ms, mx, maximum and ObsLim in a tsv file
-    dictToDataFrame = {'ms': ms, 'mx': mx, 'ObservedLimit': ObsLim, 'maximum': max}
-    df = pandas.DataFrame(dictToDataFrame)
-    df.to_csv('AtlasMaximum.tsv', sep='\t')
+    norm = (31.02 * 0.0026) * 10**(-3)
 
     plt.style.use(hep.style.ATLAS)
     hep.style.use({"mathtext.default": "rm"})
     matplotlib.rcParams['axes.labelsize'] = 19
     matplotlib.rcParams['axes.titlesize'] = 19
 
-    norm = (31.02 * 0.0026) * 10**(-3)
 
     ### Maximum Cross Sections ###
     
@@ -165,7 +85,6 @@ if __name__ == '__main__':
     plt.close()
 
     # DO NOT TURN ON SHOW, THE ZOOM BOX IS PLACE INCORRECTLY WHEN USING THE MATPLOTLIB WINDOW PANE OR SAVING IT AS A PNG  #  plt.close()
-
 
     ### medium mass: ###
 
@@ -285,7 +204,7 @@ if __name__ == '__main__':
 
     ax.set_xlabel(r'$M_{S}$ [GeV]')
     ax.set_ylabel(r'$M_{X}$ [GeV]')
-    ax.set_title(r'$\sigma(S(lim))/\sigma(S(b\bar{b})H(\gamma\gamma))$, small $M_{X}$')
+    ax.set_title(r'$\sigma(lim) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, small $M_{X}$')
 
     fig = plt.gcf()
     fig.colorbar(im, ax=ax, label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )

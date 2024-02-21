@@ -1,5 +1,7 @@
 import configurer as config
 from parameterData import directorySearcher
+import pandas
+import numpy as np
 
 
 
