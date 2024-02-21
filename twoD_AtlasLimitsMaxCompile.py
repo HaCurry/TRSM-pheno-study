@@ -127,3 +127,27 @@ if __name__ == '__main__':
     dictToDataFrame = {'ms': ms, 'mx': mx, 'ObservedLimit': ObsLim, 'maximum': max}
     df = pandas.DataFrame(dictToDataFrame)
     df.to_csv('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_AtlasNotation.tsv', sep='\t')
+
+    ### Find what points are excluded ###
+
+    msExcl = []
+    mxExcl = []
+    ObsLimExcl = []
+    maxExcl = []
+    
+    for i in range(len(ObsLim/max):
+        excluded = ObsLim[i]/max[i]
+        if excluded < 1:
+            msExcl.append(ms[i])
+            mxExcl.append(mx[i])
+            ObsLimExcl.append(ObsLim[i])
+            maxExcl.append(max[i])
+
+        else:
+            continue
+
+    print(msExcl, mxExcl, ObsLimExcl, np.array(ObsLimExcl)/np.array(maxExcl))
+            
+
+            
+            
