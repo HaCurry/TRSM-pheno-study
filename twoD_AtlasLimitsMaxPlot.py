@@ -285,7 +285,7 @@ if __name__ == '__main__':
     ax.set_title(r'$\sigma(S(lim))/\sigma(S(b\bar{b})H(\gamma\gamma))$, small $M_{X}$')
 
     fig = plt.gcf()
-    fig.colorbar(im, ax=ax, label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
+    fig.colorbar(im, ax=ax, label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
     plt.tight_layout()
     plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_lowmass.png", format='png')
@@ -314,10 +314,10 @@ if __name__ == '__main__':
     plt.xlabel(r'$M_{S}$ [GeV]')
     plt.ylabel(r'$M_{X}$ [GeV]')
 
-    plt.title(r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$, medium $M_{X}$')
+    plt.title(r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, medium $M_{X}$')
 
     # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
-    plt.colorbar(label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
+    plt.colorbar(label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
     plt.tight_layout()
     plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_mediummass.png", format='png')
@@ -349,10 +349,10 @@ if __name__ == '__main__':
     plt.xlabel(r'$M_{S}$ [GeV]')
     plt.ylabel(r'$M_{X}$ [GeV]')
 
-    plt.title(r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$, large $M_{X}$')
+    plt.title(r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, large $M_{X}$')
 
     # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
-    plt.colorbar(label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
+    plt.colorbar(label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
 
     plt.tight_layout()
