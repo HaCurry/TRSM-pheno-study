@@ -2,6 +2,7 @@ import configurer as config
 from parameterData import directorySearcher
 import pandas
 import numpy as np
+import os
 
 
 
@@ -135,7 +136,7 @@ if __name__ == '__main__':
     ObsLimExcl = []
     maxExcl = []
     
-    for i in range(len(ObsLim/max):
+    for i in range(len(ObsLim/max)):
         excluded = ObsLim[i]/max[i]
         if excluded < 1:
             msExcl.append(ms[i])
@@ -145,9 +146,45 @@ if __name__ == '__main__':
 
         else:
             continue
+    print('printing excluded values') 
+    df2 = pandas.DataFrame({'ms': np.array(msExcl), 'mx': np.array(mxExcl), 'Excl': np.array(ObsLimExcl)/np.array(maxExcl)})
+    print(df2)
+#    print(msExcl, mxExcl, ObsLimExcl, np.array(ObsLimExcl)/np.array(maxExcl))
+    
+    excludedScannerS = []
+    excludedLimitsRatio = []
+    excludedNan = []
+    for i in range(len(ObsLimExcl)):
+        pathEos = '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3' 
+        dataId = f'X{mxExcl[i]:.0f}_S{msExcl[i]:.0f}'
+       
+        if 125.09  < msExcl[i]:
+            XSKey = 'pp_X_H1_gamgam_H2_bb'
 
-    print(msExcl, mxExcl, ObsLimExcl, np.array(ObsLimExcl)/np.array(maxExcl))
-            
+        elif msExcl[i] < 125.09:
+            XSKey = 'pp_X_H1_bb_H2_gamgam'
+        
+        else: raise Exception(f'something went wrong at index {i}')
 
-            
+        path = os.path.join(pathEos, dataId, f'{dataId}_calculation.tsv')    
+        dfCalc = pandas.read_table(path)
+        XS = [element for element in dfCalc[XSKey]]
+
+        excludedScannerS.append(dfCalc[XSKey]/100000)
+        numExclusions = 0
+
+        for j in range(len(XS)):
+            # fix this if statement or handle the nans somehow,
+            # should they even be considered..?
+            # if np.isnan(ObsLimExcl[i]/XS[j]):
+                #raise Exception('np.nan in excluded points, you should remove this exception, but I just kept it to just see what happens.')           
+            if ObsLimExcl[i]/XS[j] < 1:
+                numExclusions  = numExclusions + 1
+       
+            else:
+                continue
+        # hmmm, make sure to check that XS is only np.non nan values, otherwise this ratio is considering np.nan values as well...
+        excludedLimitsRatio.append(numExclusions)
+
+    print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio})) 
             
