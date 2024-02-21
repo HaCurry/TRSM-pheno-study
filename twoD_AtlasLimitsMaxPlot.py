@@ -90,7 +90,10 @@ if __name__ == '__main__':
     max = np.array(max)
     ObsLim = np.array(ObsLim)
 
-    print(ms[0:3], mx[0:3], max[0:3], ObsLim[0:3])
+    # save ms, mx, maximum and ObsLim in a tsv file
+    dictToDataFrame = {'ms': ms, 'mx': mx, 'ObservedLimit': ObsLim, 'maximum': max}
+    df = pandas.DataFrame(dictToDataFrame)
+    df.to_csv('AtlasMaximum.tsv', sep='\t')
 
     plt.style.use(hep.style.ATLAS)
     hep.style.use({"mathtext.default": "rm"})
