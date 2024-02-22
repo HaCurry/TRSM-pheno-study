@@ -150,10 +150,11 @@ if __name__ == '__main__':
     df2 = pandas.DataFrame({'ms': np.array(msExcl), 'mx': np.array(mxExcl), 'Excl': np.array(ObsLimExcl)/np.array(maxExcl)})
     print(df2)
 #    print(msExcl, mxExcl, ObsLimExcl, np.array(ObsLimExcl)/np.array(maxExcl))
-    
     excludedScannerS = []
     excludedLimitsRatio = []
-    excludedNan = []
+    NansInXS = []
+    lenXS = []
+    keys = []
     for i in range(len(ObsLimExcl)):
         pathEos = '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3' 
         dataId = f'X{mxExcl[i]:.0f}_S{msExcl[i]:.0f}'
@@ -165,6 +166,7 @@ if __name__ == '__main__':
             XSKey = 'pp_X_H1_bb_H2_gamgam'
         
         else: raise Exception(f'something went wrong at index {i}')
+        keys.append(XSKey)        
 
         path = os.path.join(pathEos, dataId, f'{dataId}_calculation.tsv')    
         dfCalc = pandas.read_table(path)
@@ -172,19 +174,28 @@ if __name__ == '__main__':
 
         excludedScannerS.append(dfCalc[XSKey]/100000)
         numExclusions = 0
+        numNans = 0
+        CheckMaxInExcluded = False        
 
         for j in range(len(XS)):
             # fix this if statement or handle the nans somehow,
             # should they even be considered..?
-            # if np.isnan(ObsLimExcl[i]/XS[j]):
-                #raise Exception('np.nan in excluded points, you should remove this exception, but I just kept it to just see what happens.')           
-            if ObsLimExcl[i]/XS[j] < 1:
+            if np.isnan(ObsLimExcl[i]/XS[j]):
+                numNans = numNans + 1 
+            elif ObsLimExcl[i]/XS[j] < 1:
                 numExclusions  = numExclusions + 1
-       
+                if abs(XS[j] - maxExcl[i]) < 10**(-12):
+                    CheckMaxInExcluded = True
+                else: pass
             else:
                 continue
         # hmmm, make sure to check that XS is only np.non nan values, otherwise this ratio is considering np.nan values as well...
+        if CheckMaxInExcluded == False:
+            raise Exception(f'Something went wrong... {maxExcl[i]} was not found in XS of {msExcl[i]}, {mxExcl[i]}')
         excludedLimitsRatio.append(numExclusions)
+        NansInXS.append(numNans)
+        lenXS.append(len(XS))
 
-    print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio})) 
-            
+    # print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio}))
+    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 'max excluded': maxExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys}))
