@@ -46,6 +46,15 @@ if __name__ == '__main__':
     max = []
     ObsLim = []
 
+    mH1 = []
+    mH2 = []
+    mH3 = []
+    thetahS = []
+    thetahX = []
+    thetaSX = []
+    vs = []
+    vx = []
+
     df_H1_bb_H2_gamgam = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv')
     
     print(df_H1_bb_H2_gamgam)
@@ -53,6 +62,11 @@ if __name__ == '__main__':
     mH1_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH1']]
     mH2_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH2']]
     mH3_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['mH3']]
+    thetahS_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['thetahS']]
+    thetahX_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['thetahX']]
+    thetaSX_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['thetaSX']]
+    vs_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['vs']]
+    vx_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['vx']]
     
     x_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['pp_X_H1_bb_H2_gamgam']]
     ObsLim_H1_bb_H2_gamgam = [element for element in df_H1_bb_H2_gamgam['ObservedLimit']]
@@ -70,7 +84,16 @@ if __name__ == '__main__':
             mx.append(mH3_H1_bb_H2_gamgam[i])
             max.append(x_H1_bb_H2_gamgam[i])
             ObsLim.append(ObsLim_H1_bb_H2_gamgam[i])
-
+            
+            mH1.append(mH1_H1_bb_H2_gamgam[i])
+            mH2.append(mH2_H1_bb_H2_gamgam[i])
+            mH3.append(mH3_H1_bb_H2_gamgam[i])
+            thetahS.appen(thetahS_H1_bb_H2_gamgam[i])
+            thetahX.appen(thetahX_H1_bb_H2_gamgam[i])
+            thetaSX.appen(thetaSX_H1_bb_H2_gamgam[i])
+            vs.appen(vs_H1_bb_H2_gamgam[i])
+            vx.appen(vx_H1_bb_H2_gamgam[i])
+            
         else:
             raise Exception(f'Something went wrong at H1_bb_H2_gamgam at\n\
                             index {i},\n\
@@ -89,6 +112,11 @@ if __name__ == '__main__':
     mH1_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH1']]
     mH2_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH2']]
     mH3_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['mH3']]
+    thetahS_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['thetahS']]
+    thetahX_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['thetahX']]
+    thetaSX_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['thetaSX']]
+    vs_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['vs']]
+    vx_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['vx']]
 
     x_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['pp_X_H1_gamgam_H2_bb']]
     ObsLim_H1_gamgam_H2_bb = [element for element in df_H1_gamgam_H2_bb['ObservedLimit']]
@@ -100,6 +128,15 @@ if __name__ == '__main__':
             mx.append(mH3_H1_gamgam_H2_bb[i])
             max.append(x_H1_gamgam_H2_bb[i])
             ObsLim.append(ObsLim_H1_gamgam_H2_bb[i])
+            
+            mH1.append(mH1_H1_gamgam_H2_bb[i])
+            mH2.append(mH2_H1_gamgam_H2_bb[i])
+            mH3.append(mH3_H1_gamgam_H2_bb[i])
+            thetahS.appen(thetahS_H1_gamgam_H2_bb[i])
+            thetahX.appen(thetahX_H1_gamgam_H2_bb[i])
+            thetaSX.appen(thetaSX_H1_gamgam_H2_bb[i])
+            vs.appen(vs_H1_gamgam_H2_bb[i])
+            vx.appen(vx_H1_gamgam_H2_bb[i])
         
         elif abs(mH2_H1_gamgam_H2_bb[i] - 125.09) < 10**(-10):
             # ms.append(mH1_H1_gamgam_H2_bb[i])
@@ -125,16 +162,25 @@ if __name__ == '__main__':
     ObsLim = np.array(ObsLim)
 
     # save ms, mx, maximum and ObsLim in a tsv file
-    dictToDataFrame = {'ms': ms, 'mx': mx, 'ObservedLimit': ObsLim, 'maximum': max}
+    dictToDataFrame = {'mH1': mH1, 'mH2': mH2, 'mH3': mH3, 'thetahS': thetahS, 'thetahX': thetahX, 'thetaSX': thetaSX, 'vs': vs, 'vx': vx, 
+                       'ms': ms, 'mx': mx, 'ObservedLimit': ObsLim, 'maximum': max}
     df = pandas.DataFrame(dictToDataFrame)
     df.to_csv('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_AtlasNotation.tsv', sep='\t')
 
     ### Find what points are excluded ###
-
+    
     msExcl = []
     mxExcl = []
     ObsLimExcl = []
     maxExcl = []
+
+    mH1Excl = []
+    mH2Excl = []
+    mH3Excl = []
+    thetahSExcl = []
+    thetahXExcl = []
+    thetaSXExcl = []
+    vsExcl = []
     
     for i in range(len(ObsLim/max)):
         excluded = ObsLim[i]/max[i]
@@ -144,12 +190,23 @@ if __name__ == '__main__':
             ObsLimExcl.append(ObsLim[i])
             maxExcl.append(max[i])
 
+            mH1Excl.append(mH1[i])
+            mH2Excl.append(mH2[i])
+            mH3Excl.append(mH3[i])
+            thetahSExcl.append(thetahS[i])
+            thetahXExcl.append(thetahX[i])
+            thetaSXExcl.append(thetaSX[i])
+
         else:
             continue
     print('printing excluded values') 
-    df2 = pandas.DataFrame({'ms': np.array(msExcl), 'mx': np.array(mxExcl), 'Excl': np.array(ObsLimExcl)/np.array(maxExcl)})
-    print(df2)
-#    print(msExcl, mxExcl, ObsLimExcl, np.array(ObsLimExcl)/np.array(maxExcl))
+    df2 = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
+                           'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
+                           'ms': np.array(msExcl), 'mx': np.array(mxExcl), 'Excl': np.array(ObsLimExcl)/np.array(maxExcl)})
+
+    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(df2)
+
     excludedScannerS = []
     excludedLimitsRatio = []
     NansInXS = []
@@ -198,4 +255,7 @@ if __name__ == '__main__':
 
     # print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio}))
     with pandas.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-        print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 'max excluded': maxExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys}))
+        print(pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
+                                'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
+                                'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 
+                                'max excluded': maxExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys}))
