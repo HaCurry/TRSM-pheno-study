@@ -88,11 +88,11 @@ if __name__ == '__main__':
             mH1.append(mH1_H1_bb_H2_gamgam[i])
             mH2.append(mH2_H1_bb_H2_gamgam[i])
             mH3.append(mH3_H1_bb_H2_gamgam[i])
-            thetahS.appen(thetahS_H1_bb_H2_gamgam[i])
-            thetahX.appen(thetahX_H1_bb_H2_gamgam[i])
-            thetaSX.appen(thetaSX_H1_bb_H2_gamgam[i])
-            vs.appen(vs_H1_bb_H2_gamgam[i])
-            vx.appen(vx_H1_bb_H2_gamgam[i])
+            thetahS.append(thetahS_H1_bb_H2_gamgam[i])
+            thetahX.append(thetahX_H1_bb_H2_gamgam[i])
+            thetaSX.append(thetaSX_H1_bb_H2_gamgam[i])
+            vs.append(vs_H1_bb_H2_gamgam[i])
+            vx.append(vx_H1_bb_H2_gamgam[i])
             
         else:
             raise Exception(f'Something went wrong at H1_bb_H2_gamgam at\n\
@@ -132,11 +132,11 @@ if __name__ == '__main__':
             mH1.append(mH1_H1_gamgam_H2_bb[i])
             mH2.append(mH2_H1_gamgam_H2_bb[i])
             mH3.append(mH3_H1_gamgam_H2_bb[i])
-            thetahS.appen(thetahS_H1_gamgam_H2_bb[i])
-            thetahX.appen(thetahX_H1_gamgam_H2_bb[i])
-            thetaSX.appen(thetaSX_H1_gamgam_H2_bb[i])
-            vs.appen(vs_H1_gamgam_H2_bb[i])
-            vx.appen(vx_H1_gamgam_H2_bb[i])
+            thetahS.append(thetahS_H1_gamgam_H2_bb[i])
+            thetahX.append(thetahX_H1_gamgam_H2_bb[i])
+            thetaSX.append(thetaSX_H1_gamgam_H2_bb[i])
+            vs.append(vs_H1_gamgam_H2_bb[i])
+            vx.append(vx_H1_gamgam_H2_bb[i])
         
         elif abs(mH2_H1_gamgam_H2_bb[i] - 125.09) < 10**(-10):
             # ms.append(mH1_H1_gamgam_H2_bb[i])
@@ -181,6 +181,7 @@ if __name__ == '__main__':
     thetahXExcl = []
     thetaSXExcl = []
     vsExcl = []
+    vxExcl = []
     
     for i in range(len(ObsLim/max)):
         excluded = ObsLim[i]/max[i]
@@ -196,12 +197,15 @@ if __name__ == '__main__':
             thetahSExcl.append(thetahS[i])
             thetahXExcl.append(thetahX[i])
             thetaSXExcl.append(thetaSX[i])
-
+            vsExcl.append(vsExcl[i])
+            vxExcl.append(vxExcl[i])
         else:
             continue
     print('printing excluded values') 
+
     df2 = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
                            'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
+                           'vsExcl': np.array(vsExcl), 'vxExcl': np.array(vxExcl),
                            'ms': np.array(msExcl), 'mx': np.array(mxExcl), 'Excl': np.array(ObsLimExcl)/np.array(maxExcl)})
 
     with pandas.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
@@ -254,8 +258,19 @@ if __name__ == '__main__':
         lenXS.append(len(XS))
 
     # print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio}))
-    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-        print(pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
-                                'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
-                                'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 
-                                'max excluded': maxExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys}))
+
+        dfExcludedWithMoreInfo = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
+                                        'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
+                                        'vsExcl': np.array(vsExcl), 'vxExcl': np.array(vxExcl),
+                                        'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 
+                                        'max excluded': maxExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys}))   
+        
+        with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
+            print(dfExcludedWithMoreInfo)
+
+        x = dfExcludedWithMoreInfo['num exclusions'] == 1
+        dfExcludedOnlySingles = dfExcludedWithMoreInfo[x]
+
+        print(dfExcludedOnlySingles)
+
+        df.to_csv('testing/AtlasLimitsMax_OnlySingles')
