@@ -197,8 +197,8 @@ if __name__ == '__main__':
             thetahSExcl.append(thetahS[i])
             thetahXExcl.append(thetahX[i])
             thetaSXExcl.append(thetaSX[i])
-            vsExcl.append(vsExcl[i])
-            vxExcl.append(vxExcl[i])
+            vsExcl.append(vs[i])
+            vxExcl.append(vx[i])
         else:
             continue
     print('printing excluded values') 
@@ -258,19 +258,19 @@ if __name__ == '__main__':
         lenXS.append(len(XS))
 
     # print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio}))
-
-        dfExcludedWithMoreInfo = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
+    print(len(vsExcl), len(vxExcl), len(ObsLimExcl), len(msExcl), len(mxExcl), len(np.array(ObsLimExcl)/np.array(maxExcl)), len(mH1Excl), len(mH2Excl), len(mH3Excl), len(thetahSExcl), len(thetahXExcl), len(thetaSXExcl), len(lenXS), len(keys), len(excludedLimitsRatio))
+    dfExcludedWithMoreInfo = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
                                         'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
-                                        'vsExcl': np.array(vsExcl), 'vxExcl': np.array(vxExcl),
+                                        'vs': np.array(vsExcl), 'vx': np.array(vxExcl),
                                         'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 
-                                        'max excluded': maxExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys}))   
+                                        'max excluded': maxExcl, 'Observed Limit': ObsLimExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys})   
         
-        with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
-            print(dfExcludedWithMoreInfo)
+    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(dfExcludedWithMoreInfo)
 
-        x = dfExcludedWithMoreInfo['num exclusions'] == 1
-        dfExcludedOnlySingles = dfExcludedWithMoreInfo[x]
-
+    x = dfExcludedWithMoreInfo['num exclusions'] == 1
+    dfExcludedOnlySingles = dfExcludedWithMoreInfo[x]
+    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
         print(dfExcludedOnlySingles)
 
-        df.to_csv('testing/AtlasLimitsMax_OnlySingles')
+    dfExcludedOnlySingles.to_csv('testing/AtlasLimitsMax_OnlySingles.tsv', sep='\t')
