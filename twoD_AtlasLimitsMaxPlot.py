@@ -169,7 +169,9 @@ if __name__ == '__main__':
     # mark the points which are excluded by a red circle
     for i in range(len(ObsLim/max)):
         if ObsLim[i]/max[i] < 1:
-            ax.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            #ax.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            ax.scatter(ms[i], mx[i], marker='o', facecolor='none', color='red', linestyle='dashed', s=120)
+             
 
     from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
     from mpl_toolkits.axes_grid1.inset_locator import mark_inset   
@@ -194,7 +196,9 @@ if __name__ == '__main__':
 
     for i in range(len(ObsLim/max)):
         if ObsLim[i]/max[i] < 1:
-            axins.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            #axins.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            axins.scatter(ms[i], mx[i], marker='o', facecolor='none', color='red', linestyle='dashed', s=120)
+ 
         axins.annotate('{:.1f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
                      path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground='w')])
@@ -204,7 +208,7 @@ if __name__ == '__main__':
 
     ax.set_xlabel(r'$M_{S}$ [GeV]')
     ax.set_ylabel(r'$M_{X}$ [GeV]')
-    ax.set_title(r'$\sigma(lim) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, small $M_{X}$')
+    ax.set_title(r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, small $M_{X}$')
 
     fig = plt.gcf()
     fig.colorbar(im, ax=ax, label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
@@ -228,7 +232,8 @@ if __name__ == '__main__':
     # mark the points which are excluded by a red circle
     for i in range(len(ObsLim/max)):
         if ObsLim[i]/max[i] < 1:
-            plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            #plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            plt.scatter(ms[i], mx[i], marker='o', facecolor='none', linestyle='dashed', color='red', s=120)
 
     plt.xlim(0, 525)
     plt.ylim(420, 620)
@@ -263,7 +268,8 @@ if __name__ == '__main__':
     # mark the points which are excluded by a red circle
     for i in range(len(ObsLim/max)):
         if ObsLim[i]/max[i] < 1:
-            plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            #plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
+            plt.scatter(ms[i], mx[i], marker='o', facecolor='none', linestyle='dashed', color='red', s=120)
 
     plt.xlim(0, 525)
     plt.ylim(620, 1020)
