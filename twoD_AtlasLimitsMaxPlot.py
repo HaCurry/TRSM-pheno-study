@@ -221,7 +221,7 @@ if __name__ == '__main__':
 
     ### medium mass: ###
 
-    plt.scatter(ms, mx, c=ObsLim/max)
+    im = plt.scatter(ms, mx, c=ObsLim/max)
     for i in range(len(ObsLim/max)):
         plt.annotate('{:.1f}'.format(ObsLim[i]/max[i]), (ms[i], mx[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45, 
@@ -232,8 +232,11 @@ if __name__ == '__main__':
     # mark the points which are excluded by a red circle
     for i in range(len(ObsLim/max)):
         if ObsLim[i]/max[i] < 1:
+            hejsan=4
             #plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
-            plt.scatter(ms[i], mx[i], marker='o', facecolor='none', linestyle='dashed', color='red', s=120)
+            #plt.scatter(ms[i], mx[i], marker='o', facecolor='none', linestyle='dashed', color='red', s=120)
+            plt.scatter(ms[i], mx[i], marker='o', facecolor='none', color='red', linestyle='dashed', s=120)
+
 
     plt.xlim(0, 525)
     plt.ylim(420, 620)
@@ -244,7 +247,9 @@ if __name__ == '__main__':
     plt.title(r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, medium $M_{X}$')
 
     # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
-    plt.colorbar(label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
+    fig = plt.gcf()
+    ax = plt.gca()
+    fig.colorbar(im, ax=ax, label=r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
     plt.tight_layout()
     plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_mediummass.png", format='png')
@@ -268,6 +273,7 @@ if __name__ == '__main__':
     # mark the points which are excluded by a red circle
     for i in range(len(ObsLim/max)):
         if ObsLim[i]/max[i] < 1:
+            hejsan=4
             #plt.plot(ms[i], mx[i], ObsLim[i]/max[i], marker='o', markerfacecolor='none', color='red')
             plt.scatter(ms[i], mx[i], marker='o', facecolor='none', linestyle='dashed', color='red', s=120)
 
@@ -280,7 +286,10 @@ if __name__ == '__main__':
     plt.title(r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$, large $M_{X}$')
 
     # plt.colorbar(label =r'$\sigma_{ gg \ \rightarrow \ h_{X}} \cdot \mathrm{BR}_{h_{X} \ \to \ h_{S}(b\bar{b}) \ h_{H}(\gamma\gamma) } \ / \ \sigma_{gg \ \to \ h_{\mathrm{SM}} \ \to \ b\bar{b}\gamma\gamma }$' )
-    plt.colorbar(label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
+    
+    fig = plt.gcf()
+    ax = plt.gca()
+    fig.colorbar(im, ax=ax, label=r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
 
     plt.tight_layout()

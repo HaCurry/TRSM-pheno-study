@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     df2 = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
                            'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
-                           'vsExcl': np.array(vsExcl), 'vxExcl': np.array(vxExcl),
+                           'vs': np.array(vsExcl), 'vx': np.array(vxExcl),
                            'ms': np.array(msExcl), 'mx': np.array(mxExcl), 'Excl': np.array(ObsLimExcl)/np.array(maxExcl)})
 
     with pandas.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
@@ -122,8 +122,8 @@ if __name__ == '__main__':
             raise Exception(f'Something went wrong... {maxExcl[i]} was not found in XS of {msExcl[i]}, {mxExcl[i]}')
 
         dictDistribution[dataId]['ObservedLimit'] = ObsLimExcl[i]
-        dictDistribution[dataId]['num exclusions'] = excludedLimitsRatio
-        dictDistribution[dataId]['num nans'] = NansInXS
+        dictDistribution[dataId]['num exclusions'] = numExclusions
+        dictDistribution[dataId]['num nans'] = numNans
         dictDistribution[dataId]['num tot generated XS'] = len(XS)
 
         # excludedLimitsRatio.append(numExclusions)
@@ -155,11 +155,34 @@ if __name__ == '__main__':
     matplotlib.rcParams['axes.titlesize'] = 19
 
     for key in dictDistribution:
-        plt.hist(dictDistribution[key]['XS'], bins=15)
+        count, edges, bars = plt.hist(dictDistribution[key]['XS'], bins=15)
+        plt.bar_label(bars)
         plt.axvline(dictDistribution[key]['ObservedLimit'],color='red', ls='dashed')
+        print(dictDistribution[key]['num tot generated XS'], dictDistribution[key]['num nans'],dictDistribution[key]['num exclusions'], 
+dictDistribution[key]['ObservedLimit'])
+        textstr = '\n'.join((
+        r"total generated $\sigma$'s = $%.0f$" % (dictDistribution[key]['num tot generated XS'], ),
+        r"number of np.nan's = $%.0f$" % (dictDistribution[key]['num nans'], ),
+        r'number of exclusions = $%.0f$' % (dictDistribution[key]['num exclusions'], ),
+        r'$\sigma(obs)=%.5f$ pb' % (dictDistribution[key]['ObservedLimit'], ),
+))
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        ax = plt.gca()
+        ax.text(0.6, 0.95, textstr, transform=ax.transAxes, fontsize=14,
+            verticalalignment='top', bbox=props)
+
         plt.ylim(0,100)
         plt.title(key)
-        plt.xlabel(r'$\sigma$ [pb]')
+        plt.xlabel(r'$\sigma$ [pb]', labelpad=25)
         plt.ylabel(r'count')
         plt.savefig(os.path.join(pathEos, 'plots', 'plotsTemp', f'{key}.png'))
         plt.close()
+
+        plt.hist(dictDistribution[key]['XS'], bins=15)
+        plt.axvline(dictDistribution[key]['ObservedLimit'],color='red', ls='dashed')
+        plt.title(f'{key} - full window')
+        plt.xlabel(r'$\sigma$ [pb]')
+        plt.ylabel(r'count')
+        plt.savefig(os.path.join(pathEos, 'plots', 'plotsTemp', f'{key}_large.png'))
+        plt.close()
+ 

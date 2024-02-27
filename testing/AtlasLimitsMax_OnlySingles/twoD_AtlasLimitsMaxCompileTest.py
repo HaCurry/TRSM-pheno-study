@@ -1,8 +1,13 @@
 import configurer as config
 from parameterData import directorySearcher
+
 import pandas
 import numpy as np
 import os
+
+import matplotlib
+import matplotlib.pyplot as plt
+import mplhep as hep
 
 
 
@@ -204,6 +209,7 @@ if __name__ == '__main__':
     NansInXS = []
     lenXS = []
     keys = []
+    dictDistribution = {}
     for i in range(len(ObsLimExcl)):
         pathEos = '/eos/user/i/ihaque/testing/AtlasLimitsMax_OnlySingles/AtlasLimitsMax_configure_OnlySingles' 
         dataId = f'X{mxExcl[i]:.0f}_S{msExcl[i]:.0f}'
@@ -220,6 +226,8 @@ if __name__ == '__main__':
         path = os.path.join(pathEos, dataId, f'{dataId}_calculation.tsv')    
         dfCalc = pandas.read_table(path)
         XS = [element for element in dfCalc[XSKey]]
+        dictDistribution[dataId] = {}
+        dictDistribution[dataId]['XS'] = XS
 
         excludedScannerS.append(dfCalc[XSKey]/100000)
         numExclusions = 0
@@ -241,24 +249,104 @@ if __name__ == '__main__':
         # hmmm, make sure to check that XS is only np.non nan values, otherwise this ratio is considering np.nan values as well...
         if CheckMaxInExcluded == False:
             raise Exception(f'Something went wrong... {maxExcl[i]} was not found in XS of {msExcl[i]}, {mxExcl[i]}')
-        excludedLimitsRatio.append(numExclusions)
-        NansInXS.append(numNans)
-        lenXS.append(len(XS))
+
+        dictDistribution[dataId]['ObservedLimit'] = ObsLimExcl[i]
+        dictDistribution[dataId]['num exclusions'] = numExclusions
+        dictDistribution[dataId]['num nans'] = numNans
+        dictDistribution[dataId]['num tot generated XS'] = len(XS)
+
+        # excludedLimitsRatio.append(numExclusions)
+        # NansInXS.append(numNans)
+        # lenXS.append(len(XS))
 
     # print(pandas.DataFrame({'ms': msExcl, 'mx': mxExcl, 'XS ratio': excludedLimitsRatio}))
-    print(len(vsExcl), len(vxExcl), len(ObsLimExcl), len(msExcl), len(mxExcl), len(np.array(ObsLimExcl)/np.array(maxExcl)), len(mH1Excl), len(mH2Excl), len(mH3Excl), len(thetahSExcl), len(thetahXExcl), len(thetaSXExcl), len(lenXS), len(keys), len(excludedLimitsRatio))
-    dfExcludedWithMoreInfo = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
-                                        'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
-                                        'vs': np.array(vsExcl), 'vx': np.array(vxExcl),
-                                        'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 
-                                        'max excluded': maxExcl, 'Observed Limit': ObsLimExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys})   
+    #print(len(vsExcl), len(vxExcl), len(ObsLimExcl), len(msExcl), len(mxExcl), len(np.array(ObsLimExcl)/np.array(maxExcl)), len(mH1Excl), len(mH2Excl), len(mH3Excl), len(thetahSExcl), len(thetahXExcl), len(thetaSXExcl), len(lenXS), len(keys), len(excludedLimitsRatio))
+    #dfExcludedWithMoreInfo = pandas.DataFrame({'mH1': np.array(mH1Excl), 'mH2': np.array(mH2Excl), 'mH3': np.array(mH3Excl), 
+    #                                    'thetahS': np.array(thetahSExcl), 'thetahX': np.array(thetahXExcl), 'thetaSX': np.array(thetaSXExcl),
+    #                                    'vs': np.array(vsExcl), 'vx': np.array(vxExcl),
+    #                                    'ms': msExcl, 'mx': mxExcl, 'ratio obs max': np.array(ObsLimExcl)/np.array(maxExcl), 
+    #                                    'max excluded': maxExcl, 'Observed Limit': ObsLimExcl, 'num exclusions': excludedLimitsRatio,'num nans': NansInXS, 'num tot generated XS': lenXS, 'keys': keys})   
         
-    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
-        print(dfExcludedWithMoreInfo)
+    #with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
+    #    print(dfExcludedWithMoreInfo)
 
-    x = dfExcludedWithMoreInfo['num exclusions'] == 1
-    dfExcludedOnlySingles = dfExcludedWithMoreInfo[x]
-    with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
-        print('Printing exclusions with only one datapoint:')
-        print(dfExcludedOnlySingles)
+    #x = dfExcludedWithMoreInfo['num exclusions'] == 1
+    #dfExcludedOnlySingles = dfExcludedWithMoreInfo[x]
+    #with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
+    #    print('Printing exclusions with only one datapoint:')
+    #    print(dfExcludedOnlySingles)
+
+
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+    matplotlib.rcParams['axes.labelsize'] = 19
+    matplotlib.rcParams['axes.titlesize'] = 19
+
+    for key in dictDistribution:
+        count, edges, bars = plt.hist(dictDistribution[key]['XS'], bins=15)
+        plt.bar_label(bars)
+        plt.axvline(dictDistribution[key]['ObservedLimit'],color='red', ls='dashed')
+        print(dictDistribution[key]['num tot generated XS'], dictDistribution[key]['num nans'],dictDistribution[key]['num exclusions'],
+dictDistribution[key]['ObservedLimit'])                                                                                                                                                             
+        textstr = '\n'.join((
+        r"total generated $\sigma$'s = $%.0f$" % (dictDistribution[key]['num tot generated XS'], ),
+        r"number of np.nan's = $%.0f$" % (dictDistribution[key]['num nans'], ),
+        r'number of exclusions = $%.0f$' % (dictDistribution[key]['num exclusions'], ),                                                                                                             r'$\sigma(obs)=%.5f$ pb' % (dictDistribution[key]['ObservedLimit'], ),
+))
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        ax = plt.gca()
+        ax.text(0.6, 0.95, textstr, transform=ax.transAxes, fontsize=14,
+            verticalalignment='top', bbox=props)
+
+        plt.ylim(0,100)
+        plt.title(key)
+        plt.xlabel(r'$\sigma$ [pb]', labelpad=25)
+        plt.ylabel(r'count')
+        plt.savefig(os.path.join(pathEos, 'plots', 'plotsTemp', f'{key}.png'))
+        plt.close()
+
+        plt.hist(dictDistribution[key]['XS'], bins=15)
+        plt.axvline(dictDistribution[key]['ObservedLimit'],color='red', ls='dashed')
+        plt.title(f'{key} - full window')
+        plt.xlabel(r'$\sigma$ [pb]')
+        plt.ylabel(r'count')
+        plt.savefig(os.path.join(pathEos, 'plots', 'plotsTemp', f'{key}_large.png'))
+        plt.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
