@@ -46,10 +46,11 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
         else:
             print('No points given for model parameter ' + param + 'using default np.linspace values.')
             linspaceDict[param] = np.linspace(configDict[param_lb], configDict[param_ub])
+    
     # can be used when lower bounds and upper bounds are equal and user desires
-    # to save the same set of model params kwargs['forcePoint'] number of times
-    # can be used to check if scannerS does not produce any bugs when generating
-    # the same point.
+    # to save the same set of model params kwargs['forcePoint'] number of times.
+    # can also be used to check if scannerS does not produce any bugs when 
+    # generating the same point.
     if 'forcePoints' in kwargs:
         forceList = list(zip(*[linspaceDict[param] for param in modelParams]))
         temp = []

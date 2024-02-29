@@ -7,7 +7,7 @@ import mplhep as hep
 
 if __name__ == '__main__':
     
-    df = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_AtlasNotation.tsv')
+    df = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_AtlasNotation.tsv')
     
     ms = np.array([element for element in df['ms']])
     mx = np.array([element for element in df['mx']])
@@ -80,8 +80,8 @@ if __name__ == '__main__':
     fig.colorbar(im, ax=ax, label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_lowmass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_lowmass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsMax_lowmass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsMax_lowmass.pdf")
     plt.close()
 
     # DO NOT TURN ON SHOW, THE ZOOM BOX IS PLACE INCORRECTLY WHEN USING THE MATPLOTLIB WINDOW PANE OR SAVING IT AS A PNG  #  plt.close()
@@ -108,8 +108,8 @@ if __name__ == '__main__':
     plt.colorbar(label =r'$\sigma(S(b\bar{b})H(\gamma\gamma))/\sigma(SM)$' )
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_mediummass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_mediummass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsMax_mediummass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsMax_mediummass.pdf")
 
     # plt.show()
     plt.close()
@@ -138,8 +138,8 @@ if __name__ == '__main__':
 
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_largemass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsMax_largemass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsMax_largemass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsMax_largemass.pdf")
 
     # plt.show()
     plt.close()
@@ -214,8 +214,8 @@ if __name__ == '__main__':
     fig.colorbar(im, ax=ax, label =r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_lowmass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_lowmass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsExclusion_lowmass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsExclusion_lowmass.pdf")
     plt.close()
 
 
@@ -252,8 +252,8 @@ if __name__ == '__main__':
     fig.colorbar(im, ax=ax, label=r'$\sigma(obs) \ / \ \sigma(S(b\bar{b})H(\gamma\gamma))$' )
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_mediummass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_mediummass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsExclusion_mediummass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsExclusion_mediummass.pdf")
 
     # plt.show()
     plt.close()
@@ -293,8 +293,8 @@ if __name__ == '__main__':
 
 
     plt.tight_layout()
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_largemass.png", format='png')
-    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/plots/AtlasLimitsExclusion_largemass.pdf")
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsExclusion_largemass.png", format='png')
+    plt.savefig("/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/plots/AtlasLimitsExclusion_largemass.pdf")
 
     # plt.show()
     plt.close()

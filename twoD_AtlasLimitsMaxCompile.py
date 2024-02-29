@@ -10,32 +10,32 @@ if __name__ == '__main__':
 
     
     # calculate each dataId
-    # paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3', '/**/output_*.tsv')
+    paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4', '/**/output_*.tsv')
     # print(paths)
-    # config.calculator(paths, 'bb', 'gamgam')
+    config.calculator(paths, 'bb', 'gamgam')
 
     # find the max for each dataId and save it in AtlasLimitsMax_max
-    paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3', '/**/*_calculation.tsv')
+    paths = directorySearcher('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4', '/**/*_calculation.tsv')
 
-    # config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_All_Max.tsv', 
-    #                    'pp_X_H1H2_bbgamgam', 'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam', 
-    #                    limitsKey='ObservedLimit')
+    config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_All_Max.tsv', 
+                       'pp_X_H1H2_bbgamgam', 'pp_X_H1H1_bbgamgam', 'pp_X_H2H2_bbgamgam', 
+                       limitsKey='ObservedLimit')
 
-    # config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv', 
-    #                    'pp_X_H1_bb_H2_gamgam', 
-    #                    limitsKey='ObservedLimit')
+    config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv', 
+                       'pp_X_H1_bb_H2_gamgam', 
+                       limitsKey='ObservedLimit')
 
-    # config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv', 
-    #                    'pp_X_H1_gamgam_H2_bb', 
-    #                    limitsKey='ObservedLimit')
+    config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv', 
+                       'pp_X_H1_gamgam_H2_bb', 
+                       limitsKey='ObservedLimit')
 
-    # config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1H1_bbgamgam_Max.tsv', 
-    #                    'pp_X_H1H1_bbgamgam', 
-    #                    limitsKey='ObservedLimit')
+    config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_H1H1_bbgamgam_Max.tsv', 
+                       'pp_X_H1H1_bbgamgam', 
+                       limitsKey='ObservedLimit')
 
-    # config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H2H2_bbgamgam_Max.tsv', 
-    #                    'pp_X_H2H2_bbgamgam', 
-    #                    limitsKey='ObservedLimit')
+    config.maxCompiler(paths, '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_H2H2_bbgamgam_Max.tsv', 
+                       'pp_X_H2H2_bbgamgam', 
+                       limitsKey='ObservedLimit')
 
     ### compile cross sections from AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv, 
     ### AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv in terms of Atlas notation 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     vs = []
     vx = []
 
-    df_H1_bb_H2_gamgam = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv')
+    df_H1_bb_H2_gamgam = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_H1_bb_H2_gamgam_Max.tsv')
     
     print(df_H1_bb_H2_gamgam)
 
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     del df_H1_bb_H2_gamgam, mH1_H1_bb_H2_gamgam, mH2_H1_bb_H2_gamgam, mH3_H1_bb_H2_gamgam, x_H1_bb_H2_gamgam, ObsLim_H1_bb_H2_gamgam
     
-    df_H1_gamgam_H2_bb = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv')
+    df_H1_gamgam_H2_bb = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_H1_gamgam_H2_bb_Max.tsv')
     
     print(df_H1_gamgam_H2_bb)
 
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     dictToDataFrame = {'mH1': mH1, 'mH2': mH2, 'mH3': mH3, 'thetahS': thetahS, 'thetahX': thetahX, 'thetaSX': thetaSX, 'vs': vs, 'vx': vx, 
                        'ms': ms, 'mx': mx, 'ObservedLimit': ObsLim, 'maximum': max}
     df = pandas.DataFrame(dictToDataFrame)
-    df.to_csv('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_AtlasNotation.tsv', sep='\t')
+    df.to_csv('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_AtlasNotation.tsv', sep='\t')
 
     ### Find what points are excluded ###
     
@@ -217,7 +217,7 @@ if __name__ == '__main__':
     lenXS = []
     keys = []
     for i in range(len(ObsLimExcl)):
-        pathEos = '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3' 
+        pathEos = '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4' 
         dataId = f'X{mxExcl[i]:.0f}_S{msExcl[i]:.0f}'
        
         if 125.09  < msExcl[i]:
@@ -273,4 +273,4 @@ if __name__ == '__main__':
     with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
         print(dfExcludedOnlySingles)
 
-    dfExcludedOnlySingles.to_csv('testing/AtlasLimitsMax_OnlySingles.tsv', sep='\t')
+    # dfExcludedOnlySingles.to_csv('testing/AtlasLimitsMax_OnlySingles.tsv', sep='\t')
