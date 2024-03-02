@@ -1,0 +1,9 @@
+# sleep.sub -- simple sleep job
+executable              = /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/test.sh
+getenv                  = True
+log                     = $(ClusterId).$(ProcId).scannerS.log
+output                  = $(ClusterId).$(ProcId).scannerS.out
+error                   = $(ClusterId).$(ProcId).scannerS.err
+# longlunch = 2 hrs
++JobFlavour             = "longlunch"
+queue

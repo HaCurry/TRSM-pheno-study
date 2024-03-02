@@ -65,6 +65,11 @@ if __name__ == '__main__':
 
         H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
         returnValue = (H1H2[mode])[0]
+        
+        if np.isnan(returnValue):
+            returnValue = 0
+
+        else: pass
 
         return returnValue
 
@@ -91,12 +96,14 @@ if __name__ == '__main__':
         try:
             # if returnvalue == -1, then model parameters pass the constraints
             H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
-            returnValue = -1
+            returnValue = 1
+            # returnValue = -1
 
         # if outputfile (pathExecutionOutput) is empty, the parameters do not pass the constraints
         except pandas.errors.EmptyDataError:
             # if returnValue == 1, then model parameters fail constraints
-            returnValue = 1
+            returnValue = -1
+            # returnValue = 1
 
         return returnValue
         
@@ -128,8 +135,6 @@ if __name__ == '__main__':
                                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
                                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')    
     
-    print(black_box_constraint(0.123, 0.31289, 0.8732, 122, 897))
-
     # Bounded region of parameter space
     pbounds = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 
                'vs': (1, 1000), 'vx': (1, 1000)}
@@ -144,7 +149,8 @@ if __name__ == '__main__':
     #     return -x ** 2 - (y - 1) ** 2 + 1
 
     # pbounds = {'x': (2, 4), 'y': (-3, 3)}
-    constraint = NonlinearConstraint(black_box_constraint, -np.inf, 0)
+    constraint = NonlinearConstraint(black_box_constraint, 0, np.inf)
+    # constraint = NonlinearConstraint(black_box_constraint, -np.inf, 0)
     optimizer = BayesianOptimization(
         f=black_box_function,
         constraint=constraint,
@@ -154,14 +160,14 @@ if __name__ == '__main__':
         allow_duplicate_points=True,
     )
 
-    init_points = 25 
-    n_iter = 100
+    init_points = 250 
+    n_iter = 5
     kind = "ucb"
-    kappa=10
+    kappa='default'
     xi='default'
 
     print(f'running n_iter = {n_iter}, init_points = {init_points}, kind = {kind}, kappa = {kappa}, xi = {xi}')
-    acquisition_function = UtilityFunction(kind=kind, kappa=kappa)    
+    acquisition_function = UtilityFunction(kind=kind)    
     optimizer.maximize(
         init_points=init_points,
         n_iter=n_iter,
@@ -189,15 +195,15 @@ if __name__ == '__main__':
     
     # save iterations
     with open(f'/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv', 'a') as logs:
-        logs.write('iteration\ttarget\tthetahS\tthetahX\tthetaSX\tvs\tvx\n')
+        logs.write('iteration\ttarget\tconstraint\tmH1\tmH2\tmH3\tthetahS\tthetahX\tthetaSX\tvs\tvx\n')
         for i, res in enumerate(optimizer.res):
             #logs.write(f"Iteration {i}: \n\t{res}\n")
-            logs.write(f'{i}\t{res["target"]}\t{res["params"]["thetahS"]}\t{res["params"]["thetahX"]}\t{res["params"]["thetaSX"]}\t{res["params"]["vs"]}\t{res["params"]["vx"]}\n')
+            logs.write(f'{i}\t{res["target"]}\t{res["constraint"]}\t{BayOutput["params"]["mH1"]}\t{BayOutput["params"]["mH2"]}\t{BayOutput["params"]["mH3"]}\t{res["params"]["thetahS"]}\t{res["params"]["thetahX"]}\t{res["params"]["thetaSX"]}\t{res["params"]["vs"]}\t{res["params"]["vx"]}\n')
 
-    df = pandas.read_table(f'/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv')
-    import matplotlib.pyplot as plt
-    plt.plot(np.array(df['iteration']), np.array(df['target']), marker='o')
-    plt.yscale('log')
-    plt.savefig('/eos/user/i/ihaque/bayesianOptPlots/x_test.pdf')
+    #df = pandas.read_table(f'/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv')
+    #import matplotlib.pyplot as plt
+    #plt.plot(np.array(df['iteration']), np.array(df['target']), marker='o')
+    #plt.yscale('log')
+    #plt.savefig('/eos/user/i/ihaque/bayesianOptPlots/x_test.pdf')
     
     

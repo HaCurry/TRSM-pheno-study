@@ -1,0 +1,1360 @@
+ggsBounds collects together results from
+
+     * the LEP collaborations and LEP Higgs Working Group
+     * the CDF and D0 Collaborations
+     * the ATLAS and CMS Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * the program VH@NNLO
+       (arXiv:1210.5347,arXiv:1802.04817)
+     * TeV4LHC Higgs Working Group report
+       (see arXiv:hep-ph/0612172 and refs. therein)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and refs. therein, including the
+        gluon fusion N3LO prediction (arXiv:1602.00695).)
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                  HiggsSignals 2.6.1                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~       arXiv:1305.1933 (Manual)                         ~
+ ~       arXiv:1403.1582 (application + more details)     ~
+ ~                                                        ~
+ ~ It is based on the HiggsBounds-5 Fortran library.      ~
+ ~ Please consult and cite also the following references  ~
+ ~ for the HiggsBounds program                            ~
+ ~                                                        ~
+ ~           arXiv:0811.4169, arXiv:1102.1898,            ~
+ ~           arXiv:1311.0055, arXiv:2006.06007            ~
+ ~      https://gitlab.com/higgsbounds/higgssignals       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  HiggsSignals collects together results from
+
+     * the ATLAS and CMS Collaborations
+     * the CDF and D0 Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and ref. therein)
+
+ Covariance matrix for relative branching ratio uncertainties read in successfully.
+ Covariance matrix for relative cross section uncertainties read in successfully.
+ Correlation matrix for relative cross section uncertainties read in successfully.
+ Reading in measurements from the following datafiles from analysis-set latestresults:
+   1  ATL_H-bb_ttH_1lepton_13TeV_36.1fb-1_125GeV_88951.txt
+   2  ATL_H-bb_ttH_2lepton_13TeV_36.1fb-1_125GeV_88952.txt
+   3  ATL_H-bb_VBF_13TeV_36.1fb-1_125GeV_86391.txt
+   4  ATL_ttH_1l2tau_13TeV_79.9fb-1_125.09GeV_20190454.txt
+   5  ATL_ttH_2lSS_13TeV_79.9b-1_125.09GeV_20190451.txt
+   6  ATL_ttH_2lSS1tau_13TeV_79.9b-1_125.09GeV_20190455.txt
+   7  ATL_ttH_3l_13TeV_79.9fb-1_125.09GeV_20190452.txt
+   8  ATL_ttH_3l1tau_13TeV_79.9b-1_125.09GeV_20190456.txt
+   9  ATL_ttH_4l_13TeV_79.9fb-1_125.09GeV_20190453.txt
+  10  CMS_gg-H-bb_boosted_13TeV_35.9fb-1_125GeV_1709055431.txt
+  11  CMS_H-mumu_13TeV_35.9fb-1_125GeV_63251.txt
+  12  CMS_ttH-bb_1lep_13TeV_35.9fb-1_125GeV_36821.txt
+  13  CMS_ttH-bb_1lep_13TeV_41.5fb-1_125GeV_180302.txt
+  14  CMS_ttH-bb_2lep_13TeV_35.9fb-1_125GeV_36822.txt
+  15  CMS_ttH-bb_2lep_13TeV_41.5fb-1_125GeV_180303.txt
+  16  CMS_ttH-bb_fullhadr_13TeV_41.5fb-1_125GeV_180301.txt
+  17  CMS_ttH-multilepton_1l2tauh_13TeV_35.9fb-1_125GeV_1803054856.txt
+  18  CMS_ttH-multilepton_1l2tauh_13TeV_41.5fb-1_125GeV_180191.txt
+  19  CMS_ttH-multilepton_2lss_13TeV_35.9fb-1_125GeV_1803054851.txt
+  20  CMS_ttH-multilepton_2lss_13TeV_41.5fb-1_125GeV_180192.txt
+  21  CMS_ttH-multilepton_2lss1tauh_13TeV_35.9fb-1_125GeV_1803054854.txt
+  22  CMS_ttH-multilepton_2lss1tauh_13TeV_41.5fb-1_125GeV_180193.txt
+  23  CMS_ttH-multilepton_3l_13TeV_35.9fb-1_125GeV_1803054852.txt
+  24  CMS_ttH-multilepton_3l_13TeV_41.5fb-1_125GeV_1801951.txt
+  25  CMS_ttH-multilepton_3l1tauh_13TeV_35.9fb-1_125GeV_1803054855.txt
+  26  CMS_ttH-multilepton_3l1tauh_13TeV_41.5fb-1_125GeV_180196.txt
+  27  CMS_ttH-multilepton_4l_13TeV_35.9fb-1_125GeV_1803054853.txt
+  28  CMS_ttH-multilepton_4l_13TeV_41.5fb-1_125GeV_180197.txt
+  29  CMS_WH_Wbb_13TeV_35.9fb-1_125.09GeV_1709074972.txt
+  30  CMS_ZH_Zbb_13TeV_35.9fb-1_125.09GeV_1709074971.txt
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+ Reading in STXS measurements from analysis-set latestresults:
+   1  ATL_H-gaga_0j_13TeV_139fb-1_20190291.stxs
+   2  ATL_H-gaga_1j_13TeV_139fb-1_20190292.stxs
+   3  ATL_H-gaga_2j_DeltaPhijj_-0p5Pi_0Pi_13TeV_139fb-1_20190294.stxs
+   4  ATL_H-gaga_2j_DeltaPhijj_0p5Pi_Pi_13TeV_139fb-1_20190296.stxs
+   5  ATL_H-gaga_2j_DeltaPhijj_0Pi_0p5Pi_13TeV_139fb-1_20190295.stxs
+   6  ATL_H-gaga_2j_DeltaPhijj_-Pi_-0p5Pi_13TeV_139fb-1_20190293.stxs
+   7  ATL_H-tautau_ggH_13TeV_36.1fb-1_125GeV_88561.stxs
+   8  ATL_H-tautau_VBF_13TeV_36.1fb-1_125GeV_88562.stxs
+   9  ATL_H-WW-enumunu_ggH_13TeV_36.1fb-1_125GeV_90541.stxs
+  10  ATL_H-WW-enumunu_VBF_13TeV_36.1fb-1_125GeV_90542.stxs
+  11  ATL_H-ZZ_ggF0jpThigh_13TeV_139fb-1_125GeV_344702.stxs
+  12  ATL_H-ZZ_ggF0jpTlow_13TeV_139fb-1_125GeV_344701.stxs
+  13  ATL_H-ZZ_ggF1jpThigh_13TeV_139fb-1_125GeV_344705.stxs
+  14  ATL_H-ZZ_ggF1jpTlow_13TeV_139fb-1_125GeV_344703.stxs
+  15  ATL_H-ZZ_ggF1jpTmed_13TeV_139fb-1_125GeV_344704.stxs
+  16  ATL_H-ZZ_ggF2j_13TeV_139fb-1_125GeV_344706.stxs
+  17  ATL_H-ZZ_ggF-pTH-high_13TeV_139fb-1_125GeV_344707.stxs
+  18  ATL_H-ZZ_ttH_13TeV_139fb-1_125GeV_344712.stxs
+  19  ATL_H-ZZ_VBFpTH-high_13TeV_139fb-1_125GeV_344709.stxs
+  20  ATL_H-ZZ_VBFpTH-low_13TeV_139fb-1_125GeV_344708.stxs
+  21  ATL_H-ZZ_VH-had_13TeV_139fb-1_125GeV_344710.stxs
+  22  ATL_H-ZZ_VH-lep_13TeV_139fb-1_125GeV_344711.stxs
+  23  ATL_ttH-gaga_13TeV_139fb-1_20190041.stxs
+  24  ATL_WH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200062.stxs
+  25  ATL_WH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200061.stxs
+  26  ATL_WH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100521.stxs
+  27  ATL_ZH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200065.stxs
+  28  ATL_ZH-bb_pTlow_13TeV_139.0fb-1_125GeV_20200063.stxs
+  29  ATL_ZH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200064.stxs
+  30  ATL_ZH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100522.stxs
+  31  CMS_H-gaga_ggH0j_77.4fb-1_13TeV_125GeV_1802901.stxs
+  32  CMS_H-gaga_ggH1j_pThigh_77.4fb-1_13TeV_125GeV_1802904.stxs
+  33  CMS_H-gaga_ggH1j_pTlow_77.4fb-1_13TeV_125GeV_1802902.stxs
+  34  CMS_H-gaga_ggH1j_pTmed_77.4fb-1_13TeV_125GeV_1802903.stxs
+  35  CMS_H-gaga_ggH2j_77.4fb-1_13TeV_125GeV_1802905.stxs
+  36  CMS_H-gaga_ggH_BSM_77.4fb-1_13TeV_125GeV_1802906.stxs
+  37  CMS_H-gaga_qqH_77.4fb-1_13TeV_125GeV_1802907.stxs
+  38  CMS_H-gaga_ttH_13TeV_137.0fb-1_125GeV_108661.stxs
+  39  CMS_H-tautau_ggH0j_13TeV_77.4fb-1_125GeV_1803201.stxs
+  40  CMS_H-tautau_ggH1jpThigh_13TeV_77.4fb-1_125GeV_1803204.stxs
+  41  CMS_H-tautau_ggH1jpTlow_13TeV_77.4fb-1_125GeV_1803202.stxs
+  42  CMS_H-tautau_ggH1jpTmed_13TeV_77.4fb-1_125GeV_1803203.stxs
+  43  CMS_H-tautau_ggH2j_13TeV_77.4fb-1_125GeV_1803205.stxs
+  44  CMS_H-tautau_HV-Hqq_13TeV_77.4fb-1_125GeV_1803207.stxs
+  45  CMS_H-tautau_pTj1high_13TeV_77.4fb-1_125GeV_1803208.stxs
+  46  CMS_H-tautau_rest_13TeV_77.4fb-1_125GeV_1803209.stxs
+  47  CMS_H-tautau_VBF_13TeV_77.4fb-1_125GeV_1803206.stxs
+  48  CMS_H-WW_0j_13TeV_137fb-1_1900201.stxs
+  49  CMS_H-WW_1j_13TeV_137fb-1_1900202.stxs
+  50  CMS_H-WW_2j_13TeV_137fb-1_1900203.stxs
+  51  CMS_H-WW_3j_13TeV_137fb-1_1900204.stxs
+  52  CMS_H-WW_4j_13TeV_137fb-1_1900205.stxs
+  53  CMS_H-ZZ-4l_ggH_13TeV_137.1fb-1_125GeV_1900101.stxs
+  54  CMS_H-ZZ-4l_ttHtH_13TeV_137.1fb-1_125GeV_1900104.stxs
+  55  CMS_H-ZZ-4l_VBF_13TeV_137.1fb-1_125GeV_1900102.stxs
+  56  CMS_H-ZZ-4l_VH_13TeV_137.1fb-1_125GeV_1900103.stxs
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+   1  28  18029_CMS_H-gaga.stxscorr
+   2  45  18032_CMS_H-tautau.stxscorr
+   3   6  19001_CMS_H-ZZ_incl.stxscorr
+   4   3  ATL_H-tautau_8856.stxscorr
+   5  78  ATL_H-ZZ_200403447.stxscorr
+   6  15  ATL_VH-bb_2020006.stxscorr
+   7  15  CMS_H-WW_19002.stxscorr
+ Reading in theory uncertainty correlations from the following datafiles in analysis-set latestresults:
+======================================================================
+Starting ScannerS check of the TRSM broken phase using the settings:
+BFB=0
+Uni=0
+STU=0
+Higgs=0
+scan.npoints=1
+scan.seed=247374847
+======================================================================
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                   HiggsBounds 5.9.0                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~            arXiv:0811.4169, arXiv:1102.1898,           ~
+ ~            arXiv:1301.2345, arXiv:1311.0055,           ~
+ ~            arXiv:1507.06706                            ~
+ ~       https://gitlab.com/higgsbounds/higgsbounds       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ HiggsBounds collects together results from
+
+     * the LEP collaborations and LEP Higgs Working Group
+     * the CDF and D0 Collaborations
+     * the ATLAS and CMS Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * the program VH@NNLO
+       (arXiv:1210.5347,arXiv:1802.04817)
+     * TeV4LHC Higgs Working Group report
+       (see arXiv:hep-ph/0612172 and refs. therein)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and refs. therein, including the
+        gluon fusion N3LO prediction (arXiv:1602.00695).)
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                  HiggsSignals 2.6.1                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~       arXiv:1305.1933 (Manual)                         ~
+ ~       arXiv:1403.1582 (application + more details)     ~
+ ~                                                        ~
+ ~ It is based on the HiggsBounds-5 Fortran library.      ~
+ ~ Please consult and cite also the following references  ~
+ ~ for the HiggsBounds program                            ~
+ ~                                                        ~
+ ~           arXiv:0811.4169, arXiv:1102.1898,            ~
+ ~           arXiv:1311.0055, arXiv:2006.06007            ~
+ ~      https://gitlab.com/higgsbounds/higgssignals       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  HiggsSignals collects together results from
+
+     * the ATLAS and CMS Collaborations
+     * the CDF and D0 Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and ref. therein)
+
+ Covariance matrix for relative branching ratio uncertainties read in successfully.
+ Covariance matrix for relative cross section uncertainties read in successfully.
+ Correlation matrix for relative cross section uncertainties read in successfully.
+ Reading in measurements from the following datafiles from analysis-set latestresults:
+   1  ATL_H-bb_ttH_1lepton_13TeV_36.1fb-1_125GeV_88951.txt
+   2  ATL_H-bb_ttH_2lepton_13TeV_36.1fb-1_125GeV_88952.txt
+   3  ATL_H-bb_VBF_13TeV_36.1fb-1_125GeV_86391.txt
+   4  ATL_ttH_1l2tau_13TeV_79.9fb-1_125.09GeV_20190454.txt
+   5  ATL_ttH_2lSS_13TeV_79.9b-1_125.09GeV_20190451.txt
+   6  ATL_ttH_2lSS1tau_13TeV_79.9b-1_125.09GeV_20190455.txt
+   7  ATL_ttH_3l_13TeV_79.9fb-1_125.09GeV_20190452.txt
+   8  ATL_ttH_3l1tau_13TeV_79.9b-1_125.09GeV_20190456.txt
+   9  ATL_ttH_4l_13TeV_79.9fb-1_125.09GeV_20190453.txt
+  10  CMS_gg-H-bb_boosted_13TeV_35.9fb-1_125GeV_1709055431.txt
+  11  CMS_H-mumu_13TeV_35.9fb-1_125GeV_63251.txt
+  12  CMS_ttH-bb_1lep_13TeV_35.9fb-1_125GeV_36821.txt
+  13  CMS_ttH-bb_1lep_13TeV_41.5fb-1_125GeV_180302.txt
+  14  CMS_ttH-bb_2lep_13TeV_35.9fb-1_125GeV_36822.txt
+  15  CMS_ttH-bb_2lep_13TeV_41.5fb-1_125GeV_180303.txt
+  16  CMS_ttH-bb_fullhadr_13TeV_41.5fb-1_125GeV_180301.txt
+  17  CMS_ttH-multilepton_1l2tauh_13TeV_35.9fb-1_125GeV_1803054856.txt
+  18  CMS_ttH-multilepton_1l2tauh_13TeV_41.5fb-1_125GeV_180191.txt
+  19  CMS_ttH-multilepton_2lss_13TeV_35.9fb-1_125GeV_1803054851.txt
+  20  CMS_ttH-multilepton_2lss_13TeV_41.5fb-1_125GeV_180192.txt
+  21  CMS_ttH-multilepton_2lss1tauh_13TeV_35.9fb-1_125GeV_1803054854.txt
+  22  CMS_ttH-multilepton_2lss1tauh_13TeV_41.5fb-1_125GeV_180193.txt
+  23  CMS_ttH-multilepton_3l_13TeV_35.9fb-1_125GeV_1803054852.txt
+  24  CMS_ttH-multilepton_3l_13TeV_41.5fb-1_125GeV_1801951.txt
+  25  CMS_ttH-multilepton_3l1tauh_13TeV_35.9fb-1_125GeV_1803054855.txt
+  26  CMS_ttH-multilepton_3l1tauh_13TeV_41.5fb-1_125GeV_180196.txt
+  27  CMS_ttH-multilepton_4l_13TeV_35.9fb-1_125GeV_1803054853.txt
+  28  CMS_ttH-multilepton_4l_13TeV_41.5fb-1_125GeV_180197.txt
+  29  CMS_WH_Wbb_13TeV_35.9fb-1_125.09GeV_1709074972.txt
+  30  CMS_ZH_Zbb_13TeV_35.9fb-1_125.09GeV_1709074971.txt
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+ Reading in STXS measurements from analysis-set latestresults:
+   1  ATL_H-gaga_0j_13TeV_139fb-1_20190291.stxs
+   2  ATL_H-gaga_1j_13TeV_139fb-1_20190292.stxs
+   3  ATL_H-gaga_2j_DeltaPhijj_-0p5Pi_0Pi_13TeV_139fb-1_20190294.stxs
+   4  ATL_H-gaga_2j_DeltaPhijj_0p5Pi_Pi_13TeV_139fb-1_20190296.stxs
+   5  ATL_H-gaga_2j_DeltaPhijj_0Pi_0p5Pi_13TeV_139fb-1_20190295.stxs
+   6  ATL_H-gaga_2j_DeltaPhijj_-Pi_-0p5Pi_13TeV_139fb-1_20190293.stxs
+   7  ATL_H-tautau_ggH_13TeV_36.1fb-1_125GeV_88561.stxs
+   8  ATL_H-tautau_VBF_13TeV_36.1fb-1_125GeV_88562.stxs
+   9  ATL_H-WW-enumunu_ggH_13TeV_36.1fb-1_125GeV_90541.stxs
+  10  ATL_H-WW-enumunu_VBF_13TeV_36.1fb-1_125GeV_90542.stxs
+  11  ATL_H-ZZ_ggF0jpThigh_13TeV_139fb-1_125GeV_344702.stxs
+  12  ATL_H-ZZ_ggF0jpTlow_13TeV_139fb-1_125GeV_344701.stxs
+  13  ATL_H-ZZ_ggF1jpThigh_13TeV_139fb-1_125GeV_344705.stxs
+  14  ATL_H-ZZ_ggF1jpTlow_13TeV_139fb-1_125GeV_344703.stxs
+  15  ATL_H-ZZ_ggF1jpTmed_13TeV_139fb-1_125GeV_344704.stxs
+  16  ATL_H-ZZ_ggF2j_13TeV_139fb-1_125GeV_344706.stxs
+  17  ATL_H-ZZ_ggF-pTH-high_13TeV_139fb-1_125GeV_344707.stxs
+  18  ATL_H-ZZ_ttH_13TeV_139fb-1_125GeV_344712.stxs
+  19  ATL_H-ZZ_VBFpTH-high_13TeV_139fb-1_125GeV_344709.stxs
+  20  ATL_H-ZZ_VBFpTH-low_13TeV_139fb-1_125GeV_344708.stxs
+  21  ATL_H-ZZ_VH-had_13TeV_139fb-1_125GeV_344710.stxs
+  22  ATL_H-ZZ_VH-lep_13TeV_139fb-1_125GeV_344711.stxs
+  23  ATL_ttH-gaga_13TeV_139fb-1_20190041.stxs
+  24  ATL_WH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200062.stxs
+  25  ATL_WH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200061.stxs
+  26  ATL_WH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100521.stxs
+  27  ATL_ZH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200065.stxs
+  28  ATL_ZH-bb_pTlow_13TeV_139.0fb-1_125GeV_20200063.stxs
+  29  ATL_ZH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200064.stxs
+  30  ATL_ZH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100522.stxs
+  31  CMS_H-gaga_ggH0j_77.4fb-1_13TeV_125GeV_1802901.stxs
+  32  CMS_H-gaga_ggH1j_pThigh_77.4fb-1_13TeV_125GeV_1802904.stxs
+  33  CMS_H-gaga_ggH1j_pTlow_77.4fb-1_13TeV_125GeV_1802902.stxs
+  34  CMS_H-gaga_ggH1j_pTmed_77.4fb-1_13TeV_125GeV_1802903.stxs
+  35  CMS_H-gaga_ggH2j_77.4fb-1_13TeV_125GeV_1802905.stxs
+  36  CMS_H-gaga_ggH_BSM_77.4fb-1_13TeV_125GeV_1802906.stxs
+  37  CMS_H-gaga_qqH_77.4fb-1_13TeV_125GeV_1802907.stxs
+  38  CMS_H-gaga_ttH_13TeV_137.0fb-1_125GeV_108661.stxs
+  39  CMS_H-tautau_ggH0j_13TeV_77.4fb-1_125GeV_1803201.stxs
+  40  CMS_H-tautau_ggH1jpThigh_13TeV_77.4fb-1_125GeV_1803204.stxs
+  41  CMS_H-tautau_ggH1jpTlow_13TeV_77.4fb-1_125GeV_1803202.stxs
+  42  CMS_H-tautau_ggH1jpTmed_13TeV_77.4fb-1_125GeV_1803203.stxs
+  43  CMS_H-tautau_ggH2j_13TeV_77.4fb-1_125GeV_1803205.stxs
+  44  CMS_H-tautau_HV-Hqq_13TeV_77.4fb-1_125GeV_1803207.stxs
+  45  CMS_H-tautau_pTj1high_13TeV_77.4fb-1_125GeV_1803208.stxs
+  46  CMS_H-tautau_rest_13TeV_77.4fb-1_125GeV_1803209.stxs
+  47  CMS_H-tautau_VBF_13TeV_77.4fb-1_125GeV_1803206.stxs
+  48  CMS_H-WW_0j_13TeV_137fb-1_1900201.stxs
+  49  CMS_H-WW_1j_13TeV_137fb-1_1900202.stxs
+  50  CMS_H-WW_2j_13TeV_137fb-1_1900203.stxs
+  51  CMS_H-WW_3j_13TeV_137fb-1_1900204.stxs
+  52  CMS_H-WW_4j_13TeV_137fb-1_1900205.stxs
+  53  CMS_H-ZZ-4l_ggH_13TeV_137.1fb-1_125GeV_1900101.stxs
+  54  CMS_H-ZZ-4l_ttHtH_13TeV_137.1fb-1_125GeV_1900104.stxs
+  55  CMS_H-ZZ-4l_VBF_13TeV_137.1fb-1_125GeV_1900102.stxs
+  56  CMS_H-ZZ-4l_VH_13TeV_137.1fb-1_125GeV_1900103.stxs
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+   1  28  18029_CMS_H-gaga.stxscorr
+   2  45  18032_CMS_H-tautau.stxscorr
+   3   6  19001_CMS_H-ZZ_incl.stxscorr
+   4   3  ATL_H-tautau_8856.stxscorr
+   5  78  ATL_H-ZZ_200403447.stxscorr
+   6  15  ATL_VH-bb_2020006.stxscorr
+   7  15  CMS_H-WW_19002.stxscorr
+ Reading in theory uncertainty correlations from the following datafiles in analysis-set latestresults:
+======================================================================
+Starting ScannerS check of the TRSM broken phase using the settings:
+BFB=1
+Uni=1
+STU=1
+Higgs=1
+scan.npoints=1
+scan.seed=-1665995872
+======================================================================
+{'target': 8.501942654093332e-06, 'params': {'thetaSX': 1.2596631352577048, 'thetahS': -0.48499169775589474, 'thetahX': 1.2948028051918328, 'vs': 663.9404166473137, 'vx': 622.1614751288954, 'mH1': 90, 'mH2': 125.09, 'mH3': 500, 'mode': 4}, 'constraint': -1.0}
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ bg
+-bash: bg: current: no such job
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv                  logs.txt
+90_125.09_500.txt                  output_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out             parameterData.py
+bayesianOpt.err                    __pycache__
+bayesianOptExec.sh                 scannerS.sub
+BayesianOptimization-1.4.3         STXS_analyses.txt
+bayesianOpt.log                    STXS_correlations.txt
+bayesianOpt.out                    testOutput
+bayesianOptSubmit.sub              test.sh
+BayOptOutput.json                  twoD_AtlasLimitsMaxBayOpt.py
+config_mH190_mH2125.09_mH3500.tsv  v1.4.3.tar.gz
+configurer.py                      x_90_125.09_500.tsv
+functions.py                       x_BayOptOutput.json
+gitBayesianOptimization            x_config_mH190_mH2125.09_mH3500.tsv
+HS_analyses.txt                    x_constraint_config_mH190_mH2125.09_mH3500.tsv
+HS_correlations.txt                x_constraint_output_mH190_mH2125.09_mH3500.tsv
+Key.dat                            x_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim x_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ cd ..
+[ihaque@lxplus987 testing]$ ls
+AtlasLimitsMax_BayesianOpt  AtlasLimitsMax_OnlySingles.tsv
+AtlasLimitsMax_OnlySingles  AtlasLimitsMax_ScriptTesting
+[ihaque@lxplus987 testing]$ cd ..
+[ihaque@lxplus987 sh-bbyy-pheno]$ ls
+Atlas2023Limits.json        parameterPlotter.py            twoD_AtlasLimitsMaxConfigure.py
+Atlas2023Limits.tsv         plots2D                        twoD_AtlasLimitsMaxErrorCheck.py
+AtlasLimitsMaxCondor        __pycache__                    twoD_AtlasLimitsMaxPlotDistribution.py
+configurer.py               RobensMax                      twoD_AtlasLimitsMaxPlot.py
+Exclusion_functions.py      RobensMaxCondor                twoD_AtlasLimits.py
+functions.py                scannerS.err                   twoD_Exclusion.py
+old                         scannerS.log                   twoD_ExtendedBPs.py
+oneD_AtlasLimitsCompile.py  scannerS.out                   twoD_MaximalXSCompileTest.py
+oneD_AtlasLimitsPlot.py     test2                          twoD_MaximalXSTest.py
+oneD_AtlasLimits.py         testing                        twoD_NP.py
+oneD_NPbbgamgam.py          testing.py                     twoD_NPSM.py
+oneD_ownGridCompile.py      testMaxTryingToFindNaN         twoD_NWA.py
+oneD_ownGridPlot.py         theory.py                      twoDPlotter.py
+oneD_ownGrid.py             thesisAuxiliaryData            twoD_RobensMaxCompile.py
+parameterData.py            twoD_AtlasLimitsMaxCompile.py  twoD_RobensMax.py
+[ihaque@lxplus987 sh-bbyy-pheno]$ cd ..
+[ihaque@lxplus987 build]$ ls
+C2HDM                       CPVDM                  Doxyfile.doc   N2HDMDarkD     tabort
+CMakeCache.txt              CTestTestfile.cmake    example_input  N2HDMDarkS     Testing
+CMakeDoxyfile.in            CxSMBroken             include        N2HDMDarkSD    tests
+CMakeDoxygenDefaults.cmake  CxSMDark               lib            R2HDM          TRSMBroken
+CMakeFiles                  DartConfiguration.tcl  Makefile       sh-bbyy-pheno
+cmake_install.cmake         _deps                  N2HDMBroken    src
+[ihaque@lxplus987 build]$ pwd
+/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build
+[ihaque@lxplus987 build]$ ls
+C2HDM                       CPVDM                  Doxyfile.doc   N2HDMDarkD     tabort
+CMakeCache.txt              CTestTestfile.cmake    example_input  N2HDMDarkS     Testing
+CMakeDoxyfile.in            CxSMBroken             include        N2HDMDarkSD    tests
+CMakeDoxygenDefaults.cmake  CxSMDark               lib            R2HDM          TRSMBroken
+CMakeFiles                  DartConfiguration.tcl  Makefile       sh-bbyy-pheno
+cmake_install.cmake         _deps                  N2HDMBroken    src
+[ihaque@lxplus987 build]$ cd sh-bbyy-pheno/
+[ihaque@lxplus987 sh-bbyy-pheno]$ ls
+Atlas2023Limits.json        parameterPlotter.py            twoD_AtlasLimitsMaxConfigure.py
+Atlas2023Limits.tsv         plots2D                        twoD_AtlasLimitsMaxErrorCheck.py
+AtlasLimitsMaxCondor        __pycache__                    twoD_AtlasLimitsMaxPlotDistribution.py
+configurer.py               RobensMax                      twoD_AtlasLimitsMaxPlot.py
+Exclusion_functions.py      RobensMaxCondor                twoD_AtlasLimits.py
+functions.py                scannerS.err                   twoD_Exclusion.py
+old                         scannerS.log                   twoD_ExtendedBPs.py
+oneD_AtlasLimitsCompile.py  scannerS.out                   twoD_MaximalXSCompileTest.py
+oneD_AtlasLimitsPlot.py     test2                          twoD_MaximalXSTest.py
+oneD_AtlasLimits.py         testing                        twoD_NP.py
+oneD_NPbbgamgam.py          testing.py                     twoD_NPSM.py
+oneD_ownGridCompile.py      testMaxTryingToFindNaN         twoD_NWA.py
+oneD_ownGridPlot.py         theory.py                      twoDPlotter.py
+oneD_ownGrid.py             thesisAuxiliaryData            twoD_RobensMaxCompile.py
+parameterData.py            twoD_AtlasLimitsMaxCompile.py  twoD_RobensMax.py
+[ihaque@lxplus987 sh-bbyy-pheno]$ cd testing/
+[ihaque@lxplus987 testing]$ ls
+AtlasLimitsMax_BayesianOpt  AtlasLimitsMax_OnlySingles.tsv
+AtlasLimitsMax_OnlySingles  AtlasLimitsMax_ScriptTesting
+[ihaque@lxplus987 testing]$ cd AtlasLimitsMax_BayesianOpt/
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv                  logs.txt
+90_125.09_500.txt                  output_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out             parameterData.py
+bayesianOpt.err                    __pycache__
+bayesianOptExec.sh                 scannerS.sub
+BayesianOptimization-1.4.3         STXS_analyses.txt
+bayesianOpt.log                    STXS_correlations.txt
+bayesianOpt.out                    testOutput
+bayesianOptSubmit.sub              test.sh
+BayOptOutput.json                  twoD_AtlasLimitsMaxBayOpt.py
+config_mH190_mH2125.09_mH3500.tsv  v1.4.3.tar.gz
+configurer.py                      x_90_125.09_500.tsv
+functions.py                       x_BayOptOutput.json
+gitBayesianOptimization            x_config_mH190_mH2125.09_mH3500.tsv
+HS_analyses.txt                    x_constraint_config_mH190_mH2125.09_mH3500.tsv
+HS_correlations.txt                x_constraint_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/buil[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ./afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/bui
+ld/TRSMBroken tb.tsv check x_constraint_output_mH190_mH2125.09_mH3500.tsv
+-bash: ./afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken: No such file or directory
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ./afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken
+-bash: ./afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken: No such file or directory
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ../afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/bu
+ild/TRSMBroken
+-bash: ../afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken: No such file or directory
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/buil
+d/TRSMBroken
+A subcommand is required
+Run with --help for more information.
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/buil
+d/TRSMBroken
+A subcommand is required
+Run with --help for more information.
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/buil
+d/TRSMBroken tb.tsv check x_constraint_output_mH190_mH2125.09_mH3500.tsv
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                   HiggsBounds 5.9.0                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~            arXiv:0811.4169, arXiv:1102.1898,           ~
+ ~            arXiv:1301.2345, arXiv:1311.0055,           ~
+ ~            arXiv:1507.06706                            ~
+ ~       https://gitlab.com/higgsbounds/higgsbounds       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ HiggsBounds collects together results from
+
+     * the LEP collaborations and LEP Higgs Working Group
+     * the CDF and D0 Collaborations
+     * the ATLAS and CMS Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * the program VH@NNLO
+       (arXiv:1210.5347,arXiv:1802.04817)
+     * TeV4LHC Higgs Working Group report
+       (see arXiv:hep-ph/0612172 and refs. therein)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and refs. therein, including the
+        gluon fusion N3LO prediction (arXiv:1602.00695).)
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                  HiggsSignals 2.6.1                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~       arXiv:1305.1933 (Manual)                         ~
+ ~       arXiv:1403.1582 (application + more details)     ~
+ ~                                                        ~
+ ~ It is based on the HiggsBounds-5 Fortran library.      ~
+ ~ Please consult and cite also the following references  ~
+ ~ for the HiggsBounds program                            ~
+ ~                                                        ~
+ ~           arXiv:0811.4169, arXiv:1102.1898,            ~
+ ~           arXiv:1311.0055, arXiv:2006.06007            ~
+ ~      https://gitlab.com/higgsbounds/higgssignals       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  HiggsSignals collects together results from
+
+     * the ATLAS and CMS Collaborations
+     * the CDF and D0 Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and ref. therein)
+
+ Covariance matrix for relative branching ratio uncertainties read in successfully.
+ Covariance matrix for relative cross section uncertainties read in successfully.
+ Correlation matrix for relative cross section uncertainties read in successfully.
+ Reading in measurements from the following datafiles from analysis-set latestresults:
+   1  ATL_H-bb_ttH_1lepton_13TeV_36.1fb-1_125GeV_88951.txt
+   2  ATL_H-bb_ttH_2lepton_13TeV_36.1fb-1_125GeV_88952.txt
+   3  ATL_H-bb_VBF_13TeV_36.1fb-1_125GeV_86391.txt
+   4  ATL_ttH_1l2tau_13TeV_79.9fb-1_125.09GeV_20190454.txt
+   5  ATL_ttH_2lSS_13TeV_79.9b-1_125.09GeV_20190451.txt
+   6  ATL_ttH_2lSS1tau_13TeV_79.9b-1_125.09GeV_20190455.txt
+   7  ATL_ttH_3l_13TeV_79.9fb-1_125.09GeV_20190452.txt
+   8  ATL_ttH_3l1tau_13TeV_79.9b-1_125.09GeV_20190456.txt
+   9  ATL_ttH_4l_13TeV_79.9fb-1_125.09GeV_20190453.txt
+  10  CMS_gg-H-bb_boosted_13TeV_35.9fb-1_125GeV_1709055431.txt
+  11  CMS_H-mumu_13TeV_35.9fb-1_125GeV_63251.txt
+  12  CMS_ttH-bb_1lep_13TeV_35.9fb-1_125GeV_36821.txt
+  13  CMS_ttH-bb_1lep_13TeV_41.5fb-1_125GeV_180302.txt
+  14  CMS_ttH-bb_2lep_13TeV_35.9fb-1_125GeV_36822.txt
+  15  CMS_ttH-bb_2lep_13TeV_41.5fb-1_125GeV_180303.txt
+  16  CMS_ttH-bb_fullhadr_13TeV_41.5fb-1_125GeV_180301.txt
+  17  CMS_ttH-multilepton_1l2tauh_13TeV_35.9fb-1_125GeV_1803054856.txt
+  18  CMS_ttH-multilepton_1l2tauh_13TeV_41.5fb-1_125GeV_180191.txt
+  19  CMS_ttH-multilepton_2lss_13TeV_35.9fb-1_125GeV_1803054851.txt
+  20  CMS_ttH-multilepton_2lss_13TeV_41.5fb-1_125GeV_180192.txt
+  21  CMS_ttH-multilepton_2lss1tauh_13TeV_35.9fb-1_125GeV_1803054854.txt
+  22  CMS_ttH-multilepton_2lss1tauh_13TeV_41.5fb-1_125GeV_180193.txt
+  23  CMS_ttH-multilepton_3l_13TeV_35.9fb-1_125GeV_1803054852.txt
+  24  CMS_ttH-multilepton_3l_13TeV_41.5fb-1_125GeV_1801951.txt
+  25  CMS_ttH-multilepton_3l1tauh_13TeV_35.9fb-1_125GeV_1803054855.txt
+  26  CMS_ttH-multilepton_3l1tauh_13TeV_41.5fb-1_125GeV_180196.txt
+  27  CMS_ttH-multilepton_4l_13TeV_35.9fb-1_125GeV_1803054853.txt
+  28  CMS_ttH-multilepton_4l_13TeV_41.5fb-1_125GeV_180197.txt
+  29  CMS_WH_Wbb_13TeV_35.9fb-1_125.09GeV_1709074972.txt
+  30  CMS_ZH_Zbb_13TeV_35.9fb-1_125.09GeV_1709074971.txt
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+ Reading in STXS measurements from analysis-set latestresults:
+   1  ATL_H-gaga_0j_13TeV_139fb-1_20190291.stxs
+   2  ATL_H-gaga_1j_13TeV_139fb-1_20190292.stxs
+   3  ATL_H-gaga_2j_DeltaPhijj_-0p5Pi_0Pi_13TeV_139fb-1_20190294.stxs
+   4  ATL_H-gaga_2j_DeltaPhijj_0p5Pi_Pi_13TeV_139fb-1_20190296.stxs
+   5  ATL_H-gaga_2j_DeltaPhijj_0Pi_0p5Pi_13TeV_139fb-1_20190295.stxs
+   6  ATL_H-gaga_2j_DeltaPhijj_-Pi_-0p5Pi_13TeV_139fb-1_20190293.stxs
+   7  ATL_H-tautau_ggH_13TeV_36.1fb-1_125GeV_88561.stxs
+   8  ATL_H-tautau_VBF_13TeV_36.1fb-1_125GeV_88562.stxs
+   9  ATL_H-WW-enumunu_ggH_13TeV_36.1fb-1_125GeV_90541.stxs
+  10  ATL_H-WW-enumunu_VBF_13TeV_36.1fb-1_125GeV_90542.stxs
+  11  ATL_H-ZZ_ggF0jpThigh_13TeV_139fb-1_125GeV_344702.stxs
+  12  ATL_H-ZZ_ggF0jpTlow_13TeV_139fb-1_125GeV_344701.stxs
+  13  ATL_H-ZZ_ggF1jpThigh_13TeV_139fb-1_125GeV_344705.stxs
+  14  ATL_H-ZZ_ggF1jpTlow_13TeV_139fb-1_125GeV_344703.stxs
+  15  ATL_H-ZZ_ggF1jpTmed_13TeV_139fb-1_125GeV_344704.stxs
+  16  ATL_H-ZZ_ggF2j_13TeV_139fb-1_125GeV_344706.stxs
+  17  ATL_H-ZZ_ggF-pTH-high_13TeV_139fb-1_125GeV_344707.stxs
+  18  ATL_H-ZZ_ttH_13TeV_139fb-1_125GeV_344712.stxs
+  19  ATL_H-ZZ_VBFpTH-high_13TeV_139fb-1_125GeV_344709.stxs
+  20  ATL_H-ZZ_VBFpTH-low_13TeV_139fb-1_125GeV_344708.stxs
+  21  ATL_H-ZZ_VH-had_13TeV_139fb-1_125GeV_344710.stxs
+  22  ATL_H-ZZ_VH-lep_13TeV_139fb-1_125GeV_344711.stxs
+  23  ATL_ttH-gaga_13TeV_139fb-1_20190041.stxs
+  24  ATL_WH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200062.stxs
+  25  ATL_WH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200061.stxs
+  26  ATL_WH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100521.stxs
+  27  ATL_ZH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200065.stxs
+  28  ATL_ZH-bb_pTlow_13TeV_139.0fb-1_125GeV_20200063.stxs
+  29  ATL_ZH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200064.stxs
+  30  ATL_ZH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100522.stxs
+  31  CMS_H-gaga_ggH0j_77.4fb-1_13TeV_125GeV_1802901.stxs
+  32  CMS_H-gaga_ggH1j_pThigh_77.4fb-1_13TeV_125GeV_1802904.stxs
+  33  CMS_H-gaga_ggH1j_pTlow_77.4fb-1_13TeV_125GeV_1802902.stxs
+  34  CMS_H-gaga_ggH1j_pTmed_77.4fb-1_13TeV_125GeV_1802903.stxs
+  35  CMS_H-gaga_ggH2j_77.4fb-1_13TeV_125GeV_1802905.stxs
+  36  CMS_H-gaga_ggH_BSM_77.4fb-1_13TeV_125GeV_1802906.stxs
+  37  CMS_H-gaga_qqH_77.4fb-1_13TeV_125GeV_1802907.stxs
+  38  CMS_H-gaga_ttH_13TeV_137.0fb-1_125GeV_108661.stxs
+  39  CMS_H-tautau_ggH0j_13TeV_77.4fb-1_125GeV_1803201.stxs
+  40  CMS_H-tautau_ggH1jpThigh_13TeV_77.4fb-1_125GeV_1803204.stxs
+  41  CMS_H-tautau_ggH1jpTlow_13TeV_77.4fb-1_125GeV_1803202.stxs
+  42  CMS_H-tautau_ggH1jpTmed_13TeV_77.4fb-1_125GeV_1803203.stxs
+  43  CMS_H-tautau_ggH2j_13TeV_77.4fb-1_125GeV_1803205.stxs
+  44  CMS_H-tautau_HV-Hqq_13TeV_77.4fb-1_125GeV_1803207.stxs
+  45  CMS_H-tautau_pTj1high_13TeV_77.4fb-1_125GeV_1803208.stxs
+  46  CMS_H-tautau_rest_13TeV_77.4fb-1_125GeV_1803209.stxs
+  47  CMS_H-tautau_VBF_13TeV_77.4fb-1_125GeV_1803206.stxs
+  48  CMS_H-WW_0j_13TeV_137fb-1_1900201.stxs
+  49  CMS_H-WW_1j_13TeV_137fb-1_1900202.stxs
+  50  CMS_H-WW_2j_13TeV_137fb-1_1900203.stxs
+  51  CMS_H-WW_3j_13TeV_137fb-1_1900204.stxs
+  52  CMS_H-WW_4j_13TeV_137fb-1_1900205.stxs
+  53  CMS_H-ZZ-4l_ggH_13TeV_137.1fb-1_125GeV_1900101.stxs
+  54  CMS_H-ZZ-4l_ttHtH_13TeV_137.1fb-1_125GeV_1900104.stxs
+  55  CMS_H-ZZ-4l_VBF_13TeV_137.1fb-1_125GeV_1900102.stxs
+  56  CMS_H-ZZ-4l_VH_13TeV_137.1fb-1_125GeV_1900103.stxs
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+   1  28  18029_CMS_H-gaga.stxscorr
+   2  45  18032_CMS_H-tautau.stxscorr
+   3   6  19001_CMS_H-ZZ_incl.stxscorr
+   4   3  ATL_H-tautau_8856.stxscorr
+   5  78  ATL_H-ZZ_200403447.stxscorr
+   6  15  ATL_VH-bb_2020006.stxscorr
+   7  15  CMS_H-WW_19002.stxscorr
+ Reading in theory uncertainty correlations from the following datafiles in analysis-set latestresults:
+======================================================================
+Starting ScannerS check of the TRSM broken phase using the settings:
+BFB=1
+Uni=1
+STU=1
+Higgs=1
+scan.npoints=1
+scan.seed=-1829511944
+======================================================================
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Cannot parse input file x_constraint_output_mH190_mH2125.09_mH3500.tsv, invalid column count in header.
+Aborted (core dumped)
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim x_constraint_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken tb.tsv check x_output_mH190_mH2125.09_mH3500.tsv
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                   HiggsBounds 5.9.0                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~            arXiv:0811.4169, arXiv:1102.1898,           ~
+ ~            arXiv:1301.2345, arXiv:1311.0055,           ~
+ ~            arXiv:1507.06706                            ~
+ ~       https://gitlab.com/higgsbounds/higgsbounds       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ HiggsBounds collects together results from
+
+     * the LEP collaborations and LEP Higgs Working Group
+     * the CDF and D0 Collaborations
+     * the ATLAS and CMS Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * the program VH@NNLO
+       (arXiv:1210.5347,arXiv:1802.04817)
+     * TeV4LHC Higgs Working Group report
+       (see arXiv:hep-ph/0612172 and refs. therein)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and refs. therein, including the
+        gluon fusion N3LO prediction (arXiv:1602.00695).)
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                  HiggsSignals 2.6.1                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~       arXiv:1305.1933 (Manual)                         ~
+ ~       arXiv:1403.1582 (application + more details)     ~
+ ~                                                        ~
+ ~ It is based on the HiggsBounds-5 Fortran library.      ~
+ ~ Please consult and cite also the following references  ~
+ ~ for the HiggsBounds program                            ~
+ ~                                                        ~
+ ~           arXiv:0811.4169, arXiv:1102.1898,            ~
+ ~           arXiv:1311.0055, arXiv:2006.06007            ~
+ ~      https://gitlab.com/higgsbounds/higgssignals       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  HiggsSignals collects together results from
+
+     * the ATLAS and CMS Collaborations
+     * the CDF and D0 Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and ref. therein)
+
+ Covariance matrix for relative branching ratio uncertainties read in successfully.
+ Covariance matrix for relative cross section uncertainties read in successfully.
+ Correlation matrix for relative cross section uncertainties read in successfully.
+ Reading in measurements from the following datafiles from analysis-set latestresults:
+   1  ATL_H-bb_ttH_1lepton_13TeV_36.1fb-1_125GeV_88951.txt
+   2  ATL_H-bb_ttH_2lepton_13TeV_36.1fb-1_125GeV_88952.txt
+   3  ATL_H-bb_VBF_13TeV_36.1fb-1_125GeV_86391.txt
+   4  ATL_ttH_1l2tau_13TeV_79.9fb-1_125.09GeV_20190454.txt
+   5  ATL_ttH_2lSS_13TeV_79.9b-1_125.09GeV_20190451.txt
+   6  ATL_ttH_2lSS1tau_13TeV_79.9b-1_125.09GeV_20190455.txt
+   7  ATL_ttH_3l_13TeV_79.9fb-1_125.09GeV_20190452.txt
+   8  ATL_ttH_3l1tau_13TeV_79.9b-1_125.09GeV_20190456.txt
+   9  ATL_ttH_4l_13TeV_79.9fb-1_125.09GeV_20190453.txt
+  10  CMS_gg-H-bb_boosted_13TeV_35.9fb-1_125GeV_1709055431.txt
+  11  CMS_H-mumu_13TeV_35.9fb-1_125GeV_63251.txt
+  12  CMS_ttH-bb_1lep_13TeV_35.9fb-1_125GeV_36821.txt
+  13  CMS_ttH-bb_1lep_13TeV_41.5fb-1_125GeV_180302.txt
+  14  CMS_ttH-bb_2lep_13TeV_35.9fb-1_125GeV_36822.txt
+  15  CMS_ttH-bb_2lep_13TeV_41.5fb-1_125GeV_180303.txt
+  16  CMS_ttH-bb_fullhadr_13TeV_41.5fb-1_125GeV_180301.txt
+  17  CMS_ttH-multilepton_1l2tauh_13TeV_35.9fb-1_125GeV_1803054856.txt
+  18  CMS_ttH-multilepton_1l2tauh_13TeV_41.5fb-1_125GeV_180191.txt
+  19  CMS_ttH-multilepton_2lss_13TeV_35.9fb-1_125GeV_1803054851.txt
+  20  CMS_ttH-multilepton_2lss_13TeV_41.5fb-1_125GeV_180192.txt
+  21  CMS_ttH-multilepton_2lss1tauh_13TeV_35.9fb-1_125GeV_1803054854.txt
+  22  CMS_ttH-multilepton_2lss1tauh_13TeV_41.5fb-1_125GeV_180193.txt
+  23  CMS_ttH-multilepton_3l_13TeV_35.9fb-1_125GeV_1803054852.txt
+  24  CMS_ttH-multilepton_3l_13TeV_41.5fb-1_125GeV_1801951.txt
+  25  CMS_ttH-multilepton_3l1tauh_13TeV_35.9fb-1_125GeV_1803054855.txt
+  26  CMS_ttH-multilepton_3l1tauh_13TeV_41.5fb-1_125GeV_180196.txt
+  27  CMS_ttH-multilepton_4l_13TeV_35.9fb-1_125GeV_1803054853.txt
+  28  CMS_ttH-multilepton_4l_13TeV_41.5fb-1_125GeV_180197.txt
+  29  CMS_WH_Wbb_13TeV_35.9fb-1_125.09GeV_1709074972.txt
+  30  CMS_ZH_Zbb_13TeV_35.9fb-1_125.09GeV_1709074971.txt
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+ Reading in STXS measurements from analysis-set latestresults:
+   1  ATL_H-gaga_0j_13TeV_139fb-1_20190291.stxs
+   2  ATL_H-gaga_1j_13TeV_139fb-1_20190292.stxs
+   3  ATL_H-gaga_2j_DeltaPhijj_-0p5Pi_0Pi_13TeV_139fb-1_20190294.stxs
+   4  ATL_H-gaga_2j_DeltaPhijj_0p5Pi_Pi_13TeV_139fb-1_20190296.stxs
+   5  ATL_H-gaga_2j_DeltaPhijj_0Pi_0p5Pi_13TeV_139fb-1_20190295.stxs
+   6  ATL_H-gaga_2j_DeltaPhijj_-Pi_-0p5Pi_13TeV_139fb-1_20190293.stxs
+   7  ATL_H-tautau_ggH_13TeV_36.1fb-1_125GeV_88561.stxs
+   8  ATL_H-tautau_VBF_13TeV_36.1fb-1_125GeV_88562.stxs
+   9  ATL_H-WW-enumunu_ggH_13TeV_36.1fb-1_125GeV_90541.stxs
+  10  ATL_H-WW-enumunu_VBF_13TeV_36.1fb-1_125GeV_90542.stxs
+  11  ATL_H-ZZ_ggF0jpThigh_13TeV_139fb-1_125GeV_344702.stxs
+  12  ATL_H-ZZ_ggF0jpTlow_13TeV_139fb-1_125GeV_344701.stxs
+  13  ATL_H-ZZ_ggF1jpThigh_13TeV_139fb-1_125GeV_344705.stxs
+  14  ATL_H-ZZ_ggF1jpTlow_13TeV_139fb-1_125GeV_344703.stxs
+  15  ATL_H-ZZ_ggF1jpTmed_13TeV_139fb-1_125GeV_344704.stxs
+  16  ATL_H-ZZ_ggF2j_13TeV_139fb-1_125GeV_344706.stxs
+  17  ATL_H-ZZ_ggF-pTH-high_13TeV_139fb-1_125GeV_344707.stxs
+  18  ATL_H-ZZ_ttH_13TeV_139fb-1_125GeV_344712.stxs
+  19  ATL_H-ZZ_VBFpTH-high_13TeV_139fb-1_125GeV_344709.stxs
+  20  ATL_H-ZZ_VBFpTH-low_13TeV_139fb-1_125GeV_344708.stxs
+  21  ATL_H-ZZ_VH-had_13TeV_139fb-1_125GeV_344710.stxs
+  22  ATL_H-ZZ_VH-lep_13TeV_139fb-1_125GeV_344711.stxs
+  23  ATL_ttH-gaga_13TeV_139fb-1_20190041.stxs
+  24  ATL_WH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200062.stxs
+  25  ATL_WH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200061.stxs
+  26  ATL_WH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100521.stxs
+  27  ATL_ZH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200065.stxs
+  28  ATL_ZH-bb_pTlow_13TeV_139.0fb-1_125GeV_20200063.stxs
+  29  ATL_ZH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200064.stxs
+  30  ATL_ZH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100522.stxs
+  31  CMS_H-gaga_ggH0j_77.4fb-1_13TeV_125GeV_1802901.stxs
+  32  CMS_H-gaga_ggH1j_pThigh_77.4fb-1_13TeV_125GeV_1802904.stxs
+  33  CMS_H-gaga_ggH1j_pTlow_77.4fb-1_13TeV_125GeV_1802902.stxs
+  34  CMS_H-gaga_ggH1j_pTmed_77.4fb-1_13TeV_125GeV_1802903.stxs
+  35  CMS_H-gaga_ggH2j_77.4fb-1_13TeV_125GeV_1802905.stxs
+  36  CMS_H-gaga_ggH_BSM_77.4fb-1_13TeV_125GeV_1802906.stxs
+  37  CMS_H-gaga_qqH_77.4fb-1_13TeV_125GeV_1802907.stxs
+  38  CMS_H-gaga_ttH_13TeV_137.0fb-1_125GeV_108661.stxs
+  39  CMS_H-tautau_ggH0j_13TeV_77.4fb-1_125GeV_1803201.stxs
+  40  CMS_H-tautau_ggH1jpThigh_13TeV_77.4fb-1_125GeV_1803204.stxs
+  41  CMS_H-tautau_ggH1jpTlow_13TeV_77.4fb-1_125GeV_1803202.stxs
+  42  CMS_H-tautau_ggH1jpTmed_13TeV_77.4fb-1_125GeV_1803203.stxs
+  43  CMS_H-tautau_ggH2j_13TeV_77.4fb-1_125GeV_1803205.stxs
+  44  CMS_H-tautau_HV-Hqq_13TeV_77.4fb-1_125GeV_1803207.stxs
+  45  CMS_H-tautau_pTj1high_13TeV_77.4fb-1_125GeV_1803208.stxs
+  46  CMS_H-tautau_rest_13TeV_77.4fb-1_125GeV_1803209.stxs
+  47  CMS_H-tautau_VBF_13TeV_77.4fb-1_125GeV_1803206.stxs
+  48  CMS_H-WW_0j_13TeV_137fb-1_1900201.stxs
+  49  CMS_H-WW_1j_13TeV_137fb-1_1900202.stxs
+  50  CMS_H-WW_2j_13TeV_137fb-1_1900203.stxs
+  51  CMS_H-WW_3j_13TeV_137fb-1_1900204.stxs
+  52  CMS_H-WW_4j_13TeV_137fb-1_1900205.stxs
+  53  CMS_H-ZZ-4l_ggH_13TeV_137.1fb-1_125GeV_1900101.stxs
+  54  CMS_H-ZZ-4l_ttHtH_13TeV_137.1fb-1_125GeV_1900104.stxs
+  55  CMS_H-ZZ-4l_VBF_13TeV_137.1fb-1_125GeV_1900102.stxs
+  56  CMS_H-ZZ-4l_VH_13TeV_137.1fb-1_125GeV_1900103.stxs
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+   1  28  18029_CMS_H-gaga.stxscorr
+   2  45  18032_CMS_H-tautau.stxscorr
+   3   6  19001_CMS_H-ZZ_incl.stxscorr
+   4   3  ATL_H-tautau_8856.stxscorr
+   5  78  ATL_H-ZZ_200403447.stxscorr
+   6  15  ATL_VH-bb_2020006.stxscorr
+   7  15  CMS_H-WW_19002.stxscorr
+ Reading in theory uncertainty correlations from the following datafiles in analysis-set latestresults:
+======================================================================
+Starting ScannerS check of the TRSM broken phase using the settings:
+BFB=1
+Uni=1
+STU=1
+Higgs=1
+scan.npoints=1
+scan.seed=-1258888177
+======================================================================
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ cat x_output_mH190_mH2125.09_mH3500.tsv
+        mH1     mH2     mH3     R11     R12     R13     R21     R22     R23     R31     R32     R33     thetahS thetahX thetaSX v       vs      vx      LH      LS      LX      LHS     LHX     LSX     muHsq   muSsq    muXsq   S       STU_chisq       T       U       b_H1_WW b_H1_ZZ b_H1_Zgam       b_H1_bb b_H1_cc b_H1_gamgam     b_H1_gg b_H1_mumu       b_H1_ss b_H1_tautau     b_H1_tt b_H2_H1H1       b_H2_WW b_H2_ZZ b_H2_Zgam        b_H2_bb b_H2_cc b_H2_gamgam     b_H2_gg b_H2_mumu       b_H2_ss b_H2_tautau     b_H2_tt b_H3_H1H1       b_H3_H1H2       b_H3_H2H2       b_H3_WW b_H3_ZZ b_H3_Zgam       b_H3_bb b_H3_cc b_H3_gamgam      b_H3_gg b_H3_mumu       b_H3_ss b_H3_tautau     b_H3_tt c_H1H1H1        c_H1H1H2        c_H1H1H3        c_H1H2H2        c_H1H2H3        c_H1H3H3        c_H2H2H2        c_H2H2H3        c_H2H3H3        c_H3H3H3 hb_H1_channel   hb_H1_ncombined hb_H1_obsratio  hb_H1_result    hb_H2_channel   hb_H2_ncombined hb_H2_obsratio  hb_H2_result    hb_H3_channel   hb_H3_ncombined hb_H3_obsratio  hb_H3_result    hb_channel       hb_result       hs_chisqMass    hs_chisqMu      hs_deltaChisq   maxEV   mu_H1_WW        mu_H1_ZZ        mu_H1_bb        mu_H1_bb_VH     mu_H1_gamgam    mu_H1_tautau    mu_H2_WW        mu_H2_ZZ        mu_H2_bb mu_H2_bb_VH     mu_H2_gamgam    mu_H2_tautau    mu_H3_WW        mu_H3_ZZ        mu_H3_bb        mu_H3_bb_VH     mu_H3_gamgam    mu_H3_tautau    valid_BFB       valid_Higgs     valid_STU       valid_Uniw_H1    w_H2    w_H3    x_H1W   x_H1Z   x_H1_bb x_H1_gg x_H1_vbf        x_H1tt  x_H2W   x_H2Z   x_H2_bb x_H2_gg x_H2_vbf        x_H2tt  x_H3W   x_H3Z   x_H3_bb x_H3_gg x_H3_vbf        x_H3tt
+0       90      125.09  500     0.35606333792066769     0.69320050492570151     0.62665138582751478     0.2550207006176034      0.57306179989131711     -0.77882258298140705    -0.8989901788369542     0.43711924400108076      0.027265818869499303    -1.0962874185614273     -0.67724879598582599    1.5358015945353878      246.21965079413738      1.1737870452378711      766.66800114028922      1.68324438141968        20612.644723039473       0.010937671985639453    -325.09471503442199     -0.039352047951292275   -0.53949047739349754    -90256.079610012719     9984441.1298348513      -5235.729697343636      0.075417140813366881     60.370785789341021      -0.11604183405237212    -0.0026677263968706436  0.0020004360950687254   0.00040708874534648554  0       0.81817836288310852     0.040108743706127936    0.0012402703789426094   0.055112014419143381     0.00029206366988003383  0.00034307479030428633  0.082317945312078034    0       0       0.209540379497799       0.026436167649781489    0.001547190824977831    0.58943392991338939     0.02882447563136455      0.0023091776568478976   0.078098650877957143    0.00022443255863105615  0.00024633988002286961  0.063339255509228878    0       0.34703387998208629     0.48432263117892416     0.16821482241365765      0.00023172794171386172  0.00011093814584822586  3.4480775060935054e-09  4.9686582696502698e-08  2.4414958738798736e-09  1.2078979586563587e-10  2.7113454178350175e-07  2.4543458521634521e-11  2.0859798080342081e-11   6.9389882731322726e-09  8.566652189052189e-05   6908.1964292676421      7462.9352064557806      47516.616646727176      7663.5955551236302      40401.328903669149      57928.981000093896       7500.5366378223325      34340.629652096381      48533.44272463087       51153.777716294135      1       1       0.68243127199076647     1       377     1       0.051561742219867188    1       516     14.3106157701982708      0       516     0       2.3864838774123047e-25  808.30815813869185      722.54049626019184      61839.643491870971      0.12680874491759964     0.12680874491759966     0.12680874491759964      0.12680874491759964     0.12680874491759966     0.12680874491759969     0.065027606818007677    0.065027606818007691    0.065027606818007677    0.065027606818007677    0.065027606818007663    0.065027606818007677     0.00034617127964314766  0.00034617127964314777  0.00034617127964314766  0.00034617127964314766  0.0003461712796431476   0.0003461712796431476   0       0       0       0       0.00028646282486868      0.00026568712644173731  120756.00298422253      0.50420843713077257     0.28777181442823807     0.1669707095049604      9.5174572228833529      0.66661502701372954     0.13013289279662865     0.095726097584878753     0.059209252458142549    0.031663536820785862    2.7268680963600009      0.255086626857225       0.03088409848819592     0.006967348588324122    0.0042651538678877563   0.002058442971170576    3.6675360043863665       0.39374692404958966     0.0086114874418683832
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim x_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim twoD_AtlasLimitsMaxBayOpt.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3
+Python 3.9.18 (main, Jan  4 2024, 00:00:00)
+[GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import functions
+>>> a, b, c = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3',  'bb', 'gamgam',  normalizationSM=1)
+>>> c[4][0]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index 4 is out of bounds for axis 0 with size 4
+>>> a[4][0]
+0.0033559423053730404
+>>> b[4][0]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index 4 is out of bounds for axis 0 with size 4
+>>> c[4][0]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index 4 is out of bounds for axis 0 with size 4
+>>> a, b, c = functions.ppXNPSM_massfree('x_constraint_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3',  'bb', 'gamgam',  normalizationSM=1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/functions.py", line 171, in ppXNPSM_massfree
+    df = pandas.read_table(BPdirectory)#, index_col = 0)
+  File "/afs/cern.ch/user/i/ihaque/.local/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1403, in read_table
+    return _read(filepath_or_buffer, kwds)
+  File "/afs/cern.ch/user/i/ihaque/.local/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 618, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/afs/cern.ch/user/i/ihaque/.local/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1618, in __init__
+    self._engine = self._make_engine(f, self.engine)
+  File "/afs/cern.ch/user/i/ihaque/.local/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1896, in _make_engine
+    return mapping[engine](f, **self.options)
+  File "/afs/cern.ch/user/i/ihaque/.local/lib/python3.9/site-packages/pandas/io/parsers/c_parser_wrapper.py", line 93, in __init__
+    self._reader = parsers.TextReader(src, **kwds)
+  File "parsers.pyx", line 581, in pandas._libs.parsers.TextReader.__cinit__
+pandas.errors.EmptyDataError: No columns to parse from file
+>>>
+[1]+  Stopped                 python3
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim twoD_AtlasLimitsMaxBayOpt.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim twoD_AtlasLimitsMaxBayOpt.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3
+Python 3.9.18 (main, Jan  4 2024, 00:00:00)
+[GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import functions
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM
+[2]+  Stopped                 python3
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken --Higgs 1 --STU 1 --Uni 1 --BFB 1 tb.tsv check x_output_mH190_mH2125.09_mH3500.tsv
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                   HiggsBounds 5.9.0                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~            arXiv:0811.4169, arXiv:1102.1898,           ~
+ ~            arXiv:1301.2345, arXiv:1311.0055,           ~
+ ~            arXiv:1507.06706                            ~
+ ~       https://gitlab.com/higgsbounds/higgsbounds       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ HiggsBounds collects together results from
+
+     * the LEP collaborations and LEP Higgs Working Group
+     * the CDF and D0 Collaborations
+     * the ATLAS and CMS Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * the program VH@NNLO
+       (arXiv:1210.5347,arXiv:1802.04817)
+     * TeV4LHC Higgs Working Group report
+       (see arXiv:hep-ph/0612172 and refs. therein)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and refs. therein, including the
+        gluon fusion N3LO prediction (arXiv:1602.00695).)
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~                                                        ~
+ ~                  HiggsSignals 2.6.1                    ~
+ ~                                                        ~
+ ~             Philip Bechtle, Sven Heinemeyer,           ~
+ ~              Tobias Klingl, Tim Stefaniak,             ~
+ ~             Georg Weiglein, Jonas Wittbrodt            ~
+ ~                                                        ~
+ ~       arXiv:1305.1933 (Manual)                         ~
+ ~       arXiv:1403.1582 (application + more details)     ~
+ ~                                                        ~
+ ~ It is based on the HiggsBounds-5 Fortran library.      ~
+ ~ Please consult and cite also the following references  ~
+ ~ for the HiggsBounds program                            ~
+ ~                                                        ~
+ ~           arXiv:0811.4169, arXiv:1102.1898,            ~
+ ~           arXiv:1311.0055, arXiv:2006.06007            ~
+ ~      https://gitlab.com/higgsbounds/higgssignals       ~
+ ~                                                        ~
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  HiggsSignals collects together results from
+
+     * the ATLAS and CMS Collaborations
+     * the CDF and D0 Collaborations
+     * the program HDECAY (arXiv:hep-ph/9704448)
+     * LHC Higgs Cross Section Working Group
+       (arXiv:1101.0593, arXiv:1201.3084, arXiv:1307.1347,
+        arXiv:1610.07922 and ref. therein)
+
+ Covariance matrix for relative branching ratio uncertainties read in successfully.
+ Covariance matrix for relative cross section uncertainties read in successfully.
+ Correlation matrix for relative cross section uncertainties read in successfully.
+ Reading in measurements from the following datafiles from analysis-set latestresults:
+   1  ATL_H-bb_ttH_1lepton_13TeV_36.1fb-1_125GeV_88951.txt
+   2  ATL_H-bb_ttH_2lepton_13TeV_36.1fb-1_125GeV_88952.txt
+   3  ATL_H-bb_VBF_13TeV_36.1fb-1_125GeV_86391.txt
+   4  ATL_ttH_1l2tau_13TeV_79.9fb-1_125.09GeV_20190454.txt
+   5  ATL_ttH_2lSS_13TeV_79.9b-1_125.09GeV_20190451.txt
+   6  ATL_ttH_2lSS1tau_13TeV_79.9b-1_125.09GeV_20190455.txt
+   7  ATL_ttH_3l_13TeV_79.9fb-1_125.09GeV_20190452.txt
+   8  ATL_ttH_3l1tau_13TeV_79.9b-1_125.09GeV_20190456.txt
+   9  ATL_ttH_4l_13TeV_79.9fb-1_125.09GeV_20190453.txt
+  10  CMS_gg-H-bb_boosted_13TeV_35.9fb-1_125GeV_1709055431.txt
+  11  CMS_H-mumu_13TeV_35.9fb-1_125GeV_63251.txt
+  12  CMS_ttH-bb_1lep_13TeV_35.9fb-1_125GeV_36821.txt
+  13  CMS_ttH-bb_1lep_13TeV_41.5fb-1_125GeV_180302.txt
+  14  CMS_ttH-bb_2lep_13TeV_35.9fb-1_125GeV_36822.txt
+  15  CMS_ttH-bb_2lep_13TeV_41.5fb-1_125GeV_180303.txt
+  16  CMS_ttH-bb_fullhadr_13TeV_41.5fb-1_125GeV_180301.txt
+  17  CMS_ttH-multilepton_1l2tauh_13TeV_35.9fb-1_125GeV_1803054856.txt
+  18  CMS_ttH-multilepton_1l2tauh_13TeV_41.5fb-1_125GeV_180191.txt
+  19  CMS_ttH-multilepton_2lss_13TeV_35.9fb-1_125GeV_1803054851.txt
+  20  CMS_ttH-multilepton_2lss_13TeV_41.5fb-1_125GeV_180192.txt
+  21  CMS_ttH-multilepton_2lss1tauh_13TeV_35.9fb-1_125GeV_1803054854.txt
+  22  CMS_ttH-multilepton_2lss1tauh_13TeV_41.5fb-1_125GeV_180193.txt
+  23  CMS_ttH-multilepton_3l_13TeV_35.9fb-1_125GeV_1803054852.txt
+  24  CMS_ttH-multilepton_3l_13TeV_41.5fb-1_125GeV_1801951.txt
+  25  CMS_ttH-multilepton_3l1tauh_13TeV_35.9fb-1_125GeV_1803054855.txt
+  26  CMS_ttH-multilepton_3l1tauh_13TeV_41.5fb-1_125GeV_180196.txt
+  27  CMS_ttH-multilepton_4l_13TeV_35.9fb-1_125GeV_1803054853.txt
+  28  CMS_ttH-multilepton_4l_13TeV_41.5fb-1_125GeV_180197.txt
+  29  CMS_WH_Wbb_13TeV_35.9fb-1_125.09GeV_1709074972.txt
+  30  CMS_ZH_Zbb_13TeV_35.9fb-1_125.09GeV_1709074971.txt
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+ Reading in STXS measurements from analysis-set latestresults:
+   1  ATL_H-gaga_0j_13TeV_139fb-1_20190291.stxs
+   2  ATL_H-gaga_1j_13TeV_139fb-1_20190292.stxs
+   3  ATL_H-gaga_2j_DeltaPhijj_-0p5Pi_0Pi_13TeV_139fb-1_20190294.stxs
+   4  ATL_H-gaga_2j_DeltaPhijj_0p5Pi_Pi_13TeV_139fb-1_20190296.stxs
+   5  ATL_H-gaga_2j_DeltaPhijj_0Pi_0p5Pi_13TeV_139fb-1_20190295.stxs
+   6  ATL_H-gaga_2j_DeltaPhijj_-Pi_-0p5Pi_13TeV_139fb-1_20190293.stxs
+   7  ATL_H-tautau_ggH_13TeV_36.1fb-1_125GeV_88561.stxs
+   8  ATL_H-tautau_VBF_13TeV_36.1fb-1_125GeV_88562.stxs
+   9  ATL_H-WW-enumunu_ggH_13TeV_36.1fb-1_125GeV_90541.stxs
+  10  ATL_H-WW-enumunu_VBF_13TeV_36.1fb-1_125GeV_90542.stxs
+  11  ATL_H-ZZ_ggF0jpThigh_13TeV_139fb-1_125GeV_344702.stxs
+  12  ATL_H-ZZ_ggF0jpTlow_13TeV_139fb-1_125GeV_344701.stxs
+  13  ATL_H-ZZ_ggF1jpThigh_13TeV_139fb-1_125GeV_344705.stxs
+  14  ATL_H-ZZ_ggF1jpTlow_13TeV_139fb-1_125GeV_344703.stxs
+  15  ATL_H-ZZ_ggF1jpTmed_13TeV_139fb-1_125GeV_344704.stxs
+  16  ATL_H-ZZ_ggF2j_13TeV_139fb-1_125GeV_344706.stxs
+  17  ATL_H-ZZ_ggF-pTH-high_13TeV_139fb-1_125GeV_344707.stxs
+  18  ATL_H-ZZ_ttH_13TeV_139fb-1_125GeV_344712.stxs
+  19  ATL_H-ZZ_VBFpTH-high_13TeV_139fb-1_125GeV_344709.stxs
+  20  ATL_H-ZZ_VBFpTH-low_13TeV_139fb-1_125GeV_344708.stxs
+  21  ATL_H-ZZ_VH-had_13TeV_139fb-1_125GeV_344710.stxs
+  22  ATL_H-ZZ_VH-lep_13TeV_139fb-1_125GeV_344711.stxs
+  23  ATL_ttH-gaga_13TeV_139fb-1_20190041.stxs
+  24  ATL_WH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200062.stxs
+  25  ATL_WH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200061.stxs
+  26  ATL_WH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100521.stxs
+  27  ATL_ZH-bb_pThigh_13TeV_139.0fb-1_125GeV_20200065.stxs
+  28  ATL_ZH-bb_pTlow_13TeV_139.0fb-1_125GeV_20200063.stxs
+  29  ATL_ZH-bb_pTmed_13TeV_139.0fb-1_125GeV_20200064.stxs
+  30  ATL_ZH-WW-lnulnu_incl_13TeV_36.1fb-1_125GeV_100522.stxs
+  31  CMS_H-gaga_ggH0j_77.4fb-1_13TeV_125GeV_1802901.stxs
+  32  CMS_H-gaga_ggH1j_pThigh_77.4fb-1_13TeV_125GeV_1802904.stxs
+  33  CMS_H-gaga_ggH1j_pTlow_77.4fb-1_13TeV_125GeV_1802902.stxs
+  34  CMS_H-gaga_ggH1j_pTmed_77.4fb-1_13TeV_125GeV_1802903.stxs
+  35  CMS_H-gaga_ggH2j_77.4fb-1_13TeV_125GeV_1802905.stxs
+  36  CMS_H-gaga_ggH_BSM_77.4fb-1_13TeV_125GeV_1802906.stxs
+  37  CMS_H-gaga_qqH_77.4fb-1_13TeV_125GeV_1802907.stxs
+  38  CMS_H-gaga_ttH_13TeV_137.0fb-1_125GeV_108661.stxs
+  39  CMS_H-tautau_ggH0j_13TeV_77.4fb-1_125GeV_1803201.stxs
+  40  CMS_H-tautau_ggH1jpThigh_13TeV_77.4fb-1_125GeV_1803204.stxs
+  41  CMS_H-tautau_ggH1jpTlow_13TeV_77.4fb-1_125GeV_1803202.stxs
+  42  CMS_H-tautau_ggH1jpTmed_13TeV_77.4fb-1_125GeV_1803203.stxs
+  43  CMS_H-tautau_ggH2j_13TeV_77.4fb-1_125GeV_1803205.stxs
+  44  CMS_H-tautau_HV-Hqq_13TeV_77.4fb-1_125GeV_1803207.stxs
+  45  CMS_H-tautau_pTj1high_13TeV_77.4fb-1_125GeV_1803208.stxs
+  46  CMS_H-tautau_rest_13TeV_77.4fb-1_125GeV_1803209.stxs
+  47  CMS_H-tautau_VBF_13TeV_77.4fb-1_125GeV_1803206.stxs
+  48  CMS_H-WW_0j_13TeV_137fb-1_1900201.stxs
+  49  CMS_H-WW_1j_13TeV_137fb-1_1900202.stxs
+  50  CMS_H-WW_2j_13TeV_137fb-1_1900203.stxs
+  51  CMS_H-WW_3j_13TeV_137fb-1_1900204.stxs
+  52  CMS_H-WW_4j_13TeV_137fb-1_1900205.stxs
+  53  CMS_H-ZZ-4l_ggH_13TeV_137.1fb-1_125GeV_1900101.stxs
+  54  CMS_H-ZZ-4l_ttHtH_13TeV_137.1fb-1_125GeV_1900104.stxs
+  55  CMS_H-ZZ-4l_VBF_13TeV_137.1fb-1_125GeV_1900102.stxs
+  56  CMS_H-ZZ-4l_VH_13TeV_137.1fb-1_125GeV_1900103.stxs
+ Reading in correlations from the following datafiles in analysis-set latestresults:
+   1  28  18029_CMS_H-gaga.stxscorr
+   2  45  18032_CMS_H-tautau.stxscorr
+   3   6  19001_CMS_H-ZZ_incl.stxscorr
+   4   3  ATL_H-tautau_8856.stxscorr
+   5  78  ATL_H-ZZ_200403447.stxscorr
+   6  15  ATL_VH-bb_2020006.stxscorr
+   7  15  CMS_H-WW_19002.stxscorr
+ Reading in theory uncertainty correlations from the following datafiles in analysis-set latestresults:
+======================================================================
+Starting ScannerS check of the TRSM broken phase using the settings:
+BFB=1
+Uni=1
+STU=1
+Higgs=1
+scan.npoints=1
+scan.seed=-2103593119
+======================================================================
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ cat x_output_mH190_mH2125.09_mH3500.tsv
+        mH1     mH2     mH3     R11     R12     R13     R21     R22     R23     R31     R32     R33     thetahS thetahX thetaSX v       vs      vx      LH      LS      LX      LHS     LHX     LSX     muHsq   muSsq    muXsq   S       STU_chisq       T       U       b_H1_WW b_H1_ZZ b_H1_Zgam       b_H1_bb b_H1_cc b_H1_gamgam     b_H1_gg b_H1_mumu       b_H1_ss b_H1_tautau     b_H1_tt b_H2_H1H1       b_H2_WW b_H2_ZZ b_H2_Zgam        b_H2_bb b_H2_cc b_H2_gamgam     b_H2_gg b_H2_mumu       b_H2_ss b_H2_tautau     b_H2_tt b_H3_H1H1       b_H3_H1H2       b_H3_H2H2       b_H3_WW b_H3_ZZ b_H3_Zgam       b_H3_bb b_H3_cc b_H3_gamgam      b_H3_gg b_H3_mumu       b_H3_ss b_H3_tautau     b_H3_tt c_H1H1H1        c_H1H1H2        c_H1H1H3        c_H1H2H2        c_H1H2H3        c_H1H3H3        c_H2H2H2        c_H2H2H3        c_H2H3H3        c_H3H3H3 hb_H1_channel   hb_H1_ncombined hb_H1_obsratio  hb_H1_result    hb_H2_channel   hb_H2_ncombined hb_H2_obsratio  hb_H2_result    hb_H3_channel   hb_H3_ncombined hb_H3_obsratio  hb_H3_result    hb_channel       hb_result       hs_chisqMass    hs_chisqMu      hs_deltaChisq   maxEV   mu_H1_WW        mu_H1_ZZ        mu_H1_bb        mu_H1_bb_VH     mu_H1_gamgam    mu_H1_tautau    mu_H2_WW        mu_H2_ZZ        mu_H2_bb mu_H2_bb_VH     mu_H2_gamgam    mu_H2_tautau    mu_H3_WW        mu_H3_ZZ        mu_H3_bb        mu_H3_bb_VH     mu_H3_gamgam    mu_H3_tautau    valid_BFB       valid_Higgs     valid_STU       valid_Uniw_H1    w_H2    w_H3    x_H1W   x_H1Z   x_H1_bb x_H1_gg x_H1_vbf        x_H1tt  x_H2W   x_H2Z   x_H2_bb x_H2_gg x_H2_vbf        x_H2tt  x_H3W   x_H3Z   x_H3_bb x_H3_gg x_H3_vbf        x_H3tt
+0       90      125.09  500     0.35606333792066769     0.69320050492570151     0.62665138582751478     0.2550207006176034      0.57306179989131711     -0.77882258298140705    -0.8989901788369542     0.43711924400108076      0.027265818869499303    -1.0962874185614273     -0.67724879598582599    1.5358015945353878      246.21965079413738      1.1737870452378711      766.66800114028922      1.68324438141968        20612.644723039473       0.010937671985639453    -325.09471503442199     -0.039352047951292275   -0.53949047739349754    -90256.079610012719     9984441.1298348513      -5235.729697343636      0.075417140813366881     60.370785789341021      -0.11604183405237212    -0.0026677263968706436  0.0020004360950687254   0.00040708874534648554  0       0.81817836288310852     0.040108743706127936    0.0012402703789426094   0.055112014419143381     0.00029206366988003383  0.00034307479030428633  0.082317945312078034    0       0       0.209540379497799       0.026436167649781489    0.001547190824977831    0.58943392991338939     0.02882447563136455      0.0023091776568478976   0.078098650877957143    0.00022443255863105615  0.00024633988002286961  0.063339255509228878    0       0.34703387998208629     0.48432263117892416     0.16821482241365765      0.00023172794171386172  0.00011093814584822586  3.4480775060935054e-09  4.9686582696502698e-08  2.4414958738798736e-09  1.2078979586563587e-10  2.7113454178350175e-07  2.4543458521634521e-11  2.0859798080342081e-11   6.9389882731322726e-09  8.566652189052189e-05   6908.1964292676421      7462.9352064557806      47516.616646727176      7663.5955551236302      40401.328903669149      57928.981000093896       7500.5366378223325      34340.629652096381      48533.44272463087       51153.777716294135      1       1       0.68243127199076647     1       377     1       0.051561742219867188    1       516     14.3106157701982708      0       516     0       2.3864838774123047e-25  808.30815813869185      722.54049626019184      61839.643491870971      0.12680874491759964     0.12680874491759966     0.12680874491759964      0.12680874491759964     0.12680874491759966     0.12680874491759969     0.065027606818007677    0.065027606818007691    0.065027606818007677    0.065027606818007677    0.065027606818007663    0.065027606818007677     0.00034617127964314766  0.00034617127964314777  0.00034617127964314766  0.00034617127964314766  0.0003461712796431476   0.0003461712796431476   0       0       0       0       0.00028646282486868      0.00026568712644173731  120756.00298422253      0.50420843713077257     0.28777181442823807     0.1669707095049604      9.5174572228833529      0.66661502701372954     0.13013289279662865     0.095726097584878753     0.059209252458142549    0.031663536820785862    2.7268680963600009      0.255086626857225       0.03088409848819592     0.006967348588324122    0.0042651538678877563   0.002058442971170576    3.6675360043863665       0.39374692404958966     0.0086114874418683832
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3
+Python 3.9.18 (main, Jan  4 2024, 00:00:00)
+[GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import functions
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'SM1' is not defined
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3',  'bb', 'gamgam',  normalizationSM=1)
+>>> H1H2[4]
+array([0.00335594])
+>>> H1H2[5]
+array([0.00129856])
+>>> import pandas
+>>> df = pandas.read_table('x_output_mH190_mH2125.09_mH3500.tsv')
+>>> df
+   Unnamed: 0  mH1     mH2  mH3       R11       R12       R13       R21       R22       R23  ...   x_H2_bb   x_H2_gg  x_H2_vbf    x_H2tt     x_H3W     x_H3Z   x_H3_bb   x_H3_gg  x_H3_vbf    x_H3tt
+0           0   90  125.09  500  0.356063  0.693201  0.626651  0.255021  0.573062 -0.778823  ...  0.031664  2.726868  0.255087  0.030884  0.006967  0.004265  0.002058  3.667536  0.393747  0.008611
+
+[1 rows x 140 columns]
+>>> df['thetahS']
+0   -1.096287
+Name: thetahS, dtype: float64
+>>> df['thetahX']
+0   -0.677249
+Name: thetahX, dtype: float64
+>>> df['thetaSX']
+0    1.535802
+Name: thetaSX, dtype: float64
+>>> df['vs']
+0    1.173787
+Name: vs, dtype: float64
+>>> df['vx']
+0    766.668001
+Name: vx, dtype: float64
+>>>
+[3]+  Stopped                 python3
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim twoD_AtlasLimitsMaxBayOpt.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.tsv                        x_BayOptOutput.json
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              x_90_125.09_500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim x_BayOptOutput.json
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim twoD_AtlasLimitsMaxBayOpt.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim twoD_AtlasLimitsMaxBayOpt.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3
+Python 3.9.18 (main, Jan  4 2024, 00:00:00)
+[GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import functions
+>>> import pandas
+>>> df = pandas.read_table('x_output_mH190_mH2125.09_mH3500.tsv')
+>>> df
+   Unnamed: 0  mH1     mH2  mH3       R11  ...     x_H3Z   x_H3_bb   x_H3_gg  x_H3_vbf    x_H3tt
+0           0   90  125.09  500  0.196498  ...  0.001175  0.000567  1.010076  0.108442  0.002372
+
+[1 rows x 140 columns]
+>>> df['thetahS']
+0    0.252156
+Name: thetahS, dtype: float64
+>>> df['thetahX']
+0    1.366463
+Name: thetahX, dtype: float64
+>>> df['thetaSX']
+0    1.326094
+Name: thetaSX, dtype: float64
+>>> df['vs']
+0    18.778109
+Name: vs, dtype: float64
+>>> df['vx']
+0    745.092185
+Name: vx, dtype: float64
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3', 'bb', 'gamgam', normalizationSM=1)
+>>> H1H2[4]
+array([0.00207477])
+>>> H1H2[5]
+array([0.00080282])
+>>> H1H2
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [2.87758479e-03],
+       [2.07476899e-03],
+       [8.02815805e-04]])
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', '
+mH3',  SM1, SM2,  normalizationSM=1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'SM1' is not defined
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3',  'bb', 'gamgam',  normalizationSM=1)
+>>> H1H2
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [2.87758479e-03],
+       [2.07476899e-03],
+       [8.02815805e-04]])
+>>> df
+   Unnamed: 0  mH1     mH2  mH3       R11  ...     x_H3Z   x_H3_bb   x_H3_gg  x_H3_vbf    x_H3tt
+0           0   90  125.09  500  0.196498  ...  0.001175  0.000567  1.010076  0.108442  0.002372
+
+[1 rows x 140 columns]
+>>> df[b_H3_H1H2]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'b_H3_H1H2' is not defined
+>>> df['b_H3_H1H2']
+0    0.026019
+Name: b_H3_H1H2, dtype: float64
+>>> df['b_H3_H1H2'] * (df['b_H1_bb'] + df['b_H2_gamgam'])
+0    0.021349
+dtype: float64
+>>> df['x_H3_gg'] * df['b_H3_H1H2'] * (df['b_H1_bb'] + df['b_H2_gamgam'])
+0    0.021564
+dtype: float64
+>>> df['x_H3_gg'] * df['b_H3_H1H2'] * (df['b_H1_bb'] * df['b_H2_gamgam'])
+0    0.00005
+dtype: float64
+>>> df['x_H3_gg'] * df['b_H3_H1H2'] * (df['b_H1_bb'] + df['b_H2_gamgam'])
+0    0.021564
+dtype: float64
+>>> H1H2[4]
+array([0.00207477])
+>>> df['x_H3_gg'] * df['b_H3_H1H2'] * (df['b_H1_bb'] * df['b_H2_gamgam'])
+0    0.00005
+dtype: float64
+>>> (df['x_H3_gg'] * df['b_H3_H1H2'] * (df['b_H1_bb'] * df['b_H2_gamgam']))[0]
+4.9654115502469286e-05
+>>> (df['x_H3_gg'][0] * df['b_H3_H1H2'][0] * (df['b_H1_bb'][0] * df['b_H2_gamgam'][0]))[0]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: invalid index to scalar variable.
+>>> ((df['x_H3_gg'])[0] * (df['b_H3_H1H2'])[0] * (df['b_H1_bb'])[0] * (df['b_H2_gamgam'])[0])[0]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: invalid index to scalar variable.
+>>> ((df['x_H3_gg'])[0] * (df['b_H3_H1H2'])[0] * (df['b_H1_bb'])[0] * (df['b_H2_gamgam'])[0])
+4.9654115502469286e-05
+>>> ((df['x_H3_gg'])[0] * (df['b_H3_H1H2'])[0] * (df['b_H1_bb'])[0] * (df['b_H2_gamgam'])[0])
+4.9654115502469286e-05
+>>> df['thetahS']
+0    0.252156
+Name: thetahS, dtype: float64
+>>> df['thetahX']
+0    1.366463
+Name: thetahX, dtype: float64
+>>> df['thetaSX']
+0    1.326094
+Name: thetaSX, dtype: float64
+>>> df['vs']
+0    18.778109
+Name: vs, dtype: float64
+>>> df['vx']
+0    745.092185
+Name: vx, dtype: float64
+>>> df
+   Unnamed: 0  mH1     mH2  mH3       R11  ...     x_H3Z   x_H3_bb   x_H3_gg  x_H3_vbf    x_H3tt
+0           0   90  125.09  500  0.196498  ...  0.001175  0.000567  1.010076  0.108442  0.002372
+
+[1 rows x 140 columns]
+>>> ((df['x_H3_gg'])[0] * (df['b_H3_H1H2'])[0] * (df['b_H1_bb'])[0] * (df['b_H2_gamgam'])[0])[0]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: invalid index to scalar variable.
+>>> ((df['x_H3_gg'])[0] * (df['b_H3_H1H2'])[0] * (df['b_H1_bb'])[0] * (df['b_H2_gamgam'])[0])
+4.9654115502469286e-05
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3', 'bb', 'gamgam', normalizationSM=1)
+>>> H1H2
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [2.87758479e-03],
+       [2.07476899e-03],
+       [8.02815805e-04]])
+>>> H1H2[4][0]
+0.002074768985600961
+>>> df
+   Unnamed: 0  mH1     mH2  mH3       R11  ...     x_H3Z   x_H3_bb   x_H3_gg  x_H3_vbf    x_H3tt
+0           0   90  125.09  500  0.196498  ...  0.001175  0.000567  1.010076  0.108442  0.002372
+
+[1 rows x 140 columns]
+>>> df['b_H3_H1H2']*df['x_H3_gg']
+0    0.026281
+dtype: float64
+>>> df['b_H3_H1H2']*df['x_H3_gg'] * (df['b_H1_bb']*df['b_H2_gamgam'])
+0    0.00005
+dtype: float64
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3', 'bb', 'gamgam')
+>>> H1H2
+array([[ 90.        ],
+       [125.09      ],
+       [500.        ],
+       [ 35.67902582],
+       [ 25.72495395],
+       [  9.95407188]])
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3', 'bb', 'gamgam', normalizationSM=1)
+>>> H1H1
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [4.50259606e-04]])
+>>> H2H2
+array([[9.0000000e+01],
+       [1.2509000e+02],
+       [5.0000000e+02],
+       [9.1419089e-04]])
+>>> H1H2
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [2.87758479e-03],
+       [2.07476899e-03],
+       [8.02815805e-04]])
+>>>
+[4]+  Stopped                 python3
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.py                         x_90_125.09_500.tsv
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   tb.tsv                        x_BayOptOutput.json
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim tb.py
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv                  output_mH190_mH2125.09_mH3500.tsv
+90_125.09_500.txt                  parameterData.py
+9369584.0.scannerS.out             __pycache__
+bayesianOpt.err                    scannerS.sub
+bayesianOptExec.sh                 STXS_analyses.txt
+BayesianOptimization-1.4.3         STXS_correlations.txt
+bayesianOpt.log                    tb.py
+bayesianOpt.out                    tb.tsv
+bayesianOptSubmit.sub              testOutput
+BayOptOutput.json                  test.sh
+config_mH190_mH2125.09_mH3500.tsv  twoD_AtlasLimitsMaxBayOpt.py
+configurer.py                      v1.4.3.tar.gz
+functions.py                       x_90_125.09_500.tsv
+gitBayesianOptimization            x_BayOptOutput.json
+HS_analyses.txt                    x_config_mH190_mH2125.09_mH3500.tsv
+HS_correlations.txt                x_constraint_config_mH190_mH2125.09_mH3500.tsv
+Key.dat                            x_constraint_output_mH190_mH2125.09_mH3500.tsv
+logs.txt                           x_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3 tb.py
+  File "/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/tb.py", line 17
+    df = pandas.read_table(BPdirectory)#, index_col = 0)
+    ^
+IndentationError: expected an indented block
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3 tb.py
+0.0020747689856009614
+0.002074768985600961
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ condor_history ihaque
+ ID     OWNER          SUBMITTED   RUN_TIME     ST COMPLETED   CMD
+9372252.0 ihaque          2/29 18:01   0+00:11:44 C   2/29 21:05 /afs/cern.ch/user/i/ihaque/scannerS/Sc
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ python3
+Python 3.9.18 (main, Jan  4 2024, 00:00:00)
+[GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import functions
+>>> H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree('x_output_mH190_mH2125.09_mH3500.tsv', 'mH1', 'mH2', 'mH3', 'bb', 'gamgam', normalizationSM=1)
+>>> H1H2
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [2.87758479e-03],
+       [2.07476899e-03],
+       [8.02815805e-04]])
+>>> df = pandas.read_table('x_output_mH190_mH2125.09_mH3500.tsv')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'pandas' is not defined
+>>> import pandas
+>>> df = pandas.read_table('x_outiput_mH190_mH2125.09_mH3500.tsv')
+>>> ((df['x_H3_gg'])[0] * (df['b_H3_H1H2'])[0] * (df['b_H1_bb'])[0] * (df['b_H2_gamgam'])[0])
+0.002074768985600961
+>>> df['x_H3_gg'] * df['b_H3_H1H2'] * (df['b_H1_bb'] * df['b_H2_gamgam'])
+0    0.002075
+dtype: float64
+>>> H1H2
+array([[9.00000000e+01],
+       [1.25090000e+02],
+       [5.00000000e+02],
+       [2.87758479e-03],
+       [2.07476899e-03],
+       [8.02815805e-04]])
+>>>
+[5]+  Stopped                 python3
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ ls
+90_125.09_500.tsv           bayesianOpt.log                    functions.py             output_mH190_mH2125.09_mH3500.tsv  tb.py                         x_90_125.09_500.tsv
+90_125.09_500.txt           bayesianOpt.out                    gitBayesianOptimization  parameterData.py                   tb.tsv                        x_BayOptOutput.json
+9369584.0.scannerS.out      bayesianOptSubmit.sub              HS_analyses.txt          __pycache__                        testOutput                    x_config_mH190_mH2125.09_mH3500.tsv
+bayesianOpt.err             BayOptOutput.json                  HS_correlations.txt      scannerS.sub                       test.sh                       x_constraint_config_mH190_mH2125.09_mH3500.tsv
+bayesianOptExec.sh          config_mH190_mH2125.09_mH3500.tsv  Key.dat                  STXS_analyses.txt                  twoD_AtlasLimitsMaxBayOpt.py  x_constraint_output_mH190_mH2125.09_mH3500.tsv
+BayesianOptimization-1.4.3  configurer.py                      logs.txt                 STXS_correlations.txt              v1.4.3.tar.gz                 x_output_mH190_mH2125.09_mH3500.tsv
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ history -w XSerrorHistory.txt
+[ihaque@lxplus987 AtlasLimitsMax_BayesianOpt]$ vim XSerrorHistory.txt
+

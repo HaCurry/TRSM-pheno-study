@@ -1,0 +1,518 @@
+{
+    "BayOutput": {
+        "target": 2.90335729653014e-07,
+        "params": {
+            "thetaSX": 1.2438613817236774,
+            "thetahS": -0.22509440145939877,
+            "thetahX": 1.4603881074882863,
+            "vs": 663.7866953815717,
+            "vx": 622.0826635498547,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 10,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 8.501942654093332e-06,
+        "params": {
+            "thetaSX": 1.2596631352577048,
+            "thetahS": -0.48499169775589474,
+            "thetahX": 1.2948028051918328,
+            "vs": 663.9404166473137,
+            "vx": 622.1614751288954,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 100,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 8.501942654093332e-06,
+        "params": {
+            "thetaSX": 1.2596631352577048,
+            "thetahS": -0.48499169775589474,
+            "thetahX": 1.2948028051918328,
+            "vs": 663.9404166473137,
+            "vx": 622.1614751288954,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 100,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 8.501942654093332e-06,
+        "params": {
+            "thetaSX": 1.2596631352577048,
+            "thetahS": -0.48499169775589474,
+            "thetahX": 1.2948028051918328,
+            "vs": 663.9404166473137,
+            "vx": 622.1614751288954,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 250,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.2631897947318187e-05,
+        "params": {
+            "thetaSX": 0.8946924727151093,
+            "thetahS": -0.7751781088682407,
+            "thetahX": 1.1692945672475308,
+            "vs": 663.7162953307165,
+            "vx": 622.3352976984314,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 250,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.2631897947318187e-05,
+        "params": {
+            "thetaSX": 0.8946924727151093,
+            "thetahS": -0.7751781088682407,
+            "thetahX": 1.1692945672475308,
+            "vs": 663.7162953307165,
+            "vx": 622.3352976984314,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 250,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 2.90335729653014e-07,
+        "params": {
+            "thetaSX": 1.2438613817236774,
+            "thetahS": -0.22509440145939877,
+            "thetahX": 1.4603881074882863,
+            "vs": 663.7866953815717,
+            "vx": 622.0826635498547,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 25,
+    "n_iter": 10,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 3.448469639289071e-06,
+        "params": {
+            "thetaSX": 0.9926530120927262,
+            "thetahS": -0.3519709139600536,
+            "thetahX": 1.2959823687123406,
+            "vs": 663.8326684944625,
+            "vx": 622.0899182431694,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 25,
+    "n_iter": 250,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 2.8562207380204564e-07,
+        "params": {
+            "thetaSX": 1.2437132347422093,
+            "thetahS": -0.22590818962872317,
+            "thetahX": 1.460338077215701,
+            "vs": 663.7780563206296,
+            "vx": 622.0740244889126,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 25,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 2.8562207380204564e-07,
+        "params": {
+            "thetaSX": 1.2437132347422093,
+            "thetahS": -0.22590818962872317,
+            "thetahX": 1.460338077215701,
+            "vs": 663.7780563206296,
+            "vx": 622.0740244889126,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 25,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.9774822805041e-05,
+        "params": {
+            "thetaSX": 0.3687945788474449,
+            "thetahS": -1.3727261787467164,
+            "thetahX": 0.7899907519366208,
+            "vs": 948.4345833062806,
+            "vx": 535.3175742747896,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.979009307890017e-05,
+        "params": {
+            "thetaSX": 0.36866327601844523,
+            "thetahS": -1.3723262669307694,
+            "thetahX": 0.7898637832879674,
+            "vs": 948.4343353506887,
+            "vx": 535.3174833946244,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.9774822805041e-05,
+        "params": {
+            "thetaSX": 0.3687945788474449,
+            "thetahS": -1.3727261787467164,
+            "thetahX": 0.7899907519366208,
+            "vs": 948.4345833062806,
+            "vx": 535.3175742747896,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.9774822805041e-05,
+        "params": {
+            "thetaSX": 0.3687945788474449,
+            "thetahS": -1.3727261787467164,
+            "thetahX": 0.7899907519366208,
+            "vs": 948.4345833062806,
+            "vx": 535.3175742747896,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}
+{
+    "BayOutput": {
+        "target": 1.9774822805041e-05,
+        "params": {
+            "thetaSX": 0.3687945788474449,
+            "thetahS": -1.3727261787467164,
+            "thetahX": 0.7899907519366208,
+            "vs": 948.4345833062806,
+            "vx": 535.3175742747896,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}
+{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}
+{
+    "BayOutput": {
+        "target": 1.9774822805041e-05,
+        "params": {
+            "thetaSX": 0.3687945788474449,
+            "thetahS": -1.3727261787467164,
+            "thetahX": 0.7899907519366208,
+            "vs": 948.4345833062806,
+            "vx": 535.3175742747896,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}
+{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}
+{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}
+{
+    "BayOutput": {
+        "target": 1.9774822805041e-05,
+        "params": {
+            "thetaSX": 0.3687945788474449,
+            "thetahS": -1.3727261787467164,
+            "thetahX": 0.7899907519366208,
+            "vs": 948.4345833062806,
+            "vx": 535.3175742747896,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}

@@ -11,7 +11,7 @@ import mplhep as hep
 
 if __name__ == '__main__':
 
-    df = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3/AtlasLimitsMax_AtlasNotation.tsv', sep='\t')
+    df = pandas.read_table('/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4/AtlasLimitsMax_AtlasNotation.tsv', sep='\t')
 
     ms = df['ms']
     mx = df['mx']
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     lenXS = []
     keys = []
     dictDistribution = {}
-    pathEos = '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure3' 
+    pathEos = '/eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_configure4' 
     for i in range(len(ObsLimExcl)):
         dataId = f'X{mxExcl[i]:.0f}_S{msExcl[i]:.0f}'
 

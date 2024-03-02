@@ -1,0 +1,106 @@
+{
+    "BayOutput": {
+        "target": 2.90335729653014e-07,
+        "params": {
+            "thetaSX": 1.2438613817236774,
+            "thetahS": -0.22509440145939877,
+            "thetahX": 1.4603881074882863,
+            "vs": 663.7866953815717,
+            "vx": 622.0826635498547,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 10,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 8.501942654093332e-06,
+        "params": {
+            "thetaSX": 1.2596631352577048,
+            "thetahS": -0.48499169775589474,
+            "thetahX": 1.2948028051918328,
+            "vs": 663.9404166473137,
+            "vx": 622.1614751288954,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 100,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 8.501942654093332e-06,
+        "params": {
+            "thetaSX": 1.2596631352577048,
+            "thetahS": -0.48499169775589474,
+            "thetahX": 1.2948028051918328,
+            "vs": 663.9404166473137,
+            "vx": 622.1614751288954,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 100,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 8.501942654093332e-06,
+        "params": {
+            "thetaSX": 1.2596631352577048,
+            "thetahS": -0.48499169775589474,
+            "thetahX": 1.2948028051918328,
+            "vs": 663.9404166473137,
+            "vx": 622.1614751288954,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 250,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.2631897947318187e-05,
+        "params": {
+            "thetaSX": 0.8946924727151093,
+            "thetahS": -0.7751781088682407,
+            "thetahX": 1.1692945672475308,
+            "vs": 663.7162953307165,
+            "vx": 622.3352976984314,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": -1.0
+    },
+    "init_points": 25,
+    "n_iter": 250,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}
