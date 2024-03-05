@@ -11,102 +11,244 @@ import pandas
 from scipy.optimize import NonlinearConstraint
 
 if __name__ == '__main__':
-   
 
-    def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026):
-        df = pandas.read_table(BPdirectory)#, index_col = 0)
-        # PC
-        # df = pandas.read_table ( r"\\wsl.localhost\Ubuntu\home\iram\scannerS\ScannerS-master\build\output_file.tsv" , index_col =0)
-        
-        mH1_H1H2 = [i for i in df[axes1]] #"mH1"
-        mH2_H1H2 = [i for i in df[axes2]] #"mH2"
-        mH3_H1H2 = [i for i in df[axes3]] #"mH3"
-        
-        mH1_H1H1 = mH1_H1H2.copy()
-        mH2_H1H1 = mH2_H1H2.copy()
-        mH3_H1H1 = mH3_H1H2.copy()
-        
-        mH1_H2H2 = mH1_H1H2.copy()
-        mH2_H2H2 = mH2_H1H2.copy()
-        mH3_H2H2 = mH3_H1H2.copy()
-        
-        mH1_x_H3_gg = mH1_H1H2.copy()
-        mH2_x_H3_gg = mH2_H1H2.copy()
-        mH3_x_H3_gg = mH3_H1H2.copy()
-        
-        b_H3_H1H2 = [i for i in df["b_H3_H1H2"]]
-        b_H3_H1H1 = [i for i in df["b_H3_H1H1"]]
-        b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
-        # if energy == 13
-        x_H3_gg_H1H2 = [i for i in df["x_H3_gg"]]
-        x_H3_gg_H1H1 = x_H3_gg_H1H2.copy()
-        x_H3_gg_H2H2 = x_H3_gg_H1H2.copy()
-        # elif energy == 13.6
-        # x_H3_gg_H1H2 = run3Interp(massList)
-        
-        b_H1_bb     = [i for i in df["b_H1_" + SM1]]        #"b_H1_bb"
-        b_H1_gamgam = [i for i in df["b_H1_" + SM2]]        #"b_H1_gamgam"
-        b_H2_bb     = [i for i in df["b_H2_" + SM1]]        #"b_H2_bb"
-        b_H2_gamgam = [i for i in df["b_H2_" + SM2]]        #"b_H2_gamgam"
-        
-        epsilon = 10**(-6)
-        
-        check = ( len(mH1_H1H2 ) + len(mH2_H1H2) + len(mH3_H1H2) \
-            + len(mH1_H1H1) + len(mH2_H1H1) + len(mH3_H1H1) \
-            + len(mH1_H2H2) + len(mH2_H2H2) + len(mH3_H2H2) \
-            + len(mH1_x_H3_gg) + len(mH2_x_H3_gg) + len(mH3_x_H3_gg) \
-            + len(b_H3_H1H2) + len(b_H3_H1H1) + len(b_H3_H2H2) + len(x_H3_gg_H1H2) + len(x_H3_gg_H1H1) + len(x_H3_gg_H2H2) \
-            + len(b_H1_bb) + len(b_H1_gamgam) + len(b_H2_bb) + len(b_H2_gamgam) ) / ( 22 *len(df["Unnamed: 0"]) )
-        
-        if  abs( check - 1 )  > + epsilon:
-            raise Exception('length of lists not equal in ppXNPSM_massfree')
-        
-        b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
-        b_H1_gamgam_H2_bb = [b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
-        
-        b_H1H2_bbgamgam = [b_H1_bb_H2_gamgam[i] + b_H1_gamgam_H2_bb[i] for i in range(len(b_H1_bb))]
-        # b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
-        b_H1H1_bbgamgam = [b_H1_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
-        b_H2H2_bbgamgam = [b_H2_bb[i] * b_H2_gamgam[i] for i in range(len(b_H2_bb))]
-        
-        
-        ggF_bbgamgam_xs_SM_Higgs = normalizationSM
-        # bbgamgam BR: https://inspirehep.net/files/a34811e0b9462ca5900081ffe6c92bdb
-        # ggF XS: https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
-        # ggF_bbgamgam_xs_SM_Higgs = (31.02 * 10**(-3)) * 0.0026  
-        # ggF_bbgamgam_xs_SM_Higgs = (31.02 * 10**(-3)) * (10**(-2)*0.028)  
-        # ggF_bbgamgam_xs_SM_Higgs = 1 
-        
-        # rescaled cross-section
-        pp_X_H1H2_bbgamgam = [(b_H1H2_bbgamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H1H2_bbgamgam))]
-        # pp_X_H1H2_bbgamgam = [x_H3_gg_H1H2[i] *  b_H3_H1H2[i] for i in range(len(b_H1H2_bbgamgam))]
-        
-        pp_X_H1H1_bbgamgam = [(b_H1H1_bbgamgam[i] * x_H3_gg_H1H1[i] * b_H3_H1H1[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H1H1_bbgamgam))]
-        # pp_X_H1H1_bbgamgam = [ x_H3_gg_H1H1[i] * b_H3_H1H1[i] for i in range(len(b_H1H1_bbgamgam))]
-        
-        pp_X_H2H2_bbgamgam = [(b_H2H2_bbgamgam[i] * x_H3_gg_H2H2[i] * b_H3_H2H2[i])/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H2H2_bbgamgam))]
-        # pp_X_H2H2_bbgamgam = [x_H3_gg_H2H2[i] * b_H3_H2H2[i] for i in range(len(b_H2H2_bbgamgam))]
-        
-        
-        pp_X_H1_bb_H2_gamgam = [b_H1_bb_H2_gamgam[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
-        # pp_X_H1_bb_H2_gamgam = [x_H3_gg_H1H2[i] * b_H3_H1H2[i] for i in range(len(b_H3_H1H2))]
-        pp_X_H1_gamgam_H2_bb = [b_H1_gamgam_H2_bb[i] * x_H3_gg_H1H2[i] * b_H3_H1H2[i]/ggF_bbgamgam_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
-        # pp_X_H1_gamgam_H2_bb = [x_H3_gg_H1H2[i] * b_H3_H1H2[i] for i in range(len(b_H3_H1H2))]
-        
-        
-            
-        H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, pp_X_H1H2_bbgamgam, pp_X_H1_bb_H2_gamgam, pp_X_H1_gamgam_H2_bb])
-        H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, pp_X_H1H1_bbgamgam])
-        H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, pp_X_H2H2_bbgamgam])
-        
-        return H1H2, H1H1, H2H2
-    
-    BPdirectory = 'x_output_mH190_mH2125.09_mH3500.tsv' 
+    def TRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput, **kwargs):
 
-    df = pandas.read_table(BPdirectory)
+        ####################### kwargs #######################
+
+        if 'BFB' in kwargs:
+            BFB = kwargs['BFB']
+
+        else: BFB = 0
+
+        if 'Uni' in kwargs:
+            Uni = kwargs['Uni']
+
+        else: Uni = 0
+
+        if 'STU' in kwargs:
+            STU = kwargs['STU']
+
+        else: STU = 0
+
+        if 'Higgs' in kwargs:
+            Higgs = kwargs['Higgs']
+
+        else: Higgs = 0
+
+        ######################################################
+        
+        # input parameters
+        dictModelParams = {'mH1_lb': mH1, 'mH1_ub': mH1,
+                           'mH2_lb': mH2, 'mH2_ub': mH2,
+                           'mH3_lb': mH3, 'mH3_ub': mH3,
+                           'thetahS_lb': thetahS, 'thetahS_ub': thetahS,
+                           'thetahX_lb': thetahX, 'thetahX_ub': thetahX,
+                           'thetaSX_lb': thetaSX, 'thetaSX_ub': thetaSX,
+                           'vs_lb': vs, 'vs_ub': vs,
+                           'vx_lb': vx, 'vx_ub': vx}
+
+        # some temporary files needed for the executable below
+        dataId = f'mH1{mH1}_mH2{mH2}_mH3{mH3}'
+        pathExecutionConfig = os.path.join(pathOutput, f'x_config_{dataId}.tsv')
+        pathExecutionOutput = os.path.join(pathOutput, f'x_output_{dataId}.tsv')
+        
+        # creates contents of pathExecutionConfig
+        config.checkCreatorNew(pathExecutionConfig, dictModelParams)
+
+        # for subprocesses.run below
+        runTRSM = [pathTRSM, '--BFB', str(BFB), '--Uni', str(Uni), '--STU', str(STU), '--Higgs', str(Higgs), pathExecutionOutput, 'check', pathExecutionConfig]
+
+        # run the executable
+        shell_output = subprocess.run(runTRSM, cwd=pathOutput)
+
+        # calculate physical observables from the output from the executable (pathExecutionOutput)
+        H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
+        returnValue = (H1H2[mode])[0]
+        
+        # Sometimes the output is very small values such that it cannot represent them as floats, hence return as 0.
+        if np.isnan(returnValue):
+            returnValue = 0
+
+        else: pass
+        
+        print(returnValue)
+        return returnValue
+
+    def constraintTRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput):
+         
+        dictModelParams = {'mH1_lb': mH1, 'mH1_ub': mH1,
+                           'mH2_lb': mH2, 'mH2_ub': mH2,
+                           'mH3_lb': mH3, 'mH3_ub': mH3,
+                           'thetahS_lb': thetahS, 'thetahS_ub': thetahS,
+                           'thetahX_lb': thetahX, 'thetahX_ub': thetahX,
+                           'thetaSX_lb': thetaSX, 'thetaSX_ub': thetaSX,
+                           'vs_lb': vs, 'vs_ub': vs,
+                           'vx_lb': vx, 'vx_ub': vx}
+
+        dataId = f'mH1{mH1}_mH2{mH2}_mH3{mH3}'
+        pathExecutionConfig = os.path.join(pathOutput, f'x_constraint_config_{dataId}.tsv')
+        pathExecutionOutput = os.path.join(pathOutput, f'x_constraint_output_{dataId}.tsv')
+
+        config.checkCreatorNew(pathExecutionConfig, dictModelParams)
+        runTRSM = [pathTRSM, '--BFB', '1', '--Uni', '1', '--STU', '1', '--Higgs', '1', pathExecutionOutput, 'check', pathExecutionConfig]
+        
+        shell_output = subprocess.run(runTRSM, cwd=pathOutput)
+
+        try:
+            # if returnvalue == 1, then model parameters pass the constraints
+            H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
+            returnValue = 1
+
+        # if outputfile (pathExecutionOutput) is empty, the parameters do not pass the constraints
+        except pandas.errors.EmptyDataError:
+            # if returnValue == -1, then model parameters fail constraints
+            returnValue = -1
+        
+        print(returnValue)
+        return returnValue
+        
+
+    # we do not want to optimize mH1, mH2, mH3 and SM1, SM2, pathTRSM, pathOutput are strings required for TRSM
+    def wrapInputBayesianOpt(mH1, mH2, mH3, SM1, SM2, mode, pathTRSM, pathOutput):
+        def inputBayesianOpt(thetahS, thetahX, thetaSX, vs, vx):
+            return TRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput)
+        return inputBayesianOpt
+
+    def wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode, pathTRSM, pathOutput):
+        def inputBayesianOptConstraint(thetahS, thetahX, thetaSX, vs, vx):
+            return constraintTRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput)
+        return inputBayesianOptConstraint
+
+
+    from bayes_opt import BayesianOptimization
+    from bayes_opt import UtilityFunction
+    mH1 = 90
+    mH2 = 125.09
+    mH3 = 500
+    SM1, SM2 = 'bb', 'gamgam'
+    mode = 4
+
+    black_box_function = wrapInputBayesianOpt(mH1, mH2, mH3, SM1, SM2, mode,
+                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
+                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')
     
-    print((df['x_H3_gg']*df['b_H3_H1H2']*(df['b_H1_bb']*df['b_H2_gamgam']))[0])
+    black_box_constraint = wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode,
+                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
+                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')    
     
-    H1H2, H1H1, H2H2 = ppXNPSM_massfree(BPdirectory, 'mH1', 'mH2', 'mH3', 'bb', 'gamgam', normalizationSM=1) 
+    # Bounded region of parameter space
+    pbounds = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 
+               'vs': (1, 1000), 'vx': (1, 1000)}
+
+    constraint = NonlinearConstraint(black_box_constraint, 0, np.inf)
+
+    optimizer = BayesianOptimization(
+        f=black_box_function,
+        constraint=constraint,
+        pbounds=pbounds,
+        random_state=1,
+        verbose=0,
+        allow_duplicate_points=True,
+    )
+
+    init_points = 20
+    n_iter = 500
+    kind = "ucb"
+    kappa='10'
+    xi='default'
+
+    print(f'running n_iter = {n_iter}, init_points = {init_points}, kind = {kind}, kappa = {kappa}, xi = {xi}')
+    acquisition_function = UtilityFunction(kind=kind, kappa=10)    
+    optimizer.maximize(
+        init_points=init_points,
+        n_iter=n_iter,
+        acquisition_function=acquisition_function
+    )
+
+    BayOutput = (optimizer.max)
+
+    # IGNORE BELOW, WRITES OUTPUT FROM optimizer.max INTO A .json FILE AND ITERATIONS IN A .tsv FILE
+
+    BayOutput['params']['mH1'] = mH1
+    BayOutput['params']['mH2'] = mH2
+    BayOutput['params']['mH3'] = mH3
+    BayOutput['params']['mode'] = mode
+
+    BayOutputToJson = {'BayOutput': BayOutput, 'init_points': init_points, 'n_iter': n_iter, 'kind': kind, 'kappa': kappa, 'xi':xi}
     
-    print(H1H2[4][0])
+    print(BayOutputToJson)
+
+    import json
+    # save settings used in BayesianOptimization and optimizer.maximize and other useful info
+    with open("/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_BayOptOutput.json", "a") as outfile: 
+        json.dump(BayOutputToJson, outfile, indent=4)
+    
+    # clear old contents of iteration file
+    #with open(f'/aaa/bbb/ccc/ddd/eee/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv', 'w') as logs:
+    #    pass
+    
+    # save iterations
+    #with open(f'/aaa/bbb/ccc/ddd/eee/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv', 'a') as logs:
+    #    logs.write('iteration\ttarget\tconstraint\tmH1\tmH2\tmH3\tthetahS\tthetahX\tthetaSX\tvs\tvx\n')
+    #    for i, res in enumerate(optimizer.res):
+            #logs.write(f"Iteration {i}: \n\t{res}\n")
+    #        logs.write(f'{i}\t{res["target"]}\t{res["constraint"]}\t{BayOutput["params"]["mH1"]}\t{BayOutput["params"]["mH2"]}\t{BayOutput["params"]["mH3"]}\t{res["params"]["thetahS"]}\t{res["params"]["thetahX"]}\t{res["params"]["thetaSX"]}\t{res["params"]["vs"]}\t{res["params"]["vx"]}\n')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

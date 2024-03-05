@@ -30,6 +30,11 @@ x: {(x)}, y: {(y)}, z: {(z)}, w: {(w)}, u: {(u)}\n')
 
 
     constraint = NonlinearConstraint(constraint_function, 0, np.inf)
+    
+    def target_function(x,y,z,w,u):
+        returnValue = (1/x)
+        print(f'allowed: {returnValue}')
+        return returnValue
 
     # Bounded region of parameter space
     pbounds = {'x': (-np.pi/2, np.pi/2), 'y': (-np.pi/2, np.pi/2), 
@@ -46,7 +51,7 @@ x: {(x)}, y: {(y)}, z: {(z)}, w: {(w)}, u: {(u)}\n')
 
     optimizer.maximize(
         init_points=5,
-        n_iter=10,
+        n_iter=20,
     )
     #maxs_.append(optimizer.max['target'])
 #print(maxs_) 

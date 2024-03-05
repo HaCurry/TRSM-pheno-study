@@ -356,8 +356,7 @@
     "kappa": "default",
     "xi": "default",
     "machine": "condor"
-}
-{
+}{
     "BayOutput": {
         "target": 1.9774822805041e-05,
         "params": {
@@ -379,8 +378,7 @@
     "kappa": "default",
     "xi": "default",
     "machine": "condor"
-}
-{
+}{
     "BayOutput": {
         "target": 1.9741709457416507e-05,
         "params": {
@@ -402,8 +400,7 @@
     "kappa": "default",
     "xi": "default",
     "machine": "condor"
-}
-{
+}{
     "BayOutput": {
         "target": 1.9774822805041e-05,
         "params": {
@@ -425,31 +422,7 @@
     "kappa": "default",
     "xi": "default",
     "machine": "condor"
-}
-{
-    "BayOutput": {
-        "target": 1.9741709457416507e-05,
-        "params": {
-            "thetaSX": 0.36816421354717116,
-            "thetahS": -1.372854229768855,
-            "thetahX": 0.7892743528709447,
-            "vs": 948.4379181502919,
-            "vx": 535.3211491302947,
-            "mH1": 90,
-            "mH2": 125.09,
-            "mH3": 500,
-            "mode": 4
-        },
-        "constraint": 1.0
-    },
-    "init_points": 250,
-    "n_iter": 5,
-    "kind": "ucb",
-    "kappa": "default",
-    "xi": "default",
-    "machine": "condor"
-}
-{
+}{
     "BayOutput": {
         "target": 1.9741709457416507e-05,
         "params": {
@@ -493,8 +466,29 @@
     "kappa": "default",
     "xi": "default",
     "machine": "condor"
-}
-{
+}{
+    "BayOutput": {
+        "target": 1.9741709457416507e-05,
+        "params": {
+            "thetaSX": 0.36816421354717116,
+            "thetahS": -1.372854229768855,
+            "thetahX": 0.7892743528709447,
+            "vs": 948.4379181502919,
+            "vx": 535.3211491302947,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}{
     "BayOutput": {
         "target": 1.9774822805041e-05,
         "params": {
@@ -511,6 +505,315 @@
         "constraint": 1.0
     },
     "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor"
+}{
+    "BayOutput": {
+        "target": 1.8686094302138283e-05,
+        "params": {
+            "thetaSX": 0.36355676792507013,
+            "thetahS": -1.3847362371985088,
+            "thetahX": 0.7864342797704423,
+            "vs": 948.2639040903612,
+            "vx": 535.1470444968252,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 400,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 2.0104099684401486e-05,
+        "params": {
+            "thetaSX": 0.3700974697054436,
+            "thetahS": -1.3687989984983115,
+            "thetahX": 0.7906384898148543,
+            "vs": 948.5427538557177,
+            "vx": 535.4537512306504,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 500,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 6.606264302701139e-05,
+        "params": {
+            "thetaSX": -0.6142277209535989,
+            "thetahS": 1.138784610337245,
+            "thetahX": 1.074987406044427,
+            "vs": 425.1880973845082,
+            "vx": 364.320723444932,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 750,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 1.973503482369949e-05,
+        "params": {
+            "thetaSX": 0.3679610300788268,
+            "thetahS": -1.3720638558110625,
+            "thetahX": 0.7895956698467969,
+            "vs": 948.434387049824,
+            "vx": 535.316297294662,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.8"
+}{
+    "BayOutput": {
+        "target": 1.973503482369949e-05,
+        "params": {
+            "thetaSX": 0.3679610300788268,
+            "thetahS": -1.3720638558110625,
+            "thetahX": 0.7895956698467969,
+            "vs": 948.434387049824,
+            "vx": 535.316297294662,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.8"
+}{
+    "BayOutput": {
+        "target": 1.9767924462893365e-05,
+        "params": {
+            "thetaSX": 0.3686218421038606,
+            "thetahS": -1.372529453704533,
+            "thetahX": 0.7899360130012603,
+            "vs": 948.4344291640566,
+            "vx": 535.3175123680122,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.8"
+}{
+    "BayOutput": {
+        "target": 1.973503482369949e-05,
+        "params": {
+            "thetaSX": 0.3679610300788268,
+            "thetahS": -1.3720638558110625,
+            "thetahX": 0.7895956698467969,
+            "vs": 948.434387049824,
+            "vx": 535.316297294662,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.8"
+}{
+    "BayOutput": {
+        "target": 1.973503482369949e-05,
+        "params": {
+            "thetaSX": 0.3679610300788268,
+            "thetahS": -1.3720638558110625,
+            "thetahX": 0.7895956698467969,
+            "vs": 948.434387049824,
+            "vx": 535.316297294662,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.8"
+}{
+    "BayOutput": {
+        "target": 1.973503482369949e-05,
+        "params": {
+            "thetaSX": 0.3679610300788268,
+            "thetahS": -1.3720638558110625,
+            "thetahX": 0.7895956698467969,
+            "vs": 948.434387049824,
+            "vx": 535.316297294662,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.8"
+}{
+    "BayOutput": {
+        "target": 1.973503482369949e-05,
+        "params": {
+            "thetaSX": 0.3679610300788268,
+            "thetahS": -1.3720638558110625,
+            "thetahX": 0.7895956698467969,
+            "vs": 948.434387049824,
+            "vx": 535.316297294662,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 250,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 2.009495584505835e-05,
+        "params": {
+            "thetaSX": 0.37000585194620406,
+            "thetahS": -1.368760127892021,
+            "thetahX": 0.7906287097138505,
+            "vs": 948.5427309023167,
+            "vx": 535.4537400429513,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 500,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default",
+    "machine": "condor",
+    "scipy": "1.11"
+}{
+    "BayOutput": {
+        "target": 6.606264302701139e-05,
+        "params": {
+            "thetaSX": -0.6142277209535989,
+            "thetahS": 1.138784610337245,
+            "thetahX": 1.074987406044427,
+            "vs": 425.1880973845082,
+            "vx": 364.320723444932,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 1000,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 6.606264302701139e-05,
+        "params": {
+            "thetaSX": -0.6142277209535989,
+            "thetahS": 1.138784610337245,
+            "thetahX": 1.074987406044427,
+            "vs": 425.1880973845082,
+            "vx": 364.320723444932,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 1500,
+    "n_iter": 5,
+    "kind": "ucb",
+    "kappa": "default",
+    "xi": "default"
+}{
+    "BayOutput": {
+        "target": 7.054328909500112e-05,
+        "params": {
+            "thetaSX": -0.43241761306714377,
+            "thetahS": 1.330865279823394,
+            "thetahX": 1.084695375203299,
+            "vs": 258.86187272268256,
+            "vx": 276.34327745802545,
+            "mH1": 90,
+            "mH2": 125.09,
+            "mH3": 500,
+            "mode": 4
+        },
+        "constraint": 1.0
+    },
+    "init_points": 2000,
     "n_iter": 5,
     "kind": "ucb",
     "kappa": "default",

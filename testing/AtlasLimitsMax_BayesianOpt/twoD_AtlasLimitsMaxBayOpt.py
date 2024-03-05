@@ -98,7 +98,7 @@ if __name__ == '__main__':
             H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
             returnValue = 1
             # returnValue = -1
-
+            returnValue = rng.uniform(0, 10**(-2))
         # if outputfile (pathExecutionOutput) is empty, the parameters do not pass the constraints
         except pandas.errors.EmptyDataError:
             # if returnValue == 1, then model parameters fail constraints
@@ -133,24 +133,14 @@ if __name__ == '__main__':
     
     black_box_constraint = wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode,
                                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
-                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')    
+                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')
     
     # Bounded region of parameter space
     pbounds = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 
                'vs': (1, 1000), 'vx': (1, 1000)}
 
-    # def black_box_function(x, y):
-    #    """Function with unknown internals we wish to maximize.
-    #
-    #    This is just serving as an example, for all intents and
-    #    purposes think of the internals of this function, i.e.: the process
-    #    which generates its output values, as unknown.
-    #    """
-    #     return -x ** 2 - (y - 1) ** 2 + 1
-
-    # pbounds = {'x': (2, 4), 'y': (-3, 3)}
     constraint = NonlinearConstraint(black_box_constraint, 0, np.inf)
-    # constraint = NonlinearConstraint(black_box_constraint, -np.inf, 0)
+    
     optimizer = BayesianOptimization(
         f=black_box_function,
         constraint=constraint,
@@ -160,8 +150,8 @@ if __name__ == '__main__':
         allow_duplicate_points=True,
     )
 
-    init_points = 250 
-    n_iter = 5
+    init_points = 1
+    n_iter = 1
     kind = "ucb"
     kappa='default'
     xi='default'
@@ -199,7 +189,7 @@ if __name__ == '__main__':
         for i, res in enumerate(optimizer.res):
             #logs.write(f"Iteration {i}: \n\t{res}\n")
             logs.write(f'{i}\t{res["target"]}\t{res["constraint"]}\t{BayOutput["params"]["mH1"]}\t{BayOutput["params"]["mH2"]}\t{BayOutput["params"]["mH3"]}\t{res["params"]["thetahS"]}\t{res["params"]["thetahX"]}\t{res["params"]["thetaSX"]}\t{res["params"]["vs"]}\t{res["params"]["vx"]}\n')
-
+    
     #df = pandas.read_table(f'/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv')
     #import matplotlib.pyplot as plt
     #plt.plot(np.array(df['iteration']), np.array(df['target']), marker='o')
