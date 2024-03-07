@@ -123,6 +123,7 @@ if __name__ == '__main__':
 
     from bayes_opt import BayesianOptimization
     from bayes_opt import UtilityFunction
+    from bayes_opt import SequentialDomainReductionTransformer
     mH1 = 90
     mH2 = 125.09
     mH3 = 500
@@ -142,6 +143,7 @@ if __name__ == '__main__':
                'vs': (1, 1000), 'vx': (1, 1000)}
 
     constraint = NonlinearConstraint(black_box_constraint, 0, np.inf)
+    bounds_transformer = SequentialDomainReductionTransformer()
 
     optimizer = BayesianOptimization(
         f=black_box_function,
@@ -150,16 +152,17 @@ if __name__ == '__main__':
         random_state=1,
         verbose=0,
         allow_duplicate_points=True,
+        bounds_transformer=bounds_transformer, 
     )
 
     init_points = 20
-    n_iter = 500
+    n_iter = 1000
     kind = "ucb"
-    kappa='10'
+    kappa = 10
     xi='default'
 
     print(f'running n_iter = {n_iter}, init_points = {init_points}, kind = {kind}, kappa = {kappa}, xi = {xi}')
-    acquisition_function = UtilityFunction(kind=kind, kappa=10)    
+    acquisition_function = UtilityFunction(kind=kind, kappa=kappa)    
     optimizer.maximize(
         init_points=init_points,
         n_iter=n_iter,

@@ -374,8 +374,7 @@
     "n_iter": 1000,
     "kind": "ucb",
     "kappa": 10
-}
-{
+}{
     "BayOutput": {
         "target": 2.5759879046293793e-05,
         "params": {

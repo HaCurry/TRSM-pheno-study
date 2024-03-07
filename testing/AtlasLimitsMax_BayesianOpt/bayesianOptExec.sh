@@ -30,4 +30,6 @@ echo 'installing matplotlib'
 pip3 install matplotlib
 
 echo 'running optimization'
-python3 twoD_AtlasLimitsMaxBayOpt.py -mX ${X} -mS ${S} -SM1 bb -SM2 gamgam -o /eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_bayesianOpt -e /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken -d ${dataId} -init 25 -iter 100 -kind ucb
+#python3 twoD_AtlasLimitsMaxBayOpt.py -mX ${X} -mS ${S} -SM1 bb -SM2 gamgam -o /eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_bayesianOpt -e /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken -d ${dataId} -init 20 -iter 500 -kind ucb
+#python3 twoD_AtlasLimitsMaxBayOptConfigure.py -mX 500 -mS 20 -SM1 bb -SM2 gamgam -o /eos/user/i/ihaque/AtlasLimitsMax/AtlasLimitsMax_bayesianOpt -e /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken -d 500_20 -init 20 -iter 500 -kind ucb
+time python3 tb.py
