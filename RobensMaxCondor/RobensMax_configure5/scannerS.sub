@@ -1,0 +1,10 @@
+# sleep.sub -- simple sleep job
+executable              = /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/scannerS.sh
+getenv                  = True
+log                     = $(dataId).$(ClusterId).$(ProcId).scannerS.log
+output                  = $(dataId).$(ClusterId).$(ProcId).scannerS.out
+error                   = $(dataId).$(ClusterId).$(ProcId).scannerS.err
+arguments               = -i $(dataId) -s /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken
+# longlunch = 2 hrs
++JobFlavour             = "tomorrow"
+queue dataId from /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/RobensMaxCondor/RobensMax_configure5/dataIds.txt

@@ -1,0 +1,10 @@
+# sleep.sub -- simple sleep job
+executable              = /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure2/scannerS.sh
+getenv                  = True
+log                     = $(dataId).$(ClusterId).$(ProcId).scannerS.log
+output                  = $(dataId).$(ClusterId).$(ProcId).scannerS.out
+error                   = $(dataId).$(ClusterId).$(ProcId).scannerS.err
+arguments               = -i $(dataId) -s /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken
+# longlunch = 2 hrs
++JobFlavour             = "testmatch"
+queue dataId from /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/AtlasLimitsMaxCondor/AtlasLimitsMax_configure2/dataIds.txt
