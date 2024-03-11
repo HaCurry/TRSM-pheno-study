@@ -254,7 +254,7 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
     if run3 == True:
         del x_H3_gg_H1H2, x_H3_gg_H1H1, x_H3_gg_H2H2
 
-        dfRun3 = pandas.DataFrame(pathRun3Data)
+        dfRun3 = pandas.read_table(pathRun3Data)
         run3_x_HSM_gg = CubicSpline(np.array(dfRun3[keyMassRun3]), np.array(dfRun3[keyCrossSecRun3]))
         x_H3_gg_H1H2 = [(df['R31'][i]**2) * run3_x_HSM_gg(mH3_H1H2[i]) for i in range(len(mH3_H1H2))]
         x_H3_gg_H1H1 = x_H3_gg_H1H2.copy()

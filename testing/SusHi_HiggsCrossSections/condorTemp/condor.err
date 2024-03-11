@@ -226,6 +226,6 @@ Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 
-real	30m30.241s
-user	30m5.526s
-sys	0m8.083s
+real	17m54.048s
+user	17m39.229s
+sys	0m5.370s
