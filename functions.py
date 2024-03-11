@@ -167,10 +167,38 @@ def ppXNP_massfree(BPdirectory, axes1, axes2, axes3, normalizationNP = 31.02 * 1
 
 
 
-def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026):
+def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026, **kwargs):
+
+    #################################### kwargs ####################################
+
+    if 'run3' in kwargs and kwargs['run3'] == True:
+
+        run3 = True
+
+        if 'pathRun3Data' in kwargs:
+            pathRun3Data = kwargs['pathRun3Data']
+
+        else: raise Exception('run3 is set to True, path to run 3 cross sections required')
+
+        if 'keyMassRun3' in kwargs:
+            keyMassRun3 = kwargs['keyMass']
+
+        else: keyMassRun3 = 'mass'
+
+        if 'keyCrossSecRun3' in kwargs:
+            keyCrossSecRun3 = kwargs['keyCrossSecRun3']
+
+        else: keyCrossSecRun3 = 'crossSec'
+
+
+    else:
+        run3 = False
+
+    ################################################################################
+    
     df = pandas.read_table(BPdirectory)#, index_col = 0)
     # PC
-    # df = pandas.read_table ( r"\\wsl.localhost\Ubuntu\home\iram\scannerS\ScannerS-master\build\output_file.tsv" , index_col =0)
+    # df = pandas.read_table ( r"\\wsl.localslhost\Ubuntu\home\iram\scannerS\ScannerS-master\build\output_file.tsv" , index_col =0)
     
     mH1_H1H2 = [i for i in df[axes1]] #"mH1"
     mH2_H1H2 = [i for i in df[axes2]] #"mH2"
@@ -222,8 +250,18 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
     # b_H1H2_bbgamgam = [b_H1_bb[i] * b_H2_gamgam[i] + b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
     b_H1H1_bbgamgam = [b_H1_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
     b_H2H2_bbgamgam = [b_H2_bb[i] * b_H2_gamgam[i] for i in range(len(b_H2_bb))]
-    
-    
+
+    if run3 == True:
+        del x_H3_gg_H1H2, x_H3_gg_H1H1, x_H3_gg_H2H2
+
+        dfRun3 = pandas.DataFrame(pathRun3Data)
+        run3_x_HSM_gg = CubicSpline(np.array(dfRun3[keyMassRun3]), np.array(dfRun3[keyCrossSecRun3]))
+        x_H3_gg_H1H2 = [(df['R31'][i]**2) * run3_x_HSM_gg(mH3_H1H2[i]) for i in range(len(mH3_H1H2))]
+        x_H3_gg_H1H1 = x_H3_gg_H1H2.copy()
+        x_H3_gg_H2H2 = x_H3_gg_H1H2.copy()
+
+    else: pass
+
     ggF_bbgamgam_xs_SM_Higgs = normalizationSM
     # bbgamgam BR: https://inspirehep.net/files/a34811e0b9462ca5900081ffe6c92bdb
     # ggF XS: https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
@@ -272,59 +310,70 @@ def run3Interp(massList, **kwargs):
     
    
     #################################### kwargs ####################################
-    
-    if 'keySushi' in kwargs:
-        keySushi = kwargs['keySushi']
-    else:
-        keySushi = '..'
 
-    if 'keyX' in kwargs:
-        keyX = kwargs['keyX']
-    else:
-        keyX = '..' 
+    # if 'keySushi' in kwargs:
+    #     keySushi = kwargs['keySushi']
+    # else:
+    #     keySushi = '..'
 
-    if 'keyY' in kwargs:
-        keyY = kwargs['keyY']
-    else:
-        keyY = '..' 
+    # if 'keyX' in kwargs:
+    #     keyX = kwargs['keyX']
+    # else:
+    #     keyX = '..' 
+
+    # if 'keyY' in kwargs:
+    #     keyY = kwargs['keyY']
+    # else:
+    #     keyY = '..' 
 
 
-    if 'BP' in kwargs:
-        if kwargs['BP'] == 'BP2':
-            ths = 1.352
-            thx = 1.175
-            tsx = -0.407
+    # if 'BP' in kwargs:
+    #     if kwargs['BP'] == 'BP2':
+    #         ths = 1.352
+    #         thx = 1.175
+    #         tsx = -0.407
         
-        elif kwargs['BP'] == 'BP3':
-            ths = -0.129
-            thx = 0.226
-            tsx = -0.899
+    #     elif kwargs['BP'] == 'BP3':
+    #         ths = -0.129
+    #         thx = 0.226
+    #         tsx = -0.899
 
-        elif kwargs['BP'] == 'BP5':
-            ths = -1.498
-            thx = 0.251
-            tsx = 0.271
+    #     elif kwargs['BP'] == 'BP5':
+    #         ths = -1.498
+    #         thx = 0.251
+    #         tsx = 0.271
 
-        elif kwargs['BP'] == 'BP6':
-            ths = 0.207
-            thx = 0.146
-            tsx = 0.782
+    #     elif kwargs['BP'] == 'BP6':
+    #         ths = 0.207
+    #         thx = 0.146
+    #         tsx = 0.782
 
-        else:
-            raise Exception('invalid value of BP. Can be either \'BP2\', \'BP3\', \'BP5\' or \'BP6\'')
+    #     else:
+    #         raise Exception('invalid value of BP. Can be either \'BP2\', \'BP3\', \'BP5\' or \'BP6\'')
+
+    # ################################################################################
+    
+    # kappa = np.cos(ths)*np.sin(thx)*np.cos(tsx) + np.sin(ths)*np.sin(tsx)
+        
+    # dataPath = keySushi  
+    # df = pandas.read_table(dataPath)
+    # x = np.array([i for i in df[keyX]])
+    # y = np.array([i for i in df[keyY]])
+    # interpFunc = CubicSpline(x, y)
+    # interpValue = pow(kappa, 2) * interpFunc(massList)
+
+    # return interpValue
+    #################################### kwargs ####################################
+
+    if 'pathSusHiData' in kwargs:
+        pathSusHiData = kwargs['pathSusHiData']
 
     ################################################################################
     
-    kappa = np.cos(ths)*np.sin(thx)*np.cos(tsx) + np.sin(ths)*np.sin(tsx)
-        
-    dataPath = keySushi  
-    df = pandas.read_table(dataPath)
-    x = np.array([i for i in df[keyX]])
-    y = np.array([i for i in df[keyY]])
-    interpFunc = CubicSpline(x, y)
-    interpValue = pow(kappa, 2) * interpFunc(massList)
+    df = pandas.DataFrame(pathSusHiData)
 
-    return interpValue
+    CubicSpline(np.array(df['mass']), np.array(df['crossSec']))
+    
 
     
 

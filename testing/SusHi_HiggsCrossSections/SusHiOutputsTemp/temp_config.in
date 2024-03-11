@@ -2,7 +2,7 @@ Block SUSHI
   1   0		# model: 0 = SM, 1 = MSSM, 2 = 2HDM, 3 = NMSSM
   2   11	# 11 = scalar Higgs (h), 21 = pseudoscalar Higgs (A)
   3   0		# collider: 0 = p-p, 1 = p-pbar
-  4   13000.d0	# center-of-mass energy in GeV
+  4   1.30000000e+04	# center-of-mass energy in GeV
   5   2		# order ggh: -1 = off, 0 = LO, 1 = NLO, 2 = NNLO, 3 = N3LO
   6   2 	# order bbh: -1 = off, 0 = LO, 1 = NLO, 2 = NNLO
   7   2 	# electroweak cont. for ggh:

@@ -11,12 +11,12 @@ import pandas
 import matplotlib
 import matplotlib.pyplot as plt
 
-def SusHiInputFile(mass):
+def SusHiInputFile(mass, energy):
     inputFile = f'''Block SUSHI
   1   0		# model: 0 = SM, 1 = MSSM, 2 = 2HDM, 3 = NMSSM
   2   11	# 11 = scalar Higgs (h), 21 = pseudoscalar Higgs (A)
   3   0		# collider: 0 = p-p, 1 = p-pbar
-  4   13000.d0	# center-of-mass energy in GeV
+  4   {energy:.8e}	# center-of-mass energy in GeV
   5   2		# order ggh: -1 = off, 0 = LO, 1 = NLO, 2 = NNLO, 3 = N3LO
   6   2 	# order bbh: -1 = off, 0 = LO, 1 = NLO, 2 = NNLO
   7   2 	# electroweak cont. for ggh:
@@ -83,17 +83,22 @@ Block FACTORS
   3   1.d0	# b '''
 
     return inputFile
- 
-if __name__ == '__main__':
 
-    with open('ggH_bbH.dat') as f:
-        first_line = f.readline()
+
+
+
+def SusHiCrossSections(masses, energy, pathOutputCrossSec, pathOutputCrossSecPlots, pathTemp, pathSUSHI):
     
-    masses = ([float(i) for i in first_line.split()])
+    
+
+    # with open('ggH_bbH.dat') as f:
+    #     first_line = f.readline()
+    # 
+    # masses = ([float(i) for i in first_line.split()])
     crossSec = []    
     
-    pathTemp = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHiOutputsTemp'
-    pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi' 
+    # pathTemp = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHiOutputsTemp'
+    # pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi' 
     
     # absolute paths for the config and output files do not work because
     # sushi cannot handle hyphens in the paths for some reason.
@@ -107,7 +112,7 @@ if __name__ == '__main__':
     for mass in masses:
         
         # creates contents of pathExecutionConfig
-        inputFileContents = SusHiInputFile(mass)
+        inputFileContents = SusHiInputFile(mass, energy)
         with open(absolutePathExecutionConfig , "w") as inputFile:
             inputFile.write(inputFileContents)
 
@@ -116,6 +121,8 @@ if __name__ == '__main__':
         
         # run the executable
         shell_output = subprocess.run(runSUSHI, cwd=pathTemp)
+        
+        print('\n\n===============================================\n\n')
         
         outputFileRows = []
         with open(absolutePathExecutionOutput) as outputFile:
@@ -127,10 +134,23 @@ if __name__ == '__main__':
 
     dfOut = pandas.DataFrame(crossSecList, columns=['mass', 'crossSec'])
     print(dfOut)
-    dfOut.to_csv('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv', sep='\t')
+    dfOut.to_csv(pathOutputCrossSec, sep='\t')
 
     plt.plot(np.array(dfOut['mass']), np.array(dfOut['crossSec']), marker='o')
     plt.yscale('log')
-    plt.savefig('/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_SusHiCrossSections.pdf')
+    plt.savefig(pathOutputCrossSecPlots)
     plt.close()
+
+if __name__ == '__main__':
+
+    with open('ggH_bbH.dat') as f:
+        first_line = f.readline()
     
+    masses = ([float(i) for i in first_line.split()])
+    
+    pathTemp = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHiOutputsTemp'
+    pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi' 
+    pathOutputCrossSec = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections2.tsv'  
+    pathOutputCrossSecPlots = '/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_SusHiCrossSections2.pdf' 
+
+    SusHiCrossSections(masses, 13000, pathOutputCrossSec, pathOutputCrossSecPlots, pathTemp, pathSUSHI) 
