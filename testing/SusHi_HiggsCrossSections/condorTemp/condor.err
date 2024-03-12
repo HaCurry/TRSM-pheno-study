@@ -1,3 +1,11 @@
+WARNING: Value for scheme.platlib does not match. Please report this to <https://github.com/pypa/pip/issues/10151>
+distutils: /afs/cern.ch/user/i/ihaque/.local/lib/python3.9/site-packages
+sysconfig: /afs/cern.ch/user/i/ihaque/.local/lib64/python3.9/site-packages
+WARNING: Additional context:
+user = True
+home = None
+root = None
+prefix = None
 Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DIVIDE_BY_ZERO IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
@@ -50,6 +58,56 @@ Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
@@ -130,6 +188,11 @@ Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
@@ -143,61 +206,6 @@ Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
-Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
@@ -226,6 +234,6 @@ Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 
-real	17m54.048s
-user	17m39.229s
-sys	0m5.370s
+real	26m33.255s
+user	25m55.643s
+sys	0m9.235s

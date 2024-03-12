@@ -42,8 +42,8 @@ Block RENORMBOT # Renormalization of the bottom sector
   1   0  	# m_b used for bottom Yukawa:     0 = OS, 1 = MSbar(mb), 2 = MSbar(muR)
 Block PDFSPEC
   1   MMHT2014lo68cl.LHgrid	# name of pdf (lo)
-  2   PDF4LHC15_nlo_30_pdfas.LHgrid	# name of pdf (nlo)
-  3   PDF4LHC15_nnlo_30_pdfas	# name of pdf (nnlo)
+  2   PDF4LHC15_nlo_100.LHgrid	# name of pdf (nlo)
+  3   PDF4LHC15_nnlo_100.LHgrid	# name of pdf (nnlo)
   4   MMHT2014nnlo68cl.LHgrid	# name of pdf (n3lo)
  10  0		# set number - if different for LO, NLO, NNLO, N3LO use entries 11, 12, 13, 14
 Block VEGAS
