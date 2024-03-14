@@ -112,7 +112,7 @@ def SusHiCrossSections(masses, energy, pathOutputCrossSec, pathOutputCrossSecPlo
     for mass in masses:
         
         # creates contents of pathExecutionConfig
-        inputFileContents = SusHiInputFile(mass, energy, pdfLO='MMHT2014lo68cl.LHgrid', pdfNLO='PDF4LHC15_nlo_100.LHgrid' , pdfNNLO='PDF4LHC15_nnlo_100.LHgrid')
+        inputFileContents = SusHiInputFile(mass, energy, pdfLO='MMHT2014lo68cl.LHgrid', pdfNLO='PDF4LHC15_nlo_30_pdfas.LHgrid' , pdfNNLO='PDF4LHC15_nnlo_30_pdfas.LHgrid')
         with open(absolutePathExecutionConfig , "w") as inputFile:
             inputFile.write(inputFileContents)
 
@@ -151,12 +151,12 @@ if __name__ == '__main__':
     pathTemp = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHiOutputsTemp'
     pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi' 
     
-    pathOutputCrossSec_13TeV = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv'  
-    pathOutputCrossSecPlots_13TeV = '/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_SusHiCrossSections.pdf' 
+    # pathOutputCrossSec_13TeV = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv'  
+    # pathOutputCrossSecPlots_13TeV = '/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_SusHiCrossSections.pdf' 
 
-    SusHiCrossSections(masses, 13000, pathOutputCrossSec_13TeV, pathOutputCrossSecPlots_13TeV, pathTemp, pathSUSHI) 
+    # SusHiCrossSections(masses, 13000, pathOutputCrossSec_13TeV, pathOutputCrossSecPlots_13TeV, pathTemp, pathSUSHI) 
 
-    # pathOutputCrossSec_13_6TeV = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV = '/eos/user/i/ihaque/SusHiPlots/13_6TeV/13_6TeV_SusHiCrossSections.pdf' 
+    pathOutputCrossSec_13_6TeV = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections.tsv'  
+    pathOutputCrossSecPlots_13_6TeV = '/eos/user/i/ihaque/SusHiPlots/13_6TeV/13_6TeV_SusHiCrossSections.pdf' 
 
-    # SusHiCrossSections(masses, 13600, pathOutputCrossSec_13_6TeV, pathOutputCrossSecPlots_13_6TeV, pathTemp, pathSUSHI) 
+    SusHiCrossSections(masses, 13600, pathOutputCrossSec_13_6TeV, pathOutputCrossSecPlots_13_6TeV, pathTemp, pathSUSHI) 
