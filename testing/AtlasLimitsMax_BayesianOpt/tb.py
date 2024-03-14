@@ -63,8 +63,12 @@ if __name__ == '__main__':
         shell_output = subprocess.run(runTRSM, cwd=pathOutput)
 
         # calculate physical observables from the output from the executable (pathExecutionOutput)
-        H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
-        returnValue = (H1H2[mode])[0]
+        try:
+            H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
+            returnValue = (H1H2[mode])[0]
+        
+        except pandas.errors.EmptyDataError:
+            returnValue = 0
         
         # Sometimes the output is very small values such that it cannot represent them as floats, hence return as 0.
         if np.isnan(returnValue):
@@ -147,12 +151,12 @@ if __name__ == '__main__':
 
     optimizer = BayesianOptimization(
         f=black_box_function,
-        constraint=constraint,
+        # constraint=constraint,
         pbounds=pbounds,
         random_state=1,
         verbose=0,
         allow_duplicate_points=True,
-        bounds_transformer=bounds_transformer, 
+        # bounds_transformer=bounds_transformer, 
     )
 
     init_points = 20
