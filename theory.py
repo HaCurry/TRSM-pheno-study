@@ -7,15 +7,22 @@ class Observables:
     ''' SM1 == SM2 is not treated '''
     
     def __init__(self, path, *args):
+        # save arguments and create dataframe from path
         self.dataframe = pandas.read_table(path)
         self.args = args
+        
+        # dictCalc contains observables (XS & BRs)
+        self.dictCalc = {}
+
+        # A, B, C are the TRSM Higgs bosons H1, H2, H3
+        # input by the user where in the process A -> B C
+        self.A, self.B, self.C = None, None, None
+
+        # SM1, SM2 are the Standard Model final states
+        # of the particles B & C
+        self.SM1, self.SM2 = None, None
 
     def bCalc(self, A, B, C, SM1, SM2):
-
-        self.dictCalc = {}
-        self.A, self.B, self.C = A, B, C
-        self.SM1, self.SM2 = SM1, SM2
-
         b_A_BC = np.array(self.dataframe[f'b_{A}_{B}{C}'])
         b_B_SM1 = np.array(self.dataframe[f'b_{B}_{SM1}'])
         b_B_SM2 = np.array(self.dataframe[f'b_{B}_{SM2}'])
@@ -23,15 +30,13 @@ class Observables:
         b_C_SM2 = np.array(self.dataframe[f'b_{C}_{SM2}'])
 
         self.dictCalc[f'b_{A}_{B}{C}'] = b_A_BC
-        self.dictCalc[f'b_{A}_{B}_{SM1}_{C}_{SM2}'] = b_A_BC * (b_B_SM1 + b_C_SM2)
-        self.dictCalc[f'b_{A}_{B}_{SM2}_{C}_{SM1}'] = b_A_BC * (b_B_SM2 + b_C_SM1)
-        self.dictCalc[f'b_{A}_{B}{C}_{SM1}{SM2}'] = b_A_BC * (b_B_SM1 + b_C_SM2 
-                                                          + b_B_SM2 + b_C_SM1)
+        self.dictCalc[f'b_{A}_{B}_{SM1}_{C}_{SM2}'] = b_A_BC * (b_B_SM1 * b_C_SM2)
+        self.dictCalc[f'b_{A}_{B}_{SM2}_{C}_{SM1}'] = b_A_BC * (b_B_SM2 * b_C_SM1)
+        self.dictCalc[f'b_{A}_{B}{C}_{SM1}{SM2}'] = b_A_BC * (b_B_SM1 * b_C_SM2 
+                                                          + b_B_SM2 * b_C_SM1)
 
         for arg in self.args:
             self.dictCalc[arg] = self.dataframe[arg]
-
-        return self
 
     def xCalc(self, **kwargs):
 
@@ -55,9 +60,6 @@ class Observables:
 
         self.dictCalc[f'x_{self.A}_{self.B}{self.C}_{self.SM1}{self.SM2}'] = (self.dataframe[f'x_{self.A}_{prodMode}'] 
             * self.dictCalc[f'b_{self.A}_{self.B}{self.C}_{self.SM1}{self.SM2}'])
-
-        # return self.dictCalc
-        return self
 
 
 if __name__ == '__main__':
