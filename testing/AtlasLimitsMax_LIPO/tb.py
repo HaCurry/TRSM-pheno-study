@@ -131,8 +131,8 @@ if __name__ == '__main__':
     mode = 4
 
     black_box_function = wrapInputBayesianOpt(mH1, mH2, mH3, SM1, SM2, mode,
-                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
-                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')
+                                              '/home/iram/scannerS/ScannerS-master/build/TRSMBroken', 
+                                              '/home/iram/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')
     
     # black_box_constraint = wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode,
     #                                           '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
@@ -144,11 +144,13 @@ if __name__ == '__main__':
 
     import dlib
 
-    #thetahS, thetahX, thetaSX, vs, vx = dlib.find_min_global(black_box_function,
-    x, y = dlib.find_min_global(black_box_function,
+    n_iter = 1000
+    solver_epsilon = 10**(-6)
+    x, y = dlib.find_max_global(black_box_function,
 [-np.pi/2, -np.pi/2, -np.pi/2, 1, 1],
 [np.pi/2, np.pi/2, np.pi/2, 1000, 1000],
-100)
+n_iter,
+solver_epsilon)
 
     print(f'optimal inputs: {x}')
     print(f'optimal output: {y}')
@@ -156,17 +158,16 @@ if __name__ == '__main__':
 
     # IGNORE BELOW, WRITES OUTPUT FROM optimizer.max INTO A .json FILE AND ITERATIONS IN A .tsv FILE
 
-    # from datetime import datetime
-    # currentTime = datetime.now() 
+    from datetime import datetime
+    currentTime = datetime.now() 
 
-    # BayOutput['params']['mH1'] = mH1
-    # BayOutput['params']['mH2'] = mH2
-    # BayOutput['params']['mH3'] = mH3
-    # BayOutput['params']['mode'] = mode
+    #BayOutput['params']['mH1'] = mH1
+    #BayOutput['params']['mH2'] = mH2
+    #BayOutput['params']['mH3'] = mH3
+    #BayOutput['params']['mode'] = mode
 
-    # BayOutputToJson = {'BayOutput': BayOutput, 'init_points': init_points, 'n_iter': n_iter, 'kind': kind, 'kappa': kappa, 'xi':xi, 'date': str(currentTime)}
-    # 
-    # print(BayOutputToJson)
+    # BayOutputToJson = {'Output': BayOutput, 'n_iter': , 'date': str(currentTime)}
+    
 
     # import json
     # # save settings used in BayesianOptimization and optimizer.maximize and other useful info
