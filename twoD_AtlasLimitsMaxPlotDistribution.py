@@ -93,6 +93,12 @@ if __name__ == '__main__':
         XS = [element for element in dfCalc[XSKey]]
         dictDistribution[dataId] = {}
         dictDistribution[dataId]['XS'] = XS
+        
+        # dictDistribution[dataId]['thetahS'] = dfCalc['thetahS'][0]
+        # dictDistribution[dataId]['thetahX'] = dfCalc['thetahX'][0]
+        # dictDistribution[dataId]['thetaSX'] = dfCalc['thetaSX'][0]
+        # dictDistribution[dataId]['vs'] = dfCalc['vs'][0]
+        # dictDistribution[dataId]['vx'] = dfCalc['vx'][0]
 
         # excludedScannerS.append(dfCalc[XSKey]/100000)
         numExclusions = 0

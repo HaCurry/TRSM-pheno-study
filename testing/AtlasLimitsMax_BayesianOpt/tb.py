@@ -19,22 +19,22 @@ if __name__ == '__main__':
         if 'BFB' in kwargs:
             BFB = kwargs['BFB']
 
-        else: BFB = 0
+        else: BFB = 1
 
         if 'Uni' in kwargs:
             Uni = kwargs['Uni']
 
-        else: Uni = 0
+        else: Uni = 1
 
         if 'STU' in kwargs:
             STU = kwargs['STU']
 
-        else: STU = 0
+        else: STU = 1
 
         if 'Higgs' in kwargs:
             Higgs = kwargs['Higgs']
 
-        else: Higgs = 0
+        else: Higgs = 1
 
         ######################################################
         
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
         # for subprocesses.run below
         runTRSM = [pathTRSM, '--BFB', str(BFB), '--Uni', str(Uni), '--STU', str(STU), '--Higgs', str(Higgs), pathExecutionOutput, 'check', pathExecutionConfig]
-
+        print('BFB,Uni,STU,Higgs:', BFB, Uni, STU, Higgs)
         # run the executable
         shell_output = subprocess.run(runTRSM, cwd=pathOutput)
 
@@ -66,6 +66,7 @@ if __name__ == '__main__':
         try:
             H1H2, H1H1, H2H2 = functions.ppXNPSM_massfree(pathExecutionOutput, 'mH1', 'mH2', 'mH3',  SM1, SM2,  normalizationSM=1)
             returnValue = (H1H2[mode])[0]
+            print(returnValue)
         
         except pandas.errors.EmptyDataError:
             returnValue = 0
@@ -76,7 +77,6 @@ if __name__ == '__main__':
 
         else: pass
         
-        print(returnValue)
         return returnValue
 
     def constraintTRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput):
@@ -119,10 +119,10 @@ if __name__ == '__main__':
             return TRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput)
         return inputBayesianOpt
 
-    def wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode, pathTRSM, pathOutput):
-        def inputBayesianOptConstraint(thetahS, thetahX, thetaSX, vs, vx):
-            return constraintTRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput)
-        return inputBayesianOptConstraint
+    # def wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode, pathTRSM, pathOutput):
+    #     def inputBayesianOptConstraint(thetahS, thetahX, thetaSX, vs, vx):
+    #         return constraintTRSM(mH1, mH2, mH3, thetahS, thetahX, thetaSX, vs, vx, SM1, SM2, mode, pathTRSM, pathOutput)
+    #     return inputBayesianOptConstraint
 
 
     from bayes_opt import BayesianOptimization
@@ -138,16 +138,16 @@ if __name__ == '__main__':
                                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
                                               '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')
     
-    black_box_constraint = wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode,
-                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
-                                              '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')    
+    # black_box_constraint = wrapInputBayesianOptConstraint(mH1, mH2, mH3, SM1, SM2, mode,
+    #                                           '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken', 
+    #                                           '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt')    
     
     # Bounded region of parameter space
     pbounds = {'thetahS': (-np.pi/2, np.pi/2), 'thetahX': (-np.pi/2, np.pi/2), 'thetaSX': (-np.pi/2, np.pi/2), 
                'vs': (1, 1000), 'vx': (1, 1000)}
 
-    constraint = NonlinearConstraint(black_box_constraint, 0, np.inf)
-    bounds_transformer = SequentialDomainReductionTransformer()
+    # constraint = NonlinearConstraint(black_box_constraint, 0, np.inf)
+    # bounds_transformer = SequentialDomainReductionTransformer()
 
     optimizer = BayesianOptimization(
         f=black_box_function,
@@ -159,8 +159,8 @@ if __name__ == '__main__':
         # bounds_transformer=bounds_transformer, 
     )
 
-    init_points = 20
-    n_iter = 1000
+    init_points = 5000
+    n_iter = 100
     kind = "ucb"
     kappa = 10
     xi='default'
@@ -177,12 +177,15 @@ if __name__ == '__main__':
 
     # IGNORE BELOW, WRITES OUTPUT FROM optimizer.max INTO A .json FILE AND ITERATIONS IN A .tsv FILE
 
+    from datetime import datetime
+    currentTime = datetime.now() 
+
     BayOutput['params']['mH1'] = mH1
     BayOutput['params']['mH2'] = mH2
     BayOutput['params']['mH3'] = mH3
     BayOutput['params']['mode'] = mode
 
-    BayOutputToJson = {'BayOutput': BayOutput, 'init_points': init_points, 'n_iter': n_iter, 'kind': kind, 'kappa': kappa, 'xi':xi}
+    BayOutputToJson = {'BayOutput': BayOutput, 'init_points': init_points, 'n_iter': n_iter, 'kind': kind, 'kappa': kappa, 'xi':xi, 'date': str(currentTime)}
     
     print(BayOutputToJson)
 
@@ -192,15 +195,15 @@ if __name__ == '__main__':
         json.dump(BayOutputToJson, outfile, indent=4)
     
     # clear old contents of iteration file
-    #with open(f'/aaa/bbb/ccc/ddd/eee/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv', 'w') as logs:
-    #    pass
-    
+    # with open(f'/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/iterations/x_{mH1}_{mH2}_{mH3}.tsv', 'w') as logs:
+    #     pass
+
     # save iterations
-    #with open(f'/aaa/bbb/ccc/ddd/eee/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/x_{mH1}_{mH2}_{mH3}.tsv', 'a') as logs:
-    #    logs.write('iteration\ttarget\tconstraint\tmH1\tmH2\tmH3\tthetahS\tthetahX\tthetaSX\tvs\tvx\n')
-    #    for i, res in enumerate(optimizer.res):
-            #logs.write(f"Iteration {i}: \n\t{res}\n")
-    #        logs.write(f'{i}\t{res["target"]}\t{res["constraint"]}\t{BayOutput["params"]["mH1"]}\t{BayOutput["params"]["mH2"]}\t{BayOutput["params"]["mH3"]}\t{res["params"]["thetahS"]}\t{res["params"]["thetahX"]}\t{res["params"]["thetaSX"]}\t{res["params"]["vs"]}\t{res["params"]["vx"]}\n')
+    with open(f'/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/AtlasLimitsMax_BayesianOpt/iterations/x_{mH1}_{mH2}_{mH3}_{str(currentTime)}.tsv', 'a') as logs:
+        logs.write('iteration\ttarget\tmH1\tmH2\tmH3\tthetahS\tthetahX\tthetaSX\tvs\tvx\n')
+        for i, res in enumerate(optimizer.res):
+           #logs.write(f"Iteration {i}: \n\t{res}\n")
+            logs.write(f'{i}\t{res["target"]}\t{BayOutput["params"]["mH1"]}\t{BayOutput["params"]["mH2"]}\t{BayOutput["params"]["mH3"]}\t{res["params"]["thetahS"]}\t{res["params"]["thetahX"]}\t{res["params"]["thetaSX"]}\t{res["params"]["vs"]}\t{res["params"]["vx"]}\n')
 
 
 

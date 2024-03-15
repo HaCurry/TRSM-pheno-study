@@ -7,6 +7,6 @@ output                  = bayesianOpt.out
 error                   = bayesianOpt.err
 
 # longlunch = 2 hrs
-+JobFlavour             = "longlunch"
++JobFlavour             = "tomorrow"
 
 queue
