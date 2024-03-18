@@ -93,12 +93,20 @@ if __name__ == '__main__':
         XS = [element for element in dfCalc[XSKey]]
         dictDistribution[dataId] = {}
         dictDistribution[dataId]['XS'] = XS
-        
-        # dictDistribution[dataId]['thetahS'] = dfCalc['thetahS'][0]
-        # dictDistribution[dataId]['thetahX'] = dfCalc['thetahX'][0]
-        # dictDistribution[dataId]['thetaSX'] = dfCalc['thetaSX'][0]
-        # dictDistribution[dataId]['vs'] = dfCalc['vs'][0]
-        # dictDistribution[dataId]['vx'] = dfCalc['vx'][0]
+
+        # only model parameter which gives maximal exclusion at mass point
+        # dictDistribution[dataId][ExclThetahS] = thetahSExcl
+        # dictDistribution[dataId][ExclThetahX] = thetahXExcl
+        # dictDistribution[dataId][ExclThetaSX] = thetaSXExcl
+        # dictDistribution[dataId][Exclvs] = vsExcl
+        # dictDistribution[dataId][Exclvx] = vxExcl
+
+        # all model parameters of the given mass point        
+        # dictDistribution[dataId]['thetahS'] = [i for i in dfCalc['thetahS']]
+        # dictDistribution[dataId]['thetahX'] = [i for i in dfCalc['thetahX']]
+        # dictDistribution[dataId]['thetaSX'] = [i for i in dfCalc['thetaSX']]
+        # dictDistribution[dataId]['vs'] = [i for i in dfCalc['vs']]
+        # dictDistribution[dataId]['vx'] = [i for i in dfCalc['vx']]
 
         # excludedScannerS.append(dfCalc[XSKey]/100000)
         numExclusions = 0
@@ -191,4 +199,8 @@ dictDistribution[key]['ObservedLimit'])
         plt.ylabel(r'count')
         plt.savefig(os.path.join(pathEos, 'plots', 'plotsTemp', f'{key}_large.png'))
         plt.close()
+
+        # plt.hist(dictDistribution[key]['thetahS'])
+        # plt.hist(dictDistribution[key]['thetahX'])
+        # plt.hist(dictDistribution[key]['thetaSX'])
  
