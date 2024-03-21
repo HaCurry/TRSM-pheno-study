@@ -7,6 +7,6 @@ output                  = condor.out
 error                   = condor.err
 
 # longlunch = 2 hrs
-+JobFlavour             = "microcentury"
++JobFlavour             = "longlunch"
 
 queue

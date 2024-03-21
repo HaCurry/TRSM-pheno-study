@@ -18,11 +18,18 @@ if __name__ == '__main__':
 
     ### 13 TeV cross sections ###
 
+    ## If not specified it is NNLO otherwise N3LO
+
     dfScannerS = pandas.read_table('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_ScannerSCrossSections.tsv')
     dfSusHi = pandas.read_table('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv')
+    dfSusHi_N3LO = pandas.read_table('/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_N3LO_SusHiCrossSections.tsv')
 
-    if (len(dfScannerS) == len(dfSusHi) and len(dfScannerS['mass']) == len(dfSusHi['mass']) and 
-len(dfScannerS['SMCrossSec']) == len(dfSusHi['crossSec'])):
+    if (len(dfScannerS) == len(dfSusHi) and
+        len(dfScannerS) == len(dfSusHi_N3LO) and
+        len(dfScannerS['mass']) == len(dfSusHi['mass']) and
+        len(dfScannerS['mass']) == len(dfSusHi_N3LO['mass']) and
+        len(dfScannerS['SMCrossSec']) == len(dfSusHi['crossSec']) and
+        len(dfScannerS['SMCrossSec']) == len(dfSusHi_N3LO['crossSec'])):
         pass
 
     else:
@@ -31,11 +38,16 @@ len(dfScannerS['SMCrossSec']) == len(dfSusHi['crossSec'])):
     mass = np.array(dfScannerS['mass'])
     XSScannerS = np.array(dfScannerS['SMCrossSec'])
     XSSusHi = np.array(dfSusHi['crossSec'])
+    XSSusHi_N3LO = np.array(dfSusHi_N3LO['crossSec'])
 
-    ratio = XSSusHi/XSScannerS  
+    ratio = XSSusHi/XSScannerS 
+    print(f'NNLO:') 
     [print(f'mass: {mass[i]} ratio: {ratio[i]}') for i in range(len(mass))]
     # print(ratio)
-    
+
+    ratio_N3LO = XSSusHi_N3LO/XSScannerS 
+    print(f'N3LO:') 
+    [print(f'mass: {mass[i]} ratio: {ratio[i]}') for i in range(len(mass))]
 
     ## 13 TeV SusHi and ScannerS cross sections (ratio) ##
 
@@ -51,6 +63,21 @@ len(dfScannerS['SMCrossSec']) == len(dfSusHi['crossSec'])):
     plt.savefig('/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_ScannerSSusHiCrossSectionsRatio.png')
     plt.close()
 
+    ## 13 TeV SusHi at N3LO and ScannerS cross sections (ratio) ##
+
+    plt.plot(mass, ratio_N3LO)
+    plt.xlabel(r'$M _{h_{{SM}}}$ [GeV]')
+    plt.ylabel(r'$\sigma^{{SusHi}}/\sigma^{{ScannerS}}$')
+    plt.title(r'Ratio of SusHi N3LO and ScannerS cross sections at 13 TeV')
+    plt.yscale('log')
+    # plt.ylim(0.9, 1.20)
+    # plt.xlim(90,400)
+    plt.tight_layout()
+
+    plt.savefig('/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_N3LO_ScannerSSusHiCrossSectionsRatio.pdf')
+    plt.savefig('/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_N3LO_ScannerSSusHiCrossSectionsRatio.png')
+    plt.close()
+    
     ## 13 TeV SusHi and ScannerS cross sections (side-by-side) ##
 
     plt.plot(mass, XSScannerS, label='ScannerS')
@@ -70,9 +97,9 @@ len(dfScannerS['SMCrossSec']) == len(dfSusHi['crossSec'])):
 
     mass = np.array(dfSusHi13_6['mass'])
     XSSusHi13_6 = np.array(dfSusHi13_6['crossSec'])
-   
-    ## 13 TeV and 13.6 TeV SusHi cross sections (side-by-side) ##    
- 
+
+    ## 13 TeV and 13.6 TeV SusHi cross sections (side-by-side) ##
+
     plt.plot(mass, XSScannerS, label='ScannerS 13 TeV')
     plt.plot(mass, XSSusHi, label='SusHi 13 TeV')
     plt.plot(mass, XSSusHi13_6, label='SusHi 13.6 TeV')
