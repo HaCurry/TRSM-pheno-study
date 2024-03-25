@@ -18,9 +18,9 @@ import glob
 import json
 from itertools import product
 
-import functions as TRSM
-import Exclusion_functions as excl
-import parameterData
+from helpScannerS import functions as TRSM
+from helpScannerS import Exclusion_functions as excl
+from helpScannerS import parameterData
 # import adjustText
 
 

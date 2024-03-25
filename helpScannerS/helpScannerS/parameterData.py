@@ -24,7 +24,7 @@ import glob
 from pathlib import Path
 from itertools import repeat
 
-import functions as TRSM
+from helpScannerS import functions as TRSM
 
 def paramDirCreator(userParametersDict, targetDir, **kwargs):
 

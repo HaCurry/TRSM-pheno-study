@@ -16,7 +16,7 @@ import sys
 # pc
 sys.path.insert(1, r"G:/My Drive/Master's thesis/TRSM Coding 13/")
 
-import functions as TRSM
+from helpScannerS import functions as TRSM
 
 
 

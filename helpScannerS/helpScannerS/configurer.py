@@ -10,8 +10,8 @@ from itertools import product
 from glob import glob
 from json import load
 
-import functions as TRSM
-import parameterData
+from helpScannerS import functions as TRSM
+from helpScannerS import parameterData
 
 
 def checkCreatorNew(locOutputData, configDict, **kwargs):
