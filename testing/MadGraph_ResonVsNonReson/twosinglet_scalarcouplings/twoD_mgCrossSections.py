@@ -688,6 +688,10 @@ set nevents {str(nevents)}
 {pathRun_card}
 0
     '''
+# set output_dependencies internal
+# set use_syst False
+# set pdlabel none
+# remember to remove 'set use_syst False'
 
     pathMadgraph_script = os.path.join(pathOutput, 'scriptMadgraph')
 
@@ -773,6 +777,7 @@ if __name__ == '__main__':
 
     # number of Madgraph events
     nevents = sys.argv[5]
+    # nevents = 100
 
     # create dictionary where madgraph output will be stored
     dictCrossSec = {}

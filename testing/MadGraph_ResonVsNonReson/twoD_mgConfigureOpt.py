@@ -4,20 +4,27 @@ import pandas
 from helpScannerS import configurer as config
 
 
-def condorScriptCreator(pathExecutable,
-                        pathExecPythonDir,
-                        pathExecMadgraph,
-                        pathExecOutputParent,
-                        pathExecModel,
-                        neventsExec,
-                        pathSubmit,
-                        JobFlavour,
-                        pathDataIds):
+def condorScriptCreatorOpt(pathExecutable,
+                           pathExecPythonDir,
+                           pathExecMadgraph,
+                           pathExecOutputParent,
+                           pathExecModel,
+                           neventsExec,
+                           init_pointsOpt,
+                           n_iterOpt,
+                           pathSubmit,
+                           JobFlavour,
+                           pathDataIds):
     '''
     OBS!: do NOT append slashes '/' at the end of the paths in the input
           arguments.
 
     Input arguments with ...Exec... refer to the condor executable.
+
+    Input arguments with ...Opt refer to parameters for the Bayesian
+    optimization. Please see the bayesian optimization examples section
+    for more information:  
+    https://github.com/bayesian-optimization/BayesianOptimization/blob/master/examples/basic-tour.ipynb
     
     Remaining input arguments refer to the submit file (pathSubmit, 
     JobFlavour, pathDataIds).
@@ -33,6 +40,8 @@ def condorScriptCreator(pathExecutable,
                     sections).
     pathExecModel: path to the TRSM model https://gitlab.com/apapaefs/twosinglet
     neventsExec: number of events in the Madgraph calculations.
+    n_iterOpt: number of iterations in the Bayesian optimization.
+    init_pointsOpt: number of initial points for the Bayesian optimization 
     pathSubmit: path to where the condor submit file will be written.
     JobFlavour: The maximal run time for a condor job (see
                 https://batchdocs.web.cern.ch/tutorial/exercise6b.html for more
@@ -65,10 +74,17 @@ queue dataId from {pathDataIds}'''
     executable = f'''#!/bin/bash
 # executable for Madgraph jobs
 
-# Required packages for generating run_card in twoD_mgCrossSections.py
+# required packages for generating run_card in twoD_mgCrossSectionsOpt.py
 pip3 install scipy==1.6.2
 pip3 install numpy==1.22.4
 pip3 install pandas==2.2.0
+
+# install Bayesian optimization python package
+pip3 install bayesian-optimization==1.4.3
+
+# Bayesian optimization parameters
+init_pointsOpt={init_pointsOpt:.0f}
+n_iterOpt={n_iterOpt:.0f}
 
 # copy TRSM model to job output path
 pathExecOutputJob={pathExecOutputParent}/${{1}}
@@ -86,7 +102,7 @@ cd {pathExecPython}
 pathExecMadgraph={pathExecMadgraph}
 pathExecConfig=${{pathExecOutputJob}}/config_${{1}}.tsv
 
-time python3 twoD_mgCrossSections.py ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModelNew}} ${{neventsExec}}'''
+time python3 twoD_mgCrossSectionsOpt.py ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModelNew}} ${{neventsExec}} ${{init_pointsOpt}} ${{n_iterOpt}}'''
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
@@ -131,55 +147,33 @@ if __name__ == '__main__':
 
     print(f"\nms: {len(ms)}", f"mx: {len(mx)}", f"XS: {len(XS)}", f"listModelTuples: {len(listModelTuples)}\n")
 
-    # listModelParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
-    #                     'mH2_lb': mH2, 'mH2_ub': mH2,
-    #                     'mH3_lb': mH3, 'mH3_ub': mH3,
-    #                     'thetahS_lb': 1.352,  'thetahS_ub': 1.352,  'thetahSPoints':1,
-    #                     'thetahX_lb': 1.175,  'thetahX_ub': 1.175,  'thetahXPoints':1,
-    #                     'thetaSX_lb': -0.407, 'thetaSX_ub': -0.407, 'thetaSXPoints':1,
-    #                     'vs_lb': 120, 'vs_ub': 120, 'vsPoints': 1,
-    #                     'vx_lb': 890, 'vx_ub': 890, 'vxPoints': 1,
-    #                     'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
 
-    listModelParams = []
-    for (mH1, mH2, mH3, XS, dataId) in listModelTuples:
-        # BP2
-        if abs(mH1 - 125.09) < 10**(-6):
-            listModelParams.append({'mH1_lb': mH1, 'mH1_ub': mH1,
-                                    'mH2_lb': mH2, 'mH2_ub': mH2,
-                                    'mH3_lb': mH3, 'mH3_ub': mH3,
-                                    'thetahS_lb': -0.129,  'thetahS_ub': -0.129,  'thetahSPoints':1,
-                                    'thetahX_lb': 0.226,  'thetahX_ub': 0.226,  'thetahXPoints':1,
-                                    'thetaSX_lb': -0.899, 'thetaSX_ub': -0.899, 'thetaSXPoints':1,
-                                    'vs_lb': 140, 'vs_ub': 140, 'vsPoints': 1,
-                                    'vx_lb': 100, 'vx_ub': 100, 'vxPoints': 1,
-                                    'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
-        # BP3
-        elif abs(mH2 - 125.09) < 10**(-6):
-            listModelParams.append({'mH1_lb': mH1, 'mH1_ub': mH1,
-                                    'mH2_lb': mH2, 'mH2_ub': mH2,
-                                    'mH3_lb': mH3, 'mH3_ub': mH3,
-                                    'thetahS_lb': 1.352,  'thetahS_ub': 1.352,  'thetahSPoints':1,
-                                    'thetahX_lb': 1.175,  'thetahX_ub': 1.175,  'thetahXPoints':1,
-                                    'thetaSX_lb': -0.407, 'thetaSX_ub': -0.407, 'thetaSXPoints':1,
-                                    'vs_lb': 120, 'vs_ub': 120, 'vsPoints': 1,
-                                    'vx_lb': 890, 'vx_ub': 890, 'vxPoints': 1,
-                                    'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
+    # Only the masses are fixed, Bayesian optimization will try to find the
+    # optimal values on the angles and vevs so that the ratio of 
+    # resonant and non-resonant cross section is maximized. 
 
-        else:
-            raise Exception('something went wrong') 
+    # The angles and vevs are set to an arbitrary value only so that 
+    # config.configureDirs works, otherwise an error is raised
+    listModelParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
+                        'mH2_lb': mH2, 'mH2_ub': mH2,
+                        'mH3_lb': mH3, 'mH3_ub': mH3,
+                        'thetahS_lb': 0, 'thetahS_ub': 0, # these parameters we do not care about
+                        'thetahX_lb': 0, 'thetahX_ub': 0, # these parameters we do not care about
+                        'thetaSX_lb': 0, 'thetaSX_ub': 0, # these parameters we do not care about
+                        'vs_lb': 0, 'vs_ub': 0, # these parameters we do not care about
+                        'vx_lb': 0, 'vx_ub': 0, # these parameters we do not care about
+                        'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
 
-    listModelParams = listModelParams[0:10]
-
+    listModelParams = listModelParams[0:2]
     [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
 
     # create directories for the condor jobs. Each directory name can be found in dataIds.txt
     # where the dataIds are defined in listModelParams
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_nevents100_5',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/dataIds.txt')
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_configure_bayOpt4',
+                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/dataIds.txt')
 
     # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/condorExecutable.sh'
+    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/condorExecutableOpt.sh'
 
     # path to the directory containing the python script which the condor executable executes
     pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings'
@@ -188,32 +182,40 @@ if __name__ == '__main__':
     pathExecMadgraph = '/eos/user/i/ihaque/madgraphTRSMTesting2/MG5_aMC_v3_5_3/bin/mg5_aMC'
 
     # path where the output from condor jobs are stored (i.e cross sections)
-    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_nevents100_5'
+    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_configure_bayOpt4'
 
     # path to TRSM model
     pathExecModel = '/eos/user/i/ihaque/madgraphTRSMTesting2/MG5_aMC_v3_5_3/twosinglet'
 
     # number of Madgraph events
-    neventsExec = 100
+    neventsExec = 10
+
+    # number of initial bayesian optimization points
+    init_pointsOpt = 0
+
+    # number of bayesian optimization iterations
+    n_iterOpt = 2
 
     # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/condorSubmit.sub'
+    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/condorSubmitOpt.sub'
 
     # condor maximum runtime for each job (see condor docs for more info)
     JobFlavour = 'tomorrow'
 
     # names of the directories where output from the condor jobs will be output
     # (i.e cross sections)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/dataIds.txt'
+    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/dataIds.txt'
 
     # create the condor submit file and condor executable
-    condorScriptCreator(pathExecutable,
-                        pathExecPython,
-                        pathExecMadgraph,
-                        pathExecOutputParent,
-                        pathExecModel,
-                        neventsExec,
-                        pathSubmit,
-                        JobFlavour,
-                        pathDataIds)
+    condorScriptCreatorOpt(pathExecutable,
+                           pathExecPython,
+                           pathExecMadgraph,
+                           pathExecOutputParent,
+                           pathExecModel,
+                           neventsExec,
+                           init_pointsOpt,
+                           n_iterOpt,
+                           pathSubmit,
+                           JobFlavour,
+                           pathDataIds)
 

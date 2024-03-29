@@ -1,6 +1,7 @@
 import pandas
 import subprocess
 import re
+import matplotlib.pyplot as plt
 from bayes_opt import BayesianOptimization
 from bayes_opt import UtilityFunction
 
@@ -776,6 +777,15 @@ if __name__ == '__main__':
 
     # number of Madgraph events
     nevents = sys.argv[5]
+    nevents = int(nevents)
+
+    # number of Bayesian optimization initial points
+    init_points = sys.argv[6]
+    init_points = int(init_points)
+    
+    # number of Bayesian optimization iterations
+    n_iter = sys.argv[7]
+    n_iter = int(n_iter)
 
     # create dictionary where madgraph output will be stored
     dictCrossSec = {}
@@ -783,23 +793,24 @@ if __name__ == '__main__':
     dictCrossSec['thetahS'], dictCrossSec['thetahX'], dictCrossSec['thetaSX'] = [], [], []
     dictCrossSec['vs'], dictCrossSec['vx'] = [], []
     dictCrossSec['resCrossSec'], dictCrossSec['resCrossSecUncert'] = [], [] 
-    dictCrossSec['nonresCrossSec'], dictCrossSec['nonresCrossSecUncert'] = [], [] 
+    dictCrossSec['nonresCrossSec'], dictCrossSec['nonresCrossSecUncert'] = [], []
+    dictCrossSec['ratio'] = []
 
     # read model parameters from df
     mH1_input = df['mH1'][0]
     mH2_input = df['mH2'][0]
     mH3_input = df['mH3'][0]
 
-    # bayesian optimization iteration number (start at 0 and increaseas 
+    # bayesian optimization iteration number (starts at 0 and increaseas 
     # incrementally for every bayesian optimization iteration)
-    bayOptIter = 0
-    
+    bayOptIter = [0]
+
+    # the function which will be optimized by bayesian optimization
+    # note the mass parameters are fixed and found in the config file
+    # (pathConfig)
     def blackBoxFunc(thetahS_input, thetahX_input, thetaSX_input, vs_input, vx_input):
-        nonlocal bayOptIter
-        
         # path to param_card
-        pathTempParam_card = os.path.join(pathOutput, f'tempParam_card_{str(bayOptIter)}.dat')
-        bayOptIter = bayOptIter + 1
+        pathTempParam_card = os.path.join(pathOutput, f'tempParam_card_{str(bayOptIter[0])}.dat')
         
         # generate param_card
         generateCard(pathTempParam_card,
@@ -810,30 +821,43 @@ if __name__ == '__main__':
         # generate resonant cross section:
         # (p p > eta0 h / iota0 [noborn=QCD])
         crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
-                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{bayOptIter}')
+                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{bayOptIter[0]}')
         dictCrossSec['resCrossSec'].append(crossSec)
         dictCrossSec['resCrossSecUncert'].append(crossSecUncert)
 
         # generate nonresonant cross section:
         # (p p > eta0 h / iota0 [noborn=QCD])
         nonrescrossSec, nonrescrossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar,
-                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{bayOptIter}')
+                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{bayOptIter[0]}')
+
+        # increase the iteration number
+        bayOptIter[0] = bayOptIter[0] + 1
+        
+        # ratio of nonresonant and resonant
+        ratio = nonrescrossSec/crossSec
+        
         dictCrossSec['nonresCrossSec'].append(nonrescrossSec)
         dictCrossSec['nonresCrossSecUncert'].append(nonrescrossSecUncert)
+        dictCrossSec['ratio'].append(ratio)
 
+        dictCrossSec['mH1'].append(mH1_input)
+        dictCrossSec['mH2'].append(mH2_input)
+        dictCrossSec['mH3'].append(mH3_input)
         dictCrossSec['thetahS'].append(thetahS_input)
         dictCrossSec['thetahX'].append(thetahX_input)
         dictCrossSec['thetaSX'].append(thetaSX_input)
         dictCrossSec['vs'].append(vs_input)
         dictCrossSec['vx'].append(vx_input)        
         
-        return nonrescrossSec/crossSec
+        return ratio
 
-    pbounds = {'thetahS_input': (-np.pi/2, np.pi/2), 
-               'thetahX_input': (-np.pi/2, np.pi/2),
-               'thetaSX_input': (-np.pi/2, np.pi/2),
-               'vs_input': (1, 1000),
-               'vx_input': (1, 1000)}
+    pbounds = {
+   'thetahS_input': (-np.pi/2, np.pi/2), 
+   'thetahX_input': (-np.pi/2, np.pi/2),
+   'thetaSX_input': (-np.pi/2, np.pi/2),
+   'vs_input': (1, 1000),
+   'vx_input': (1, 1000)
+    }
 
     optimizer = BayesianOptimization(
     f=blackBoxFunc,
@@ -843,8 +867,8 @@ if __name__ == '__main__':
     )
 
     optimizer.maximize(
-        init_points=10
-        n_iter=3
+        init_points=init_points,
+        n_iter=n_iter
     )
 
     print(optimizer.max)
@@ -856,3 +880,8 @@ if __name__ == '__main__':
     dfCSV.to_csv(pathCSV, sep='\t')
 
     print(dfCSV)
+
+    plt.plot(np.array(dfCSV['ratio']), marker='o')
+    plt.yscale('log')
+    plt.savefig(os.path.join(pathOutput, f'figure_{os.path.basename(pathOutput)}.pdf'))
+    plt.savefig(os.path.join(pathOutput, f'figure_{os.path.basename(pathOutput)}.png'))
