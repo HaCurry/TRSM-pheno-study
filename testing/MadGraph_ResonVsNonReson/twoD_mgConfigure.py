@@ -6,9 +6,8 @@ from helpScannerS import configurer as config
 
 def condorScriptCreator(pathExecutable,
                         pathExecPythonDir,
-                        pathExecMadgraph,
+                        pathExecMadgraphAndTRSM,
                         pathExecOutputParent,
-                        pathExecModel,
                         neventsExec,
                         pathSubmit,
                         JobFlavour,
@@ -70,23 +69,34 @@ pip3 install scipy==1.6.2
 pip3 install numpy==1.22.4
 pip3 install pandas==2.2.0
 
-# copy TRSM model to job output path
+# job output path
 pathExecOutputJob={pathExecOutputParent}/${{1}}
-cp -r {pathExecModel} ${{pathExecOutputJob}}
+    
+# copy tarball (containing Madgraph and model) to job output path
+echo "copying tarball into job output path"
+time cp {pathExecMadgraphAndTRSM} ${{pathExecOutputJob}}
 
-# new path to TRSM model is now
-pathExecModelNew=${{pathExecOutputJob}}/{os.path.basename(pathExecModel)}
+# cd to job output path and extract tarball
+cd ${{pathExecOutputJob}}
+echo "extracting tarball in job output path"
+time tar -xf ${{pathExecOutputJob}}/{os.path.basename(pathExecMadgraphAndTRSM)}
+
+# path to Madgraph executable
+pathExecMadgraph=${{pathExecOutputJob}}/MG5_aMC_v3_5_3/bin/mg5_aMC
+
+# path to TRSM model is now
+pathExecModel=${{pathExecOutputJob}}/twosinglet
 
 # Madgraph events
 neventsExec={neventsExec:.0f}
 
-# Enter directory and run python script which runs Madgraph 
-cd {pathExecPython}
-
-pathExecMadgraph={pathExecMadgraph}
+# path to tsv file containgin TRSM model parameters for madgraph
 pathExecConfig=${{pathExecOutputJob}}/config_${{1}}.tsv
 
-time python3 twoD_mgCrossSections.py ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModelNew}} ${{neventsExec}}'''
+# Enter directory and run python script which runs Madgraph 
+cd {pathExecPython}
+echo "running Madgraph..."
+time python3 twoD_mgCrossSections.py ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}}'''
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
@@ -184,14 +194,11 @@ if __name__ == '__main__':
     # path to the directory containing the python script which the condor executable executes
     pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings'
 
-    # path to madgraph executable
-    pathExecMadgraph = '/eos/user/i/ihaque/madgraphTRSMTesting2/MG5_aMC_v3_5_3/bin/mg5_aMC'
+    # path to tarball containing Madgraph and TRSM model
+    pathExecMadgraphAndTRSM = '/eos/user/i/ihaque/MadgraphAndModelTarball/MadgraphAndTRSM.tar.gz'
 
     # path where the output from condor jobs are stored (i.e cross sections)
     pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_nevents100_5'
-
-    # path to TRSM model
-    pathExecModel = '/eos/user/i/ihaque/madgraphTRSMTesting2/MG5_aMC_v3_5_3/twosinglet'
 
     # number of Madgraph events
     neventsExec = 100
@@ -209,9 +216,8 @@ if __name__ == '__main__':
     # create the condor submit file and condor executable
     condorScriptCreator(pathExecutable,
                         pathExecPython,
-                        pathExecMadgraph,
+                        pathExecMadgraphAndTRSM,
                         pathExecOutputParent,
-                        pathExecModel,
                         neventsExec,
                         pathSubmit,
                         JobFlavour,
