@@ -701,7 +701,7 @@ set nevents {str(nevents)}
     return pathMadgraph_script
 
 
-def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents, process, processName):
+def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents, process, runName):
     '''
     This is the function executed in the loop in main.
 
@@ -712,12 +712,12 @@ def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents
     nevents: number of madgraph events for the process
     process: the physical process in madgraph syntax e.g.
     p p > eta0 h / iota0 [noborn=QCD]
-    processName: the name of the output from Madgraph. The output can be found
-    in pathOutput as 'outputMadgraph_[directory name of pathOutput]_[processName]'
+    runName: the name of the output from Madgraph. The output can be found
+    in pathOutput as 'outputMadgraph_[directory name of pathOutput]_[runName]'
     '''
 
     # madgraph output path
-    outputMadgraphName = f'outputMadgraph_{os.path.basename(pathOutput)}_{processName}'
+    outputMadgraphName = f'outputMadgraph_{os.path.basename(pathOutput)}_{runName}'
     pathMadgraphOutput = os.path.join(pathOutput, outputMadgraphName)
 
     # generate madgraph script
@@ -762,21 +762,26 @@ def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents
 
 
 if __name__ == '__main__':
+
+    # all output from this script (madgraph and .csv files)
+    # will be identified with runName
+    runName = sys.argv[1]
+    
     # read in path to madgraph executable
-    pathMadgraph = sys.argv[1]
+    pathMadgraph = sys.argv[2]
 
     # read in path to file with model parameters
-    pathConfig = sys.argv[2]
+    pathConfig = sys.argv[3]
     df = pandas.read_table(pathConfig)
 
     # path to output directory
-    pathOutput = sys.argv[3]
+    pathOutput = sys.argv[4]
 
     # path to TRSM model
-    pathLoop_sm_twoscalar = sys.argv[4]
+    pathLoop_sm_twoscalar = sys.argv[5]
 
     # number of Madgraph events
-    nevents = sys.argv[5]
+    nevents = sys.argv[6]
     # nevents = 100
 
     # create dictionary where madgraph output will be stored
@@ -817,22 +822,20 @@ if __name__ == '__main__':
                      thetahS_input, thetahX_input, thetaSX_input, 
                      vs_input, vx_input)
 
-        # generate resonant cross section:
-        # (p p > eta0 h / iota0 [noborn=QCD])
+        # generate p p > eta0 h / iota0 [noborn=QCD]
         crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
-                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{i}')
-        dictCrossSec['resCrossSec'].append(crossSec)
-        dictCrossSec['resCrossSecUncert'].append(crossSecUncert)
+                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{i}_{runName}')
+        dictCrossSec['noIota0CrossSec'].append(crossSec)
+        dictCrossSec['noIota0CrossSecUncert'].append(crossSecUncert)
 
-        # generate nonresonant cross section:
-        # (p p > eta0 h / iota0 [noborn=QCD])
+        # generate p p > eta0 h / iota0 [noborn=QCD]
         nonrescrossSec, nonrescrossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar,
-                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{i}')
-        dictCrossSec['nonresCrossSec'].append(nonrescrossSec)
-        dictCrossSec['nonresCrossSecUncert'].append(nonrescrossSecUncert)
+                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{i}_{runName}')
+        dictCrossSec['CrossSec'].append(nonrescrossSec)
+        dictCrossSec['CrossSecUncert'].append(nonrescrossSecUncert)
 
     # create dataframe out of dictCrossSec
     # and create a csv file out of the dataframe
     dfCSV = pandas.DataFrame(dictCrossSec)
-    pathCSV = os.path.join(pathOutput, f'output_{os.path.basename(pathOutput)}.tsv')
+    pathCSV = os.path.join(pathOutput, f'output_{os.path.basename(pathOutput)}_{runName}.tsv')
     dfCSV.to_csv(pathCSV, sep='\t')

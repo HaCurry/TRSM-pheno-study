@@ -4,7 +4,8 @@ import pandas
 from helpScannerS import configurer as config
 
 
-def condorScriptCreator(pathExecutable,
+def condorScriptCreator(runNameExec,
+                        pathExecutable,
                         pathExecPythonDir,
                         pathExecMadgraphAndTRSM,
                         pathExecOutputParent,
@@ -17,10 +18,15 @@ def condorScriptCreator(pathExecutable,
           arguments.
 
     Input arguments with ...Exec... refer to the condor executable.
-    
+
     Remaining input arguments refer to the submit file (pathSubmit, 
     JobFlavour, pathDataIds).
-    
+
+    runNameExec: the string runName will be appended to the file and directory
+                 names of the output from Madgraph and the python script below,
+                 this is useful when multiple runs are executed in the same 
+                 directory leading to conflicting names of output from Madgraph
+                 and twoD_mgCrossSections.py.
     pathExecutable: path to where the condor executable will be written.
     pathExecPython: path to the directory where the python script 
                     twoD_mgCrossSections.py which the condor executable will
@@ -69,9 +75,13 @@ pip3 install scipy==1.6.2
 pip3 install numpy==1.22.4
 pip3 install pandas==2.2.0
 
+# the string runName will be appended to the file and directory names of the
+# output from Madgraph and the python script below
+runName={runNameExec}
+
 # job output path
 pathExecOutputJob={pathExecOutputParent}/${{1}}
-    
+
 # copy tarball (containing Madgraph and model) to job output path
 echo "copying tarball into job output path"
 time cp {pathExecMadgraphAndTRSM} ${{pathExecOutputJob}}
@@ -96,7 +106,7 @@ pathExecConfig=${{pathExecOutputJob}}/config_${{1}}.tsv
 # Enter directory and run python script which runs Madgraph 
 cd {pathExecPython}
 echo "running Madgraph..."
-time python3 twoD_mgCrossSections.py ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}}'''
+time python3 twoD_mgCrossSections.py ${{runName}} ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}}'''
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
@@ -179,17 +189,21 @@ if __name__ == '__main__':
         else:
             raise Exception('something went wrong') 
 
-    listModelParams = listModelParams[0:10]
+    # listModelParams = listModelParams[0:10]
 
     [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
 
     # create directories for the condor jobs. Each directory name can be found in dataIds.txt
     # where the dataIds are defined in listModelParams
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_nevents100_5',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/dataIds.txt')
+    config.configureDirs(listModelParams, '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson',
+                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/dataIds.txt')
+
+    # runNameExec will be appended to all file and directory names output
+    # from the executables (Madgraph etc.)
+    runNameExec = 'installRun'
 
     # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/condorExecutable.sh'
+    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/condorExecutable.sh'
 
     # path to the directory containing the python script which the condor executable executes
     pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings'
@@ -198,23 +212,24 @@ if __name__ == '__main__':
     pathExecMadgraphAndTRSM = '/eos/user/i/ihaque/MadgraphAndModelTarball/MadgraphAndTRSM.tar.gz'
 
     # path where the output from condor jobs are stored (i.e cross sections)
-    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_nevents100_5'
+    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
 
     # number of Madgraph events
     neventsExec = 100
 
     # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/condorSubmit.sub'
+    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/condorSubmit.sub'
 
     # condor maximum runtime for each job (see condor docs for more info)
     JobFlavour = 'tomorrow'
 
     # names of the directories where output from the condor jobs will be output
     # (i.e cross sections)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_5/dataIds.txt'
+    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/dataIds.txt'
 
     # create the condor submit file and condor executable
-    condorScriptCreator(pathExecutable,
+    condorScriptCreator(runNameExec,
+                        pathExecutable,
                         pathExecPython,
                         pathExecMadgraphAndTRSM,
                         pathExecOutputParent,
