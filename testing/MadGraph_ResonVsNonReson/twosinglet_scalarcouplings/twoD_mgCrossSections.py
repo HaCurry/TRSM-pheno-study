@@ -684,7 +684,11 @@ generate {process}
 output {pathMadgraphOutput}
 launch
 0
+set iseed 123
 set nevents {str(nevents)}
+set width 99925 auto
+set width 99926 auto
+set width 25 auto
 {pathRun_card}
 0
     '''
@@ -724,41 +728,77 @@ def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents
     pathMadgraphScript = generateScript(pathOutput, pathMadgraphOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
                                         nevents, process)
 
+    # check if param_card generated any widths
+    # which are nan and return appropriate cross
+    # sections in that case (see if, elif below)
+    paramCard = ''
+    with open(os.path.join(pathMadgraphOutput, pathTempParam_card)) as file:
+        for row in file:
+            paramCard = paramCard + row
+            
+    patternH = re.compile('DECAY 25 nan \# wh')
+    patternEta = re.compile('DECAY 99925 nan \# weta')
+    patternIota = re.compile('DECAY 99926 nan \# wiota')
+
+    lineCrossSecH = patternH.findall(paramCard)
+    lineCrossSecEta = patternEta.findall(paramCard)
+    lineCrossSecIota = patternIota.findall(paramCard)
+
+    # crossSecUncert is set to -1 to alert the user
+    # that the width of h is nan and Madgraph will
+    # raise an error if the param_card with these
+    # settings are run
+    if len(lineCrossSecH) != 0:
+        crossSec = -1
+        crossSecUncert = -1
+        return crossSec, crossSecUncert
+
+    # crossSecUncert is set to -2 to alert the user
+    # that the width of eta is nan and Madgraph will
+    # raise an error if the param_card with these
+    # settings are run
+    elif len(lineCrossSecEta) != 0:
+        crossSec = -1
+        crossSecUncert = -1
+        return crossSec, crossSecUncert
+        
+    # crossSecUncert is set to -3 to alert the user
+    # that the width of iota is nan and Madgraph will
+    # raise an error if the param_card with these
+    # settings are run
+    elif len(lineCrossSecIota) != 0:
+        crossSec = -1
+        crossSecUncert = -1
+        return crossSec, crossSecUncert
+
+    else:
+        pass
+
+    # if no nan widths were found, run Madgraph
+    
     # run madgraph
     runMadgraph = [pathMadgraph, pathMadgraphScript]
 
     # run the executable
-    shell_output = subprocess.run(runMadgraph, cwd=pathOutput)
+    shell_output = subprocess.run(runMadgraph, cwd=pathOutput,
+                                  capture_output=True, text=True)
 
-    # collect cross section
-    crossSecHTML = ''
-    with open(os.path.join(pathMadgraphOutput, 'HTML', 'run_01', 'results.html')) as file:
-        for row in file:
-            crossSecHTML = crossSecHTML + row
-
+    print('printing Madgraph stdout and stderr...')
+    print(shell_output.stdout)
+    print(shell_output.stderr)
+    
     # regex pattern
-    pattern = re.compile('>s=.*<')
+    pattern = re.compile('Current estimate of cross-section.*')
 
     # find substring with cross sections
-    lineCrossSec = pattern.findall(crossSecHTML)
+    lineCrossSec = pattern.findall(shell_output.stdout)
 
-    if len(lineCrossSec) != 2:
-        raise Exception('Something went wrong, there should be two regex matches in results.html')
-
-    elif lineCrossSec[0] != lineCrossSec[0]:
-        raise Exception('Something went wrong, the two matches from the regex search\n in results.html should be the same')
-
-    # there should be two matches from the regex search above
-    # both should be the same, just pick the first
     crossSecString = lineCrossSec[0].split()
 
-    # crossSecString containts HTML code we do not need
-    # we only need the cross section and uncertainty
-    crossSec = float(crossSecString[1])
-    crossSecUncert = float(crossSecString[3])
+    crossSec = float(crossSecString[4])
+    crossSecUncert = float(crossSecString[6])
 
     return crossSec, crossSecUncert
-
 
 
 if __name__ == '__main__':
@@ -789,8 +829,9 @@ if __name__ == '__main__':
     dictCrossSec['mH1'], dictCrossSec['mH2'], dictCrossSec['mH3'] = [], [], []
     dictCrossSec['thetahS'], dictCrossSec['thetahX'], dictCrossSec['thetaSX'] = [], [], []
     dictCrossSec['vs'], dictCrossSec['vx'] = [], []
-    dictCrossSec['resCrossSec'], dictCrossSec['resCrossSecUncert'] = [], [] 
-    dictCrossSec['nonresCrossSec'], dictCrossSec['nonresCrossSecUncert'] = [], [] 
+    dictCrossSec['pp_eta0h_no_iota0'], dictCrossSec['pp_eta0h_no_iota0_uncert'] = [], [] 
+    dictCrossSec['pp_eta0h'], dictCrossSec['pp_eta0h_uncert'] = [], []
+    dictCrossSec['ratio'] = []
 
     for i in range(len(df)):
         # read model parameters from df
@@ -823,19 +864,36 @@ if __name__ == '__main__':
                      vs_input, vx_input)
 
         # generate p p > eta0 h / iota0 [noborn=QCD]
-        crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
-                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{i}_{runName}')
-        dictCrossSec['noIota0CrossSec'].append(crossSec)
-        dictCrossSec['noIota0CrossSecUncert'].append(crossSecUncert)
+        crossSec_no_iota0, crossSecUncert_no_iota0 = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
+                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{i}')
+        
+        dictCrossSec['pp_eta0h_no_iota0'].append(crossSec_no_iota0)
+        dictCrossSec['pp_eta0h_no_iota0_uncert'].append(crossSecUncert_no_iota0)
 
-        # generate p p > eta0 h / iota0 [noborn=QCD]
-        nonrescrossSec, nonrescrossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar,
-                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{i}_{runName}')
-        dictCrossSec['CrossSec'].append(nonrescrossSec)
-        dictCrossSec['CrossSecUncert'].append(nonrescrossSecUncert)
+        # generate p p > eta0 h [noborn=QCD]
+        crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar,
+                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{i}')
+
+        dictCrossSec['pp_eta0h'].append(crossSec)
+        dictCrossSec['pp_eta0h_uncert'].append(crossSecUncert)
+
+        # cross sections set to -1 when the generate card
+        # generates nan widths, see mainExecution
+        if crossSec_no_iota0 == -1 and crossSec == -1:
+            ratio = 0
+
+        # calculate ratio
+        else:
+            ratio = crossSec/crossSec_no_iota0
+
+        dictCrossSec['ratio'].append(ratio)
 
     # create dataframe out of dictCrossSec
     # and create a csv file out of the dataframe
     dfCSV = pandas.DataFrame(dictCrossSec)
-    pathCSV = os.path.join(pathOutput, f'output_{os.path.basename(pathOutput)}_{runName}.tsv')
+
+    # quick fix to get the dataId, not a good solution...
+    dataId = (pathOutput.split('/'))[-2]
+
+    pathCSV = os.path.join(pathOutput, f'output_{dataId}_{runName}.tsv')
     dfCSV.to_csv(pathCSV, sep='\t')

@@ -4,11 +4,10 @@ import pandas
 from helpScannerS import configurer as config
 
 
-def condorScriptCreatorOpt(pathExecutable,
+def condorScriptCreatorOpt(runNameExec,
+                           pathExecutable,
                            pathExecPythonDir,
-                           pathExecMadgraph,
                            pathExecOutputParent,
-                           pathExecModel,
                            neventsExec,
                            init_pointsOpt,
                            n_iterOpt,
@@ -78,42 +77,51 @@ queue dataId from {pathDataIds}'''
 pip3 install scipy==1.6.2
 pip3 install numpy==1.22.4
 pip3 install pandas==2.2.0
-
+    
 # install Bayesian optimization python package
 pip3 install bayesian-optimization==1.4.3
-
+    
 # Bayesian optimization parameters
 init_pointsOpt={init_pointsOpt:.0f}
 n_iterOpt={n_iterOpt:.0f}
 
-# copy TRSM model to job output path
-pathExecOutputJob={pathExecOutputParent}/${{1}}
-cp -r {pathExecModel} ${{pathExecOutputJob}}
+# the string runName will be appended to the file and directory names of the
+# output from Madgraph and the python script below
+runName={runNameExec}
 
-# new path to TRSM model is now
-pathExecModelNew=${{pathExecOutputJob}}/{os.path.basename(pathExecModel)}
+# job output path
+pathExecOutputJob={pathExecOutputParent}/${{1}}/${{runName}}
+    
+# path to directory containing Madgraph exec and model
+pathExecMadgraphAndModel={pathExecOutputParent}/${{1}}
+
+# path to Madgraph executable
+pathExecMadgraph=${{pathExecMadgraphAndModel}}/MG5_aMC_v3_5_3/bin/mg5_aMC
+
+# path to TRSM model
+pathExecModel=${{pathExecMadgraphAndModel}}/twosinglet-master
 
 # Madgraph events
 neventsExec={neventsExec:.0f}
 
+# path to tsv file containing TRSM model parameters for madgraph
+pathExecConfig=${{pathExecOutputJob}}/config_${{1}}_${{runName}}.tsv
+    
 # Enter directory and run python script which runs Madgraph 
-cd {pathExecPython}
-
-pathExecMadgraph={pathExecMadgraph}
-pathExecConfig=${{pathExecOutputJob}}/config_${{1}}.tsv
-
-time python3 twoD_mgCrossSectionsOpt.py ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModelNew}} ${{neventsExec}} ${{init_pointsOpt}} ${{n_iterOpt}}'''
+cd {os.path.dirname(pathExecPython)}
+echo "running twoD_mgCrossSections.py (Madgraph)..."
+time python3 twoD_mgCrossSectionsOpt.py ${{runName}} ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}} ${{init_pointsOpt}} ${{n_iterOpt}}'''
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
 
     print('+------------------------------+')
-    print(f'creating executable {pathExecutable}')
+    print(f'creating condor executable {pathExecutable}')
     print('+------------------------------+')
     print(executable)
     print('\n')
     print('+------------------------------+')
-    print(f'creating submit file {pathSubmit}')
+    print(f'creating condor submit file {pathSubmit}')
     print('+------------------------------+')
     print(submit)
 
@@ -164,31 +172,50 @@ if __name__ == '__main__':
                         'vx_lb': 0, 'vx_ub': 0, # these parameters we do not care about
                         'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
 
-    listModelParams = listModelParams[0:2]
+    newListModelParams = []
+    desiredPoints = ['X170_S30', 'X210_S70', 'X325_S110',
+                     'X375_S125', 'X400_S200', 'X450_S70', 'X500_S125',
+                     'X550_S300', 'X750_S50', 'X850_S125', 'X900_S400']
+    for element in listModelParams:
+        if element['extra']['dataId'] in desiredPoints:
+            newListModelParams.append(element)
+        else:
+            continue
+
+    if len(newListModelParams) != len(desiredPoints):
+        print([element['extra']['dataId'] for element in newListModelParams])
+        raise Exception('Not all desired points were found')
+
+    listModelParams = newListModelParams
+
     [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
 
-    # create directories for the condor jobs. Each directory name can be found in dataIds.txt
-    # where the dataIds are defined in listModelParams
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_configure_bayOpt4',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/dataIds.txt')
+    # path to parent directory containing all the mass points (dataId)
+    # each mass point corresponds to a condor job
+    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
+
+    # runNameExec will be created as a directory inside each mass point (dataId) 
+    # the condor job output i.e the cross sections will be found there
+    runNameExec = 'nevents100_bayOpt1'
+
+    # path to file listing mass points (dataIds)
+    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_bayOpt1/dataIds.txt'
+
+    # create the above directory structure
+    config.configureDirs(listModelParams, pathExecOutputParent, pathDataIds,
+                         childrenDirs=runNameExec)
 
     # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/condorExecutableOpt.sh'
+    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_bayOpt1/condorExecutableOpt.sh'
+
+    # path to condor submit file
+    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents100_bayOpt1/condorSubmitOpt.sub'
 
     # path to the directory containing the python script which the condor executable executes
-    pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings'
-
-    # path to madgraph executable
-    pathExecMadgraph = '/eos/user/i/ihaque/madgraphTRSMTesting2/MG5_aMC_v3_5_3/bin/mg5_aMC'
-
-    # path where the output from condor jobs are stored (i.e cross sections)
-    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson_configure_bayOpt4'
-
-    # path to TRSM model
-    pathExecModel = '/eos/user/i/ihaque/madgraphTRSMTesting2/MG5_aMC_v3_5_3/twosinglet'
+    pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings/twoD_mgCrossSections.py'
 
     # number of Madgraph events
-    neventsExec = 10
+    neventsExec = 100
 
     # number of initial bayesian optimization points
     init_pointsOpt = 0
@@ -196,22 +223,14 @@ if __name__ == '__main__':
     # number of bayesian optimization iterations
     n_iterOpt = 2
 
-    # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/condorSubmitOpt.sub'
-
     # condor maximum runtime for each job (see condor docs for more info)
     JobFlavour = 'tomorrow'
 
-    # names of the directories where output from the condor jobs will be output
-    # (i.e cross sections)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_configure_bayOpt4/dataIds.txt'
-
     # create the condor submit file and condor executable
-    condorScriptCreatorOpt(pathExecutable,
+    condorScriptCreatorOpt(runNameExec,
+                           pathExecutable,
                            pathExecPython,
-                           pathExecMadgraph,
                            pathExecOutputParent,
-                           pathExecModel,
                            neventsExec,
                            init_pointsOpt,
                            n_iterOpt,

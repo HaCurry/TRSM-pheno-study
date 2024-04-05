@@ -7,7 +7,6 @@ from helpScannerS import configurer as config
 def condorScriptCreator(runNameExec,
                         pathExecutable,
                         pathExecPythonDir,
-                        pathExecMadgraphAndTRSM,
                         pathExecOutputParent,
                         neventsExec,
                         pathSubmit,
@@ -32,11 +31,9 @@ def condorScriptCreator(runNameExec,
                     twoD_mgCrossSections.py which the condor executable will
                     execute (OBS! not the path to twoD_mgCrossSection.py
                     just the path to the directory containing it).
-    pathExecMadgraph: path to the madgraph executable.
     pathExecOutputParent: path to the directory where all the output from
                     the condor jobs will be output (i.e the cross
                     sections).
-    pathExecModel: path to the TRSM model https://gitlab.com/apapaefs/twosinglet
     neventsExec: number of events in the Madgraph calculations.
     pathSubmit: path to where the condor submit file will be written.
     JobFlavour: The maximal run time for a condor job (see
@@ -80,44 +77,38 @@ pip3 install pandas==2.2.0
 runName={runNameExec}
 
 # job output path
-pathExecOutputJob={pathExecOutputParent}/${{1}}
+pathExecOutputJob={pathExecOutputParent}/${{1}}/${{runName}}
 
-# copy tarball (containing Madgraph and model) to job output path
-echo "copying tarball into job output path"
-time cp {pathExecMadgraphAndTRSM} ${{pathExecOutputJob}}
-
-# cd to job output path and extract tarball
-cd ${{pathExecOutputJob}}
-echo "extracting tarball in job output path"
-time tar -xf ${{pathExecOutputJob}}/{os.path.basename(pathExecMadgraphAndTRSM)}
+# path to directory containing Madgraph exec and model
+pathExecMadgraphAndModel={pathExecOutputParent}/${{1}}
 
 # path to Madgraph executable
-pathExecMadgraph=${{pathExecOutputJob}}/MG5_aMC_v3_5_3/bin/mg5_aMC
+pathExecMadgraph=${{pathExecMadgraphAndModel}}/MG5_aMC_v3_5_3/bin/mg5_aMC
 
-# path to TRSM model is now
-pathExecModel=${{pathExecOutputJob}}/twosinglet
+# path to TRSM model
+pathExecModel=${{pathExecMadgraphAndModel}}/twosinglet-master
 
 # Madgraph events
 neventsExec={neventsExec:.0f}
 
-# path to tsv file containgin TRSM model parameters for madgraph
-pathExecConfig=${{pathExecOutputJob}}/config_${{1}}.tsv
+# path to tsv file containing TRSM model parameters for madgraph
+pathExecConfig=${{pathExecOutputJob}}/config_${{1}}_${{runName}}.tsv
 
 # Enter directory and run python script which runs Madgraph 
-cd {pathExecPython}
-echo "running Madgraph..."
+cd {os.path.dirname(pathExecPython)}
+echo "running twoD_mgCrossSections.py (Madgraph)..."
 time python3 twoD_mgCrossSections.py ${{runName}} ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}}'''
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
 
     print('+------------------------------+')
-    print(f'creating executable {pathExecutable}')
+    print(f'creating condor executable {pathExecutable}')
     print('+------------------------------+')
     print(executable)
     print('\n')
     print('+------------------------------+')
-    print(f'creating submit file {pathSubmit}')
+    print(f'creating condor submit file {pathSubmit}')
     print('+------------------------------+')
     print(submit)
 
@@ -164,18 +155,7 @@ if __name__ == '__main__':
     listModelParams = []
     for (mH1, mH2, mH3, XS, dataId) in listModelTuples:
         # BP2
-        if abs(mH1 - 125.09) < 10**(-6):
-            listModelParams.append({'mH1_lb': mH1, 'mH1_ub': mH1,
-                                    'mH2_lb': mH2, 'mH2_ub': mH2,
-                                    'mH3_lb': mH3, 'mH3_ub': mH3,
-                                    'thetahS_lb': -0.129,  'thetahS_ub': -0.129,  'thetahSPoints':1,
-                                    'thetahX_lb': 0.226,  'thetahX_ub': 0.226,  'thetahXPoints':1,
-                                    'thetaSX_lb': -0.899, 'thetaSX_ub': -0.899, 'thetaSXPoints':1,
-                                    'vs_lb': 140, 'vs_ub': 140, 'vsPoints': 1,
-                                    'vx_lb': 100, 'vx_ub': 100, 'vxPoints': 1,
-                                    'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
-        # BP3
-        elif abs(mH2 - 125.09) < 10**(-6):
+        if abs(mH2 - 125.09) < 10**(-6):
             listModelParams.append({'mH1_lb': mH1, 'mH1_ub': mH1,
                                     'mH2_lb': mH2, 'mH2_ub': mH2,
                                     'mH3_lb': mH3, 'mH3_ub': mH3,
@@ -185,53 +165,74 @@ if __name__ == '__main__':
                                     'vs_lb': 120, 'vs_ub': 120, 'vsPoints': 1,
                                     'vx_lb': 890, 'vx_ub': 890, 'vxPoints': 1,
                                     'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
+        
+        # BP3
+        elif abs(mH1 - 125.09) < 10**(-6):
+            listModelParams.append({'mH1_lb': mH1, 'mH1_ub': mH1,
+                                    'mH2_lb': mH2, 'mH2_ub': mH2,
+                                    'mH3_lb': mH3, 'mH3_ub': mH3,
+                                    'thetahS_lb': -0.129,  'thetahS_ub': -0.129,  'thetahSPoints':1,
+                                    'thetahX_lb': 0.226,  'thetahX_ub': 0.226,  'thetahXPoints':1,
+                                    'thetaSX_lb': -0.899, 'thetaSX_ub': -0.899, 'thetaSXPoints':1,
+                                    'vs_lb': 140, 'vs_ub': 140, 'vsPoints': 1,
+                                    'vx_lb': 100, 'vx_ub': 100, 'vxPoints': 1,
+                                    'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
 
         else:
             raise Exception('something went wrong') 
 
-    # listModelParams = listModelParams[0:10]
+    newListModelParams = []
+    desiredPoints = ['X170_S30', 'X210_S70', 'X325_S110',
+                     'X375_S125', 'X400_S200', 'X450_S70', 'X500_S125',
+                     'X550_S300', 'X750_S50', 'X850_S125', 'X900_S400']
+    for element in listModelParams:
+        if element['extra']['dataId'] in desiredPoints:
+            newListModelParams.append(element)
+        else:
+            continue
+
+    if len(newListModelParams) != len(desiredPoints):
+        print([element['extra']['dataId'] for element in newListModelParams])
+        raise Exception('Not all desired points were found')
+
+    listModelParams = newListModelParams
 
     [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
 
-    # create directories for the condor jobs. Each directory name can be found in dataIds.txt
-    # where the dataIds are defined in listModelParams
-    config.configureDirs(listModelParams, '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson',
-                         '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/dataIds.txt')
-
-    # runNameExec will be appended to all file and directory names output
-    # from the executables (Madgraph etc.)
-    runNameExec = 'installRun'
-
-    # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/condorExecutable.sh'
-
-    # path to the directory containing the python script which the condor executable executes
-    pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings'
-
-    # path to tarball containing Madgraph and TRSM model
-    pathExecMadgraphAndTRSM = '/eos/user/i/ihaque/MadgraphAndModelTarball/MadgraphAndTRSM.tar.gz'
-
-    # path where the output from condor jobs are stored (i.e cross sections)
+    # path to parent directory containing all the mass points (dataId)
+    # each mass point corresponds to a condor job
     pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
 
-    # number of Madgraph events
-    neventsExec = 100
+    # runNameExec will be created as a directory inside each mass point (dataId) 
+    # the condor job output i.e the cross sections will be found there
+    runNameExec = 'nevents1000_v2'
+
+    # path to file listing mass points (dataIds)
+    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents1000_v2/dataIds.txt'
+
+    # create the above directory structure
+    config.configureDirs(listModelParams, pathExecOutputParent, pathDataIds,
+                         childrenDirs=runNameExec)
+
+    # path to condor executable
+    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents1000_v2/condorExecutable.sh'
 
     # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/condorSubmit.sub'
+    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents1000_v2/condorSubmit.sub'
+    
+    # path to the directory containing the python script which the condor executable executes
+    pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings/twoD_mgCrossSections.py'
+
+    # number of Madgraph events
+    neventsExec = 1000
 
     # condor maximum runtime for each job (see condor docs for more info)
-    JobFlavour = 'tomorrow'
-
-    # names of the directories where output from the condor jobs will be output
-    # (i.e cross sections)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson/dataIds.txt'
+    JobFlavour = 'microcentury'
 
     # create the condor submit file and condor executable
     condorScriptCreator(runNameExec,
                         pathExecutable,
                         pathExecPython,
-                        pathExecMadgraphAndTRSM,
                         pathExecOutputParent,
                         neventsExec,
                         pathSubmit,
