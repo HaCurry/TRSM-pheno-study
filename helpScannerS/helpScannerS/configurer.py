@@ -102,6 +102,13 @@ def configureDirs(listModelParams, pathDir, pathDataIds, **kwargs):
 
     else: existOk = True
 
+    # this will create the additional directory
+    # pathDir/dataId/childrenDirs
+    if 'childrenDirs' in kwargs:
+        childrenDirs = kwargs['childrenDirs']
+
+    else: pass
+
     ##################################################################
 
     # checks so that all ranges of the model parameters are given
@@ -127,17 +134,33 @@ def configureDirs(listModelParams, pathDir, pathDataIds, **kwargs):
         # name of each directory where each set of model parameter configs are stored
         dataId = (element['extra'])['dataId']
 
-        os.makedirs(pathDir + '/' + dataId, exist_ok=existOk)
+        if 'childrenDirs' in kwargs:
+            os.makedirs(pathDir + '/' + dataId + '/' + childrenDirs, exist_ok=existOk)
 
-        # create the configuration file (grid of all parameter combinations specified by element)
-        checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
+            # create the configuration file (grid of all parameter combinations specified by element)
+            checkCreatorNew(pathDir + '/' + dataId + '/' + childrenDirs + '/' +
+                            'config_' + dataId + '_' + os.path.basename(childrenDirs) + '.tsv', element)
 
-        # store element in a JSON file in the directory (dataId)
-        parameterData.createJSON(element, pathDir + '/' + dataId, 'settings_' + dataId + '.json')
+            # store element in a JSON file in the directory (dataId)
+            parameterData.createJSON(element, pathDir + '/' + dataId + '/' + childrenDirs,
+                                     'settings_' + dataId + '_' + os.path.basename(childrenDirs) + '.json')
 
-        # store the name of the directory (dataId) in a txt file for later reference
-        with open(pathDataIds, 'a') as myfile:
-            myfile.write(dataId + '\n')
+            # store the name of the directory (dataId) in a txt file for later reference
+            with open(pathDataIds, 'a') as myfile:
+                myfile.write(dataId + '\n')
+
+        else:
+            os.makedirs(pathDir + '/' + dataId, exist_ok=existOk)
+
+            # create the configuration file (grid of all parameter combinations specified by element)
+            checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
+
+            # store element in a JSON file in the directory (dataId)
+            parameterData.createJSON(element, pathDir + '/' + dataId, 'settings_' + dataId + '.json')
+
+            # store the name of the directory (dataId) in a txt file for later reference
+            with open(pathDataIds, 'a') as myfile:
+                myfile.write(dataId + '\n')
 
 
 def condorScriptCreator(pathOutputDirs, pathExecutable, pathSubmit, pathDataIds, **kwargs):
