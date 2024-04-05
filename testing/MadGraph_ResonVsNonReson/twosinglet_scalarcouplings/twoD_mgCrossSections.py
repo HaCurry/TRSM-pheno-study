@@ -841,8 +841,8 @@ if __name__ == '__main__':
         thetahS_input = df['thetahS'][i]
         thetahX_input = df['thetahX'][i]
         thetaSX_input = df['thetaSX'][i] 
-        vs_input = df['vx'][i]
-        vx_input = df['vs'][i]
+        vs_input = df['vs'][i]
+        vx_input = df['vx'][i]
 
         # store in dictionary
         dictCrossSec['mH1'].append(mH1_input)
