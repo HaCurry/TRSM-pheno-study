@@ -851,8 +851,8 @@ if __name__ == '__main__':
         dictCrossSec['thetahS'].append(thetahS_input)
         dictCrossSec['thetahX'].append(thetahX_input)
         dictCrossSec['thetaSX'].append(thetaSX_input)
-        dictCrossSec['vx'].append(vx_input)
         dictCrossSec['vs'].append(vs_input)
+        dictCrossSec['vx'].append(vx_input)
 
         # path to param_card
         pathTempParam_card = os.path.join(pathOutput, f'tempParam_card_{str(i)}.dat')

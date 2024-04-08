@@ -1,10 +1,6 @@
 import pandas
 import subprocess
 import re
-import matplotlib.pyplot as plt
-from bayes_opt import BayesianOptimization
-from bayes_opt import UtilityFunction
-
 
 # packages for generateCard
 import math, cmath
@@ -620,7 +616,7 @@ def generateCard(pathParam_card, mH1_input, mH2_input, mH3_input, thetahS_input,
         write_param_card(pathParam_card, paramsubs)
 
 
-def generateScript(pathOutput, pathMadgraphOutput, pathRun_card, pathLoop_sm_twoscalar,
+def generateScript(pathOutput, pathMadgraphOutput, pathParam_card, pathLoop_sm_twoscalar,
                    nevents, process):
     '''
     Creates a madgraph script in the location pathOutput for a process
@@ -637,7 +633,8 @@ def generateScript(pathOutput, pathMadgraphOutput, pathRun_card, pathLoop_sm_two
     returns the path to the script
     '''
 
-    script = f'''#************************************************************
+    script = f'''
+    #************************************************************
 #*                     MadGraph5_aMC@NLO                    *
 #*                                                          *
 #*                *                       *                 *
@@ -688,13 +685,10 @@ generate {process}
 output {pathMadgraphOutput}
 launch
 0
-set iseed 123
-set nevents {str(nevents)}
-set width 99925 auto
-set width 99926 auto
-set width 25 auto
-{pathRun_card}
+{pathParam_card}
+set nevents {nevents:.0f}
 0
+
     '''
 
     pathMadgraph_script = os.path.join(pathOutput, 'scriptMadgraph')
@@ -705,7 +699,7 @@ set width 25 auto
     return pathMadgraph_script
 
 
-def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents, process, runName):
+def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents, process, processName):
     '''
     This is the function executed in the loop in main.
 
@@ -716,234 +710,46 @@ def mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, nevents
     nevents: number of madgraph events for the process
     process: the physical process in madgraph syntax e.g.
     p p > eta0 h / iota0 [noborn=QCD]
-    runName: the name of the output from Madgraph. The output can be found
-    in pathOutput as 'outputMadgraph_[directory name of pathOutput]_[runName]'
+    processName: the name of the output from Madgraph. The output can be found
+    in pathOutput as 'outputMadgraph_[directory name of pathOutput]_[processName]'
     '''
 
     # madgraph output path
-    outputMadgraphName = f'outputMadgraph_{os.path.basename(pathOutput)}_{runName}'
+    outputMadgraphName = f'outputMadgraph_installRun'
     pathMadgraphOutput = os.path.join(pathOutput, outputMadgraphName)
 
     # generate madgraph script
     pathMadgraphScript = generateScript(pathOutput, pathMadgraphOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
-                                        nevents, process)
-
-    # check if param_card generated any widths
-    # which are nan and return appropriate cross
-    # sections in that case (see if, elif below)
-    paramCard = ''
-    with open(os.path.join(pathMadgraphOutput, pathTempParam_card)) as file:
-        for row in file:
-            paramCard = paramCard + row
-
-    patternH = re.compile('DECAY 25 nan \# wh')
-    patternEta = re.compile('DECAY 99925 nan \# weta')
-    patternIota = re.compile('DECAY 99926 nan \# wiota')
-
-    lineCrossSecH = patternH.findall(paramCard)
-    lineCrossSecEta = patternEta.findall(paramCard)
-    lineCrossSecIota = patternIota.findall(paramCard)
-
-    # crossSecUncert is set to -1 to alert the user
-    # that the width of h is nan and Madgraph will
-    # raise an error if the param_card with these
-    # settings are run
-    if len(lineCrossSecH) != 0:
-        crossSec = -1
-        crossSecUncert = -1
-        return crossSec, crossSecUncert
-
-    # crossSecUncert is set to -2 to alert the user
-    # that the width of eta is nan and Madgraph will
-    # raise an error if the param_card with these
-    # settings are run
-    elif len(lineCrossSecEta) != 0:
-        crossSec = -1
-        crossSecUncert = -1
-        return crossSec, crossSecUncert
-        
-    # crossSecUncert is set to -3 to alert the user
-    # that the width of iota is nan and Madgraph will
-    # raise an error if the param_card with these
-    # settings are run
-    elif len(lineCrossSecIota) != 0:
-        crossSec = -1
-        crossSecUncert = -1
-        return crossSec, crossSecUncert
-
-    else:
-        pass
-
-    # if no nan widths were found, run Madgraph
-
-    # run madgraph
-    runMadgraph = [pathMadgraph, pathMadgraphScript]
+                                        100, 'p p > eta0 h / iota0 [noborn=QCD]')
 
     # run madgraph
     runMadgraph = [pathMadgraph, pathMadgraphScript]
 
     # run the executable
-    shell_output = subprocess.run(runMadgraph, cwd=pathOutput,
-                                  capture_output=True, text=True)
-
-    print('printing Madgraph stdout and stderr...')
-    print(shell_output.stdout)
-    print(shell_output.stderr)
-    
-    # regex pattern
-    pattern = re.compile('Current estimate of cross-section.*')
-
-    # find substring with cross sections
-    lineCrossSec = pattern.findall(shell_output.stdout)
-
-    crossSecString = lineCrossSec[0].split()
-
-    crossSec = float(crossSecString[4])
-    crossSecUncert = float(crossSecString[6])
-
-    return crossSec, crossSecUncert
+    shell_output = subprocess.run(runMadgraph, cwd=pathOutput)
 
 
 if __name__ == '__main__':
-
-    # all output from this script (madgraph and .csv files)
-    # will be identified with runName
-    runName = sys.argv[1]
-    
-    # read in path to madgraph executable
-    pathMadgraph = sys.argv[2]
-
-    # read in path to file with model parameters
-    pathConfig = sys.argv[3]
-    df = pandas.read_table(pathConfig)
-
     # path to output directory
-    pathOutput = sys.argv[4]
+    pathOutput = sys.argv[1]
 
-    # path to TRSM model
-    pathLoop_sm_twoscalar = sys.argv[5]
+    # path to to loop_sm_twoscalar (i.e path to the 
+    # actual model)
+    pathLoop_sm_twoscalar = os.path.join(pathOutput,
+                                         'twosinglet-master',
+                                         'loop_sm_twoscalar')
 
-    # number of Madgraph events
-    nevents = sys.argv[6]
-    # nevents = 100
+    # path to param_card (use the default param_card
+    # provided in twosinglet-master/twosinglet_scalarcouplings)
+    pathTempParam_card = os.path.join(pathOutput,
+                                      'twosinglet-master',
+                                      'twosinglet_scalarcouplings',
+                                      'param_card.dat')
 
-    # number of Bayesian optimization initial points
-    init_points = sys.argv[7]
-    init_points = int(init_points)
-    
-    # number of Bayesian optimization iterations
-    n_iter = sys.argv[8]
-    n_iter = int(n_iter)
+    # generate p p > eta0 h / iota0 [noborn=QCD]
+    crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
+                                             100, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{i}')
+    dictCrossSec['noIota0CrossSec'].append(crossSec)
+    dictCrossSec['noIota0CrossSecUncert'].append(crossSecUncert)
 
-    # create dictionary where madgraph output will be stored
-    dictCrossSec = {}
-    dictCrossSec['mH1'], dictCrossSec['mH2'], dictCrossSec['mH3'] = [], [], []
-    dictCrossSec['thetahS'], dictCrossSec['thetahX'], dictCrossSec['thetaSX'] = [], [], []
-    dictCrossSec['vs'], dictCrossSec['vx'] = [], []
-    dictCrossSec['pp_eta0h_no_iota0'], dictCrossSec['pp_eta0h_no_iota0_uncert'] = [], [] 
-    dictCrossSec['pp_eta0h'], dictCrossSec['pp_eta0h_uncert'] = [], []
-    dictCrossSec['ratio'] = []
 
-    # read model parameters from df
-    mH1_input = df['mH1'][0]
-    mH2_input = df['mH2'][0]
-    mH3_input = df['mH3'][0]
-
-    # bayesian optimization iteration number (starts at 0 and increaseas 
-    # incrementally for every bayesian optimization iteration)
-    bayOptIter = 0
-
-    # the function which will be optimized by bayesian optimization
-    # note the mass parameters are fixed and found in the config file
-    # (pathConfig)
-    def blackBoxFunc(thetahS_input, thetahX_input, thetaSX_input, vs_input, vx_input):
-        # to increase the Bayesian optimization iteration number later
-        global bayOptIter
-
-        # path to param_card
-        pathTempParam_card = os.path.join(pathOutput, f'tempParam_card_{str(bayOptIter)}.dat')
-
-        # generate param_card
-        generateCard(pathTempParam_card,
-                     mH1_input, mH2_input, mH3_input,
-                     thetahS_input, thetahX_input, thetaSX_input, 
-                     vs_input, vx_input)
-        
-
-        # generate p p > eta0 h / iota0 [noborn=QCD]
-        crossSec_no_iota0, crossSecUncert_no_iota0 = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
-                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{str(bayOptIter)}')
-
-        dictCrossSec['pp_eta0h_no_iota0'].append(crossSec_no_iota0)
-        dictCrossSec['pp_eta0h_no_iota0_uncert'].append(crossSecUncert_no_iota0)
-
-        # generate p p > eta0 h [noborn=QCD]
-        crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar,
-                                                             nevents, 'p p > eta0 h [noborn=QCD]', f'pp_eta0h_{str(bayOptIter)}')
-
-        dictCrossSec['pp_eta0h'].append(crossSec)
-        dictCrossSec['pp_eta0h_uncert'].append(crossSecUncert)
-
-        # increase the Bayesian optimization iteration number
-        bayOptIter = bayOptIter + 1
-
-        # cross sections set to -1 when the generate card
-        # generates nan widths, see mainExecution
-        if crossSec_no_iota0 == -1 and crossSec == -1:
-            ratio = 0
-
-        # ratio of nonresonant and resonant
-        else:
-            ratio = crossSec/crossSec_no_iota0
-
-        dictCrossSec['ratio'].append(ratio)
-
-        dictCrossSec['mH1'].append(mH1_input)
-        dictCrossSec['mH2'].append(mH2_input)
-        dictCrossSec['mH3'].append(mH3_input)
-        dictCrossSec['thetahS'].append(thetahS_input)
-        dictCrossSec['thetahX'].append(thetahX_input)
-        dictCrossSec['thetaSX'].append(thetaSX_input)
-        dictCrossSec['vs'].append(vs_input)
-        dictCrossSec['vx'].append(vx_input)
-
-        return ratio
-
-    pbounds = {
-   'thetahS_input': (-np.pi/2, np.pi/2), 
-   'thetahX_input': (-np.pi/2, np.pi/2),
-   'thetaSX_input': (-np.pi/2, np.pi/2),
-   'vs_input': (1, 1000),
-   'vx_input': (1, 1000)
-    }
-
-    optimizer = BayesianOptimization(
-    f=blackBoxFunc,
-    pbounds=pbounds,
-    verbose=2, # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
-    random_state=1,
-    )
-
-    optimizer.maximize(
-        init_points=init_points,
-        n_iter=n_iter
-    )
-
-    print(optimizer.max)
-    
-    # create dataframe out of dictCrossSec
-    # and create a csv file out of the dataframe
-    dfCSV = pandas.DataFrame(dictCrossSec)
-
-    # quick fix to get the dataId, not a good solution...
-    dataId = (pathOutput.split('/'))[-2]
-        
-    pathCSV = os.path.join(pathOutput, f'output_{dataId}_{runName}.tsv')
-    dfCSV.to_csv(pathCSV, sep='\t')
-
-    print(dfCSV)
-
-    plt.plot(np.array(dfCSV['ratio']), marker='o')
-    plt.yscale('log')
-    plt.savefig(os.path.join(pathOutput, f'figure_{os.path.basename(pathOutput)}.pdf'))
-    plt.savefig(os.path.join(pathOutput, f'figure_{os.path.basename(pathOutput)}.png'))
