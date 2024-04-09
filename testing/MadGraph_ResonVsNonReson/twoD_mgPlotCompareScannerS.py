@@ -10,8 +10,36 @@ import mplhep as hep
 
 if __name__ == '__main__':
 
-    limitsUntransposed = pandas.read_json('../../Atlas2023Limits.json')
+    ## paths
+    # paths with the comment '#E:' requires the user to insert the path
+
+    # E:
+    pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
+
+    # path to txt file containing dataIds
+    # this file will be generated when twoD_mgConfigureCompareScannerS.py is executed
+    pathTxtFileWithDataIds = os.path.join(pathRepo,
+                               'testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_compareScannerS/dataIds.txt')
+
+    # path to Atlas limits within BP2 and BP3 mass ranges
+    pathAtlasBPpoints = os.path.join(pathRepo, 'testing', 'MadGraph_ResonVsNonReson', 'AtlasLimitsMax_AtlasNotation.tsv')
+
+    # path containing the dataId directories (the mass points where each mass point directory 
+    # contains a Madgraph Executable, see twoD_mgConfigure.py or 
+    # twoD_mgConfigureCompareScannerS.py for more information)
+    # E:
+    pathDataIdParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
+    
+    # path to where the figures will be saved
+    pathSavefig = os.path.join(pathDataIdParent, 'plots')
+    
+    # create the directory pathSavefig if it already does not exist
+    os.makedirs(pathSavefig, exist_ok=True)
+
+    # read the Atlas limits
+    limitsUntransposed = pandas.read_json(os.path.join(pathRepo, 'Atlas2023Limits.json'))
     print(limitsUntransposed)
+    # transpose the dataframe
     limits = limitsUntransposed.T
     print(limits)
 
@@ -23,8 +51,7 @@ if __name__ == '__main__':
     matplotlib.rcParams['axes.labelsize'] = 19
     matplotlib.rcParams['axes.titlesize'] = 19
 
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_compareScannerS/dataIds.txt'
-    with open(pathDataIds) as file:
+    with open(pathTxtFileWithDataIds) as file:
         dataIds = [line.strip() for line in file]
 
     remasses = re.compile('\d+')
@@ -33,15 +60,12 @@ if __name__ == '__main__':
     desiredMs = [int(point[1]) for point in desiredPoints]
     desiredMx = [int(point[0]) for point in desiredPoints]
 
-    desiredMs = desiredMs + [70, 100, 150, 325, 185, 250, 170]
-    desiredMx = desiredMx + [375, 240, 300, 500, 550, 525, 475]
-
     print(desiredMx, desiredMs)
 
-    pathAtlasBPpoints = '/eos/user/i/ihaque/testing/AtlasLimitsMax_ScriptTesting/AtlasLimitsMax_configure_ScriptTesting/AtlasLimitsMax_AtlasNotation.tsv'
     df = pandas.read_table(pathAtlasBPpoints)
 
-    pathSavefig = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson/plots'
+
+    ## plot the points which will be investigated with Madgraph
 
     # low mass
     plt.scatter(ms, mx)
@@ -73,26 +97,10 @@ if __name__ == '__main__':
     plt.savefig(os.path.join(pathSavefig, 'mgHighMass.pdf'))
     plt.close()
 
-    # Same plots as above only BP2 and BP3 points plotted
-
-    # BP2
-    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
-    plt.scatter(desiredMs, desiredMx, facecolors='none', edgecolors='red', s=200)
-    plt.xlim(1, 124)
-    plt.ylim(126, 500)
-    plt.savefig(os.path.join(pathSavefig, 'mgBP2.pdf'))
-    
-    # BP3
-    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
-    plt.scatter(desiredMs, desiredMx, facecolors='none', edgecolors='red', s=200)
-    plt.xlim(126, 500)
-    plt.ylim(255, 650)
-    plt.savefig(os.path.join(pathSavefig, 'mgBP3.pdf'))
 
     ## compare ScannerS calculations and Madgraph
 
     # path to all mass points
-    pathDataIdParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
 
     # runName (see twoD_mgConfigureCompareScannerS.py or twoD_mgConfigure.py 
     # for more information)

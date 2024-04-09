@@ -142,16 +142,6 @@ if __name__ == '__main__':
 
     print(f"\nms: {len(ms)}", f"mx: {len(mx)}", f"XS: {len(XS)}", f"listModelTuples: {len(listModelTuples)}\n")
 
-    # listModelParams = [{'mH1_lb': mH1, 'mH1_ub': mH1,
-    #                     'mH2_lb': mH2, 'mH2_ub': mH2,
-    #                     'mH3_lb': mH3, 'mH3_ub': mH3,
-    #                     'thetahS_lb': 1.352,  'thetahS_ub': 1.352,  'thetahSPoints':1,
-    #                     'thetahX_lb': 1.175,  'thetahX_ub': 1.175,  'thetahXPoints':1,
-    #                     'thetaSX_lb': -0.407, 'thetaSX_ub': -0.407, 'thetaSXPoints':1,
-    #                     'vs_lb': 120, 'vs_ub': 120, 'vsPoints': 1,
-    #                     'vx_lb': 890, 'vx_ub': 890, 'vxPoints': 1,
-    #                     'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
-
     listModelParams = []
     for (mH1, mH2, mH3, XS, dataId) in listModelTuples:
         # BP2
@@ -165,7 +155,7 @@ if __name__ == '__main__':
                                     'vs_lb': 120, 'vs_ub': 120, 'vsPoints': 1,
                                     'vx_lb': 890, 'vx_ub': 890, 'vxPoints': 1,
                                     'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
-        
+
         # BP3
         elif abs(mH1 - 125.09) < 10**(-6):
             listModelParams.append({'mH1_lb': mH1, 'mH1_ub': mH1,
@@ -181,10 +171,41 @@ if __name__ == '__main__':
         else:
             raise Exception('something went wrong') 
 
+    # for (mH1, mH2, mH3, XS, dataId) in listModelTuples:
+    #     # BP2
+    #     if abs(mH2 - 125.09) < 10**(-6):
+    #         listModelParams.append({'mH1_lb': 125.09, 'mH1_ub': 125.09,
+    #                                 'mH2_lb': 200, 'mH2_ub': 200,
+    #                                 'mH3_lb': 400, 'mH3_ub': 400,
+    #                                 'thetahS_lb': -0.129,  'thetahS_ub': -0.129,  'thetahSPoints':1,
+    #                                 'thetahX_lb': 0.226,  'thetahX_ub': 0.226,  'thetahXPoints':1,
+    #                                 'thetaSX_lb': -0.899, 'thetaSX_ub': -0.899, 'thetaSXPoints':1,
+    #                                 'vs_lb': 140, 'vs_ub': 140, 'vsPoints': 1,
+    #                                 'vx_lb': 100, 'vx_ub': 100, 'vxPoints': 1,
+    #                                 'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
+
+    #     # BP3
+    #     elif abs(mH1 - 125.09) < 10**(-6):
+    #         listModelParams.append({'mH1_lb': 125.09, 'mH1_ub': 125.09,
+    #                                 'mH2_lb': 200, 'mH2_ub': 200,
+    #                                 'mH3_lb': 400, 'mH3_ub': 400,
+    #                                 'thetahS_lb': -0.129,  'thetahS_ub': -0.129,  'thetahSPoints':1,
+    #                                 'thetahX_lb': 0.226,  'thetahX_ub': 0.226,  'thetahXPoints':1,
+    #                                 'thetaSX_lb': -0.899, 'thetaSX_ub': -0.899, 'thetaSXPoints':1,
+    #                                 'vs_lb': 140, 'vs_ub': 140, 'vsPoints': 1,
+    #                                 'vx_lb': 100, 'vx_ub': 100, 'vxPoints': 1,
+    #                                 'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} })
+
+    #     else:
+    #         raise Exception('something went wrong') 
+
     newListModelParams = []
     desiredPoints = ['X170_S30', 'X210_S70', 'X325_S110',
                      'X375_S125', 'X400_S200', 'X450_S70', 'X500_S125',
-                     'X550_S300', 'X750_S50', 'X850_S125', 'X900_S400']
+                     'X550_S300', 'X750_S50', 'X850_S125', 'X900_S400', 
+                     'X375_S70', 'X240_S100', 'X300_S150', 'X500_S325',
+                     'X550_S185', 'X525_S250', 'X475_S170']
+
     for element in listModelParams:
         if element['extra']['dataId'] in desiredPoints:
             newListModelParams.append(element)
@@ -205,29 +226,29 @@ if __name__ == '__main__':
 
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
-    runNameExec = 'nevents1000_v2'
+    runNameExec = 'nevents10000_v3'
 
     # path to file listing mass points (dataIds)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents1000_v2/dataIds.txt'
+    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_v3/dataIds.txt'
 
     # create the above directory structure
     config.configureDirs(listModelParams, pathExecOutputParent, pathDataIds,
                          childrenDirs=runNameExec)
 
     # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents1000_v2/condorExecutable.sh'
+    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_v3/condorExecutable.sh'
 
     # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents1000_v2/condorSubmit.sub'
+    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_v3/condorSubmit.sub'
     
     # path to the directory containing the python script which the condor executable executes
     pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings/twoD_mgCrossSections.py'
 
     # number of Madgraph events
-    neventsExec = 1000
+    neventsExec = 10000
 
     # condor maximum runtime for each job (see condor docs for more info)
-    JobFlavour = 'microcentury'
+    JobFlavour = 'workday'
 
     # create the condor submit file and condor executable
     condorScriptCreator(runNameExec,
