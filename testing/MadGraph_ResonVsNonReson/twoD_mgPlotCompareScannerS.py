@@ -56,51 +56,11 @@ if __name__ == '__main__':
 
     remasses = re.compile('\d+')
 
-    desiredPoints = [remasses.findall(line) for line in dataIds]
-    desiredMs = [int(point[1]) for point in desiredPoints]
-    desiredMx = [int(point[0]) for point in desiredPoints]
-
-    print(desiredMx, desiredMs)
-
+    # Atlas limit points where ScannerS constraints are applied
     df = pandas.read_table(pathAtlasBPpoints)
 
 
-    ## plot the points which will be investigated with Madgraph
-
-    # low mass
-    plt.scatter(ms, mx)
-    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
-    plt.scatter(desiredMs, desiredMx, facecolors='none', edgecolors='red', s=200)
-    plt.axvline(125)
-    plt.xlim(0, 270)
-    plt.ylim(160, 420)
-    plt.savefig(os.path.join(pathSavefig, 'mgLowMass.pdf'))
-    plt.close()
-
-    # medium mass
-    plt.scatter(ms, mx)
-    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
-    plt.scatter(desiredMs, desiredMx, facecolors='none', edgecolors='red', s=200)
-    plt.axvline(125)
-    plt.xlim(0, 525)
-    plt.ylim(420, 620)
-    plt.savefig(os.path.join(pathSavefig, 'mgMediumMass.pdf'))
-    plt.close()
-
-    # high mass
-    plt.scatter(ms, mx)
-    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
-    plt.scatter(desiredMs, desiredMx, facecolors='none', edgecolors='red', s=200)
-    plt.axvline(125)
-    plt.xlim(0, 525)
-    plt.ylim(620, 1020)
-    plt.savefig(os.path.join(pathSavefig, 'mgHighMass.pdf'))
-    plt.close()
-
-
     ## compare ScannerS calculations and Madgraph
-
-    # path to all mass points
 
     # runName (see twoD_mgConfigureCompareScannerS.py or twoD_mgConfigure.py 
     # for more information)
@@ -172,6 +132,47 @@ if __name__ == '__main__':
         compareScannerS['ms'].append(ms)
         compareScannerS['mx'].append(mx)
 
+
+    ## plot the points which will be investigated with Madgraph and compared with ScannerS
+
+    # low mass
+    # all Atlas limit points
+    plt.scatter(np.array(limits['S']), np.array(limits['X'])) 
+    # Atlas limit points where ScannerS constraints are applied
+    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1') 
+    # Atlas limit  points we are interested in calculating cross sections with
+    # Madgraph and comparing with ScannerS
+    plt.scatter(compareScannerS['ms'], compareScannerS['mx'],
+                facecolors='none', edgecolors='red', s=200) 
+    plt.axvline(125)
+    plt.xlim(0, 270)
+    plt.ylim(160, 420)
+    plt.savefig(os.path.join(pathSavefig, 'mgLowMass.pdf'))
+    plt.close()
+
+    # medium mass
+    plt.scatter(np.array(limits['S']), np.array(limits['X']))
+    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
+    plt.scatter(compareScannerS['ms'], compareScannerS['mx'],
+                facecolors='none', edgecolors='red', s=200)
+    plt.axvline(125)
+    plt.xlim(0, 525)
+    plt.ylim(420, 620)
+    plt.savefig(os.path.join(pathSavefig, 'mgMediumMass.pdf'))
+    plt.close()
+
+    # high mass
+    plt.scatter(np.array(limits['S']), np.array(limits['X']))
+    plt.scatter(np.array(df['ms']), np.array(df['mx']), facecolors='C1')
+    plt.scatter(compareScannerS['ms'], compareScannerS['mx'],
+                facecolors='none', edgecolors='red', s=200)
+    plt.axvline(125)
+    plt.xlim(0, 525)
+    plt.ylim(620, 1020)
+    plt.savefig(os.path.join(pathSavefig, 'mgHighMass.pdf'))
+    plt.close()
+
+    
     ### plot the cross sections
     fig, axes = plt.subplots(nrows=2, ncols=2)
     fig.supxlabel(r'$M_{S}$')
