@@ -8,6 +8,15 @@ from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__': 
+
+    ## paths
+
+    # path to repo
+    # E:
+    pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
+
+    # path to plotting directory
+    pathPlots ='/eos/user/i/ihaque/SusHiPlots' 
     
     ### The 13 TeV plots below are only for validating SusHi ###
  

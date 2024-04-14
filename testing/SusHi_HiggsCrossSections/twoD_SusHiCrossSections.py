@@ -194,7 +194,8 @@ Block FACTORS
     return inputFile
 
 
-def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCrossSecPlots, pathTemp, pathSUSHI, **kwargs):
+def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCrossSecPlots,
+                       pathTemp, pathSUSHI, **kwargs):
 
     crossSec = []    
     
@@ -268,83 +269,151 @@ def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCros
 
 if __name__ == '__main__':
 
+    ## paths
+    
+    # path to repo
+    # E:
+    pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
+
+    # path to plot directory
+    # E:
+    pathPlots = '/eos/user/i/ihaque/SusHiPlots'
+
+    # create plotting directory if it does not already exist
+    os.makedirs(pathPlots, exist_ok=True)
+    
+    # path to SusHi executable
+    pathSUSHI = os.path.join(pathRepo, 
+                             'testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi') 
+
+    # directory containting SusHi input and output (created just to run this script)
+    # user will not need to interact with this directory, all cross sections from SusHi
+    # will be saved in a .tsv file
+    pathTemp = os.path.join(pathRepo,
+                            'testing/SusHi_HiggsCrossSections/SusHiOutputsTemp')
+
+    # read in masses which SusHi will generate cross sections for
     with open('ggH_bbH.dat') as f:
         first_line = f.readline()
     
     masses = ([float(i) for i in first_line.split()])
 
-    ## path to SusHi executable
-    pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi' 
-
-    ## temporary directory containting SusHi input and output (created just to run this script)
-    pathTemp = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHiOutputsTemp'
-
-    ## OBS: everything here is NNLO unless otherwise specified
+    # OBS: everything here is NNLO unless otherwise specified
    
     ## 13 TeV SusHi cross sections
  
-    # pathOutputCrossSec_13TeV = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv'  
-    # pathOutputCrossSecPlots_13TeV = '/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_SusHiCrossSections.pdf' 
+    pathOutputCrossSec_13TeV = os.path.join(pathRepo,
+                                            'testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv')
 
-    # SusHiCrossSections(masses, 13000, 'NNLO', pathOutputCrossSec_13TeV, pathOutputCrossSecPlots_13TeV, pathTemp, pathSUSHI) 
+    # create directory for plotting for cross sections at 13 TeV
+    os.makedirs(os.path.join(pathPlots, '13TeV'), exist_ok=True)
+
+    pathOutputCrossSecPlots_13TeV = os.path.join(pathPlots, '13TeV', '13TeV_SusHiCrossSections.pdf') 
+
+    SusHiCrossSections(masses, 13000, 'NNLO', pathOutputCrossSec_13TeV,
+                       pathOutputCrossSecPlots_13TeV, pathTemp, pathSUSHI) 
 
     ## 13 TeV SusHi cross sections at N3LO
 
-    pathOutputCrossSec_13TeV_N3LO = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13TeV_N3LO_SusHiCrossSections.tsv'  
-    pathOutputCrossSecPlots_13TeV_N3LO = '/eos/user/i/ihaque/SusHiPlots/13TeV/13TeV_N3LO_SusHiCrossSections.pdf' 
+    pathOutputCrossSec_13TeV_N3LO = os.path.join(pathRepo,
+                                                 'testing/SusHi_HiggsCrossSections/13TeV_N3LO_SusHiCrossSections.tsv') 
+    pathOutputCrossSecPlots_13TeV_N3LO = os.path.join(pathPlots, '13TeV/13TeV_N3LO_SusHiCrossSections.pdf')
 
-    SusHiCrossSections(masses, 13000, 'N3LO', pathOutputCrossSec_13TeV_N3LO, pathOutputCrossSecPlots_13TeV_N3LO, pathTemp, pathSUSHI) 
+    SusHiCrossSections(masses, 13000, 'N3LO', pathOutputCrossSec_13TeV_N3LO,
+                       pathOutputCrossSecPlots_13TeV_N3LO, pathTemp, pathSUSHI) 
 
     ## 13.6 TeV SusHi cross sections
     
-    # pathOutputCrossSec_13_6TeV = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV = '/eos/user/i/ihaque/SusHiPlots/13_6TeV/13_6TeV_SusHiCrossSections.pdf' 
+    pathOutputCrossSec_13_6TeV = os.path.join(pathRepo,
+                                              'testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections.tsv')
 
-    # SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV, pathOutputCrossSecPlots_13_6TeV, pathTemp, pathSUSHI) 
+    # create directory for plotting for cross sections at 13.6 TeV
+    os.makedirs(os.path.join(pathPlots, '13_6TeV'), exist_ok=True)
+    
+    pathOutputCrossSecPlots_13_6TeV = os.path.join(pathPlots, '13_6TeV/13_6TeV_SusHiCrossSections.pdf')
+
+    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV,
+                       pathOutputCrossSecPlots_13_6TeV, pathTemp, pathSUSHI) 
 
     ## 13.6 TeV scale uncertainty SusHi cross sections
+
+    # create directories (plotting and .tsv files) for scale uncertatinty cross sections
+    os.makedirs(os.path.join(pathPlots, '13_6TeV/scaleUncert'), exist_ok=True) 
+    os.makedirs(os.path.join(pathRepo, '13_6TeV_SusHiCrossSections_ScaleUncert'), exist_ok=True)
     
-    ## renormalization scale muR/mh = 0.5 (default SusHi value)
-    ## factorization scale muF/mh = 0.5 (default SusHi value)
+    ## renormalization scale muR/mh = 0.25
+    ## factorization scale muF/mh = 0.25
 
-    # pathOutputCrossSec_13_6TeV_muR05_muF05 = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections_ScaleUncert/13_6TeV_SusHiCrossSections_muR05_muF05.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV_muR05_muF05 = '/eos/user/i/ihaque/SusHiPlots/scaleUncert/13_6TeV/13_6TeV_SusHiCrossSections_muR05_muF05.pdf' 
+    # The paths are broken up using os.path.join so that you do not have long
+    # unreadable strings.
+    pathOutputCrossSec_13_6TeV_025mh_025mh = os.path.join(pathRepo, 
+                                                          'testing/SusHi_HiggsCrossSections',
+                                                          '13_6TeV_SusHiCrossSections_ScaleUncert',
+                                                          '13_6TeV_SusHiCrossSections_025mh_025mh.tsv')
+    pathOutputCrossSecPlots_13_6TeV_025mh_025mh = os.path.join(pathPlots,
+                                                              '13_6TeV/scaleUncert',
+                                                              '13_6TeV_SusHiCrossSections_025mh_025mh.pdf')
 
-    # SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_muR05_muF05, pathOutputCrossSecPlots_13_6TeV_muR05_muF05,
-    #                    pathTemp, pathSUSHI, renormScalemuR=0.5, factScalemuF=0.5) 
+    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_025mh_025mh, 
+                       pathOutputCrossSecPlots_13_6TeV_025mh_025mh, pathTemp, pathSUSHI,
+                       renormScalemuR=0.25, factScalemuF=0.25) 
 
-    ## renormalization scale muR/mh = 2
-    ## factorization scale muF/mh = 0.5
-
-    # pathOutputCrossSec_13_6TeV_muR2_muF05 = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections_ScaleUncert/13_6TeV_SusHiCrossSections_muR2_muF05.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV_muR2_muF05 = '/eos/user/i/ihaque/SusHiPlots/scaleUncert/13_6TeV/13_6TeV_SusHiCrossSections_muR2_muF05.pdf' 
-                                                                                                                                                                             
-    # SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_muR2_muF05, pathOutputCrossSecPlots_13_6TeV_muR2_muF05,
-    #                    pathTemp, pathSUSHI, renormScalemuR=2, factScalemuF=0.5) 
-
-    ## renormalization scale muR/mh = 2 
-    ## factorization scale muF/mh = 2 
-
-    # pathOutputCrossSec_13_6TeV_muR2_muF2 = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections_ScaleUncert/13_6TeV_SusHiCrossSections_muR2_muF2.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV_muR2_muF2 = '/eos/user/i/ihaque/SusHiPlots/scaleUncert/13_6TeV/13_6TeV_SusHiCrossSections_muR2_muF2.pdf' 
-                                                                                                                                                                             
-    # SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_muR2_muF2 , pathOutputCrossSecPlots_13_6TeV_muR2_muF2 ,
-    #                    pathTemp, pathSUSHI, renormScalemuR=2, factScalemuF=2) 
-
-    ## renormalization scale muR/mh = 0.5 
-    ## factorization scale muF/mh = 2 
-
-    # pathOutputCrossSec_13_6TeV_muR05_muF2 = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections_ScaleUncert/13_6TeV_SusHiCrossSections_muR05_muF2.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV_muR05_muF2 = '/eos/user/i/ihaque/SusHiPlots/scaleUncert/13_6TeV/13_6TeV_SusHiCrossSections_muR05_muF2.pdf' 
-                                                                                                                                                                             
-    # SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_muR05_muF2, pathOutputCrossSecPlots_13_6TeV_muR05_muF2,
-    #                    pathTemp, pathSUSHI, renormScalemuR=0.5, factScalemuF=2) 
-
-    ## renormalization scale muR/mh = 1
+    ## renormalization scale muR/mh = 0.25
     ## factorization scale muF/mh = 1
 
-    # pathOutputCrossSec_13_6TeV_muR1_muF1 = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections_ScaleUncert/13_6TeV_SusHiCrossSections_muR1_muF1.tsv'  
-    # pathOutputCrossSecPlots_13_6TeV_muR1_muF1 = '/eos/user/i/ihaque/SusHiPlots/scaleUncert/13_6TeV/13_6TeV_SusHiCrossSections_muR1_muF1.pdf' 
+    pathOutputCrossSec_13_6TeV_025mh_1mh = os.path.join(pathRepo, 
+                                                         'testing/SusHi_HiggsCrossSections',
+                                                         '13_6TeV_SusHiCrossSections_ScaleUncert',
+                                                         '13_6TeV_SusHiCrossSections_025mh_1mh.tsv')
+    pathOutputCrossSecPlots_13_6TeV_025mh_1mh = os.path.join(pathPlots,
+                                                             '13_6TeV/scaleUncert',
+                                                             '13_6TeV_SusHiCrossSections_025mh_1mh.pdf')
                                                                                                                                                                              
-    # SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_muR1_muF1, pathOutputCrossSecPlots_13_6TeV_muR1_muF1,
-    #                    pathTemp, pathSUSHI, renormScalemuR=1, factScalemuF=1) 
+    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_025mh_1mh,
+                       pathOutputCrossSecPlots_13_6TeV_025mh_1mh, pathTemp, pathSUSHI,
+                       renormScalemuR=0.25, factScalemuF=1) 
+
+    ## renormalization scale muR/mh = 1 
+    ## factorization scale muF/mh = 1 
+
+    pathOutputCrossSec_13_6TeV_1mh_1mh = os.path.join(pathRepo, 
+                                                       'testing/SusHi_HiggsCrossSections',
+                                                       '13_6TeV_SusHiCrossSections_ScaleUncert',
+                                                       '13_6TeV_SusHiCrossSections_1mh_1mh.tsv')
+    pathOutputCrossSecPlots_13_6TeV_1mh_1mh = os.path.join(pathPlots,
+                                                           '13_6TeV/scaleUncert',
+                                                           '13_6TeV_SusHiCrossSections_1mh_1mh.pdf')
+                                                                                                                                                                             
+    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_1mh_1mh, 
+                       pathOutputCrossSecPlots_13_6TeV_1mh_1mh , pathTemp, pathSUSHI,
+                       renormScalemuR=1, factScalemuF=1) 
+
+    ## renormalization scale muR/mh = 1 
+    ## factorization scale muF/mh = 0.25
+
+    pathOutputCrossSec_13_6TeV_1mh_025mh = os.path.join(pathRepo, 
+                                                         'testing/SusHi_HiggsCrossSections',
+                                                         '13_6TeV_SusHiCrossSections_ScaleUncert',
+                                                         '13_6TeV_SusHiCrossSections_1mh_025mh.tsv')
+    pathOutputCrossSecPlots_13_6TeV_1mh_025mh = os.path.join(pathPlots,
+                                                             '13_6TeV/scaleUncert',
+                                                             '13_6TeV_SusHiCrossSections_1mh_025mh.pdf')
+                                                                                                                                                                             
+    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_1mh_025mh,
+                       pathOutputCrossSecPlots_13_6TeV_1mh_025mh, pathTemp, pathSUSHI,
+                       renormScalemuR=1, factScalemuF=0.25) 
+
+    ## renormalization scale muR/mh = 0.5
+    ## factorization scale muF/mh = 0.5
+
+    pathOutputCrossSec_13_6TeV_05mh_05mh = os.path.join(pathRepo, 
+                                                         'testing/SusHi_HiggsCrossSections',
+                                                         '13_6TeV_SusHiCrossSections_ScaleUncert',
+                                                         '13_6TeV_SusHiCrossSections_05mh_05mh.tsv')
+    pathOutputCrossSecPlots_13_6TeV_05mh_05mh = os.path.join(pathPlots,
+                                                             '13_6TeV/scaleUncert',
+                                                             '13_6TeV_SusHiCrossSections_05mh_05mh.pdf')
+                                                                                                                                                                             
+    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_05mh_05mh,
+                       pathOutputCrossSecPlots_13_6TeV_05mh_05mh, pathTemp, pathSUSHI,
+                       renormScalemuR=0.5, factScalemuF=0.5) 
