@@ -14,6 +14,257 @@ import scipy.interpolate
 from scipy.interpolate import CubicSpline
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
 
+
+def observables(pathObservables, SM1, SM2, *args, **kwargs):
+    '''
+    Calculates observables such as cross sections, branching ratios of the process
+    gg -> H3 -> Ha Hb > SM1 SM2 and returns a dictionary with such observables. 
+    
+    Note, observables refers to anything from the ScannerS TRSM output and 
+    anything calculated from the output.
+
+    pathObservables: string
+        path to ScannerS TRSM executable output.
+
+    SM1: string
+        Standard model final state.
+    
+    SM2: string
+        Standard model final state.
+
+    args*: string
+        additional observables found in the ScannerS TRSM executable output
+        that the user wants stored in the dictionary such as 'thetahS',
+        'thetahX', 'thetaSX', 'vs', 'vx', 'mH1', 'mH2', 'mH3' or anything
+        else found in the ScannerS TRSM output.
+
+    **kwargs:
+
+    pathRun3Data: string, default: None
+        path to gg -> HSM cross sections (or other mode) in .tsv format.
+        All observables to calculate the cross section of 
+        gg -> H3 -> Ha Hb -> SM1 SM2 will be taken from the ScannerS TRSM
+        output (pathObservables) except the first step gg -> H3 where
+        the cross section of gg -> HSM is taken from pathRun3Data and using
+        \sigma(gg -> H3) = \kappa^{2} * \sigma(gg -> HSM) (see TRSM paper) 
+        and using the NWA the new cross section gg -> H3 -> Ha Hb -> SM1 SM2
+        is calculated.
+
+    keyMassRun3: string, default: 'mass'
+        the column header of the masses in pathRun3Data. 
+
+    keyCrossSecRun3: string, default: 'crossSec'
+        the column header of the cross sections in pathRun3Data
+
+    normSM: float, default: (31.02 * 10**(-3)) * 0.0026 
+        normalizes the cross section gg -> H3 -> Ha Hb -> SM1 SM2
+        by normSM
+
+    saveAll: bool, default: False
+        saves some additional observables used when calculating the cross section
+        gg -> H3 -> Ha Hb -> SM1 SM2.
+
+    prodMode: string, default 'gg'
+        the production mode for  H3. Other possible production modes includes
+        'vbf'.
+
+    returns:
+        observables: dict
+        dictionary with all observables. The possible observables and their keys
+        (a and b are integers with possible values 1, 2, 3 and SMi, SMj are SM final states
+        e.g. 'bb', 'gamgam', 'tautau', see ScannerS TRSM output for possible SM final states)
+        
+        'b_Ha_SMi_Hb_SMj' branching ratio Ha(SMi) Hb(SMj) 
+        'b_HaHb_SMiSMj' branching ratio Ha Hb -> SMi SMj
+        'x_Ha_Hb_SMi_Hc_SMj' cross section gg -> Ha -> Hb(SMi) Hc(SMj) 
+        'x_Ha_HaHb_SMiSMj' cross section gg -> Ha -> Hb Hc -> SMi SMj
+
+        if saveAll = True, then the following additional observables are available
+        'b_H3_HaHb' branching ratio H3 -> Ha Hb (a and b can only be set to 1 or 2 here),
+        'x_Ha' cross section gg -> Ha (unless prodMode set by user)
+        'b_Ha_SMi' branching ratio Ha -> SMi
+
+        and any other observable specified by args available in the ScannerS TRSM output.
+    '''
+
+    #################################### kwargs ####################################
+
+    # path to gg -> HSM cross sections (e.g. 13.6 TeV cross sections)
+    if 'pathRun3Data' in kwargs:
+        run3 = True
+        pathRun3Data = kwargs['pathRun3Data']
+
+        # else: raise Exception('run3 is set to True, path to run 3 cross sections required')
+
+        if 'keyMassRun3' in kwargs:
+            keyMassRun3 = kwargs['keyMassRun3']
+
+        else: keyMassRun3 = 'mass'
+
+        if 'keyCrossSecRun3' in kwargs:
+            keyCrossSecRun3 = kwargs['keyCrossSecRun3']
+
+        else: keyCrossSecRun3 = 'crossSec'
+
+
+    else:
+        run3 = False
+
+    # normalise the cross sections gg -> H3 -> H1(SM1) H2(SM2)
+    # gg -> H3 -> H1(SM2) H2(SM1), gg -> H3 -> H1 H1 -> SM1 SM2,
+    # gg -> H3 -> H2 H2 -> SM1 SM2
+    if 'normSM' in kwargs:
+        normSM = kwargs['normSM']
+
+    else:
+        normSM = (31.02 * 10**(-3)) * 0.0026
+
+    # this stores some additional observables (BR, XS) in the
+    # returned dictionary to the user if set to True
+    if 'saveAll' in kwargs:
+        saveAll = kwargs['saveAll']
+
+    else: saveAll = False
+
+    # default production mode is ggF, but user can chose otherwise
+    if 'prodMode' in kwargs:
+        prodMode = kwargs['prodMode']
+
+    else: prodMode = 'gg'
+
+    ################################################################################
+    
+    df = pandas.read_table(pathObservables)    
+
+    # this dictionary will be returned to the user
+    observables = {}
+    
+    # for temporary storage (unles saveAll = True)
+    # then observables and tempObservables will be merged
+    tempObservables = {}
+    
+    tempObservables['b_H3_H1H2'] = [i for i in df['b_H3_H1H2']]
+    tempObservables['b_H3_H1H1'] = [i for i in df['b_H3_H1H1']]
+    tempObservables['b_H3_H2H2'] = [i for i in df['b_H3_H2H2']]
+
+    tempObservables['x_H1'] = [i for i in df[f'x_H1_{prodMode}']]
+    tempObservables['x_H2'] = [i for i in df[f'x_H2_{prodMode}']]
+    tempObservables['x_H3'] = [i for i in df[f'x_H3_{prodMode}']]
+        
+    tempObservables[f'b_H1_{SM1}'] = [i for i in df[f'b_H1_{SM1}']] #"b_H1_bb"
+    tempObservables[f'b_H1_{SM2}'] = [i for i in df[f'b_H1_{SM2}']] #"b_H1_gamgam"
+    tempObservables[f'b_H2_{SM1}'] = [i for i in df[f'b_H2_{SM1}']] #"b_H2_bb"
+    tempObservables[f'b_H2_{SM2}'] = [i for i in df[f'b_H2_{SM2}']] #"b_H2_gamgam"
+    
+
+        
+    # branching ratio H1(SM1) H2(SM2)    
+    tempObservables[f'b_H1_{SM1}_H2_{SM2}'] = [tempObservables[f'b_H1_{SM1}'][i] * tempObservables[f'b_H2_{SM2}'][i]
+    for i in range(len(df))]
+
+    # branching ratio H1(SM2) H2(SM1)
+    tempObservables[f'b_H1_{SM2}_H2_{SM1}'] = [tempObservables[f'b_H1_{SM2}'][i] * tempObservables[f'b_H2_{SM1}'][i]
+        for i in range(len(df))]
+
+    # branching ratio H1H2 -> SM1 SM2    
+    tempObservables[f'b_H1H2_{SM1}{SM2}'] = [tempObservables[f'b_H1_{SM1}_H2_{SM2}'][i] + tempObservables[f'b_H1_{SM2}_H2_{SM1}'][i] 
+        for i in range(len(df))]
+
+    # symmetry factor in the case H1H1 and H2H2 decays to SM1, SM2
+    # and SM1 != SM2
+    if SM1 != SM2:
+        symFact = 2
+
+    else: symFact = 1
+    
+    # branching ratio H1H1 -> SM1 SM2
+    tempObservables[f'b_H1H1_{SM1}{SM2}'] = [symFact * tempObservables[f'b_H1_{SM1}'][i] * tempObservables[f'b_H1_{SM2}'][i]
+        for i in range(len(df))]
+    
+    # branching ratio H2H2 -> SM1 SM2
+    tempObservables[f'b_H2H2_{SM1}{SM2}'] = [symFact * tempObservables[f'b_H2_{SM1}'][i] * tempObservables[f'b_H2_{SM2}'][i]
+        for i in range(len(df))]
+
+    # save cross sections from pathRun3Data in observables for calculating
+    # cross sections using the NWA later
+    if run3 == True:
+        dfRun3 = pandas.read_table(pathRun3Data)
+        
+        # quick sanity check
+        if abs(len(dfRun3[keyMassRun3]) + len(dfRun3[keyCrossSecRun3]) - 2 * len(dfRun3)) > epsilon:
+            raise Exception(f'length of columns in {pathRun3Data} are not equal')
+
+        # create splines fitting the cross sections
+        run3_x_HSM_gg = CubicSpline(np.array(dfRun3[keyMassRun3]), np.array(dfRun3[keyCrossSecRun3]))
+
+        # create TRSM cross sections from the cross sections given in pathRun3Data
+        tempObservables['x_H3'] = [(df['R31'][i]**2) * run3_x_HSM_gg(df['mH3'][i]) for i in range(len(df))]
+
+    else: pass
+
+    # cross sections gg -> H3 -> H1H2
+    tempObservables['x_H3_H1H2'] = [tempObservables['x_H3'][i] * tempObservables['b_H3_H1H2'][i] 
+        for i in range(len(df))]
+    
+    # cross sections gg -> H3 -> H1H1
+    tempObservables['x_H3_H1H1'] = [tempObservables['x_H3'][i] * tempObservables['b_H3_H1H1'][i] 
+        for i in range(len(df))]
+
+    # cross sections gg -> H3 -> H2H2
+    tempObservables['x_H3_H2H2'] = [tempObservables['x_H3'][i] * tempObservables['b_H3_H2H2'][i] 
+        for i in range(len(df))]
+    
+    # cross section gg -> H3 -> H1(SM1) H2(SM2)
+    observables[f'x_H3_H1_{SM1}_H2_{SM2}'] = [(tempObservables['x_H3_H1H2'][i] * tempObservables[f'b_H1_{SM1}_H2_{SM2}'][i])/normSM
+        for i in range(len(df))]
+    
+    # cross section gg -> H3 -> H1(SM2) H2(SM1)
+    observables[f'x_H3_H1_{SM2}_H2_{SM1}'] = [(tempObservables['x_H3_H1H2'][i] * tempObservables[f'b_H1_{SM2}_H2_{SM1}'][i])/normSM
+        for i in range(len(df))]
+    
+    # cross section gg -> H3 -> H1 H2 -> SM1 SM2
+    observables[f'x_H3_H1H2_{SM1}{SM2}'] = [(tempObservables['x_H3_H1H2'][i] * tempObservables[f'b_H1H2_{SM1}{SM2}'][i])/normSM
+        for i in range(len(df))]
+    
+    # cross section gg -> H3 -> H1 H1 -> SM1 SM2
+    observables[f'x_H1H1_{SM1}{SM2}'] = [(tempObservables['x_H3_H1H1'][i] * tempObservables[f'b_H1H1_{SM1}{SM2}'][i])/normSM
+        for i in range(len(df))]
+    
+    # cross section gg -> H3 -> H2 H2 -> SM1 SM2
+    observables[f'x_H2H2_{SM1}{SM2}'] = [(tempObservables['x_H3_H2H2'][i] * tempObservables[f'b_H2H2_{SM1}{SM2}'][i])/normSM
+        for i in range(len(df))]
+
+    # sanity check to see all rows in the dataframe are of equal length
+    epsilon = 10**(-6)
+    rows = 0
+    
+    for key in observables:
+        rows = rows + len(observables[key])
+    
+    check = rows/(len(df) * len(observables))
+    if  abs(check - 1)  > + epsilon:
+        raise Exception('length of lists not equal in ppXNPSM_massfree')
+    
+    # if user wants to store specific observables found in the
+    # ScannerS TRSM output (e.g. vevs, angles etc.) the user
+    # can specify the observables in args
+    for arg in args:
+        observables[arg] = [i for i in df[arg]]
+
+    # make sure that user gets the pathRun3Data TRSM cross sections
+    if run3 == True:
+        observables['x_H3'] = tempObservables['x_H3']
+
+    # if user wants all the observables required when calculating
+    # the cross sections
+    if saveAll == True:
+        observables = tempObservables | observables
+        return observables
+
+    else:
+        return observables
+
+
 def massAndBrs(dataFrame, axes1, axes2, axes3):
 
     mH1_H1H2 = [i for i in dataFrame[axes1]]
@@ -171,17 +422,18 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
 
     #################################### kwargs ####################################
 
-    if 'run3' in kwargs and kwargs['run3'] == True:
+    # if 'run3' in kwargs and kwargs['run3'] == True:
 
+        # run3 = True
+
+    if 'pathRun3Data' in kwargs:
         run3 = True
+        pathRun3Data = kwargs['pathRun3Data']
 
-        if 'pathRun3Data' in kwargs:
-            pathRun3Data = kwargs['pathRun3Data']
-
-        else: raise Exception('run3 is set to True, path to run 3 cross sections required')
+        # else: raise Exception('run3 is set to True, path to run 3 cross sections required')
 
         if 'keyMassRun3' in kwargs:
-            keyMassRun3 = kwargs['keyMass']
+            keyMassRun3 = kwargs['keyMassRun3']
 
         else: keyMassRun3 = 'mass'
 
@@ -292,90 +544,7 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
     H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, pp_X_H2H2_bbgamgam])
     
     return H1H2, H1H1, H2H2
-
-
-def run3Interp(massList, **kwargs):
-
-    # TO DO: 
-    # 1. check that if you use 13 TeV data that you get the same results
-    #    as in scannerS
-    # 2. the way to implement this is to implement kwargs in all the functions
-    #    where you need this (really only ppXNPSM and maybe ppXNP), which is
-    #    sort of already done through the normalization factors.
-    # 3. This function will only be called if you set the kwarg as energy=13
-    #    thus older code which the ppXNPSM and ppXNP functions will not be 
-    #    affected.
-    # 4. This then means that you also need to set the settings to the desired
-    #    settings.
-    
    
-    #################################### kwargs ####################################
-
-    # if 'keySushi' in kwargs:
-    #     keySushi = kwargs['keySushi']
-    # else:
-    #     keySushi = '..'
-
-    # if 'keyX' in kwargs:
-    #     keyX = kwargs['keyX']
-    # else:
-    #     keyX = '..' 
-
-    # if 'keyY' in kwargs:
-    #     keyY = kwargs['keyY']
-    # else:
-    #     keyY = '..' 
-
-
-    # if 'BP' in kwargs:
-    #     if kwargs['BP'] == 'BP2':
-    #         ths = 1.352
-    #         thx = 1.175
-    #         tsx = -0.407
-        
-    #     elif kwargs['BP'] == 'BP3':
-    #         ths = -0.129
-    #         thx = 0.226
-    #         tsx = -0.899
-
-    #     elif kwargs['BP'] == 'BP5':
-    #         ths = -1.498
-    #         thx = 0.251
-    #         tsx = 0.271
-
-    #     elif kwargs['BP'] == 'BP6':
-    #         ths = 0.207
-    #         thx = 0.146
-    #         tsx = 0.782
-
-    #     else:
-    #         raise Exception('invalid value of BP. Can be either \'BP2\', \'BP3\', \'BP5\' or \'BP6\'')
-
-    # ################################################################################
-    
-    # kappa = np.cos(ths)*np.sin(thx)*np.cos(tsx) + np.sin(ths)*np.sin(tsx)
-        
-    # dataPath = keySushi  
-    # df = pandas.read_table(dataPath)
-    # x = np.array([i for i in df[keyX]])
-    # y = np.array([i for i in df[keyY]])
-    # interpFunc = CubicSpline(x, y)
-    # interpValue = pow(kappa, 2) * interpFunc(massList)
-
-    # return interpValue
-    #################################### kwargs ####################################
-
-    if 'pathSusHiData' in kwargs:
-        pathSusHiData = kwargs['pathSusHiData']
-
-    ################################################################################
-    
-    df = pandas.DataFrame(pathSusHiData)
-
-    CubicSpline(np.array(df['mass']), np.array(df['crossSec']))
-    
-
-    
 
 def mixingMatrix(ths, thx, tsx, angles, plotangle):
     
