@@ -265,159 +265,6 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
         return observables
 
 
-def massAndBrs(dataFrame, axes1, axes2, axes3):
-
-    mH1_H1H2 = [i for i in dataFrame[axes1]]
-    mH2_H1H2 = [i for i in dataFrame[axes2]]
-    mH3_H1H2 = [i for i in dataFrame[axes3]]
-    
-    mH1_H1H1 = mH1_H1H2.copy()
-    mH2_H1H1 = mH2_H1H2.copy()
-    mH3_H1H1 = mH3_H1H2.copy()
-    
-    mH1_H2H2 = mH1_H1H2.copy()
-    mH2_H2H2 = mH2_H1H2.copy()
-    mH3_H2H2 = mH3_H1H2.copy()
-
-    massH1H2 = [mH1_H1H2, mH2_H1H2, mH3_H1H2]
-    massH1H1 = [mH1_H1H1, mH2_H1H1, mH3_H1H1]
-    massH2H2 = [mH1_H2H2, mH2_H2H2, mH3_H2H2]
-    
-    b_H3_H1H2 = [i for i in dataFrame["b_H3_H1H2"]]
-    b_H3_H1H1 = [i for i in dataFrame["b_H3_H1H1"]]
-    b_H3_H2H2 = [i for i in dataFrame["b_H3_H2H2"]]
-
-    return massH1H2, massH1H1, massH2H2, b_H3_H1H2, b_H3_H1H1, b_H3_H2H2
-
-
-
-def XNP_massfree(BPdirectory, axes1, axes2, axes3):
-    
-    df = pandas.read_table(BPdirectory, index_col = 0)
-    
-    mH1_H1H2 = [i for i in df[axes1]]
-    mH2_H1H2 = [i for i in df[axes2]]
-    mH3_H1H2 = [i for i in df[axes3]]
-    
-    mH1_H1H1 = mH1_H1H2.copy()
-    mH2_H1H1 = mH2_H1H2.copy()
-    mH3_H1H1 = mH3_H1H2.copy()
-    
-    mH1_H2H2 = mH1_H1H2.copy()
-    mH2_H2H2 = mH2_H1H2.copy()
-    mH3_H2H2 = mH3_H1H2.copy()
-    
-    mH1_x_H3_gg = mH1_H1H2.copy()
-    mH2_x_H3_gg = mH2_H1H2.copy()
-    mH3_x_H3_gg = mH3_H1H2.copy()
-    
-    b_H3_H1H2 = [i for i in df["b_H3_H1H2"]]
-    b_H3_H1H1 = [i for i in df["b_H3_H1H1"]]
-    b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
-    x_H3_gg = [i for i in df["x_H3_gg"]]
-    
-    # w_H3 = [i for i in df[""]]
-    
-    
-    
-    H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, b_H3_H1H2])
-    H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, b_H3_H1H1])
-    H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, b_H3_H2H2])
-    x_H3_gg = np.array([mH1_x_H3_gg, mH2_x_H3_gg, mH3_x_H3_gg, x_H3_gg])
-    
-    return H1H2, H1H1, H2H2, x_H3_gg
-
-
-def NPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2):
-    
-    df = pandas.read_table(BPdirectory)
-    
-    input1_H1H2 = df[axes1]
-    input2_H1H2 = df[axes2]
-    input3_H1H2 = df[axes3]
-    
-    input1_H1H1 = input1_H1H2.copy()
-    input2_H1H1 = input2_H1H2.copy()
-    input3_H1H1 = input3_H1H2.copy()
-
-    input1_H2H2 = input1_H1H2.copy()
-    input2_H2H2 = input2_H1H2.copy()
-    input3_H2H2 = input3_H1H2.copy()
-    
-    b_H1_bb     = [i for i in df["b_H1_" + SM1]]    #"b_H1_bb"
-    b_H1_gamgam = [i for i in df["b_H1_" + SM2]]    #"b_H1_gamgam"
-    b_H2_bb     = [i for i in df["b_H2_" + SM1]]    #"b_H2_bb"
-    b_H2_gamgam = [i for i in df["b_H2_" + SM2]]    #"b_H2_gamgam"
-    
-    check = ( len(input1_H1H2) + len(input2_H1H2) + len(input3_H1H2) + len(b_H1_bb) + len(b_H1_gamgam) + len(b_H2_bb) + len(b_H2_gamgam) )/ (7 * len(df["Unnamed: 0"]))
-    epsilon = 10**(-6)
-    
-    if abs(check - 1) > epsilon:
-        raise Exception('length of lists in NPSM_massfree are not equal')
-    
-    b_H1_bb_H2_gamgam = [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
-    b_H2_bb_H1_gamgam = [b_H2_bb[i] * b_H1_gamgam[i] for i in range(len(b_H2_bb))]
-    
-    # H1H2 -> SM
-    if SM1 == SM2:
-        b_H1H2_bbgamgam = b_H1_bb_H2_gamgam # [b_H1_bb[i] * b_H2_gamgam[i] for i in range(len(b_H1_bb))]
-    else:
-        b_H1H2_bbgamgam = [b_H1_bb_H2_gamgam[i] + b_H2_bb_H1_gamgam[i] for i in range(len(b_H1_bb_H2_gamgam))]
-        
-    b_H1H1_bbgamgam = [b_H1_bb[i] * b_H1_gamgam[i] for i in range(len(b_H1_bb))]
-    b_H2H2_bbgamgam = [b_H2_bb[i] * b_H2_gamgam[i] for i in range(len(b_H2_bb))]
-    
-    H1H2 = np.array([input1_H1H2, input2_H1H2, input3_H1H2, b_H1H2_bbgamgam, b_H1_bb_H2_gamgam, b_H2_bb_H1_gamgam])
-    H1H1 = np.array([input1_H1H1, input2_H1H1, input3_H1H1, b_H1H1_bbgamgam])
-    H2H2 = np.array([input1_H2H2, input2_H2H2, input3_H2H2, b_H2H2_bbgamgam])
-    
-    return H1H2, H1H1, H2H2
-
-
-def ppXNP_massfree(BPdirectory, axes1, axes2, axes3, normalizationNP = 31.02 * 10**(-3)):
-    
-    df = pandas.read_table(BPdirectory, index_col = 0)
-    
-    mH1_H1H2 = [i for i in df[axes1]]
-    mH2_H1H2 = [i for i in df[axes2]]
-    mH3_H1H2 = [i for i in df[axes3]]
-    
-    mH1_H1H1 = mH1_H1H2.copy()
-    mH2_H1H1 = mH2_H1H2.copy()
-    mH3_H1H1 = mH3_H1H2.copy()
-    
-    mH1_H2H2 = mH1_H1H2.copy()
-    mH2_H2H2 = mH2_H1H2.copy()
-    mH3_H2H2 = mH3_H1H2.copy()
-    
-    b_H3_H1H2 = [i for i in df["b_H3_H1H2"]]
-    b_H3_H1H1 = [i for i in df["b_H3_H1H1"]]
-    b_H3_H2H2 = [i for i in df["b_H3_H2H2"]]
-    
-    x_H3_gg_H1H2 = [i for i in df["x_H3_gg"]]
-    x_H3_gg_H1H1 = x_H3_gg_H1H2.copy()
-    x_H3_gg_H2H2 = x_H3_gg_H1H2.copy()
-    
-    
-    # rescaled SM dihiggs cross-section (ggF):
-    # https://cds.cern.ch/record/2764447/files/ATL-PHYS-SLIDE-2021-092.pdf
-    ggF_xs_SM_Higgs = normalizationNP
-    
-    # rescaled cross-section
-    pp_X_H1H2 = [(b_H3_H1H2[i] * x_H3_gg_H1H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H2))]
-    H1H2 = np.array([mH1_H1H2, mH2_H1H2, mH3_H1H2, b_H3_H1H2, pp_X_H1H2])
-    
-    pp_X_H1H1 = [(b_H3_H1H1[i] * x_H3_gg_H1H1[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H1H1))]
-    H1H1 = np.array([mH1_H1H1, mH2_H1H1, mH3_H1H1, b_H3_H1H1, pp_X_H1H1])
-    
-    pp_X_H2H2 = [(b_H3_H2H2[i] * x_H3_gg_H2H2[i]) / ggF_xs_SM_Higgs for i in range(len(b_H3_H2H2))]
-    H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, b_H3_H2H2, pp_X_H2H2])
-
-    
-    return H1H2, H1H1, H2H2
-
-
-
 def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026, **kwargs):
 
     #################################### kwargs ####################################
@@ -544,87 +391,150 @@ def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM
     H2H2 = np.array([mH1_H2H2, mH2_H2H2, mH3_H2H2, pp_X_H2H2_bbgamgam])
     
     return H1H2, H1H1, H2H2
-   
 
-def mixingMatrix(ths, thx, tsx, angles, plotangle):
+
+def comparer(observables, H1H2, H1H1=None, H2H2=None, SM1='bb', SM2='gamgam', eps=10**(-17)):
+    '''
+    Script that checks that the output from observable and ppXNPSM_massfree
+    is the same so that ppXNPSM can be deprecated and replaced by the better
+    function observables
+    '''
+    if len(observables['mH1']) == len(H1H2[0]):
+        print(len(observables['mH1']), len(H1H2[0]))
+      
+    else:
+        raise Exception('something went wrong the masses are not of equal length')
+
+    if len(observables['mH2']) == len(H1H2[1]):
+        print(len(observables['mH2']), len(H1H2[1]))
+        
+    else:
+        raise Exception('something went wrong the masses are not of equal length')
     
-    def matrix(ths, thx, tsx):
-        R11 = np.cos(ths)*np.cos(thx)
-        R12 = -np.sin(ths)*np.cos(thx)
-        R13 = -np.sin(thx)
+    if len(observables['mH3']) == len(H1H2[2]):
+        print(len(observables['mH3']), len(H1H2[2]))
         
-        R21 = np.sin(ths)*np.cos(tsx) - np.cos(ths)*np.sin(thx)*np.sin(tsx) 
-        R22 = np.cos(ths)*np.cos(tsx) + np.sin(ths)*np.sin(thx)*np.sin(tsx)
-        R23 = -np.cos(thx)*np.sin(tsx)
+    else:
+        raise Exception('something went wrong the masses are not of equal length')
+
+    if len(observables[f'x_H3_H1H2_{SM1}{SM2}']) == len(H1H2[3]):
+        print(len(observables[f'x_H3_H1H2_{SM1}{SM2}']), len(H1H2[3]))
+
+    else:
+        raise Exception('something went wrong the total cross sections are not equal')
     
-        R31 = np.cos(ths)*np.sin(thx)*np.cos(tsx) + np.sin(ths)*np.sin(tsx)
-        R32 = np.cos(ths)*np.sin(tsx) - np.sin(ths)*np.sin(thx)*np.cos(tsx)
-        R33 = np.cos(thx)*np.cos(tsx)
-        
-        return np.array([[R11, R12, R13], [R21, R22, R23], [R31, R32, R33]])
+    if len(observables[f'x_H3_H1_{SM1}_H2_{SM2}']) == len(H1H2[4]):
+        print(len(observables[f'x_H3_H1_{SM1}_H2_{SM2}']), len(H1H2[4]))
+
+    else:
+        raise Exception('Something went wrong the cross section 4 is not equal')
     
-    matrix_thsfree = matrix(angles, 
-                            np.array([thx for i in range(len(angles))]), 
-                            np.array([tsx for i in range(len(angles))]))
+    if len(observables[f'x_H3_H1_{SM2}_H2_{SM1}']) == len(H1H2[5]):
+        print(len(observables[f'x_H3_H1_{SM2}_H2_{SM1}']), len(H1H2[5]))
+        
+    else:
+        raise Exception('Something went wrong the cross section 5 is not equal')
+
+    print('Checking H1H2...')
     
-    matrix_thxfree = matrix(np.array([ths for i in range(len(angles))]), 
-                            angles, 
-                            np.array([tsx for i in range(len(angles))]))
+    for i in range(len(H1H2[0])):
+        if (abs(observables['mH1'][i] - H1H2[0][i]) > eps or
+        abs(observables['mH2'][i] - H1H2[1][i]) > eps or
+        abs(observables['mH3'][i] - H1H2[2][i]) > eps or
+        abs(observables[f'x_H3_H1H2_{SM1}{SM2}'][i] - H1H2[3][i]) > eps or
+        abs(observables[f'x_H3_H1_{SM1}_H2_{SM2}'][i] - H1H2[4][i]) > eps or
+        abs(observables[f'x_H3_H1_{SM2}_H2_{SM1}'][i] - H1H2[5][i]) > eps):
+            print(f'epsilon: {eps}')
+            print('mH1', abs(observables['mH1'][i] - H1H2[0][i]))
+            print('mH2', abs(observables['mH2'][i] - H1H2[1][i]))
+            print('mH3', abs(observables['mH3'][i] - H1H2[2][i]))
+            print(f'x_H3_H1H2_{SM1}{SM2}', abs(observables[f'x_H3_H1H2_{SM1}{SM2}'][i] - H1H2[3][i]))
+            print(f'x_H3_H1_{SM1}_H2_{SM2}', abs(observables[f'x_H3_H1_{SM1}_H2_{SM2}'][i] - H1H2[4][i]))
+            print(f'x_H3_H1_{SM2}_H2_{SM1}', abs(observables[f'x_H3_H1_{SM2}_H2_{SM1}'][i] - H1H2[5][i]))
+            raise Exception('something went wrong in one of the observables above...')
+
+        else:
+            pass
+
+    print('H1H2 passed tests')
+
+    # note H1H1 and H2H2 misses a symmetry factor when SM1 != SM2 
+    # in ppXNPSM_massfree so will allways fail
+    if H1H1 != None and H2H2 != None:
+        print('note H1H1 and H2H2 misses a symmetry factor when SM1 != SM2\n\
+              in ppXNPSM_massfree so this test will allways fail')
+        
+        if (len(observables['mH1']) == len(H1H1[0]) and
+            len(observables['mH1']) == len(H2H2[0])):
+            pass
+        
+        else:
+            raise Exception('something went wrong the masses are not of equal length')
+
+        if (len(observables['mH2']) == len(H1H1[1]) and
+            len(observables['mH2']) == len(H2H2[1])):
+            pass
+        
+        else:
+            raise Exception('something went wrong the masses are not of equal length')
     
-    matrix_tsxfree = matrix(np.array([ths for i in range(len(angles))]), 
-                            np.array([thx for i in range(len(angles))]), 
-                            angles)
-    if plotangle == 'ths':
-        plt.plot(angles, matrix_thsfree[0][0], lw = 3)
-        plt.text(angles[0], (matrix_thsfree[0][0])[0], r'$\kappa_{1}$')
-        plt.plot(angles, matrix_thsfree[1][0], lw = 3)
-        plt.text(angles[0], (matrix_thsfree[1][0])[0], r'$\kappa_{decimals}$')
-        plt.plot(angles, matrix_thsfree[2][0], lw = 3)
-        plt.text(angles[0], (matrix_thsfree[2][0])[0], r'$\kappa_{3}$')
+        if (len(observables['mH3']) == len(H1H1[2]) and
+            len(observables['mH3']) == len(H2H2[2])):
+            pass
         
-        rest = 0.5
-        plt.plot(angles, matrix_thsfree[0][1], lw = rest)
-        plt.plot(angles, matrix_thsfree[1][1], lw = rest)
-        plt.plot(angles, matrix_thsfree[2][1], lw = rest)
+        else:
+            raise Exception('something went wrong the masses are not of equal length')
+
+        if (len(observables[f'x_H3_H1H1_{SM1}{SM2}']) == len(H1H1[3]) and
+            len(observables[f'x_H3_H2H2_{SM1}{SM2}']) == len(H2H2[3])):
+            pass
+
+        else:
+            raise Exception('something went wrong the total cross sections are not equal')
         
-        plt.plot(angles, matrix_thsfree[0][2], lw = rest)
-        plt.plot(angles, matrix_thsfree[1][2], lw = rest)
-        plt.plot(angles, matrix_thsfree[2][2], lw = rest)
+        print('Checking H1H1...')
+        for i in range(len(H1H1[0])):
+            if (abs(observables['mH1'][i] - H1H1[0][i]) > eps and
+            abs(observables['mH2'][i] - H1H1[1][i]) > eps and
+            abs(observables['mH3'][i] - H1H1[2][i]) > eps and
+            abs(observables[f'x_H3_H1H1_{SM1}{SM2}'][i] - H1H1[3][i]) > eps):
+                print(f'epsilon: {eps}')
+                print('mH1', abs(observables['mH1'][i] - H1H1[0][i]))
+                print('mH2', abs(observables['mH2'][i] - H1H1[1][i]))
+                print('mH3', abs(observables['mH3'][i] - H1H1[2][i]))
+                print(f'x_H3_H1H1_{SM1}{SM2}', abs(observables[f'x_H3_H1H1_{SM1}{SM2}'][i] - H1H1[3][i]))
+                raise Exception('something went wrong in one of the observables above...')
+
+            else:
+                pass
+
+        print('H1H1 passed tests')
+
+        print('Checking H2H2...')
+        for i in range(len(H2H2[0])):
+            if (abs(observables['mH1'][i] - H2H2[0][i]) > eps and
+            abs(observables['mH2'][i] - H2H2[1][i]) > eps and
+            abs(observables['mH3'][i] - H2H2[2][i]) > eps and
+            abs(observables[f'x_H3_H2H2_{SM1}{SM2}'][i] - H2H2[3][i]) > eps):
+                print(f'epsilon: {eps}')
+                print('mH1', abs(observables['mH1'][i] - H2H2[0][i]))
+                print('mH2', abs(observables['mH2'][i] - H2H2[1][i]))
+                print('mH3', abs(observables['mH3'][i] - H2H2[2][i]))
+                print(f'x_H3_H2H2_{SM1}{SM2}', abs(observables[f'x_H3_H2H2_{SM1}{SM2}'][i] - H2H2[3][i]))
+                raise Exception('something went wrong in one of the observables above...')
+
+            else:
+                pass
+
+        print('H2H2 passed tests')
+
+    else:
+        pass
+
+    print('Testing complete, passed all tests!')
+
     
-    elif plotangle == 'thx':
-        plt.plot(angles, matrix_thxfree[0][0], lw = 3)
-        plt.text(angles[0], (matrix_thxfree[0][0])[0], r'$\kappa_{1}$')
-        plt.plot(angles, matrix_thxfree[1][0], lw = 3)
-        plt.text(angles[0], (matrix_thxfree[1][0])[0], r'$\kappa_{2}$')
-        plt.plot(angles, matrix_thxfree[2][0], lw = 3)
-        plt.text(angles[0], (matrix_thxfree[2][0])[0], r'$\kappa_{3}$')
-        
-        rest = 0.5
-        plt.plot(angles, matrix_thxfree[0][1], lw = rest)
-        plt.plot(angles, matrix_thxfree[1][1], lw = rest)
-        plt.plot(angles, matrix_thxfree[2][1], lw = rest)
-        
-        plt.plot(angles, matrix_thxfree[0][2], lw = rest)
-        plt.plot(angles, matrix_thxfree[1][2], lw = rest)
-        plt.plot(angles, matrix_thxfree[2][2], lw = rest)
-    
-    elif plotangle == 'tsx':
-        plt.plot(angles, matrix_thxfree[0][0], lw = 3)
-        plt.text(angles[0], (matrix_thxfree[0][0])[0], r'$\kappa_{1}$')
-        plt.plot(angles, matrix_thxfree[1][0], lw = 3)
-        plt.text(angles[0], (matrix_thxfree[1][0])[0], r'$\kappa_{2}$')
-        plt.plot(angles, matrix_thxfree[2][0], lw = 3)
-        plt.text(angles[0], (matrix_thxfree[2][0])[0], r'$\kappa_{3}$')
-        
-        rest = 0.5
-        plt.plot(angles, matrix_thxfree[0][1], lw = rest)
-        plt.plot(angles, matrix_thxfree[1][1], lw = rest)
-        plt.plot(angles, matrix_thxfree[2][1], lw = rest)
-        
-        plt.plot(angles, matrix_thxfree[0][2], lw = rest)
-        plt.plot(angles, matrix_thxfree[1][2], lw = rest)
-        plt.plot(angles, matrix_thxfree[2][2], lw = rest)
- 
+
 
 def pointfinder(epsilon, pointS, pointX, listS, listX, br):
     S = pointS
