@@ -57,45 +57,43 @@ if __name__ == '__main__':
     pathExecutionConfig = os.path.join(pathTemp, 'temp_config.tsv')
     pathExecutionOutput = os.path.join(pathTemp, 'temp_output.tsv')
 
-    # for mass in masses:
-    # for mass in masses:
+    for mass in masses:
 
-    #     dictModelParams = {'mH1_lb': 1, 'mH1_ub': 1,
-    #                        'mH2_lb': 2, 'mH2_ub': 2,
-    #                        'mH3_lb': mass, 'mH3_ub': mass,
-    #                        'thetahS_lb': 1.352,  'thetahS_ub': 1.352,
-    #                        'thetahX_lb': 1.175,  'thetahX_ub': 1.175,
-    #                        'thetaSX_lb': -0.407, 'thetaSX_ub': -0.407,
-    #                        'vs_lb': 120, 'vs_ub': 120,
-    #                        'vx_lb': 890, 'vx_ub': 890}
+        dictModelParams = {'mH1_lb': 1, 'mH1_ub': 1,
+                           'mH2_lb': 2, 'mH2_ub': 2,
+                           'mH3_lb': mass, 'mH3_ub': mass,
+                           'thetahS_lb': 1.352,  'thetahS_ub': 1.352,
+                           'thetahX_lb': 1.175,  'thetahX_ub': 1.175,
+                           'thetaSX_lb': -0.407, 'thetaSX_ub': -0.407,
+                           'vs_lb': 120, 'vs_ub': 120,
+                           'vx_lb': 890, 'vx_ub': 890}
 
-    #     # creates a .tsv file with model parameters in pathExecutionConfig
-    #     # given by dictModelParams, the TRSM executable will take this as
-    #     # input
-    #     config.checkCreatorNew(pathExecutionConfig, dictModelParams)
+        # creates a .tsv file with model parameters in pathExecutionConfig
+        # given by dictModelParams, the TRSM executable will take this as
+        # input
+        config.checkCreatorNew(pathExecutionConfig, dictModelParams)
 
-    #     # command line arguments required when running the ScannerS
-    #     # TRSM executable
-    #     runTRSM = [pathTRSM, '--BFB', str(BFB), '--Uni', str(Uni),
-    #                '--STU', str(STU), '--Higgs', str(Higgs), 
-    #                pathExecutionOutput, 'check', pathExecutionConfig]
+        # command line arguments required when running the ScannerS
+        # TRSM executable
+        runTRSM = [pathTRSM, '--BFB', str(BFB), '--Uni', str(Uni),
+                   '--STU', str(STU), '--Higgs', str(Higgs), 
+                   pathExecutionOutput, 'check', pathExecutionConfig]
 
-    #     # run the ScannerS TRSM executable
-    #     shell_output = subprocess.run(runTRSM, cwd=pathTemp)
+        # run the ScannerS TRSM executable
+        shell_output = subprocess.run(runTRSM, cwd=pathTemp)
 
-    #     df = pandas.read_table(pathExecutionOutput)
-    #     TRSMCrossSec = df['x_H3_gg'][0]
-    #     SMCrossSec = df['x_H3_gg'][0]/(df['R31'][0]**2)
+        df = pandas.read_table(pathExecutionOutput)
+        TRSMCrossSec = df['x_H3_gg'][0]
+        SMCrossSec = df['x_H3_gg'][0]/(df['R31'][0]**2)
 
-    #     # crossSec.append((mass, TRSMCrossSec, SMCrossSec))
-    #     massesAndCrossSec['mass'].append(mass)
-    #     massesAndCrossSec['SMCrossSec'].append(SMCrossSec)
-    #     massesAndCrossSec['TRSMCrossSec'].append(TRSMCrossSec)
+        # crossSec.append((mass, TRSMCrossSec, SMCrossSec))
+        massesAndCrossSec['mass'].append(mass)
+        massesAndCrossSec['SMCrossSec'].append(SMCrossSec)
+        massesAndCrossSec['TRSMCrossSec'].append(TRSMCrossSec)
 
-    # dfOut = pandas.DataFrame(massesAndCrossSec)
-    # print(dfOut)
-    # dfOut.to_csv('13TeV_ScannerSCrossSections.tsv', sep='\t')
-    dfOut = pandas.read_table('13TeV_ScannerSCrossSections.tsv', sep='\t')
+    dfOut = pandas.DataFrame(massesAndCrossSec)
+    print(dfOut)
+    dfOut.to_csv('13TeV_ScannerSCrossSections.tsv', sep='\t')
 
     # plot the TRSM cross sections
     plt.plot(np.array(dfOut['mass']), np.array(dfOut['TRSMCrossSec']),
@@ -130,7 +128,9 @@ if __name__ == '__main__':
     dfOut_13_6.to_csv('13_6TeV_ScannerSCrossSections.tsv', sep='\t')
 
     # create dataframe with 14 TeV cross sections for comparison below
-    dfOut_14 = pandas.read_table('14TeV_YR4CrossSections.tsv')
+    dfOut_14 = pandas.read_table(os.path.join(pathRepo, 'testing',
+                                 'SusHi_HiggsCrossSections',
+                                 '14TeV_YR4CrossSections.tsv'))
 
     # plot the 13.6 TeV SM cross sections
     fig, axes = plt.subplots(1, 2)
