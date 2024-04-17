@@ -29,6 +29,8 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
 
     else: pass
 
+    # OBS: additional kwargs can be found below
+
     ##################################################################
 
     configTuples = [(param + '_lb', param + '_ub', param) for param in modelParams]
@@ -64,29 +66,37 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
     else:
         outputTuples = list(product(*[linspaceDict[param] for param in modelParams]))
 
-    # print(outputTuples)
-    # print("============{}============".format(len(outputTuples)))
-    
-    if 'massOrder' in kwargs:
+    # some additional kwargs applied on the tuples
 
-        if kwargs['massOrder'] == True:
+    ############################# kwargs #############################
+
+    # in the case of TRSM if the user wants the constraint mH3 > (mH1 + mH2)
+    if 'kineticExcluder' in kwargs:
+        if kwargs['kineticExcluder'] == True:
+
+            # the tolerance in upholding the constraint:
+            # mH3 - (mH1 + mH2) > eps
+            if 'kineticExcluderEps' in kwargs:
+                eps = kwargs['kineticExcluderEps']
+
+            else:
+                eps = 10**(-10)
 
             cartProdTuplesTemp = []
             for tupleElement in outputTuples:
-
-                if tupleElement[2] > tupleElement[1] and tupleElement[1] > tupleElement[0]:
+                if tupleElement[2] - (tupleElement[0] + tupleElement[1]) > eps:
                     cartProdTuplesTemp.append(tupleElement)
 
                 else: continue
 
             outputTuples = cartProdTuplesTemp
 
+    # Some other user defined constraint that should be applied on the tuples.
+    # The tuples are ordered according to the default modelParams
     if 'filter' in kwargs:
         outputTuples = kwargs['filter'](outputTuples)
 
-    # print('MassOrder', outputTuples)
-    # print(outputTuples)
-    # print("============{}============".format(len(outputTuples)))
+    ##################################################################
 
     df = pandas.DataFrame(outputTuples, columns=modelParams)
             
@@ -139,7 +149,8 @@ def configureDirs(listModelParams, pathDir, pathDataIds, **kwargs):
 
             # create the configuration file (grid of all parameter combinations specified by element)
             checkCreatorNew(pathDir + '/' + dataId + '/' + childrenDirs + '/' +
-                            'config_' + dataId + '_' + os.path.basename(childrenDirs) + '.tsv', element)
+                            'config_' + dataId + '_' + os.path.basename(childrenDirs) + '.tsv', element,
+                            **kwargs)
 
             # store element in a JSON file in the directory (dataId)
             parameterData.createJSON(element, pathDir + '/' + dataId + '/' + childrenDirs,
@@ -153,7 +164,8 @@ def configureDirs(listModelParams, pathDir, pathDataIds, **kwargs):
             os.makedirs(pathDir + '/' + dataId, exist_ok=existOk)
 
             # create the configuration file (grid of all parameter combinations specified by element)
-            checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element)
+            checkCreatorNew(pathDir + '/' + dataId + '/' + 'config_' + dataId + '.tsv', element,
+                            **kwargs)
 
             # store element in a JSON file in the directory (dataId)
             parameterData.createJSON(element, pathDir + '/' + dataId, 'settings_' + dataId + '.json')
