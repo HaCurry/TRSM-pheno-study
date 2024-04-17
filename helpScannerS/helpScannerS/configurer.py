@@ -91,6 +91,29 @@ def checkCreatorNew(locOutputData, configDict, **kwargs):
 
             outputTuples = cartProdTuplesTemp
 
+    # in case of TRSM if the user wants the constraint mH3 > mH2 > mH1
+    if 'massOrder' in kwargs:
+        if kwargs['massOrder'] == True:
+
+            # the tolerance in upholding the constraint:
+            # mH3 - mH2 > eps and mH2 - mH1 > eps
+            if 'massOrderEps' in kwargs:
+                eps = kwargs['massOrderEps']
+
+            else:
+                eps = 10**(-10)
+
+            cartProdTuplesTemp = []
+            for tupleElement in outputTuples:
+
+                if (tupleElement[2] - tupleElement[1] > eps and
+                    tupleElement[1] - tupleElement[0] > eps):
+                    cartProdTuplesTemp.append(tupleElement)
+
+                else: continue
+
+            outputTuples = cartProdTuplesTemp
+
     # Some other user defined constraint that should be applied on the tuples.
     # The tuples are ordered according to the default modelParams
     if 'filter' in kwargs:
