@@ -40,6 +40,28 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
 
     **kwargs:
 
+    prodMode: string, default: 'gg'
+        the production mode for  H3. Other possible production modes includes
+        'vbf'.
+
+    normSM: float, default: (31.05 * 10**(-3)) * 0.002637 
+        normalizes the cross section gg -> Ha Hb -> SM1 SM2
+        by normSM. Default value is the standard model HH cross section
+        multiplied by the bb gamgam branching ratio taken. Values can be
+        found in:
+        https://twiki.cern.ch/twiki/bin/view/LHCPhysics/LHCHWGHH?redirectedfrom=LHCPhysics.LHCHXSWGHH
+        and
+        https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR?sortcol=0;table=1;up=0#sorted_table
+
+    kineticExclude: bool, default: False
+        excludes observables which do not obey mH3 > mH1 + mH2 with the
+        tolerance kineticExcludeEps.
+
+    kineticExcludeEps: float, default: 10**(-10)
+        if kineticExclude = True then the constraint mH3 > mH1 + mH2
+        is applied with the tolerance mH3 - (mH1 + mH2) > kineticExcludeEps.
+        In principle the user will never have to interact with this value.
+
     pathRun3Data: string, default: None
         path to gg -> HSM cross sections (or other mode) in .tsv format.
         All observables to calculate the cross section of 
@@ -56,17 +78,9 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
     keyCrossSecRun3: string, default: 'crossSec'
         the column header of the cross sections in pathRun3Data
 
-    normSM: float, default: (31.02 * 10**(-3)) * 0.0026 
-        normalizes the cross section gg -> H3 -> Ha Hb -> SM1 SM2
-        by normSM
-
     saveAll: bool, default: False
         saves some additional observables used when calculating the cross section
         gg -> H3 -> Ha Hb -> SM1 SM2.
-
-    prodMode: string, default 'gg'
-        the production mode for  H3. Other possible production modes includes
-        'vbf'.
 
     returns:
         observables: dict
@@ -114,14 +128,16 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
     else:
         run3 = False
 
-    # normalise the cross sections gg -> H3 -> H1(SM1) H2(SM2)
-    # gg -> H3 -> H1(SM2) H2(SM1), gg -> H3 -> H1 H1 -> SM1 SM2,
-    # gg -> H3 -> H2 H2 -> SM1 SM2 by normSM
+    # normalise the cross sections gg -> Ha Hb -> SM1 SM2 by 
+    # standard model HH cross section
+    # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/LHCHWGHH?redirectedfrom=LHCPhysics.LHCHXSWGHH
+    # and standard model bb gamgam branching ratio
+    # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR?sortcol=0;table=1;up=0#sorted_table
     if 'normSM' in kwargs:
         normSM = kwargs['normSM']
 
     else:
-        normSM = (31.02 * 10**(-3)) * 0.0026
+        normSM = (31.05 * 10**(-3)) * 0.002637
 
     # this stores some additional observables (BR, XS) in the
     # returned dictionary to the user if set to True
@@ -303,6 +319,7 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
         observables = kineticExcludedObs
 
     return observables
+
 
 def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026, **kwargs):
 
