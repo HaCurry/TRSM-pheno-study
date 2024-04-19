@@ -89,12 +89,16 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
 
     #################################### kwargs ####################################
 
+    # default production mode is ggF, but user can chose otherwise
+    if 'prodMode' in kwargs:
+        prodMode = kwargs['prodMode']
+
+    else: prodMode = 'gg'
+
     # path to gg -> HSM cross sections (e.g. 13.6 TeV cross sections)
     if 'pathRun3Data' in kwargs:
         run3 = True
         pathRun3Data = kwargs['pathRun3Data']
-
-        # else: raise Exception('run3 is set to True, path to run 3 cross sections required')
 
         if 'keyMassRun3' in kwargs:
             keyMassRun3 = kwargs['keyMassRun3']
@@ -112,7 +116,7 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
 
     # normalise the cross sections gg -> H3 -> H1(SM1) H2(SM2)
     # gg -> H3 -> H1(SM2) H2(SM1), gg -> H3 -> H1 H1 -> SM1 SM2,
-    # gg -> H3 -> H2 H2 -> SM1 SM2
+    # gg -> H3 -> H2 H2 -> SM1 SM2 by normSM
     if 'normSM' in kwargs:
         normSM = kwargs['normSM']
 
@@ -126,11 +130,22 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
 
     else: saveAll = False
 
-    # default production mode is ggF, but user can chose otherwise
-    if 'prodMode' in kwargs:
-        prodMode = kwargs['prodMode']
+    # excludes observables which do not obey the constraint
+    # mH3 > mH1 + mH2
+    if 'kineticExclude' in kwargs:
+        kineticExclude = kwargs['kineticExclude']
 
-    else: prodMode = 'gg'
+        # the tolerance to uphold the constraint
+        # mH3 - (mH1 + mH2) > kineticExcludeEps
+        if 'kineticExcludeEps' in kwargs:
+            kineticExcludeEps = kwargs['kineticExcludeEps']
+
+        else:
+            kineticExcludeEps = 10**(-10)
+
+    else:
+        kineticExclude = False
+
 
     ################################################################################
     
@@ -189,6 +204,7 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
     # cross sections using the NWA later
     if run3 == True:
         dfRun3 = pandas.read_table(pathRun3Data)
+        epsilon = 10**(-6)
         
         # quick sanity check
         if abs(len(dfRun3[keyMassRun3]) + len(dfRun3[keyCrossSecRun3]) - 2 * len(dfRun3)) > epsilon:
@@ -234,7 +250,8 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
     observables[f'x_H2H2_{SM1}{SM2}'] = [(tempObservables['x_H3_H2H2'][i] * tempObservables[f'b_H2H2_{SM1}{SM2}'][i])/normSM
         for i in range(len(df))]
 
-    # sanity check to see all rows in the dataframe are of equal length
+    # sanity checks to see all rows in the dataframe are of equal length
+    # these lines can be ignored
     epsilon = 10**(-6)
     rows = 0
     
@@ -262,8 +279,30 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
         return observables
 
     else:
-        return observables
+        pass
 
+    # keep only observables obeying mH3 > mH1 + mH2
+    if kineticExclude == True:
+
+        # create temporary dictionary
+        kineticExcludedObs = {}
+        for key in observables:
+            kineticExcludedObs[key] = []
+
+        # loop over dataframe
+        for i in range(len(df)):
+
+            # if mH3 > mH1 + mH2 keep the observables otherwise continue
+            if observables['mH3'][i] - (observables['mH1'][i] + observables['mH2'][i]) > kineticExcludeEps:
+                for key in observables:
+                    kineticExcludedObs[key].append(observables[key][i])
+
+            else:
+                continue
+
+        observables = kineticExcludedObs
+
+    return observables
 
 def ppXNPSM_massfree(BPdirectory, axes1, axes2, axes3, SM1, SM2, normalizationSM = (31.02 * 10**(-3)) * 0.0026, **kwargs):
 
