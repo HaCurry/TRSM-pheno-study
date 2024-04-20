@@ -1,5 +1,6 @@
 from helpScannerS import configurer as config
 
+import pandas
 import os
 import subprocess
 
@@ -15,13 +16,14 @@ if __name__ == '__main__':
     pathTRSM = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken'
 
     # path where all output from ScannerS will be stored
-    pathBP = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs')
+    pathBPnoconstraints = os.path.join(pathRepo, 'Benchmarkplanes',
+                                       'BPs_noconstraints')
 
-    os.makedirs(pathBP, exist_ok=True)
+    os.makedirs(pathBPnoconstraints, exist_ok=True)
 
     # path to dataIds. Just a file that lists all the individual
     # dataIds in a .txt file
-    pathBPDataId = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs', 'dataIds.txt')
+    pathBPnoconstraintsDataId = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints', 'dataIds.txt')
 
 
     modelParamsBP2 = {'mH1_lb': 1,      'mH1_ub': 124,    'mH1Points': 100,
@@ -87,23 +89,58 @@ if __name__ == '__main__':
                       'vx_lb': 150, 'vx_ub': 150, 'vxPoints': 1,
                       'extra': {'dataId': 'BP6'}}
 
-    ## constraints turned on
+    ## constraints turned off
 
     # create the input files for the ScannerS TRSM executable
     listModelParams = [modelParamsBP2, modelParamsBP3]
-    config.configureDirs(listModelParams, pathBP,
-                         pathBPDataId, massOrder=True)
+    config.configureDirs(listModelParams, pathBPnoconstraints,
+                         pathBPnoconstraintsDataId, massOrder=True)
 
-    # start running the ScannerS TRSM executable with all constraints turned on
+    # start running the ScannerS TRSM executable with all constraints turned off
     for X in [2, 3]:
         print(f'*~~~~~~~~~ Starting ScannerS TRSM with BP{X} settings ~~~~~~~~~*')
 
         # necessary paths for the ScannerS TRSM executable
-        pathBPX = os.path.join(pathBP, f'BP{X}')
-        outputBPX = os.path.join(pathBPX, f'output_BP{X}.tsv')
+        pathBPX = os.path.join(pathBPnoconstraints, f'BP{X}')
+        outputBPX = os.path.join(pathBPX, f'output_BP{X}_noconstraints.tsv')
+
+        # the config files are the same both in the constraints and 
+        # no constraints case
         configBPX = os.path.join(pathBPX, f'config_BP{X}.tsv')
 
         # all constraints turned on
-        constraints = ['--BFB', '1', '--Uni', '1', '--STU', '1', '--Higgs', '1']
-        subprocess.run([pathTRSM, *constraints, outputBPX, 'check', configBPX],
-                       cwd=pathBPX)
+        # constraints = ['--BFB', '0', '--Uni', '0', '--STU', '0', '--Higgs', '0']
+        # subprocess.run([pathTRSM, *constraints, outputBPX, 'check', configBPX],
+        #                cwd=pathBPX)
+
+        print(f'*~~~~~~~~~ filtering values which are only constrained for BP{X} ~~~~~~~~~*')
+    
+        df = pandas.read_table(outputBPX)
+
+        # BFB
+        dfBFB = df[df['valid_BFB'] == 0]
+        pathBFB = os.path.join(pathBPX, f'output_BP{X}_onlyBFB.tsv')
+        dfBFB.to_csv(pathBFB, sep='\t')
+        print(f'Filtering rows in output_BP{X}.tsv which fail BFB and saving it in\n\
+{pathBFB}\n')
+
+        # Uni
+        dfUni = df[df['valid_Uni'] == 0]
+        pathUni = os.path.join(pathBPX, f'output_BP{X}_onlyUni.tsv')
+        dfUni.to_csv(pathUni, sep='\t')
+        print(f'Filtering rows in output_BP{X}.tsv which fail Uni and saving it in\n\
+{pathUni}\n')
+
+        # STU
+        dfSTU = df[df['valid_STU'] == 0]
+        pathSTU = os.path.join(pathBPX, f'output_BP{X}_onlySTU.tsv')
+        dfSTU.to_csv(pathSTU, sep='\t')
+        print(f'Filtering rows in output_BP{X}.tsv which fail STU and saving it in\n\
+{pathSTU}\n')
+
+        # Higgs
+        dfHiggs = df[df['valid_Higgs'] == 0]
+        pathHiggs = os.path.join(pathBPX, f'output_BP{X}_onlyHiggs.tsv')
+        dfHiggs.to_csv(pathHiggs, sep='\t')
+        print(f'Filtering rows in output_BP{X}.tsv which fail Higgs and saving it in\n\
+{pathHiggs}\n')

@@ -1,0 +1,29 @@
+{
+    "mH1_lb": 125.09,
+    "mH1_ub": 125.09,
+    "mH1Points": 1,
+    "mH2_lb": 126,
+    "mH2_ub": 500,
+    "mH2Points": 100,
+    "mH3_lb": 255,
+    "mH3_ub": 650,
+    "mH3Points": 100,
+    "thetahS_lb": -0.129,
+    "thetahS_ub": -0.129,
+    "thetahSPoints": 1,
+    "thetahX_lb": 0.226,
+    "thetahX_ub": 0.226,
+    "thetahXPoints": 1,
+    "thetaSX_lb": -0.899,
+    "thetaSX_ub": -0.899,
+    "thetaSXPoints": 1,
+    "vs_lb": 140,
+    "vs_ub": 140,
+    "vsPoints": 1,
+    "vx_lb": 100,
+    "vx_ub": 100,
+    "vxPoints": 1,
+    "extra": {
+        "dataId": "BP3"
+    }
+}
