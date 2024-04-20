@@ -34,9 +34,9 @@ if __name__ == '__main__':
 
     # path to 13 TeV TRSM ScannerS cross sections with BP2 settings
     path13_BP = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints')
-               
+
     path13_BP2 = os.path.join(path13_BP, 'BP2', 'output_BP2_noconstraints.tsv')
-    
+
     # path to 13 TeV TRSM ScannerS cross sections with BP3 settings
     path13_BP3 = os.path.join(path13_BP, 'BP3', 'output_BP3_noconstraints.tsv')
 
@@ -82,18 +82,50 @@ if __name__ == '__main__':
                                      r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(SM)$',
                                      xlims=(1, 124), ylims=(126, 500), fig=fig, ax=ax, im=im)
 
-    ScannerS_BP2_onlyBFB = TRSM.observables(os.path.join(path13_BP, 'BP2', 'output_BP2_onlyBFB.tsv'),
-                                            'bb', 'gamgam', 'mH1', 'mH2', 'mH3',  
-                                            kineticExclude=True)
-
     ### maybe remove this??
-    # plot the constraints
-    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2_onlyBFB['mH1'],
-                                            ScannerS_BP2_onlyBFB['mH3'],
-                                            [40 for i in range(len(ScannerS_BP2_onlyBFB['mH1']))])
-    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
-    ax.contourf(xi, yi, zi, hatches=['///'],
-                cmap='Greys', alpha=1)
+#     constraints = {'BFB': r'/////', 'Higgs': r'\\\\\ ', 'STU': r'...', 'Uni': '***'}
+#     for key in constraints:
+
+#         ScannerS_BP2_onlyConstraint = TRSM.observables(os.path.join(path13_BP, 'BP2', f'output_BP2_only{key}.tsv'),
+#                                                 'bb', 'gamgam', 'mH1', 'mH2', 'mH3',  
+#                                                 kineticExclude=True)
+
+#         if len(ScannerS_BP2_onlyConstraint) == 0:
+#             print(f'observables are empty for {key}')
+#             continue
+
+#         emptyKineticExclude = 0
+#         nonemptyKineticExclude = 0
+#         for dictKey in ScannerS_BP2_onlyConstraint:
+#             if len(ScannerS_BP2_onlyConstraint[dictKey]) == 0:
+#                 emptyKineticExclude = emptyKineticExclude + 1
+#             else:
+#                 nonemptyKineticExclude = nonemptyKineticExclude + 1
+
+#         if emptyKineticExclude/len(ScannerS_BP2_onlyConstraint) == 1:
+#             print(f'kineticExclude has excluded all observables in {key}. \n\
+# Nothing to plot for {key}')   
+#             continue
+
+#         elif nonemptyKineticExclude/len(ScannerS_BP2_onlyConstraint) == 1:
+#             pass
+
+#         else:
+#             raise Exception('something went wrong in plotting the constraints...')
+
+#         # plot the constraints
+#         x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2_onlyConstraint['mH1'],
+#                                                 ScannerS_BP2_onlyConstraint['mH3'],
+#                                                 [0 for i in range(len(ScannerS_BP2_onlyConstraint['x_H3_H1_bb_H2_gamgam']))])
+#         zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+#         ax.contourf(xi, yi, zi, hatches=[constraints[key]],
+                    # colors='none')
+
+    constraints = {'BFB': r'/////', 'Higgs': r'\\\\\ ', 'STU': r'...', 'Uni': '***'}
+    for key in constraints:
+        twoDPlot.plotAuxConstraints(os.path.join(path13_BP, 'BP2', f'output_BP2_only{key}.tsv'),
+                                    'mH1', 'mH3', 'x_H3_H1_bb_H2_gamgam',
+                                    ax, [constraints[key]])
     ### maybe remove this???
 
     plt.tight_layout()
