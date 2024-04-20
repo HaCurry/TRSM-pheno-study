@@ -71,63 +71,20 @@ if __name__ == '__main__':
                             (75, 250), (110, 290), (50, 370)]
     ax.clabel(cont, inline=True, fontsize=8,
               manual=manualLabelPositions)
-    # cbar = fig.colorbar(im, ax=ax)
-    # cbar = fig.colorbar(cont, ax=ax)
 
-    # plt.imshow(zi, origin='lower',
-    #            extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
-    # contf = plt.contourf(xi, yi, zi, extent=[x.min(), x.max(), y.min(), y.max()])
     twoDPlot.plotAuxTitleAndBounds2D(r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(SM)$',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
                                      r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(SM)$',
                                      xlims=(1, 124), ylims=(126, 500), fig=fig, ax=ax, im=im)
 
-    ### maybe remove this??
-#     constraints = {'BFB': r'/////', 'Higgs': r'\\\\\ ', 'STU': r'...', 'Uni': '***'}
-#     for key in constraints:
-
-#         ScannerS_BP2_onlyConstraint = TRSM.observables(os.path.join(path13_BP, 'BP2', f'output_BP2_only{key}.tsv'),
-#                                                 'bb', 'gamgam', 'mH1', 'mH2', 'mH3',  
-#                                                 kineticExclude=True)
-
-#         if len(ScannerS_BP2_onlyConstraint) == 0:
-#             print(f'observables are empty for {key}')
-#             continue
-
-#         emptyKineticExclude = 0
-#         nonemptyKineticExclude = 0
-#         for dictKey in ScannerS_BP2_onlyConstraint:
-#             if len(ScannerS_BP2_onlyConstraint[dictKey]) == 0:
-#                 emptyKineticExclude = emptyKineticExclude + 1
-#             else:
-#                 nonemptyKineticExclude = nonemptyKineticExclude + 1
-
-#         if emptyKineticExclude/len(ScannerS_BP2_onlyConstraint) == 1:
-#             print(f'kineticExclude has excluded all observables in {key}. \n\
-# Nothing to plot for {key}')   
-#             continue
-
-#         elif nonemptyKineticExclude/len(ScannerS_BP2_onlyConstraint) == 1:
-#             pass
-
-#         else:
-#             raise Exception('something went wrong in plotting the constraints...')
-
-#         # plot the constraints
-#         x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2_onlyConstraint['mH1'],
-#                                                 ScannerS_BP2_onlyConstraint['mH3'],
-#                                                 [0 for i in range(len(ScannerS_BP2_onlyConstraint['x_H3_H1_bb_H2_gamgam']))])
-#         zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
-#         ax.contourf(xi, yi, zi, hatches=[constraints[key]],
-                    # colors='none')
-
+    # plot the constraints according to the patterns below below
     constraints = {'BFB': r'/////', 'Higgs': r'\\\\\ ', 'STU': r'...', 'Uni': '***'}
     for key in constraints:
         twoDPlot.plotAuxConstraints(os.path.join(path13_BP, 'BP2', f'output_BP2_only{key}.tsv'),
                                     'mH1', 'mH3', 'x_H3_H1_bb_H2_gamgam',
                                     ax, [constraints[key]])
-    ### maybe remove this???
 
+    # hep.text('test')
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_XS_XSH_bbgamgam_1.pdf'))
     plt.close()
@@ -207,6 +164,16 @@ if __name__ == '__main__':
 
     ax.tick_params(axis='y', which='major', length=3)
     ax.tick_params(axis='y', which='minor', length=2)
+
+    # plot the constraints according to the patterns below below
+    constraints = {'BFB': r'/////', 'Higgs': r'\\\\\ ', 'STU': r'...', 'Uni': '***'}
+    for key in constraints:
+        twoDPlot.plotAuxConstraints(os.path.join(path13_BP, 'BP3', f'output_BP3_only{key}.tsv'),
+                                    'mH2', 'mH3', 'x_H3_H1_bb_H2_gamgam',
+                                    ax, [constraints[key]])
+    # dfUni = pandas.read_table(os.path.join(path13_BP, 'BP3', f'output_BP3_onlyUni.tsv'))
+    # ax.scatter(np.array(dfUni['mH2']), np.array(dfUni['mH3']))
+
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_XS_XSH_bbgamgam_1.pdf'))
     plt.close()
