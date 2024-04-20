@@ -1040,7 +1040,37 @@ def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):
 
     # texts = [plt.text(xlist[i], ylist[i], '{:.1e}'.format(zlist[i]), ha='center', va='center') for i in range(len(zlist))]
     # adjustText.adjust_text(texts)
-    
+
+
+def plotAuxConstraints(inputDict, keyX, keyY, keyZ, ax, hatches, **kwargs):
+
+    print(keyX, keyY, keyZ)
+    # check if the inputDictionary above is empty
+    if len(inputDict) == 0:
+        return
+
+    # or if it is non empty that the observables are empty
+    # (this might happen due to kineticExclude excluding
+    # all points)
+    elif (len(inputDict[keyX]) == 0 and len(inputDict[keyY]) == 0 and len(inputDict[keyZ]) == 0):
+        return None
+
+    # otherwise continue plotting
+    else:
+        pass
+
+    x, y, z, xi, yi = plotAuxVar2D(inputDict[keyX],
+                                   inputDict[keyY],
+                                   inputDict[keyZ])
+
+    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+    contf = ax.contourf(xi, yi, zi, [0, 0.5, 1], hatches=['...', '', ''],
+                        colors=['white', '#FF000000', '#FF000000'], alpha=0.1)
+
+    return contf
+
+
 if __name__ == "__main__":
 
     print('hejsan')
