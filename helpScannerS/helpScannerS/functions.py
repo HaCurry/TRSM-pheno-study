@@ -165,7 +165,15 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
 
     ################################################################################
     
-    df = pandas.read_table(pathObservables)    
+    df = pandas.read_table(pathObservables, index_col=0)    
+
+    # if dataframe is empty, meaning no ScannerS output in pathObservables 
+    # return an empty dictionary
+    if len(df) == 0:
+        return {}
+
+    else:
+        pass
 
     # this dictionary will be returned to the user
     observables = {}
@@ -292,7 +300,6 @@ def observables(pathObservables, SM1, SM2, *args, **kwargs):
     # the cross sections
     if saveAll == True:
         observables = tempObservables | observables
-        return observables
 
     else:
         pass
