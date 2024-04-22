@@ -2,7 +2,6 @@ from helpScannerS import functions as TRSM
 from helpScannerS import twoDPlotter as twoDPlot
 
 import os
-import json
 
 import numpy as np
 import pandas
@@ -44,30 +43,23 @@ if __name__ == '__main__':
     path13_BP3 = os.path.join(path13_BP, 'BP3', 'output_BP3_noconstraints.tsv')
 
     ## plotting style
-    with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
-        styles = json.load(json_file)    
-
     plt.style.use(hep.style.ATLAS)
     hep.style.use({"mathtext.default": "rm"})
 
     # change label fontsize
-    mpl.rcParams['axes.labelsize'] = styles['axes.labelsize']
-    mpl.rcParams['axes.titlesize'] = styles['axes.titlesize']
+    mpl.rcParams['axes.labelsize'] = 19
+    mpl.rcParams['axes.titlesize'] = 19
 
     # change ticksize
-    mpl.rcParams['xtick.minor.size'] = styles['xtick.minor.size']
-    mpl.rcParams['xtick.major.size'] = styles['xtick.major.size']
-    mpl.rcParams['ytick.minor.size'] = styles['ytick.minor.size']
-    mpl.rcParams['ytick.major.size'] = styles['ytick.major.size']
+    mpl.rcParams['xtick.minor.size'] = 3.0
+    mpl.rcParams['xtick.major.size'] = 5.0
+    mpl.rcParams['ytick.minor.size'] = 3.0
+    mpl.rcParams['ytick.major.size'] = 5.0
 
     # change legend font size and padding
-    mpl.rcParams['legend.borderpad'] = styles['legend.borderpad']
-    mpl.rcParams['legend.fontsize'] = styles['legend.fontsize']
-    mpl.rcParams['legend.title_fontsize'] = styles['legend.title_fontsize']
-    mpl.rcParams['legend.frameon'] = styles['legend.frameon']
-    mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
-    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
-    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    mpl.rcParams['legend.borderpad'] = 0.5
+    mpl.rcParams['legend.fontsize'] = 13
+    mpl.rcParams['legend.title_fontsize'] = 13
 
     ## BP2
 
@@ -78,13 +70,14 @@ if __name__ == '__main__':
     ScannerS_BP2 = TRSM.observables(path13_BP2, 
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
                                     'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    saveAll=True,
                                     kineticExclude=True)
 
-    # BP2 13 TeV gg -> H3 -> H1(bb) H2(gamgam)
+    # BP2 13 TeV H3 -> H1 H2 (branching ratio)
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2['mH1'],
                                             ScannerS_BP2['mH3'],
-                                            ScannerS_BP2['x_H3_H1_bb_H2_gamgam'])
+                                            ScannerS_BP2['b_H3_H1H2'])
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     fig, ax = plt.subplots()
@@ -94,12 +87,8 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0, 0.5, 1, 2, 3, 10]
-    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower', linewidths=0.75, colors='red')
-    manualLabelPositions = [(7, 480), (12, 440), (75, 460),
-                            (40, 360), (50, 310), (60, 260), (20, 170)]
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
-                      manual=manualLabelPositions)
+    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=10)
 
     # change contour label edgecolor
     plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
@@ -110,7 +99,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
+                                     r'$BR(h_{3}\to h_{1} \ h_{2})$',
                                      xlims=(-3, 127), ylims=(117, 510),
                                      fig=fig, ax=ax, im=im)
 
@@ -122,25 +111,24 @@ if __name__ == '__main__':
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    # ax.legend(title='BP2 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
-    ax.legend(title='BP2 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP2:\n$h_1=S$, $h_2=H$, $h_3=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
-              ], loc='lower right', alignment='left')
+              ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_XS_XSH_bbgamgam_1.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_BR_XSH_.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
 
 
-    # BP2 13 TeV gg -> H3 -> H1(gamgam) H2(bb)
+    # BP2 13 TeV gg -> H3 -> H1 H2 (cross section)
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2['mH1'],
                                             ScannerS_BP2['mH3'],
-                                            ScannerS_BP2['x_H3_H1_gamgam_H2_bb'])
+                                            ScannerS_BP2['x_H3_H1H2'])
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     fig, ax = plt.subplots()
@@ -150,13 +138,8 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0.1, 0.25, 0.5, 0.75, 1.25, 1.5]
-    cont = ax.contour(xi, yi, zi, levels, origin='lower', linewidths=0.75, colors='red')
-    manualLabelsPositions = [(35, 285), (50, 280), (67.5, 270),
-                             (80, 265), (100, 260), (120, 375), 
-                             (112.5, 255)]
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
-                      manual=manualLabelsPositions)
+    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=10)
 
     # change contour label edgecolor
     plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
@@ -167,8 +150,8 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D('',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma) h_{2}(b\bar{b})) \right/ \sigma(SM)$',
-                                     xlims=(-3, 127), ylims=(110, 510),
+                                     r'$\sigma(gg \to h_{3}\to h_{1} \ h_{2})$',
+                                     xlims=(-3, 127), ylims=(117, 510),
                                      fig=fig, ax=ax, im=im)
 
     # plot the constraints according to the patterns below below
@@ -179,14 +162,14 @@ if __name__ == '__main__':
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP2 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP2:\n$h_1=S$, $h_2=H$, $h_3=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
-              ], loc='lower right', alignment='left')
+              ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_XS_XSH_bbgamgam_2.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_XS_XSH_.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
@@ -197,14 +180,15 @@ if __name__ == '__main__':
     ScannerS_BP3 = TRSM.observables(path13_BP3,
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
                                     'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    saveAll=True,
                                     kineticExclude=True)
 
 
-    # BP3 13 TeV gg -> H3 -> H1(bb) H2(gamgam)
+    # BP3 13 TeV gg -> H3 -> H1 H2
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP3['mH2'],
                                             ScannerS_BP3['mH3'],
-                                            ScannerS_BP3['x_H3_H1_bb_H2_gamgam'])
+                                            ScannerS_BP3['b_H3_H1H2'])
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     fig, ax = plt.subplots()
@@ -214,12 +198,8 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0.01, 0.1, 1, 4]
-    manualLabelsPositions = [(160, 420), (180, 460), (250, 510), (135, 290),
-                             (135, 370)]
-    cont = ax.contour(xi, yi, zi, levels, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
-                      manual=manualLabelsPositions)
+    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=10)
 
     # change contour label edgecolor
     plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
@@ -230,7 +210,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(SM)$',
+                                     r'$BR(h_{3}\to h_{1} \ h_{2})$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
@@ -242,26 +222,26 @@ if __name__ == '__main__':
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP3 @ $13$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP3:\n$h_1=H$, $h_2=S$, $h_3=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
               mpatches.Patch(linewidth=0, fill=None, hatch='..', label='Unitarity'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
-              ], loc='lower right', alignment='left')
+              ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_XS_XSH_bbgamgam_1.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_BR_XSH.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
 
 
-    ## BP3 13 TeV gg -> H3 -> H1(gamgam) H2(bb)
+    ## BP3 13 TeV gg -> H3 -> H1 H2
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP3['mH2'],
                                             ScannerS_BP3['mH3'],
-                                            ScannerS_BP3['x_H3_H1_gamgam_H2_bb'])
+                                            ScannerS_BP3['x_H3_H1H2'])
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     fig, ax = plt.subplots()
@@ -271,12 +251,8 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0, 0.01, 0.1, 1, 3]
-    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower', linewidths=0.75, colors='red')
-    manualLabelPositions = [(130, 380), (150, 450), (160, 510),
-                            (180, 570)]
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
-                      manual=manualLabelPositions)
+    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=10)
 
     # change contour label edgecolor
     plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
@@ -287,7 +263,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma) h_{2}(b\bar{b})) \right/ \sigma(SM)$',
+                                     r'$\sigma(gg \to h_{3}\to h_{1} \ h_{2})$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
@@ -299,16 +275,16 @@ if __name__ == '__main__':
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP3 @ $13$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP3:\n$h_1=H$, $h_2=S$, $h_3=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
               mpatches.Patch(linewidth=0, fill=None, hatch='..', label='Unitarity'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
-              ], loc='lower right', alignment='left')
+              ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_XS_XSH_bbgamgam_2.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_XS_XSH_.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
@@ -319,12 +295,14 @@ if __name__ == '__main__':
     ScannerS_BP2 = TRSM.observables(path13_BP2,
                                          'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
                                          normSM=1,
-                                         kineticExclude=False)
+                                    saveAll=True,     
+                                    kineticExclude=False)
 
     ScannerS_BP3 = TRSM.observables(path13_BP3,
                                          'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
                                          normSM=1,
-                                         kineticExclude=False)
+                                    saveAll=True,     
+                                    kineticExclude=False)
 
 
     ScannerS_BP2_H1H2, ScannerS_BP2_H1H1, ScannerS_BP2_H2H2 = TRSM.ppXNPSM_massfree(path13_BP2,
