@@ -1,0 +1,14 @@
+{
+    "axes.labelsize": 19,
+    "axes.titlesize": 19,
+    "xtick.minor.size": 3.0,
+    "xtick.major.size": 5.0,
+    "ytick.minor.size": 3.0,
+    "ytick.major.size": 5.0,
+    "legend.borderpad": 0.1,
+    "legend.fontsize": 12,
+    "legend.title_fontsize": 12,
+    "legend.frameon": true,
+    "legend.fancybox": false,
+    "legend.edgecolor": "none"
+}
