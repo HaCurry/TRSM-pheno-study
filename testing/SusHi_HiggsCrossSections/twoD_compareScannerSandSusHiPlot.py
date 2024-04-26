@@ -2,6 +2,7 @@ import configurer as config
 import functions as TRSM
 
 import os
+from scipy.interpolate import CubicSpline
 
 import numpy as np
 import pandas
@@ -71,25 +72,48 @@ if __name__ == '__main__':
 
     ## 13 TeV SusHi and ScannerS cross sections (ratio)
 
-    fig, (axRatio, axRatioMinusOne) = plt.subplots(1, 2)
-    plt.suptitle(r'Ratio of SusHi and ScannerS cross sections at 13 TeV')
-    fig.supxlabel(r'$M _{h_{{SM}}}$ [GeV]')
-           
-    axRatio.plot(mass, ratio)
-    axRatio.set_title(r'$\frac{\sigma^{SusHi~NNLO}}{\sigma^{ScannerS~NNLO+NNLL}}$')
-    axRatio.set_yscale('log')
-    axRatio.set_ylim(0.9, 1.20)
+    # fig, (axRatio, axRatioMinusOne) = plt.subplots(1, 2)
+    fig, axRatioMinusOne = plt.subplots()
+
+    # axRatio.plot(mass, ratio)
+    # axRatio.set_title(r'$\frac{\sigma^{SusHi~NNLO}}{\sigma^{ScannerS~NNLO+NNLL}}$')
+    # axRatio.set_yscale('log')
+    # axRatio.set_ylim(0.9, 1.20)
 
     axRatioMinusOne.plot(mass, [abs(i - 1) for i in ratio])
     axRatioMinusOne.axhline(0.05, color='grey', linestyle='dashed')
-    axRatioMinusOne.set_title(r'$\left|\frac{\sigma^{SusHi~NNLO}}{\sigma^{ScannerS~NNLO+NNLL}}-1\right|$')
+
+    axRatioMinusOne.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    axRatioMinusOne.set_ylabel(r'$\left|\frac{\sigma^{SusHi}(gg\to h_{SM})}{\sigma^{ScannerS}(gg\to h_{SM})}-1\right|$')
     axRatioMinusOne.set_ylim(0, 0.20)
+    axRatioMinusOne.set_xlim(0, 100)
+
+    axRatioMinusOne.legend(title='ggF @ $13$ TeV\nSusHi: NNLO\nScannerS: NNLO + NNLL')
 
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio.pdf'))
+                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_1.pdf'))
     plt.savefig(os.path.join(pathPlots, 
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio.png'))
+                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_1.png'))
+    plt.close()
+
+    fig, axRatioMinusOne = plt.subplots()
+
+    axRatioMinusOne.plot(mass, [abs(i - 1) for i in ratio])
+    axRatioMinusOne.axhline(0.05, color='grey', linestyle='dashed')
+
+    axRatioMinusOne.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    axRatioMinusOne.set_ylabel(r'$\left|\frac{\sigma^{SusHi}(gg\to h_{SM})}{\sigma^{ScannerS}(gg\to h_{SM})}-1\right|$')
+    axRatioMinusOne.set_ylim(0, 0.20)
+    axRatioMinusOne.set_xlim(100, 1000)
+
+    axRatioMinusOne.legend(title='ggF @ $13$ TeV\nSusHi: NNLO\nScannerS: NNLO + NNLL')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, 
+                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_2.pdf'))
+    plt.savefig(os.path.join(pathPlots, 
+                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_2.png'))
     plt.close()
 
     ## 13 TeV SusHi at N3LO and ScannerS cross sections (ratio)
@@ -155,16 +179,30 @@ if __name__ == '__main__':
     plt.close()
 
     ## 13 TeV and 13.6 TeV SusHi cross sections (ratio)
+    
+    df14 = pandas.read_table(os.path.join(pathRepo, 'testing/SusHi_HiggsCrossSections/14TeV_YR4CrossSections.tsv'))
 
-    ratio13_6 = XSSusHi13_6/XSSusHi
+    ratio13_6TeV_13TeV = XSSusHi13_6/XSSusHi
+    import scipy.interpolate as interp 
+    YR4 = CubicSpline(np.array(df14['mass']),np.array(df14['SMCrossSec']))
+    ratio14TeV_13TeV = YR4(dfScannerS['mass'])/XSScannerS
 
-    plt.plot(mass, ratio13_6)
-    [plt.annotate(f'{y:.3f}', (x, y), rotation=45) for (x, y) in list(zip(mass[::55],ratio13_6[::55])) ]
+    plt.plot(mass, ratio13_6TeV_13TeV, label='$\sigma^{13.6~TeV}_{SusHi}/\sigma^{13~TeV}_{SusHi}$')
+    plt.plot(mass, ratio14TeV_13TeV, label='$\sigma^{14~TeV}_{LHCHWG}/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}$', marker='.')
+    dfTest = pandas.read_table('test.tsv')
+    plt.plot(np.array(dfTest['mass']), np.array(dfTest['SMCrossSec']), color='grey')
+    #[plt.annotate(f'{y:.3f}', (x, y), rotation=45) for (x, y) in list(zip(mass[::55],ratio13_6[::55])) ]
 
     plt.xlabel(r'$M_{h_{SM}}$ [GeV]')
-    plt.ylabel(r'$\sigma^{{SusHi}}_{\mathrm{13.6~TeV}}/\sigma^{SusHi}_{\mathrm{13~TeV}}$')
-    plt.title(r'ratio of 13.6 TeV and 13 TeV SusHi cross sections')
+    plt.ylabel(r'$\sigma^{X~TeV}/\sigma^{Y~TeV}$')
+
+    plt.legend(title='ratios of SM ggF Higgs cross sections', alignment='left')
+    
+    plt.xlim(0,1000)
+    plt.ylim(10**(0), 1.3* 10**(0))
     plt.yscale('log')
+
+    plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, '13_6TeV/13_6TeV_13TeV_SusHiCrossSectionsRatio.pdf'))
     plt.savefig(os.path.join(pathPlots, '13_6TeV/13_6TeV_13TeV_SusHiCrossSectionsRatio.png'))
     plt.close()
