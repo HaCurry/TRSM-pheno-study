@@ -2,12 +2,15 @@ import configurer as config
 
 import subprocess
 import os
+import json
 
 import scipy.interpolate
 import numpy as np
 import pandas
-import matplotlib
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import mplhep as hep
+import matplotlib.lines as mlines
 
 if __name__ == '__main__':
 
@@ -95,6 +98,32 @@ if __name__ == '__main__':
     print(dfOut)
     dfOut.to_csv('13TeV_ScannerSCrossSections.tsv', sep='\t')
 
+    ## plotting style
+    with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
+        styles = json.load(json_file)
+
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+
+    # change label fontsize
+    mpl.rcParams['axes.labelsize'] = styles['axes.labelsize']
+    mpl.rcParams['axes.titlesize'] = styles['axes.titlesize']
+
+    # change ticksize
+    mpl.rcParams['xtick.minor.size'] = styles['xtick.minor.size']
+    mpl.rcParams['xtick.major.size'] = styles['xtick.major.size']
+    mpl.rcParams['ytick.minor.size'] = styles['ytick.minor.size']
+    mpl.rcParams['ytick.major.size'] = styles['ytick.major.size']
+
+    # change legend font size and padding
+    mpl.rcParams['legend.borderpad'] = styles['legend.borderpad']
+    mpl.rcParams['legend.fontsize'] = styles['legend.fontsize']
+    mpl.rcParams['legend.title_fontsize'] = styles['legend.title_fontsize']
+    mpl.rcParams['legend.frameon'] = styles['legend.frameon']
+    mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    
     # plot the TRSM cross sections
     plt.plot(np.array(dfOut['mass']), np.array(dfOut['TRSMCrossSec']),
              marker='o')
@@ -111,7 +140,7 @@ if __name__ == '__main__':
                 '13TeV_ScannerSSMCrossSections.pdf'))
     plt.close()
 
-    ## create 13.6 TRSM cross sections
+    ## create 13.6 (ScannerS * SusHiFactor) SM cross sections
 
     dfSusHi_13 = pandas.read_table('13TeV_SusHiCrossSections.tsv')
     XSSusHi_13 = np.array(dfSusHi_13['crossSec'])
@@ -132,7 +161,7 @@ if __name__ == '__main__':
                                  'SusHi_HiggsCrossSections',
                                  '14TeV_YR4CrossSections.tsv'))
 
-    # plot the 13.6 TeV SM cross sections
+    # plot the 13.6 TeV (ScannerS * SusHiFactor) SM cross sections
     fig, axes = plt.subplots(1, 2)
     fig.suptitle('13.6 TeV ScannerS')
     fig.supylabel(r'$\sigma$ [pb]')
@@ -152,37 +181,175 @@ if __name__ == '__main__':
                 '13_6TeV_ScannerSSMCrossSections.pdf'))
     plt.close()
 
-    # plot the 13.6 TeV, 13 TeV and 14 TeV SM cross sections together
-    fig, axes = plt.subplots(1, 2)
-    fig.suptitle('13 TeV, 13.6 TeV ScannerS and 14 TeV YR4')
-    fig.supylabel(r'$\sigma$ [pb]')
-    fig.supxlabel(r'$M_{h_{SM}}$ [GeV]')
+    # plot the 13.6 TeV (SusHi), 13 TeV (ScannerS) and 14 TeV (YR4)
+    # SM cross sections together
 
-    axes[0].plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
-                 label='13 TeV ScannerS')
-    axes[0].plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
-                 label='13.6 TeV ScannerS')
-    axes[0].plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
-                 label='14 TeV YR4')
-    axes[0].set_xlim(0, 500)
-    axes[0].set_ylim(10**(0), 10**(4))
-    axes[0].set_yscale('log')
+    fig, ax = plt.subplots()
 
-    axes[1].plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
-                 label='13 TeV ScannerS')
-    axes[1].plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
-                 label='13.6 TeV ScannerS')
-    axes[1].plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
-                 label='14 TeV YR4')
-    axes[1].set_xlim(500, 1000)
-    axes[1].set_ylim(10**(0), 10**(1))
-    axes[1].set_yscale('log')
+    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
+                 label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+                 label='14 TeV YR4', color='C2', linewidth=0.5)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(5 * 10**(1), 10**(4))
+    ax.set_yscale('log')
 
-    axes[1].legend()
+    ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
+
+    ax.legend(title='ggF cross sections',
+              handles=[
+              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
+              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1'),
+              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              ], loc='upper right', alignment='left')
+
     plt.tight_layout()
-    # plt.show()
     plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMandYR4CrossSections.pdf'))
+                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiPureAndYR4CrossSections_1.pdf'))
+    plt.close()
+
+
+    fig, ax = plt.subplots()
+
+    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
+                 label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+                 label='14 TeV YR4', color='C2', linewidth=0.5)
+    ax.set_xlim(100, 500)
+    ax.set_ylim(4 * 10**(0), 7 * 10**(1))
+    ax.set_yscale('log')
+
+    ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
+
+    ax.legend(title='ggF cross sections',
+              handles=[
+              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
+              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1'),
+              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              ], loc='upper right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, '13_6TeV',
+                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiPureAndYR4CrossSections_2.pdf'))
+    plt.close()
+
+
+    fig, ax = plt.subplots()
+
+    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
+                 label='13.6 TeV ScannerS (SusHi)', color='C1', linewidth=0.5)
+    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+                 label='14 TeV YR4', color='C2', linewidth=0.5)
+    ax.set_xlim(500, 1000)
+    ax.set_ylim(10**(-1), 6 * 10**(0))
+    ax.set_yscale('log')
+
+    ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
+
+    ax.legend(title='ggF cross sections',
+              handles=[
+              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
+              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1'),
+              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              ], loc='upper right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, '13_6TeV',
+                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiPureAndYR4CrossSections_3.pdf'))
+    plt.close()
+
+
+    # plot the 13.6 TeV (ScannerS * SusHiFactor), 13 TeV (ScannerS) and 14 TeV (YR4)
+    # SM cross sections together
+
+    fig, ax = plt.subplots()
+
+    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
+    ax.plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
+                 label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+                 label='14 TeV YR4', color='C2', linewidth=0.5)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(5 * 10**(1), 10**(4))
+    ax.set_yscale('log')
+
+    ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
+
+    ax.legend(title='ggF cross sections',
+              handles=[
+              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
+              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1 (improved)'),
+              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              ], loc='upper right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, '13_6TeV',
+                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_1.pdf'))
+    plt.close()
+
+    fig, ax = plt.subplots()
+
+    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
+    ax.plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
+                 label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+                 label='14 TeV YR4', color='C2', linewidth=0.5)
+    ax.set_xlim(100, 500)
+    ax.set_ylim(4 * 10**(0), 7 * 10**(1))
+    ax.set_yscale('log')
+
+    ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
+
+    ax.legend(title='ggF cross sections',
+              handles=[
+              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
+              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1 (improved)'),
+              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              ], loc='upper right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, '13_6TeV',
+                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_2.pdf'))
+    plt.close()
+
+    fig, ax = plt.subplots()
+
+    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
+    ax.plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
+                 label='13.6 TeV ScannerS (SusHi)', color='C1', linewidth=0.5)
+    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+                 label='14 TeV YR4', color='C2', linewidth=0.5)
+    ax.set_xlim(500, 1000)
+    ax.set_ylim(10**(-1), 6 * 10**(0))
+    ax.set_yscale('log')
+
+    ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
+    ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
+
+    ax.legend(title='ggF cross sections',
+              handles=[
+              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
+              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1 (improved)'),
+              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              ], loc='upper right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, '13_6TeV',
+                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_3.pdf'))
     plt.close()
 
     # print the cross section for comparison

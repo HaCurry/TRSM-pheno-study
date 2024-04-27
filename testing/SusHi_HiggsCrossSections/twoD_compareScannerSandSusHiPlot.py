@@ -2,7 +2,7 @@ import configurer as config
 import functions as TRSM
 
 import os
-from scipy.interpolate import CubicSpline
+import scipy.interpolate as interp
 
 import numpy as np
 import pandas
@@ -183,23 +183,20 @@ if __name__ == '__main__':
     df14 = pandas.read_table(os.path.join(pathRepo, 'testing/SusHi_HiggsCrossSections/14TeV_YR4CrossSections.tsv'))
 
     ratio13_6TeV_13TeV = XSSusHi13_6/XSSusHi
-    import scipy.interpolate as interp 
-    YR4 = CubicSpline(np.array(df14['mass']),np.array(df14['SMCrossSec']))
+    YR4 = interp.interp1d(np.array(df14['mass']),np.array(df14['SMCrossSec']))
     ratio14TeV_13TeV = YR4(dfScannerS['mass'])/XSScannerS
 
     plt.plot(mass, ratio13_6TeV_13TeV, label='$\sigma^{13.6~TeV}_{SusHi}/\sigma^{13~TeV}_{SusHi}$')
-    plt.plot(mass, ratio14TeV_13TeV, label='$\sigma^{14~TeV}_{LHCHWG}/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}$', marker='.')
-    dfTest = pandas.read_table('test.tsv')
-    plt.plot(np.array(dfTest['mass']), np.array(dfTest['SMCrossSec']), color='grey')
+    plt.plot(mass, ratio14TeV_13TeV, label='$\sigma^{14~TeV}_{LHCHWG}/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}$', color='grey', linestyle='dashed')
     #[plt.annotate(f'{y:.3f}', (x, y), rotation=45) for (x, y) in list(zip(mass[::55],ratio13_6[::55])) ]
 
     plt.xlabel(r'$M_{h_{SM}}$ [GeV]')
-    plt.ylabel(r'$\sigma^{X~TeV}/\sigma^{Y~TeV}$')
+    plt.ylabel(r'Ratio')
 
-    plt.legend(title='ratios of SM ggF Higgs cross sections', alignment='left')
+    plt.legend(title='Ratios of SM ggF Higgs cross sections', alignment='left')
     
     plt.xlim(0,1000)
-    plt.ylim(10**(0), 1.3* 10**(0))
+    plt.ylim(10**(0), 1.4 * 10**(0))
     plt.yscale('log')
 
     plt.tight_layout()
