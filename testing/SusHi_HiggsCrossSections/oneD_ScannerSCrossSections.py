@@ -94,9 +94,9 @@ if __name__ == '__main__':
         massesAndCrossSec['SMCrossSec'].append(SMCrossSec)
         massesAndCrossSec['TRSMCrossSec'].append(TRSMCrossSec)
 
-    dfOut = pandas.DataFrame(massesAndCrossSec)
-    print(dfOut)
-    dfOut.to_csv('13TeV_ScannerSCrossSections.tsv', sep='\t')
+    dfScannerS_13 = pandas.DataFrame(massesAndCrossSec)
+    print(dfScannerS_13)
+    dfScannerS_13.to_csv('13TeV_ScannerSCrossSections.tsv', sep='\t')
 
     ## plotting style
     with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
@@ -123,9 +123,9 @@ if __name__ == '__main__':
     mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
-    
+
     # plot the TRSM cross sections
-    plt.plot(np.array(dfOut['mass']), np.array(dfOut['TRSMCrossSec']),
+    plt.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['TRSMCrossSec']),
              marker='o')
     plt.yscale('log')
     plt.savefig(os.path.join(pathPlots, '13TeV',
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     plt.close()
 
     # plot the SM cross sections
-    plt.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    plt.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
              marker='o')
     plt.yscale('log')
     plt.savefig(os.path.join(pathPlots, '13TeV',
@@ -142,22 +142,30 @@ if __name__ == '__main__':
 
     ## create 13.6 (ScannerS * SusHiFactor) SM cross sections
 
-    dfSusHi_13 = pandas.read_table('13TeV_SusHiCrossSections.tsv')
-    XSSusHi_13 = np.array(dfSusHi_13['crossSec'])
+    # dfSusHi_13 = pandas.read_table('13TeV_SusHiCrossSections.tsv')
+    # XSSusHi_13 = np.array(dfSusHi_13['crossSec'])
 
-    dfSusHi_13_6 = pandas.read_table('13_6TeV_SusHiCrossSections.tsv')
-    XSSusHi_13_6 = np.array(dfSusHi_13_6['crossSec'])
+    # dfSusHi_13_6 = pandas.read_table('13_6TeV_SusHiCrossSections.tsv')
+    # XSSusHi_13_6 = np.array(dfSusHi_13_6['crossSec'])
 
-    XS_13_to_13_6_factor = XSSusHi_13_6/XSSusHi_13
+    # XS_13_to_13_6_factor = XSSusHi_13_6/XSSusHi_13
 
-    XSScannerS_13_6 = np.array(dfOut['SMCrossSec']) * XS_13_to_13_6_factor
+    # XSScannerS_13_6 = np.array(dfOut['SMCrossSec']) * XS_13_to_13_6_factor
 
-    dfOut_13_6 = pandas.DataFrame({'mass': dfOut['mass'],
-                                  'SMCrossSec': XSScannerS_13_6})
-    dfOut_13_6.to_csv('13_6TeV_ScannerSCrossSections.tsv', sep='\t')
+    # dfOut_13_6 = pandas.DataFrame({'mass': dfOut['mass'],
+    #                               'SMCrossSec': XSScannerS_13_6})
+    # dfOut_13_6.to_csv('13_6TeV_ScannerSCrossSections.tsv', sep='\t')
+
+    dfSusHiImpr_13_6 = pandas.read_table(os.path.join(pathRepo, 'testing',
+                                         'SusHi_HiggsCrossSections',
+                                         '13_6TeV_SusHiImprCrossSections.tsv'))
+
+    dfSusHi_13_6 = pandas.read_table(os.path.join(pathRepo, 'testing',
+                                     'SusHi_HiggsCrossSections',
+                                     '13_6TeV_SusHiImprCrossSections.tsv'))
 
     # create dataframe with 14 TeV cross sections for comparison below
-    dfOut_14 = pandas.read_table(os.path.join(pathRepo, 'testing',
+    dfYR4_14 = pandas.read_table(os.path.join(pathRepo, 'testing',
                                  'SusHi_HiggsCrossSections',
                                  '14TeV_YR4CrossSections.tsv'))
 
@@ -167,12 +175,12 @@ if __name__ == '__main__':
     fig.supylabel(r'$\sigma$ [pb]')
     fig.supxlabel(r'$M_{h_{SM}}$ [GeV]')
 
-    axes[0].plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']))
+    axes[0].plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']))
     axes[0].set_xlim(0, 500)
     axes[0].set_ylim(10**(0), 10**(4))
     axes[0].set_yscale('log')
 
-    axes[1].plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']))
+    axes[1].plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']))
     axes[1].set_xlim(500, 1000)
     axes[1].set_ylim(10**(0), 10**(1))
     axes[1].set_yscale('log')
@@ -186,11 +194,11 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
                  label='13 TeV ScannerS', color='C0', linewidth=0.5)
     ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
                  label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
-    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
                  label='14 TeV YR4', color='C2', linewidth=0.5)
     ax.set_xlim(0, 100)
     ax.set_ylim(5 * 10**(1), 10**(4))
@@ -214,11 +222,11 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
                  label='13 TeV ScannerS', color='C0', linewidth=0.5)
     ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
                  label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
-    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
                  label='14 TeV YR4', color='C2', linewidth=0.5)
     ax.set_xlim(100, 500)
     ax.set_ylim(4 * 10**(0), 7 * 10**(1))
@@ -242,11 +250,11 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
                  label='13 TeV ScannerS', color='C0', linewidth=0.5)
     ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
                  label='13.6 TeV ScannerS (SusHi)', color='C1', linewidth=0.5)
-    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
                  label='14 TeV YR4', color='C2', linewidth=0.5)
     ax.set_xlim(500, 1000)
     ax.set_ylim(10**(-1), 6 * 10**(0))
@@ -273,11 +281,11 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
                  label='13 TeV ScannerS', color='C0', linewidth=0.5)
-    ax.plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
+    ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
                  label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
-    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
                  label='14 TeV YR4', color='C2', linewidth=0.5)
     ax.set_xlim(0, 100)
     ax.set_ylim(5 * 10**(1), 10**(4))
@@ -300,11 +308,11 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
                  label='13 TeV ScannerS', color='C0', linewidth=0.5)
-    ax.plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
+    ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
                  label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
-    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
                  label='14 TeV YR4', color='C2', linewidth=0.5)
     ax.set_xlim(100, 500)
     ax.set_ylim(4 * 10**(0), 7 * 10**(1))
@@ -327,11 +335,11 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfOut['mass']), np.array(dfOut['SMCrossSec']),
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
                  label='13 TeV ScannerS', color='C0', linewidth=0.5)
-    ax.plot(np.array(dfOut_13_6['mass']), np.array(dfOut_13_6['SMCrossSec']),
+    ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
                  label='13.6 TeV ScannerS (SusHi)', color='C1', linewidth=0.5)
-    ax.plot(np.array(dfOut_14['mass']), np.array(dfOut_14['SMCrossSec']),
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
                  label='14 TeV YR4', color='C2', linewidth=0.5)
     ax.set_xlim(500, 1000)
     ax.set_ylim(10**(-1), 6 * 10**(0))
@@ -352,16 +360,17 @@ if __name__ == '__main__':
                 '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_3.pdf'))
     plt.close()
 
+
     # print the cross section for comparison
-    SM14TeV = scipy.interpolate.CubicSpline(dfOut_14['mass'], dfOut_14['SMCrossSec'])
+    SM14TeV = scipy.interpolate.CubicSpline(dfYR4_14['mass'], dfYR4_14['SMCrossSec'])
     print('mass, 13 TeV ScannerS, 13.6 TeV ScannerS, 14 TeV YR4 cross sections')
-    [print(dfOut['mass'][i], dfOut['SMCrossSec'][i],
-           dfOut_13_6['SMCrossSec'][i], SM14TeV(dfOut['mass'][i]))
-     for i in range(len(dfOut))]
+    [print(dfScannerS_13['mass'][i], dfScannerS_13['SMCrossSec'][i],
+           dfSusHiImpr_13_6['SMCrossSec'][i], SM14TeV(dfScannerS_13['mass'][i]))
+     for i in range(len(dfScannerS_13))]
 
     # print the ratios of the cross sections for comparison
     print('mass, (13.6 TeV ScannerS)/(13 TeV ScannerS),\
 (14 TeV YR4)/(13.6 TeV ScannerS) ratios of cross sections')
-    [print(dfOut['mass'][i], dfOut_13_6['SMCrossSec'][i]/dfOut['SMCrossSec'][i],
-           SM14TeV(dfOut['mass'][i])/dfOut_13_6['SMCrossSec'][i])
-     for i in range(len(dfOut))]
+    [print(dfScannerS_13['mass'][i], dfSusHiImpr_13_6['SMCrossSec'][i]/dfScannerS_13['SMCrossSec'][i],
+           SM14TeV(dfScannerS_13['mass'][i])/dfSusHiImpr_13_6['SMCrossSec'][i])
+     for i in range(len(dfScannerS_13))]
