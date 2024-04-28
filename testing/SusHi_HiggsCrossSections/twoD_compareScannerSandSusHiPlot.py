@@ -11,6 +11,11 @@ import mplhep as hep
 
 if __name__ == '__main__':
 
+    # !! OBS: '13 TeV ScannerS' implies the SM ggF Higgs cross section, not !!
+    # !! TRSM. Figures which were NOT included in the thesis might labeled  !!
+    # !! or titled wrong, to be sure what the figures (which are NOT        !!
+    # !! included in the thesis) are plotting check the variable names!     !!
+
     ## paths
 
     # path to repo
@@ -23,9 +28,10 @@ if __name__ == '__main__':
 
     # create plotting directory if it already does not exist
     os.makedirs(pathPlots, exist_ok=True)
-    os.makedirs(os.path.join(pathPlots, '13TeV'), exist_ok=True)
-    os.makedirs(os.path.join(pathPlots, '13TeV/compareScannerSandSusHi'), exist_ok=True)
-    os.makedirs(os.path.join(pathPlots, '13_6TeV'), exist_ok=True)
+    os.makedirs(os.path.join(pathPlots, 'plots1D'), exist_ok=True)
+    # os.makedirs(os.path.join(pathPlots, '13TeV'), exist_ok=True)
+    # os.makedirs(os.path.join(pathPlots, '13TeV/compareScannerSandSusHi'), exist_ok=True)
+    # os.makedirs(os.path.join(pathPlots, '13_6TeV'), exist_ok=True)
 
     ## plotting style
     with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
@@ -76,7 +82,7 @@ if __name__ == '__main__':
 
     dfSusHiImpr_13_6 = pandas.read_table(os.path.join(pathRepo, 'testing',
                                          'SusHi_HiggsCrossSections',
-                                         '13_6TeV_SusHiImprCrossSections.tsv.tsv'))
+                                         '13_6TeV_SusHiImprCrossSections.tsv'))
 
     dfYR4_14 = pandas.read_table(os.path.join(pathRepo, 'testing',
                                  'SusHi_HiggsCrossSections',
@@ -88,9 +94,9 @@ if __name__ == '__main__':
         len(dfScannerS_13) == len(dfSusHi_N3LO_13) and
         len(dfScannerS_13['mass']) == len(dfSusHi_13['mass']) and
         len(dfScannerS_13['mass']) == len(dfSusHi_N3LO_13['mass']) and
-        len(dfScannerS_13['SMCrossSec']) == len(dfSusHi_13['crossSec']) and
-        len(dfScannerS_13['SMCrossSec']) == len(dfSusHi_13_6['crossSec']) and
-        len(dfScannerS_13['SMCrossSec']) == len(dfSusHi_N3LO_13['crossSec'])):
+        len(dfScannerS_13['SMCrossSec']) == len(dfSusHi_13['SMCrossSec']) and
+        len(dfScannerS_13['SMCrossSec']) == len(dfSusHi_13_6['SMCrossSec']) and
+        len(dfScannerS_13['SMCrossSec']) == len(dfSusHi_N3LO_13['SMCrossSec'])):
         pass
 
     else:
@@ -109,7 +115,6 @@ if __name__ == '__main__':
     print(f'N3LO:') 
     [print(f'mass: {mass[i]} ratio: {ratio_N3LO[i]}') for i in range(len(mass))]
 
-
     ## 13 TeV SusHi and 13 TeV ScannerS cross sections (ratio)
 
     # 0 - 100 GeV
@@ -127,10 +132,10 @@ if __name__ == '__main__':
     axRatioMinusOne.legend(title='ggF @ $13$ TeV\nSusHi: NNLO\nScannerS: NNLO + NNLL')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_1.pdf'))
-    plt.savefig(os.path.join(pathPlots, 
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_1.png'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSSusHiCrossSectionsRatio_1.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSSusHiCrossSectionsRatio_1.png'))
     plt.close()
 
     # 100 - 1000 GeV
@@ -148,10 +153,10 @@ if __name__ == '__main__':
     axRatioMinusOne.legend(title='ggF @ $13$ TeV\nSusHi: NNLO\nScannerS: NNLO + NNLL')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_2.pdf'))
-    plt.savefig(os.path.join(pathPlots, 
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSectionsRatio_2.png'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSSusHiCrossSectionsRatio_2.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSSusHiCrossSectionsRatio_2.png'))
     plt.close()
 
 
@@ -174,10 +179,10 @@ if __name__ == '__main__':
     axRatioMinusOne_N3LO.set_ylim(0, 0.20)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots,
-                '13TeV/compareScannerSandSusHi/13TeV_N3LO_ScannerSSusHiCrossSectionsRatio.pdf'))
-    plt.savefig(os.path.join(pathPlots,
-                '13TeV/compareScannerSandSusHi/13TeV_N3LO_ScannerSSusHiCrossSectionsRatio.png'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_N3LO_ScannerSSusHiCrossSectionsRatio.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_N3LO_ScannerSSusHiCrossSectionsRatio.png'))
     plt.close()
 
 
@@ -190,10 +195,10 @@ if __name__ == '__main__':
     plt.ylabel(r'$\sigma(gg\to h_{SM})$ [pb]' )
     plt.title(r'SusHi and ScannerS cross sections at 13 TeV')
     plt.yscale('log')
-    plt.savefig(os.path.join(pathPlots,
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSections.pdf'))
-    plt.savefig(os.path.join(pathPlots,
-                '13TeV/compareScannerSandSusHi/13TeV_ScannerSSusHiCrossSections.png'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSSusHiCrossSections.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSSusHiCrossSections.png'))
     plt.close()
 
 
@@ -207,8 +212,10 @@ if __name__ == '__main__':
     plt.ylabel(r'$\sigma(gg\to h_{SM})$ [pb]' )
     plt.title(r'SusHi cross sections at  13 TeV and 13.6')
     plt.yscale('log')
-    plt.savefig(os.path.join(pathPlots, '13_6TeV/13_6TeV_13TeV_SusHiCrossSections.pdf'))
-    plt.savefig(os.path.join(pathPlots, '13_6TeV/13_6TeV_13TeV_SusHiCrossSections.png'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_SusHiCrossSections.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_SusHiCrossSections.png'))
     plt.close()
 
 
@@ -216,11 +223,14 @@ if __name__ == '__main__':
     ## 13.6 TeV SusHi and 13 TeV SusHi cross sections (ratio)
 
     ratio13_6TeV_13TeV = np.array(dfSusHi_13_6['SMCrossSec'])/np.array(dfSusHi_13['SMCrossSec'])
-    YR4interp = interp.CubicSpline(np.array(dfYR4_14['mass']),np.array(dfYR4_14['SMCrossSec']))
+    YR4interp = interp.CubicSpline(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']))
     ratio14TeV_13TeV = YR4interp(dfScannerS_13['mass'])/np.array(dfScannerS_13['SMCrossSec'])
 
-    plt.plot(mass, ratio13_6TeV_13TeV, label='$\sigma^{13.6~TeV}_{SusHi}/\sigma^{13~TeV}_{SusHi}$')
-    plt.plot(mass, ratio14TeV_13TeV, label='$\sigma^{14~TeV}_{LHCHWG}/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}$', color='grey', linestyle='dashed')
+    plt.plot(mass, ratio13_6TeV_13TeV,
+             label='$\sigma^{13.6~TeV}_{SusHi}/\sigma^{13~TeV}_{SusHi}$')
+    plt.plot(mass, ratio14TeV_13TeV, 
+             label='$\sigma^{14~TeV}_{LHCHWG}/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}$',
+             color='grey', linestyle='dashed')
     #[plt.annotate(f'{y:.3f}', (x, y), rotation=45) for (x, y) in list(zip(mass[::55],ratio13_6[::55])) ]
 
     plt.xlabel(r'$M_{h_{SM}}$ [GeV]')
@@ -233,8 +243,10 @@ if __name__ == '__main__':
     plt.yscale('log')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV/13_6TeV_13TeV_SusHiCrossSectionsRatio.pdf'))
-    plt.savefig(os.path.join(pathPlots, '13_6TeV/13_6TeV_13TeV_SusHiCrossSectionsRatio.png'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_SusHiCrossSectionsRatio.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_SusHiCrossSectionsRatio.png'))
     plt.close()
 
 
@@ -259,23 +271,23 @@ if __name__ == '__main__':
     axes[1].set_ylim(10**(0), 10**(1))
     axes[1].set_yscale('log')
 
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_ScannerSSMCrossSections.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_SusHiImprCrossSections.pdf'))
     plt.close()
 
 
-    ## 13.6 TeV SusHi improved, 13 TeV ScannerS and 14 TeV YR4 cross sections
+    ## 13.6 TeV SusHi, 13 TeV ScannerS and 14 TeV YR4 cross sections
 
     fig, ax = plt.subplots()
 
     # 0 - 100 GeV
 
     ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            label='13 TeV ScannerS', color='C0', linewidth=0.5)
-    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
-            label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
+            color='C1', linewidth=0.5)
     ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
-            label='14 TeV YR4', color='C2', linewidth=0.5)
+            color='C2', linewidth=0.5)
 
     ax.set_xlim(0, 100)
     ax.set_ylim(5 * 10**(1), 10**(4))
@@ -292,8 +304,8 @@ if __name__ == '__main__':
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiPureAndYR4CrossSections_1.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_14TeV_ScannerSSusHiYR4CrossSections_1.pdf'))
     plt.close()
 
     # 100 - 500 GeV
@@ -301,11 +313,11 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
-    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
-                 label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
+            color='C1', linewidth=0.5)
     ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
-                 label='14 TeV YR4', color='C2', linewidth=0.5)
+            color='C2', linewidth=0.5)
     ax.set_xlim(100, 500)
     ax.set_ylim(4 * 10**(0), 7 * 10**(1))
     ax.set_yscale('log')
@@ -321,8 +333,8 @@ if __name__ == '__main__':
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiPureAndYR4CrossSections_2.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_14TeV_ScannerSSusHiYR4CrossSections_2.pdf'))
     plt.close()
 
     # 500 - 1000 GeV
@@ -330,11 +342,11 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-                 label='13 TeV ScannerS', color='C0', linewidth=0.5)
-    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['crossSec']),
-                 label='13.6 TeV ScannerS (SusHi)', color='C1', linewidth=0.5)
+            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
+            color='C1', linewidth=0.5)
     ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
-                 label='14 TeV YR4', color='C2', linewidth=0.5)
+            color='C2', linewidth=0.5)
     ax.set_xlim(500, 1000)
     ax.set_ylim(10**(-1), 6 * 10**(0))
     ax.set_yscale('log')
@@ -350,8 +362,8 @@ if __name__ == '__main__':
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiPureAndYR4CrossSections_3.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_14TeV_ScannerSSusHiYR4CrossSections_3.pdf'))
     plt.close()
 
 
@@ -362,11 +374,11 @@ if __name__ == '__main__':
     # 0 - 100 GeV
 
     ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            label='13 TeV ScannerS', color='C0', linewidth=0.5)
+            color='C0', linewidth=0.5)
     ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
-            label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+            color='C1', linewidth=0.5)
     ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
-            label='14 TeV YR4', color='C2', linewidth=0.5)
+            color='C2', linewidth=0.5)
     ax.set_xlim(0, 100)
     ax.set_ylim(5 * 10**(1), 10**(4))
     ax.set_yscale('log')
@@ -382,8 +394,8 @@ if __name__ == '__main__':
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_1.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_14TeV_ScannerSSusHiImprYR4CrossSections_1.pdf'))
     plt.close()
 
     fig, ax = plt.subplots()
@@ -391,11 +403,11 @@ if __name__ == '__main__':
     # 100 - 500 GeV
 
     ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            label='13 TeV ScannerS', color='C0', linewidth=0.5)
+            color='C0', linewidth=0.5)
     ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
-            label='13.6 TeV ScannerS', color='C1', linewidth=0.5)
+            color='C1', linewidth=0.5)
     ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
-            label='14 TeV YR4', color='C2', linewidth=0.5)
+            color='C2', linewidth=0.5)
     ax.set_xlim(100, 500)
     ax.set_ylim(4 * 10**(0), 7 * 10**(1))
     ax.set_yscale('log')
@@ -411,8 +423,8 @@ if __name__ == '__main__':
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_2.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_14TeV_ScannerSSusHiImprYR4CrossSections_2.pdf'))
     plt.close()
 
     fig, ax = plt.subplots()
@@ -420,11 +432,11 @@ if __name__ == '__main__':
     # 500 - 1000 GeV
 
     ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            label='13 TeV ScannerS', color='C0', linewidth=0.5)
+            color='C0', linewidth=0.5)
     ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
-            label='13.6 TeV ScannerS (SusHi)', color='C1', linewidth=0.5)
+            color='C1', linewidth=0.5)
     ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
-            label='14 TeV YR4', color='C2', linewidth=0.5)
+            color='C2', linewidth=0.5)
     ax.set_xlim(500, 1000)
     ax.set_ylim(10**(-1), 6 * 10**(0))
     ax.set_yscale('log')
@@ -440,8 +452,8 @@ if __name__ == '__main__':
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, '13_6TeV',
-                '13_6TeV_13TeV_14TeV_ScannerSSMAndSusHiandYR4CrossSections_3.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13_6TeV_13TeV_14TeV_ScannerSSusHiImprYR4CrossSections_3.pdf'))
     plt.close()
 
 
