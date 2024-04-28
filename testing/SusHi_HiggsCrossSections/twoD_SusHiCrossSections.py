@@ -197,11 +197,11 @@ Block FACTORS
 def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCrossSecPlots,
                        pathTemp, pathSUSHI, **kwargs):
 
-    crossSec = []    
-    
+    crossSec = []
+
     # pathTemp = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHiOutputsTemp'
     # pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi' 
-    
+
     # absolute paths for the config and output files do not work because
     # sushi cannot handle hyphens in the paths for some reason.
     # hence the need of separating paths into absolute... & relative...
@@ -209,10 +209,10 @@ def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCros
     absolutePathExecutionOutput = os.path.join(pathTemp, 'temp_output.out')
     relativePathExecutionConfig = 'temp_config.in'
     relativePathExecutionOutput = 'temp_output.out'
-   
+
     crossSecList = []
     for mass in masses:
-        
+
         # creates contents of pathExecutionConfig
         if order == 'NNLO':
             inputFileContents = SusHiInputFileNNLO(mass, energy,
@@ -227,18 +227,18 @@ def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCros
 
         else: 
             raise Exception('order needs to be either \'NNLO\' or \'N3LO\'')
-            
+
         with open(absolutePathExecutionConfig , "w") as inputFile:
             inputFile.write(inputFileContents)
 
         # for subprocesses.run below
         runSUSHI = [pathSUSHI, relativePathExecutionConfig, relativePathExecutionOutput]
-        
+
         # run the executable
         shell_output = subprocess.run(runSUSHI, cwd=pathTemp)
-        
+
         print('\n\n===============================================\n\n')
-        
+
         outputFileRows = ''
         with open(absolutePathExecutionOutput) as outputFile:
             for row in outputFile:
@@ -249,7 +249,7 @@ def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCros
 
         # match object
         lineCrossSec = pattern.findall(outputFileRows)
-        
+
         if len(lineCrossSec) != 1:
             raise Exception('Something went wrong, there should only be one \'ggh XS in pb\' match')
 
@@ -257,7 +257,7 @@ def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCros
         crossSec = float(lineCrossSec[0].split()[1])
         print(crossSec)
         crossSecList.append((mass, crossSec))
-        
+
     dfOut = pandas.DataFrame(crossSecList, columns=['mass', 'crossSec'])
     print(dfOut)
     dfOut.to_csv(pathOutputCrossSec, sep='\t')
@@ -270,7 +270,7 @@ def SusHiCrossSections(masses, energy, order, pathOutputCrossSec, pathOutputCros
 if __name__ == '__main__':
 
     ## paths
-    
+
     # path to repo
     # E:
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
@@ -323,13 +323,13 @@ if __name__ == '__main__':
                        pathOutputCrossSecPlots_13TeV_N3LO, pathTemp, pathSUSHI) 
 
     ## 13.6 TeV SusHi cross sections
-    
+
     pathOutputCrossSec_13_6TeV = os.path.join(pathRepo,
                                               'testing/SusHi_HiggsCrossSections/13_6TeV_SusHiCrossSections.tsv')
 
     # create directory for plotting for cross sections at 13.6 TeV
     os.makedirs(os.path.join(pathPlots, '13_6TeV'), exist_ok=True)
-    
+
     pathOutputCrossSecPlots_13_6TeV = os.path.join(pathPlots, '13_6TeV/13_6TeV_SusHiCrossSections.pdf')
 
     SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV,
@@ -340,7 +340,7 @@ if __name__ == '__main__':
     # create directories (plotting and .tsv files) for scale uncertatinty cross sections
     os.makedirs(os.path.join(pathPlots, '13_6TeV/scaleUncert'), exist_ok=True) 
     os.makedirs(os.path.join(pathRepo, '13_6TeV_SusHiCrossSections_ScaleUncert'), exist_ok=True)
-    
+
     ## renormalization scale muR/mh = 0.25
     ## factorization scale muF/mh = 0.25
 
@@ -368,7 +368,7 @@ if __name__ == '__main__':
     pathOutputCrossSecPlots_13_6TeV_025mh_1mh = os.path.join(pathPlots,
                                                              '13_6TeV/scaleUncert',
                                                              '13_6TeV_SusHiCrossSections_025mh_1mh.pdf')
-                                                                                                                                                                             
+
     SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_025mh_1mh,
                        pathOutputCrossSecPlots_13_6TeV_025mh_1mh, pathTemp, pathSUSHI,
                        renormScalemuR=0.25, factScalemuF=1) 
@@ -383,7 +383,7 @@ if __name__ == '__main__':
     pathOutputCrossSecPlots_13_6TeV_1mh_1mh = os.path.join(pathPlots,
                                                            '13_6TeV/scaleUncert',
                                                            '13_6TeV_SusHiCrossSections_1mh_1mh.pdf')
-                                                                                                                                                                             
+
     SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_1mh_1mh, 
                        pathOutputCrossSecPlots_13_6TeV_1mh_1mh , pathTemp, pathSUSHI,
                        renormScalemuR=1, factScalemuF=1) 
@@ -398,7 +398,7 @@ if __name__ == '__main__':
     pathOutputCrossSecPlots_13_6TeV_1mh_025mh = os.path.join(pathPlots,
                                                              '13_6TeV/scaleUncert',
                                                              '13_6TeV_SusHiCrossSections_1mh_025mh.pdf')
-                                                                                                                                                                             
+
     SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_1mh_025mh,
                        pathOutputCrossSecPlots_13_6TeV_1mh_025mh, pathTemp, pathSUSHI,
                        renormScalemuR=1, factScalemuF=0.25) 
@@ -413,7 +413,7 @@ if __name__ == '__main__':
     pathOutputCrossSecPlots_13_6TeV_05mh_05mh = os.path.join(pathPlots,
                                                              '13_6TeV/scaleUncert',
                                                              '13_6TeV_SusHiCrossSections_05mh_05mh.pdf')
-                                                                                                                                                                             
+
     SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_05mh_05mh,
                        pathOutputCrossSecPlots_13_6TeV_05mh_05mh, pathTemp, pathSUSHI,
                        renormScalemuR=0.5, factScalemuF=0.5) 
