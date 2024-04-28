@@ -1,4 +1,3 @@
-#from subprocess import run
 import subprocess
 import os
 import re
@@ -281,7 +280,7 @@ if __name__ == '__main__':
 
     # create plotting directory if it does not already exist
     os.makedirs(pathPlots, exist_ok=True)
-    
+
     # path to SusHi executable
     pathSUSHI = os.path.join(pathRepo, 
                              'testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi') 
@@ -292,16 +291,17 @@ if __name__ == '__main__':
     pathTemp = os.path.join(pathRepo,
                             'testing/SusHi_HiggsCrossSections/SusHiOutputsTemp')
 
-    # read in masses which SusHi will generate cross sections for
-    with open('ggH_bbH.dat') as f:
-        first_line = f.readline()
-    
-    masses = ([float(i) for i in first_line.split()])
+    # read in masses which SusHi will generate cross sections. The masses are
+    # the masses recommended by the LHCHWG (see the twiki for more info)
+    dfYR4_14 = pandas.read_table(os.path.join(pathRepo, 'testing',
+                                 'SusHi_HiggsCrossSections', '14TeV_YR4CrossSections.tsv'))
+
+    masses = [mass for mass in dfYR4_14['mass']]
 
     # OBS: everything here is NNLO unless otherwise specified
-   
+
     ## 13 TeV SusHi cross sections
- 
+
     pathOutputCrossSec_13TeV = os.path.join(pathRepo,
                                             'testing/SusHi_HiggsCrossSections/13TeV_SusHiCrossSections.tsv')
 
@@ -335,85 +335,3 @@ if __name__ == '__main__':
     SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV,
                        pathOutputCrossSecPlots_13_6TeV, pathTemp, pathSUSHI) 
 
-    ## 13.6 TeV scale uncertainty SusHi cross sections
-
-    # create directories (plotting and .tsv files) for scale uncertatinty cross sections
-    os.makedirs(os.path.join(pathPlots, '13_6TeV/scaleUncert'), exist_ok=True) 
-    os.makedirs(os.path.join(pathRepo, '13_6TeV_SusHiCrossSections_ScaleUncert'), exist_ok=True)
-
-    ## renormalization scale muR/mh = 0.25
-    ## factorization scale muF/mh = 0.25
-
-    # The paths are broken up using os.path.join so that you do not have long
-    # unreadable strings.
-    pathOutputCrossSec_13_6TeV_025mh_025mh = os.path.join(pathRepo, 
-                                                          'testing/SusHi_HiggsCrossSections',
-                                                          '13_6TeV_SusHiCrossSections_ScaleUncert',
-                                                          '13_6TeV_SusHiCrossSections_025mh_025mh.tsv')
-    pathOutputCrossSecPlots_13_6TeV_025mh_025mh = os.path.join(pathPlots,
-                                                              '13_6TeV/scaleUncert',
-                                                              '13_6TeV_SusHiCrossSections_025mh_025mh.pdf')
-
-    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_025mh_025mh, 
-                       pathOutputCrossSecPlots_13_6TeV_025mh_025mh, pathTemp, pathSUSHI,
-                       renormScalemuR=0.25, factScalemuF=0.25) 
-
-    ## renormalization scale muR/mh = 0.25
-    ## factorization scale muF/mh = 1
-
-    pathOutputCrossSec_13_6TeV_025mh_1mh = os.path.join(pathRepo, 
-                                                         'testing/SusHi_HiggsCrossSections',
-                                                         '13_6TeV_SusHiCrossSections_ScaleUncert',
-                                                         '13_6TeV_SusHiCrossSections_025mh_1mh.tsv')
-    pathOutputCrossSecPlots_13_6TeV_025mh_1mh = os.path.join(pathPlots,
-                                                             '13_6TeV/scaleUncert',
-                                                             '13_6TeV_SusHiCrossSections_025mh_1mh.pdf')
-
-    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_025mh_1mh,
-                       pathOutputCrossSecPlots_13_6TeV_025mh_1mh, pathTemp, pathSUSHI,
-                       renormScalemuR=0.25, factScalemuF=1) 
-
-    ## renormalization scale muR/mh = 1 
-    ## factorization scale muF/mh = 1 
-
-    pathOutputCrossSec_13_6TeV_1mh_1mh = os.path.join(pathRepo, 
-                                                       'testing/SusHi_HiggsCrossSections',
-                                                       '13_6TeV_SusHiCrossSections_ScaleUncert',
-                                                       '13_6TeV_SusHiCrossSections_1mh_1mh.tsv')
-    pathOutputCrossSecPlots_13_6TeV_1mh_1mh = os.path.join(pathPlots,
-                                                           '13_6TeV/scaleUncert',
-                                                           '13_6TeV_SusHiCrossSections_1mh_1mh.pdf')
-
-    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_1mh_1mh, 
-                       pathOutputCrossSecPlots_13_6TeV_1mh_1mh , pathTemp, pathSUSHI,
-                       renormScalemuR=1, factScalemuF=1) 
-
-    ## renormalization scale muR/mh = 1 
-    ## factorization scale muF/mh = 0.25
-
-    pathOutputCrossSec_13_6TeV_1mh_025mh = os.path.join(pathRepo, 
-                                                         'testing/SusHi_HiggsCrossSections',
-                                                         '13_6TeV_SusHiCrossSections_ScaleUncert',
-                                                         '13_6TeV_SusHiCrossSections_1mh_025mh.tsv')
-    pathOutputCrossSecPlots_13_6TeV_1mh_025mh = os.path.join(pathPlots,
-                                                             '13_6TeV/scaleUncert',
-                                                             '13_6TeV_SusHiCrossSections_1mh_025mh.pdf')
-
-    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_1mh_025mh,
-                       pathOutputCrossSecPlots_13_6TeV_1mh_025mh, pathTemp, pathSUSHI,
-                       renormScalemuR=1, factScalemuF=0.25) 
-
-    ## renormalization scale muR/mh = 0.5
-    ## factorization scale muF/mh = 0.5
-
-    pathOutputCrossSec_13_6TeV_05mh_05mh = os.path.join(pathRepo, 
-                                                         'testing/SusHi_HiggsCrossSections',
-                                                         '13_6TeV_SusHiCrossSections_ScaleUncert',
-                                                         '13_6TeV_SusHiCrossSections_05mh_05mh.tsv')
-    pathOutputCrossSecPlots_13_6TeV_05mh_05mh = os.path.join(pathPlots,
-                                                             '13_6TeV/scaleUncert',
-                                                             '13_6TeV_SusHiCrossSections_05mh_05mh.pdf')
-
-    SusHiCrossSections(masses, 13600, 'NNLO', pathOutputCrossSec_13_6TeV_05mh_05mh,
-                       pathOutputCrossSecPlots_13_6TeV_05mh_05mh, pathTemp, pathSUSHI,
-                       renormScalemuR=0.5, factScalemuF=0.5) 
