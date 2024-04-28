@@ -1,4 +1,4 @@
-import configurer as config
+from helpScannerS import configurer as config
 
 import subprocess
 import os
@@ -9,9 +9,21 @@ import pandas
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import mplhep as hep
-import matplotlib.lines as mlines
 
 if __name__ == '__main__':
+
+    # !! This file produces the LHCHWG 13 TeV ggF Higgs cross sections as !!
+    # !! seen in the thesis, these could as well have been taken from the !!
+    # !! LHCHWG website but we decided that it was better to use ScannerS !!
+    # !! if that was possible. The file output from this script is called !!
+    # !! (confusingly) '13TeV_ScannerSCrossSections.tsv'. The column      !!
+    # !! 'SMCrossSec' contains the LHCHWG 13 TeV ggF Higgs cross sections.!!
+
+    # !! There are also two figures output from this script called        !!
+    # !! '13TeV_ScannerSTRSMCrossSections.pdf' (the TRSM ggF cross        !!
+    # !! sections) with BP2 settings and '13TeV_ScannerSCrossSections.pdf'!!
+    # !! plotting the SM ggF Higgs cross sections. But these figures are  !!
+    # !! not important at all                                             !!
 
     ## paths
 
@@ -33,13 +45,13 @@ if __name__ == '__main__':
 
     # create directories which ScannerS will store output and input
     # if they do not already exist
-    pathTemp = os.path.join(pathRepo,
-                            'testing/SusHi_HiggsCrossSections/TRSMOutputsTemp')
+    pathTemp = os.path.join(pathRepo, 'testing', 'SusHi_HiggsCrossSections',
+                            'TRSMOutputsTemp')
     os.makedirs(pathTemp, exist_ok=True)
 
-    with open(os.path.join(pathRepo,
-              'testing/SusHi_HiggsCrossSections/ggH_bbH.dat')) as f:
-        first_line = f.readline()
+    dfYR4_14 = pandas.read_table(os.path.join(pathRepo, 'testing',
+                                 'SusHi_HiggsCrossSections',
+                                 '14TeV_YR4CrossSections.tsv'))
 
     # create dictionary where all output from ScannerS will be stored
     massesAndCrossSec = {}
@@ -48,7 +60,7 @@ if __name__ == '__main__':
     massesAndCrossSec['SMCrossSec'] = []
 
     # masses which ScannerS will generate cross sections for
-    masses = ([float(i) for i in first_line.split()])
+    masses = [mass for mass in dfYR4_14['mass']]
 
     # disable all ScannerS TRSM constraints
     BFB, Uni, STU, Higgs = 0, 0, 0, 0
@@ -95,6 +107,8 @@ if __name__ == '__main__':
 
     dfScannerS_13 = pandas.DataFrame(massesAndCrossSec)
     print(dfScannerS_13)
+
+    # i.e the LHCHWG 13 TeV ggF Higgs cross sections
     dfScannerS_13.to_csv('13TeV_ScannerSCrossSections.tsv', sep='\t')
 
     ## plotting style
@@ -127,7 +141,7 @@ if __name__ == '__main__':
     plt.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['TRSMCrossSec']),
              marker='o')
     plt.yscale('log')
-    plt.savefig(os.path.join(pathPlots, '13TeV',
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
                 '13TeV_ScannerSTRSMCrossSections.pdf'))
     plt.close()
 
@@ -135,8 +149,6 @@ if __name__ == '__main__':
     plt.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
              marker='o')
     plt.yscale('log')
-    plt.savefig(os.path.join(pathPlots, '13TeV',
-                '13TeV_ScannerSSMCrossSections.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'plots1D',
+                '13TeV_ScannerSCrossSections.pdf'))
     plt.close()
-
-
