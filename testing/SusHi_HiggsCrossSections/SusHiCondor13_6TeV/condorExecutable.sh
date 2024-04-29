@@ -12,4 +12,4 @@ pip3 install pandas
 
 # Enter directory and run python script which runs SusHi
 cd /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections
-time python3 oneD_SusHiScaleUncertCrossSections.py
+time python3 oneD_SusHiCrossSections13_6TeV.py
