@@ -15,8 +15,8 @@ if __name__ == '__main__':
     pathPlots = '/eos/user/i/ihaque/SusHiPlots'
 
     # path to SusHi executable
-    pathSUSHI = os.path.join(pathRepo, 
-                             'testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi') 
+    # E:
+    pathSUSHI = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/SusHi_HiggsCrossSections/SusHi_install/SusHi-1.6.1/bin/sushi'
 
     # directory containting SusHi input and output (created just to run this script)
     # user will not need to interact with this directory, all cross sections from SusHi
