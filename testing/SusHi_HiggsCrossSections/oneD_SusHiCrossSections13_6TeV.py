@@ -1,12 +1,6 @@
-import subprocess
 import os
-import re
-
-import numpy as np
 import pandas
-import matplotlib
-import matplotlib.pyplot as plt
-import twoD_SusHiCrossSections as SusHi
+import oneD_SusHiConfigure as SusHi
 
 if __name__ == '__main__':
 
@@ -48,7 +42,7 @@ if __name__ == '__main__':
     # create directory for plotting for cross sections at 13.6 TeV
     os.makedirs(os.path.join(pathPlots, '13_6TeV'), exist_ok=True)
 
-    pathOutputCrossSecPlots_13_6TeV = os.path.join(pathPlots, '13_6TeV/13_6TeV_SusHiCrossSections.pdf')
+    pathOutputCrossSecPlots_13_6TeV = os.path.join(pathPlots, 'plots1D/13_6TeV_SusHiCrossSections.pdf')
 
     print('===================================================================')
     print('GENERATING SM ggF HIGGS CROSS SECTIONS WITH SUSHI AT 13.6 TeV, NNLO')

@@ -1,12 +1,6 @@
-import subprocess
 import os
-import re
-
-import numpy as np
 import pandas
-import matplotlib
-import matplotlib.pyplot as plt
-import twoD_SusHiCrossSections as SusHi
+import oneD_SusHiConfigure as SusHi
 
 if __name__ == '__main__':
 
@@ -47,7 +41,7 @@ if __name__ == '__main__':
 
     pathOutputCrossSec_13TeV_N3LO = os.path.join(pathRepo,
                                                  'testing/SusHi_HiggsCrossSections/13TeV_N3LO_SusHiCrossSections.tsv') 
-    pathOutputCrossSecPlots_13TeV_N3LO = os.path.join(pathPlots, '13TeV/13TeV_N3LO_SusHiCrossSections.pdf')
+    pathOutputCrossSecPlots_13TeV_N3LO = os.path.join(pathPlots, 'plots1D/13TeV_N3LO_SusHiCrossSections.pdf')
 
     print('===================================================================')
     print('GENERATING SM ggF HIGGS CROSS SECTIONS WITH SUSHI AT 13 TeV, N3LO')

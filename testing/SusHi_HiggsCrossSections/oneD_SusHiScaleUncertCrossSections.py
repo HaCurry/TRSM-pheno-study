@@ -1,6 +1,6 @@
-import pandas
 import os
-import twoD_SusHiCrossSections as SusHi
+import pandas
+import oneD_SusHiConfigure as SusHi
 
 if __name__ == '__main__':
 
