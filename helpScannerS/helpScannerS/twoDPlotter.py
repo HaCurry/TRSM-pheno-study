@@ -916,11 +916,19 @@ def plotAuxTitleAndBounds2D(title, xtitle, ytitle, ztitle, **kwargs):
 
             if 'fig' in kwargs and 'im' in kwargs and 'ax' in kwargs:
 
-                if 'cbarfmt' in kwargs:
-                    kwargs['fig'].colorbar(kwargs['im'], ax=kwargs['ax'], label=ztitle, format=kwargs['cbarfmt'])
+                if 'orientation' in kwargs:
+                    orientation = kwargs['orientation']
 
                 else:
-                    kwargs['fig'].colorbar(kwargs['im'], ax=kwargs['ax'], label=ztitle)
+                    orientation = 'vertical'
+
+                if 'cbarfmt' in kwargs:
+                    kwargs['fig'].colorbar(kwargs['im'], ax=kwargs['ax'], label=ztitle, format=kwargs['cbarfmt'],
+                                           orientation=orientation)
+
+                else:
+                    kwargs['fig'].colorbar(kwargs['im'], ax=kwargs['ax'], label=ztitle,
+                                           orientation=orientation)
 
             else: raise Exception('To enable OOP please input fig, im and ax')
 
@@ -1030,9 +1038,9 @@ def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):
 
     else:
         fground = 'w'
-    
+
     ##################################################################
-    
+
     for i in range(len(zlist)):
         plt.annotate(fmt.format(zlist[i]), (xlist[i], ylist[i]),
                      textcoords=txtcoord, xytext=xytxt, fontsize=fsize, rotation=rot, 
@@ -1044,7 +1052,19 @@ def plotAuxAnnotator2D(xlist, ylist, zlist, fmt, **kwargs):
 
 def plotAuxConstraints(inputDict, keyX, keyY, keyZ, ax, hatches, **kwargs):
 
-    print(keyX, keyY, keyZ)
+    ############################# kwargs #############################
+
+    if 'alpha' in kwargs:
+        alpha = kwargs['alpha']
+
+    else:
+        alpha = 0.5
+
+    if 'color' in kwargs:
+        color = kwargs['color']
+
+    ##################################################################
+
     # check if the inputDictionary above is empty
     if len(inputDict) == 0:
         return
@@ -1052,7 +1072,8 @@ def plotAuxConstraints(inputDict, keyX, keyY, keyZ, ax, hatches, **kwargs):
     # or if it is non empty that the observables are empty
     # (this might happen due to kineticExclude excluding
     # all points)
-    elif (len(inputDict[keyX]) == 0 and len(inputDict[keyY]) == 0 and len(inputDict[keyZ]) == 0):
+    elif (len(inputDict[keyX]) == 0 and len(inputDict[keyY]) == 0 and
+            len(inputDict[keyZ]) == 0):
         return None
 
     # otherwise continue plotting
@@ -1065,8 +1086,15 @@ def plotAuxConstraints(inputDict, keyX, keyY, keyZ, ax, hatches, **kwargs):
 
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
-    contf = ax.contourf(xi, yi, zi, [0, 0.5, 1], hatches=['...', '', ''],
-                        colors=['white', '#FF000000', '#FF000000'], alpha=0.1)
+    # this throws away regions which pass the constraints (i.e unintersting
+    # regions)
+    zi = np.ma.masked_where(zi > 0, zi)
+
+    # this somehow works... why levels is set to 3 and why there is the
+    # additional color 'red' I do not know...
+    # see where it is stolen from https://stackoverflow.com/a/55134750/17456342
+    contf = ax.contourf(xi, yi, zi, 3, hatches=[hatches, ''],
+                        colors=['white', 'red'], alpha=0.5)
 
     return contf
 
