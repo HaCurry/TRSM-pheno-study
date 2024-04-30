@@ -26,7 +26,9 @@ def SusHiInputFileNNLO(mass, energy,
     else:
         factScalemuF = 0.5
 
-
+    # everything set to default (see the example SM-NNLO.in input given by SusHi)
+    # except electroweak cont. for ggh set to 0 (the LHCHWG recommendations and
+    # ScannerS have no electroweak cont.)
     inputFile = f'''Block SUSHI
   1   0		# model: 0 = SM, 1 = MSSM, 2 = 2HDM, 3 = NMSSM
   2   11	# 11 = scalar Higgs (h), 21 = pseudoscalar Higgs (A)
@@ -34,7 +36,7 @@ def SusHiInputFileNNLO(mass, energy,
   4   {energy:.8e}	# center-of-mass energy in GeV
   5   2		# order ggh: -1 = off, 0 = LO, 1 = NLO, 2 = NNLO, 3 = N3LO
   6   2 	# order bbh: -1 = off, 0 = LO, 1 = NLO, 2 = NNLO
-  7   2 	# electroweak cont. for ggh:
+  7   0 	# electroweak cont. for ggh:
                 # 0 = no, 1 = light quarks at NLO, 2 = SM EW factor
  19   1		# 0 = silent mode of SusHi, 1 = normal output
  20   0         # ggh@nnlo subprocesses: 0=all, 10=ind. contributions
