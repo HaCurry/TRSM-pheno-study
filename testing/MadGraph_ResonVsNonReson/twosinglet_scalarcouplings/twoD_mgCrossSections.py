@@ -815,7 +815,7 @@ if __name__ == '__main__':
     dictCrossSec['mH1'], dictCrossSec['mH2'], dictCrossSec['mH3'] = [], [], []
     dictCrossSec['thetahS'], dictCrossSec['thetahX'], dictCrossSec['thetaSX'] = [], [], []
     dictCrossSec['vs'], dictCrossSec['vx'] = [], []
-    dictCrossSec['pp_eta0h_no_iota0'], dictCrossSec['pp_eta0h_no_iota0_uncert'] = [], [] 
+    dictCrossSec['pp_iota0_eta0h'], dictCrossSec['pp_iota0_eta0h_uncert'] = [], [] 
     dictCrossSec['pp_eta0h'], dictCrossSec['pp_eta0h_uncert'] = [], []
     dictCrossSec['ratio'] = []
 
@@ -851,10 +851,10 @@ if __name__ == '__main__':
 
         # generate p p > eta0 h / iota0 [noborn=QCD]
         crossSec_no_iota0, crossSecUncert_no_iota0 = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar, 
-                                                 nevents, 'p p > eta0 h / iota0 [noborn=QCD]', f'pp_eta0h_no_iota0_{i}')
+                                                 nevents, 'p p > iota0 > eta0 h [noborn=QCD]', f'pp_iota0_eta0h_{i}')
         
-        dictCrossSec['pp_eta0h_no_iota0'].append(crossSec_no_iota0)
-        dictCrossSec['pp_eta0h_no_iota0_uncert'].append(crossSecUncert_no_iota0)
+        dictCrossSec['pp_iota0_eta0h'].append(crossSec_no_iota0)
+        dictCrossSec['pp_iota0_eta0h_uncert'].append(crossSecUncert_no_iota0)
 
         # generate p p > eta0 h [noborn=QCD]
         crossSec, crossSecUncert = mainExecution(pathOutput, pathTempParam_card, pathLoop_sm_twoscalar,
