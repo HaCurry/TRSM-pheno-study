@@ -6,7 +6,7 @@ from helpScannerS import configurer as config
 
 def condorScriptCreator(runNameExec,
                         pathExecutable,
-                        pathExecPythonDir,
+                        pathExecPython,
                         pathExecOutputParent,
                         neventsExec,
                         pathSubmit,
@@ -89,6 +89,11 @@ pip3 install scipy==1.6.2
 pip3 install numpy==1.22.4
 pip3 install pandas==2.2.0
 
+# load lcg package so that you can use the ATLAS distribution of madgraph
+source /cvmfs/sft.cern.ch/lcg/views/LCG_104c_ATLAS_5/x86_64-el9-gcc13-opt/setup.sh
+lhapdf-config --incdir
+lhapdf-config --libdir
+
 # the string runName will be appended to the file and directory names of the
 # output from Madgraph and the python script below
 runName={runNameExec}
@@ -96,14 +101,11 @@ runName={runNameExec}
 # job output path
 pathExecOutputJob={pathExecOutputParent}/${{1}}/${{runName}}
 
-# path to directory containing Madgraph exec and model
-pathExecMadgraphAndModel={pathExecOutputParent}/${{1}}
+# path to the ATLAS distribution of Madgraph executable
+pathExecMadgraph=/cvmfs/sft.cern.ch/lcg/views/LCG_104c_ATLAS_5/x86_64-el9-gcc13-opt/bin/mg5_aMC
 
-# path to Madgraph executable
-pathExecMadgraph=${{pathExecMadgraphAndModel}}/MG5_aMC_v3_5_3/bin/mg5_aMC
-
-# path to TRSM model
-pathExecModel=${{pathExecMadgraphAndModel}}/twosinglet-master
+# path to the TRSM package (https://gitlab.com/apapaefs/twosinglet)
+pathExecModel={pathExecOutputParent}/${{1}}/twosinglet-master
 
 # Madgraph events
 neventsExec={neventsExec:.0f}
@@ -131,13 +133,73 @@ time python3 twoD_mgCrossSections.py ${{runName}} ${{pathExecMadgraph}} ${{pathE
 
 if __name__ == '__main__':
 
-    limitsUntransposed = pandas.read_json('../../Atlas2023Limits.json')
+    ## paths
+
+    # path to repo
+    # E:
+    pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
+
+    # path to parent directory containing all the mass points (dataId)
+    # each mass point corresponds to a condor job
+    # E:
+    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
+
+    # runNameExec will be created as a directory inside each mass point (dataId) 
+    # the condor job output i.e the cross sections will be found there
+    # E: (or you can leave as is)
+    runNameExec = 'nevents10000_ATLAS'
+
+    # number of Madgraph events
+    # E: (or you can leave as is)
+    neventsExec = 10000
+
+    # condor maximum runtime for each job (see condor docs for more info or
+    # batchdocs: https://batchdocs.web.cern.ch/tutorial/exercise6b.html)
+    # E: (or you can leave as is)
+    JobFlavour = 'tomorrow'
+
+    # path to where the condor submit files and executable will be
+    pathCondorSubAndExec = os.path.join(pathRepo, f'testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/{runNameExec}')
+    
+    # tries to create the directory
+    try:
+        os.makedirs(pathCondorSubAndExec)
+
+    # if the directory already exists, warn the user
+    except FileExistsError:
+        print(f'The directory\n{pathCondorSubAndExec}\nalready exists, do you want to continue?')
+        ans = input('y/n')
+
+        if ans == 'y':
+            pass
+
+        elif ans =='n':
+            raise Exception('user abort')
+
+        else:
+            raise Exception('invalid input, aborting')
+
+    # path to file listing mass points (dataIds)
+    pathDataIds = os.path.join(pathRepo, pathCondorSubAndExec, 'dataIds.txt')
+
+    # path to condor executable
+    pathExecutable = os.path.join(pathCondorSubAndExec, 'condorExecutable.sh')
+
+    # path to condor submit file
+    pathSubmit = os.path.join(pathCondorSubAndExec, 'condorSubmit.sub')
+    
+    # path to the directory containing the python script which the condor executable executes
+    pathExecPython = os.path.join(pathRepo, 'testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings/twoD_mgCrossSections.py')
+
+    ## read in the 2023 Atlas limits
+    limitsUntransposed = pandas.read_json(os.path.join(pathRepo, 'Atlas2023Limits.json'))
     print(limitsUntransposed)
     limits=limitsUntransposed.T
     print(limits)
 
     ms = [element for element in limits['S']]
     mx = [element for element in limits['X']]
+
     # save it in pb
     XS = [element for element in 10**(-3) *limits['ObservedLimit']]
     dataIds = [element for element in limits.index]
@@ -159,6 +221,7 @@ if __name__ == '__main__':
 
     print(f"\nms: {len(ms)}", f"mx: {len(mx)}", f"XS: {len(XS)}", f"listModelTuples: {len(listModelTuples)}\n")
 
+    # create the model parameters for each mass point in the ATLAS limits
     listModelParams = []
     for (mH1, mH2, mH3, XS, dataId) in listModelTuples:
         # BP2
@@ -216,6 +279,7 @@ if __name__ == '__main__':
     #     else:
     #         raise Exception('something went wrong') 
 
+    # pick the points you want to test
     newListModelParams = []
     desiredPoints = ['X170_S30', 'X210_S70', 'X325_S110',
                      'X375_S125', 'X400_S200', 'X450_S70', 'X500_S125',
@@ -237,35 +301,13 @@ if __name__ == '__main__':
 
     [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
 
-    # path to parent directory containing all the mass points (dataId)
-    # each mass point corresponds to a condor job
-    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
-
-    # runNameExec will be created as a directory inside each mass point (dataId) 
-    # the condor job output i.e the cross sections will be found there
-    runNameExec = 'nevents10000_rerunTesting2'
-
-    # path to file listing mass points (dataIds)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_rerunTesting2/dataIds.txt'
-
-    # create the above directory structure
+    # create the directory structure for the condor output
+    # for each point in listModelParams (see above) a separate directory
+    # is created in pathExecOutputParent, in each directory another
+    # directory called runNameExec is created (this is so that multiple runs
+    # can be run in the same directory)
     config.configureDirs(listModelParams, pathExecOutputParent, pathDataIds,
                          childrenDirs=runNameExec)
-
-    # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_rerunTesting2/condorExecutable.sh'
-
-    # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_rerunTesting2/condorSubmit.sub'
-    
-    # path to the directory containing the python script which the condor executable executes
-    pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings/twoD_mgCrossSections.py'
-
-    # number of Madgraph events
-    neventsExec = 10000
-
-    # condor maximum runtime for each job (see condor docs for more info)
-    JobFlavour = 'workday'
 
     # create the condor submit file and condor executable
     condorScriptCreator(runNameExec,
