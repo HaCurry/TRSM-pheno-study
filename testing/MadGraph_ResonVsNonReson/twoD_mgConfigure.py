@@ -21,28 +21,45 @@ def condorScriptCreator(runNameExec,
     Remaining input arguments refer to the submit file (pathSubmit, 
     JobFlavour, pathDataIds).
 
-    runNameExec: the string runName will be appended to the file and directory
-                 names of the output from Madgraph and the python script below,
-                 this is useful when multiple runs are executed in the same 
-                 directory leading to conflicting names of output from Madgraph
-                 and twoD_mgCrossSections.py.
-    pathExecutable: path to where the condor executable will be written.
-    pathExecPython: path to the directory where the python script 
-                    twoD_mgCrossSections.py which the condor executable will
-                    execute (OBS! not the path to twoD_mgCrossSection.py
-                    just the path to the directory containing it).
-    pathExecOutputParent: path to the directory where all the output from
-                    the condor jobs will be output (i.e the cross
-                    sections).
-    neventsExec: number of events in the Madgraph calculations.
-    pathSubmit: path to where the condor submit file will be written.
-    JobFlavour: The maximal run time for a condor job (see
-                https://batchdocs.web.cern.ch/tutorial/exercise6b.html for more
-                information).
-    pathDataIds: names of the directories where output from the condor jobs
-                 will be output (i.e cross sections). See __main__ in 
-                 twoD_mgConfigure.py and configure.configureDirs for more
-                 information.
+    runNameExec: string 
+        the string runName will be appended to the file and directory
+        names of the output from Madgraph and the python script below,
+        this is useful when multiple runs are executed in the same 
+        directory leading to conflicting names of output from Madgraph
+        and twoD_mgCrossSections.py.
+
+    pathExecutable: string
+        path to where the condor executable will be written.
+
+    pathExecPython: string 
+        path to the directory where the python script 
+        twoD_mgCrossSections.py which the condor executable will
+        execute (OBS! not the path to twoD_mgCrossSection.py
+        just the path to the directory containing it).
+
+    pathExecOutputParent: string 
+        path to the directory where all the output from
+        the condor jobs will be output (i.e the cross
+        sections).
+
+    neventsExec: int
+        number of events in the Madgraph calculations.
+
+    pathSubmit: string
+        path to where the condor submit file will be written.
+
+    JobFlavour: string
+        The maximal run time for a condor job (see
+        https://batchdocs.web.cern.ch/tutorial/exercise6b.html for more
+        information).
+
+    pathDataIds: string
+        names of the directories where output from the condor jobs
+        will be output (i.e cross sections). See __main__ in 
+        twoD_mgConfigure.py and configure.configureDirs for more
+        information.
+
+    returns: None
     '''
     # create directories for the condor jobs. Each directory name can be found in dataIds.txt
     # where the dataIds are defined in listModelParams
@@ -226,20 +243,20 @@ if __name__ == '__main__':
 
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
-    runNameExec = 'nevents10000_v3'
+    runNameExec = 'nevents10000_rerunTesting2'
 
     # path to file listing mass points (dataIds)
-    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_v3/dataIds.txt'
+    pathDataIds = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_rerunTesting2/dataIds.txt'
 
     # create the above directory structure
     config.configureDirs(listModelParams, pathExecOutputParent, pathDataIds,
                          childrenDirs=runNameExec)
 
     # path to condor executable
-    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_v3/condorExecutable.sh'
+    pathExecutable = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_rerunTesting2/condorExecutable.sh'
 
     # path to condor submit file
-    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_v3/condorSubmit.sub'
+    pathSubmit = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/MadgraphResonVsNonReson_nevents10000_rerunTesting2/condorSubmit.sub'
     
     # path to the directory containing the python script which the condor executable executes
     pathExecPython = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/testing/MadGraph_ResonVsNonReson/twosinglet_scalarcouplings/twoD_mgCrossSections.py'
