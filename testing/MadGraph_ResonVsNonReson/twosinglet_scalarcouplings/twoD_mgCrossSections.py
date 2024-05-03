@@ -704,12 +704,6 @@ def generateScript(pathOutput, pathMadgraphOutput, pathParam_card, pathLoop_sm_t
 #*     run as ./bin/mg5_aMC  filename                       *
 #*                                                          *
 #************************************************************
-define p = g u c d s u~ c~ d~ s~
-define j = g u c d s u~ c~ d~ s~
-define l+ = e+ mu+
-define l- = e- mu-
-define vl = ve vm vt
-define vl~ = ve~ vm~ vt~
 set stdout_level DEBUG
 convert model {pathLoop_sm_twoscalar}/loop_sm_twoscalar
 import model {pathLoop_sm_twoscalar}/loop_sm_twoscalar
@@ -721,12 +715,18 @@ launch
 0
 set iseed 123
 set nevents {str(nevents)}
-set width 99925 auto
-set width 99926 auto
-set width 25 auto
 {pathParam_card}
 0
     '''
+# define p = g u c d s u~ c~ d~ s~
+# define j = g u c d s u~ c~ d~ s~
+# define l+ = e+ mu+
+# define l- = e- mu-
+# define vl = ve vm vt
+# define vl~ = ve~ vm~ vt~
+# set width 99925 auto
+# set width 99926 auto
+# set width 25 auto
 
     pathMadgraph_script = os.path.join(pathOutput, 'scriptMadgraph')
 

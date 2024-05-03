@@ -73,6 +73,9 @@ output                  = $(dataId).$(ClusterId).$(ProcId).condor.out
 error                   = $(dataId).$(ClusterId).$(ProcId).condor.err
 arguments               = $(dataId)
 
+# set os
+requirements = (OpSysAndVer =?= "AlmaLinux9")
+
 # longlunch = 2 hrs
 +JobFlavour             = "{JobFlavour}"
 
@@ -147,7 +150,7 @@ if __name__ == '__main__':
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
     # E: (or you can leave as is)
-    runNameExec = 'nevents10000_ATLAS'
+    runNameExec = 'nevents10000_ATLAS3'
 
     # number of Madgraph events
     # E: (or you can leave as is)
