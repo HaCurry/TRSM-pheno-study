@@ -125,11 +125,11 @@ if __name__ == '__main__':
     axRatioMinusOne.axhline(0.05, color='grey', linestyle='dashed')
 
     axRatioMinusOne.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
-    axRatioMinusOne.set_ylabel(r'$\left|\frac{\sigma^{SusHi}(gg\to h_{SM})}{\sigma^{ScannerS}(gg\to h_{SM})}-1\right|$')
+    axRatioMinusOne.set_ylabel(r'$\left|\frac{\sigma^{13~TeV}_{SusHi-1.6.1}(gg\to h_{SM})}{\sigma^{13~TeV}_{LHCHWG~(ScannerS)}(gg\to h_{SM})}-1\right|$')
     axRatioMinusOne.set_ylim(0, 0.20)
     axRatioMinusOne.set_xlim(0, 100)
 
-    axRatioMinusOne.legend(title='ggF @ $13$ TeV\nSusHi: NNLO\nScannerS: NNLO + NNLL')
+    axRatioMinusOne.legend(title='SM ggF Higgs cross sections @ $\sqrt{s}=13$ TeV\nSusHi-1.6.1: NNLO\nLHCHWG (ScannerS): NNLO + NNLL')
 
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'plots1D',
@@ -146,11 +146,11 @@ if __name__ == '__main__':
     axRatioMinusOne.axhline(0.05, color='grey', linestyle='dashed')
 
     axRatioMinusOne.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
-    axRatioMinusOne.set_ylabel(r'$\left|\frac{\sigma^{SusHi}(gg\to h_{SM})}{\sigma^{ScannerS}(gg\to h_{SM})}-1\right|$')
+    axRatioMinusOne.set_ylabel(r'$\left|\frac{\sigma^{13~TeV}_{SusHi-1.6.1}(gg\to h_{SM})}{\sigma^{13~TeV}_{LHCHWG~(ScannerS)}(gg\to h_{SM})}-1\right|$')
     axRatioMinusOne.set_ylim(0, 0.20)
     axRatioMinusOne.set_xlim(100, 1000)
 
-    axRatioMinusOne.legend(title='ggF @ $13$ TeV\nSusHi: NNLO\nScannerS: NNLO + NNLL')
+    axRatioMinusOne.legend(title='SM ggF Higgs cross sections @ $\sqrt{s}=13$ TeV\nSusHi-1.6.1: NNLO\nLHCHWG (ScannerS): NNLO + NNLL')
 
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'plots1D',
@@ -226,20 +226,21 @@ if __name__ == '__main__':
     YR4interp = interp.CubicSpline(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']))
     ratio14TeV_13TeV = YR4interp(dfScannerS_13['mass'])/np.array(dfScannerS_13['SMCrossSec'])
 
-    plt.plot(mass, ratio13_6TeV_13TeV,
-             label='$\sigma^{13.6~TeV}_{SusHi}/\sigma^{13~TeV}_{SusHi}$')
-    plt.plot(mass, ratio14TeV_13TeV, 
-             label='$\sigma^{14~TeV}_{LHCHWG}/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}$',
+    plt.plot(mass, [i - 1 for i in ratio13_6TeV_13TeV],
+             label='$\left(\sigma^{13.6~TeV}_{SusHi}\left/\sigma^{13~TeV}_{SusHi}\\right.\\right) - 1$')
+    plt.plot(mass, [i - 1 for i in ratio14TeV_13TeV], 
+             label='$\left(\sigma^{14~TeV}_{LHCHWG}\left/\sigma^{13~TeV}_{LHCHWG~(ScannerS)}\\right.\\right) - 1$',
              color='grey', linestyle='dashed')
     #[plt.annotate(f'{y:.3f}', (x, y), rotation=45) for (x, y) in list(zip(mass[::55],ratio13_6[::55])) ]
 
     plt.xlabel(r'$M_{h_{SM}}$ [GeV]')
-    plt.ylabel(r'Ratio')
+    plt.ylabel(r'Rel. difference')
 
-    plt.legend(title='Ratios of SM ggF Higgs cross sections', alignment='left')
+    plt.legend(title='SM ggF Higgs cross sections', 
+               alignment='left', loc='lower right')
 
-    plt.xlim(0,1000)
-    plt.ylim(10**(0), 1.4 * 10**(0))
+    plt.xlim(0, 1000)
+    plt.ylim(3 * 10**(-2), 3 * 10**(-1))
     plt.yscale('log')
 
     plt.tight_layout()
@@ -278,29 +279,33 @@ if __name__ == '__main__':
 
     ## 13.6 TeV SusHi, 13 TeV ScannerS and 14 TeV YR4 cross sections
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 6))
 
-    # 0 - 100 GeV
+    # 0 - 50 GeV
 
-    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13['mass']), np.array(dfSusHi_13['SMCrossSec']),
+            color='C0', linewidth=0.5, linestyle='dashed')
     ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
-            color='C1', linewidth=0.5)
-    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C1', linewidth=0.5, linestyle='dashed')
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
             color='C2', linewidth=0.5)
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C3', linewidth=0.5)
 
-    ax.set_xlim(0, 100)
-    ax.set_ylim(5 * 10**(1), 10**(4))
+    ax.set_xlim(10, 50)
+    # ax.set_ylim(5 * 10**(1), 10**(4))
+    ax.set_ylim(2 * 10**(2), 9 * 10**(3))
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
     ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
 
-    ax.legend(title='ggF cross sections',
+    ax.legend(title='SM ggF Higgs cross sections',
               handles=[
-              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
-              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1'),
-              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              mlines.Line2D([], [], linestyle='dashed', color='C0', label='$\sqrt{s}=13$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], linestyle='dashed', color='C1', label='$\sqrt{s}=13.6$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], color='C2', label='$\sqrt{s}=13$ TeV LHCHWG (ScannerS): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C3', label='$\sqrt{s}=14$ TeV LHCHWG: NNLO + NNLL'),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
@@ -308,57 +313,79 @@ if __name__ == '__main__':
                 '13_6TeV_13TeV_14TeV_ScannerSSusHiYR4CrossSections_1.pdf'))
     plt.close()
 
-    # 100 - 500 GeV
+    # 50 - 150 GeV
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 6))
+    # fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13['mass']), np.array(dfSusHi_13['SMCrossSec']),
+            color='C0', linewidth=0.5, linestyle='dashed')
     ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
-            color='C1', linewidth=0.5)
-    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C1', linewidth=0.5, linestyle='dashed')
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
             color='C2', linewidth=0.5)
-    ax.set_xlim(100, 500)
-    ax.set_ylim(4 * 10**(0), 7 * 10**(1))
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C3', linewidth=0.5)
+    ax.axvline(x=95, color='grey', linestyle='dashed')
+    ax.set_xlim(50, 150)
+    # ax.set_ylim(4 * 10**(0), 7 * 10**(1))
+    ax.set_ylim(3 * 10**(1), 3 * 10**(2))
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
     ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
 
-    ax.legend(title='ggF cross sections',
+    # axins = ax.inset_axes( [0.5, 0.5, 0.47, 0.47], xlim=(95, 100), ylim=(6*10**(1), 10**(2)), xticklabels=[], yticklabels=[])
+    # axins.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
+    #         color='C0', linewidth=0.5)
+    # axins.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
+    #         color='C1', linewidth=0.5)
+    # axins.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+    #         color='C2', linewidth=0.5)
+    # axins.set_yscale('log')
+    # ax.indicate_inset_zoom(axins, edgecolor="black")
+
+    ax.legend(title='SM ggF Higgs cross sections',
               handles=[
-              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
-              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1'),
-              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              mlines.Line2D([], [], linestyle='dashed', color='C0', label='$\sqrt{s}=13$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], linestyle='dashed', color='C1', label='$\sqrt{s}=13.6$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], color='C2', label='$\sqrt{s}=13$ TeV LHCHWG (ScannerS): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C3', label='$\sqrt{s}=14$ TeV LHCHWG: NNLO + NNLL'),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'plots1D',
                 '13_6TeV_13TeV_14TeV_ScannerSSusHiYR4CrossSections_2.pdf'))
+    # plt.show()
     plt.close()
 
-    # 500 - 1000 GeV
+    # 150 - 1000 GeV
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 6))
+    # fig, ax = plt.subplots()
 
-    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13['mass']), np.array(dfSusHi_13['SMCrossSec']),
+            color='C0', linewidth=0.5, linestyle='dashed')
     ax.plot(np.array(dfSusHi_13_6['mass']), np.array(dfSusHi_13_6['SMCrossSec']),
-            color='C1', linewidth=0.5)
-    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C1', linewidth=0.5, linestyle='dashed')
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
             color='C2', linewidth=0.5)
-    ax.set_xlim(500, 1000)
-    ax.set_ylim(10**(-1), 6 * 10**(0))
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C3', linewidth=0.5)
+    ax.set_xlim(150, 1000)
+    # ax.set_ylim(10**(-1), 6 * 10**(0))
+    ax.set_ylim(10**(-1), 4 * 10**(1))
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
     ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
 
-    ax.legend(title='ggF cross sections',
+    ax.legend(title='SM ggF Higgs cross sections',
               handles=[
-              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
-              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1'),
-              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              mlines.Line2D([], [], linestyle='dashed', color='C0', label='$\sqrt{s}=13$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], linestyle='dashed', color='C1', label='$\sqrt{s}=13.6$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], color='C2', label='$\sqrt{s}=13$ TeV LHCHWG (ScannerS): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C3', label='$\sqrt{s}=14$ TeV LHCHWG: NNLO + NNLL'),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
@@ -369,28 +396,31 @@ if __name__ == '__main__':
 
     ## 13.6 TeV SusHi improved, 13 TeV ScannerS and 14 TeV YR4
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 6))
 
-    # 0 - 100 GeV
+    # 0 - 50 GeV
 
-    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13['mass']), np.array(dfSusHi_13['SMCrossSec']),
+            color='C0', linewidth=0.5, linestyle='dashed')
     ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
-            color='C1', linewidth=0.5)
-    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C1', linewidth=0.5, linestyle='dashed')
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
             color='C2', linewidth=0.5)
-    ax.set_xlim(0, 100)
-    ax.set_ylim(5 * 10**(1), 10**(4))
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C3', linewidth=0.5)
+    ax.set_xlim(10, 50)
+    ax.set_ylim(2 * 10**(2), 9 * 10**(3))
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
     ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
 
-    ax.legend(title='ggF cross sections',
+    ax.legend(title='SM ggF Higgs cross sections',
               handles=[
-              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
-              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1 (improved)'),
-              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              mlines.Line2D([], [], linestyle='dashed', color='C0', label='$\sqrt{s}=13$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], linestyle='dashed', color='C1', label='$\sqrt{s}=13.6$ TeV SusHi-1.6.1 (improved): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C2', label='$\sqrt{s}=13$ TeV LHCHWG (ScannerS): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C3', label='$\sqrt{s}=14$ TeV LHCHWG: NNLO + NNLL'),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
@@ -398,28 +428,31 @@ if __name__ == '__main__':
                 '13_6TeV_13TeV_14TeV_ScannerSSusHiImprYR4CrossSections_1.pdf'))
     plt.close()
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 6))
 
-    # 100 - 500 GeV
+    # 50 - 150 GeV
 
-    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13['mass']), np.array(dfSusHi_13['SMCrossSec']),
+            color='C0', linewidth=0.5, linestyle='dashed')
     ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
-            color='C1', linewidth=0.5)
-    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C1', linewidth=0.5, linestyle='dashed')
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
             color='C2', linewidth=0.5)
-    ax.set_xlim(100, 500)
-    ax.set_ylim(4 * 10**(0), 7 * 10**(1))
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C3', linewidth=0.5)
+    ax.set_xlim(50, 150)
+    ax.set_ylim(3 * 10**(1), 3 * 10**(2))
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
     ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
 
-    ax.legend(title='ggF cross sections',
+    ax.legend(title='SM ggF Higgs cross sections',
               handles=[
-              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
-              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1 (improved)'),
-              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              mlines.Line2D([], [], linestyle='dashed', color='C0', label='$\sqrt{s}=13$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], linestyle='dashed', color='C1', label='$\sqrt{s}=13.6$ TeV SusHi-1.6.1 (improved): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C2', label='$\sqrt{s}=13$ TeV LHCHWG (ScannerS): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C3', label='$\sqrt{s}=14$ TeV LHCHWG: NNLO + NNLL'),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
@@ -427,28 +460,31 @@ if __name__ == '__main__':
                 '13_6TeV_13TeV_14TeV_ScannerSSusHiImprYR4CrossSections_2.pdf'))
     plt.close()
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 6))
 
-    # 500 - 1000 GeV
+    # 150 - 1000 GeV
 
-    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
-            color='C0', linewidth=0.5)
+    ax.plot(np.array(dfSusHi_13['mass']), np.array(dfSusHi_13['SMCrossSec']),
+            color='C0', linewidth=0.5, linestyle='dashed')
     ax.plot(np.array(dfSusHiImpr_13_6['mass']), np.array(dfSusHiImpr_13_6['SMCrossSec']),
-            color='C1', linewidth=0.5)
-    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C1', linewidth=0.5, linestyle='dashed')
+    ax.plot(np.array(dfScannerS_13['mass']), np.array(dfScannerS_13['SMCrossSec']),
             color='C2', linewidth=0.5)
-    ax.set_xlim(500, 1000)
-    ax.set_ylim(10**(-1), 6 * 10**(0))
+    ax.plot(np.array(dfYR4_14['mass']), np.array(dfYR4_14['SMCrossSec']),
+            color='C3', linewidth=0.5)
+    ax.set_xlim(150, 1000)
+    ax.set_ylim(10**(-1), 4 * 10**(1))
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$M_{h_{SM}}$ [GeV]')
     ax.set_ylabel(r'$\sigma(gg \to h _{SM})$ [pb]')
 
-    ax.legend(title='ggF cross sections',
+    ax.legend(title='SM ggF Higgs cross sections',
               handles=[
-              mlines.Line2D([], [], color='C0', label='13 TeV LHCHWG (ScannerS)'),
-              mlines.Line2D([], [], color='C1', label='13.6 TeV SusHi-1.6.1 (improved)'),
-              mlines.Line2D([], [], color='C2', label='14 TeV LHCHWG'),
+              mlines.Line2D([], [], linestyle='dashed', color='C0', label='$\sqrt{s}=13$ TeV SusHi-1.6.1: NNLO'),
+              mlines.Line2D([], [], linestyle='dashed', color='C1', label='$\sqrt{s}=13.6$ TeV SusHi-1.6.1 (improved): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C2', label='$\sqrt{s}=13$ TeV LHCHWG (ScannerS): NNLO + NNLL'),
+              mlines.Line2D([], [], color='C3', label='$\sqrt{s}=14$ TeV LHCHWG: NNLO + NNLL'),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()
