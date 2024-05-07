@@ -28,6 +28,7 @@ be written out, but these additional paths and values can be left as is as well.
 Your directory structure should look something like this (`pathExecOutputParent` and `runNameExec`
 will depend on what you have set the variables to).
 
+```
 ├── pathExecOutputParent
 │   ├── MG5_aMC_v3.5.3.tar.gz
 │   ├── X170_S30
@@ -42,6 +43,7 @@ will depend on what you have set the variables to).
 │   │   ├── twosinglet-master
 │   │   └── twosinglet-master.tar.gz
 │   └──dataIds.txt
+```
 
 where inside the directory `runNameExec` you should find a `.tsv` file with the model parameters.
 
