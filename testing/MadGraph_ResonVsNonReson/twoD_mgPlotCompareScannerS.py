@@ -2,9 +2,10 @@ import pandas
 import numpy as np
 import os
 import re
+import json
 
-import matplotlib
-import matplotlib.patheffects
+import matplotlib as mpl
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import mplhep as hep
 
@@ -36,6 +37,32 @@ if __name__ == '__main__':
     # create the directory pathSavefig if it already does not exist
     os.makedirs(pathSavefig, exist_ok=True)
 
+    ## plotting style
+    with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
+        styles = json.load(json_file)
+
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+
+    # change label fontsize
+    mpl.rcParams['axes.labelsize'] = styles['axes.labelsize']
+    mpl.rcParams['axes.titlesize'] = styles['axes.titlesize']
+
+    # change ticksize
+    mpl.rcParams['xtick.minor.size'] = styles['xtick.minor.size']
+    mpl.rcParams['xtick.major.size'] = styles['xtick.major.size']
+    mpl.rcParams['ytick.minor.size'] = styles['ytick.minor.size']
+    mpl.rcParams['ytick.major.size'] = styles['ytick.major.size']
+
+    # change legend font size and padding
+    mpl.rcParams['legend.borderpad'] = styles['legend.borderpad']
+    mpl.rcParams['legend.fontsize'] = styles['legend.fontsize']
+    mpl.rcParams['legend.title_fontsize'] = styles['legend.title_fontsize']
+    mpl.rcParams['legend.frameon'] = styles['legend.frameon']
+    mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+
     # read the Atlas limits
     limitsUntransposed = pandas.read_json(os.path.join(pathRepo, 'Atlas2023Limits.json'))
     print(limitsUntransposed)
@@ -46,11 +73,6 @@ if __name__ == '__main__':
     ms = [element for element in limits['S']]
     mx = [element for element in limits['X']]
 
-    plt.style.use(hep.style.ATLAS)
-    hep.style.use({"mathtext.default": "rm"})
-    matplotlib.rcParams['axes.labelsize'] = 19
-    matplotlib.rcParams['axes.titlesize'] = 19
-
     with open(pathTxtFileWithDataIds) as file:
         dataIds = [line.strip() for line in file]
 
@@ -59,6 +81,38 @@ if __name__ == '__main__':
     # Atlas limit points where ScannerS constraints are applied
     df = pandas.read_table(pathAtlasBPpoints)
 
+    # Find the Atlas limit points within BP2 and BP3 mass ranges
+    AtlasBP2pointsMs = [df['ms'][i] for i in range(len(df)) if (
+        1 <= df['ms'][i] and
+        df['ms'][i] <= 124 and
+        126 <= df['mx'][i] and
+        df['mx'][i] < 500
+    )
+    ]
+    
+    AtlasBP2pointsMx = [df['mx'][i] for i in range(len(df)) if (
+        1 <= df['ms'][i] and
+        df['ms'][i] <= 124 and
+        126 <= df['mx'][i] and
+        df['mx'][i] < 500
+    )
+    ]
+
+    AtlasBP3pointsMs = [df['ms'][i] for i in range(len(df)) if ( 
+        126 <= df['ms'][i] and
+        df['ms'][i] <= 500 and
+        255 <= df['mx'][i] and
+        df['mx'][i] <= 650 
+    )
+    ]
+    
+    AtlasBP3pointsMx = [df['mx'][i] for i in range(len(df)) if (
+        126 <= df['ms'][i] and
+        df['ms'][i] <= 500 and
+        255 <= df['mx'][i] and
+        df['mx'][i] <= 650 
+    )
+    ]
 
     ## compare ScannerS calculations and Madgraph
 
@@ -257,43 +311,64 @@ if __name__ == '__main__':
 
 
     ### plot the ratio of Madgraph and ScannerS cross sections
-    fig, axes = plt.subplots(nrows=1, ncols=2)
 
     ## BP2
-    axes[0].scatter(compareScannerS['ms'], compareScannerS['mx'], 
+    fig, ax = plt.subplots()
+
+    ax.scatter(AtlasBP2pointsMs, AtlasBP2pointsMx,
+               facecolors='none', edgecolor='grey', linestyle='dashed',
+               label='Atlas limits')
+
+    scatter = ax.scatter(compareScannerS['ms'], compareScannerS['mx'], 
                     c=np.array(compareScannerS['crossSecMadgraph'])/np.array(compareScannerS['crossSecScannerS']),
                     facecolors='C1')
 
     for i in range(len(compareScannerS['crossSecScannerS'])):
         annotation = compareScannerS['crossSecMadgraph'][i]/compareScannerS['crossSecScannerS'][i]
-        axes[0].annotate(f'{annotation:.3f}',
+        ax.annotate(f'{annotation:.3f}',
                             (compareScannerS['ms'][i], compareScannerS['mx'][i]),
-                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45)
+                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45,
+                    path_effects=[pe.withStroke(linewidth=2, foreground="white")])
 
-    axes[0].set_xlim(1, 124)
-    axes[0].set_ylim(126, 500)
-    axes[0].set_title('BP2 Madgraph/ScannerS')
-    axes[0].set_xlabel(r'$M_{S}$')
-    axes[0].set_ylabel(r'$M_{X}$')
+    ax.set_xlim(1, 124)
+    ax.set_ylim(126, 500)
+    ax.set_xlabel(r'$M_{1}$ [GeV]')
+    ax.set_ylabel(r'$M_{3}$ [GeV]')
+    ax.legend(title='BP2 $\sqrt{s}=13$ TeV:\n$h_{1}=S$, $h_{2}=H$, $h_{3}=X$',
+              alignment='left')
     
+    fig.colorbar(scatter, ax=ax, label=r'$\sigma_{MG5}(gg \to h_{3}  \to h _{1} h _{2}) \ / \ \sigma_{SnS}(gg \to h _{3} \to h _{1}h _{2})$')
+
+    plt.savefig(os.path.join(pathSavefig, 'MadgraphVsScannerS_CrossSecRatio_BP2.pdf'))
+    plt.close()
 
     ## BP3
-    axes[1].scatter(compareScannerS['ms'], compareScannerS['mx'], 
+    fig, ax = plt.subplots()
+
+    ax.scatter(AtlasBP3pointsMs, AtlasBP3pointsMx,
+               facecolors='none', edgecolor='grey', linestyle='dashed',
+               label='Atlas limits')
+
+    scatter = ax.scatter(compareScannerS['ms'], compareScannerS['mx'], 
                     c=np.array(compareScannerS['crossSecMadgraph'])/np.array(compareScannerS['crossSecScannerS']),
                     facecolors='C1')
 
     for i in range(len(compareScannerS['crossSecScannerS'])):
         annotation = compareScannerS['crossSecMadgraph'][i]/compareScannerS['crossSecScannerS'][i]
-        axes[1].annotate(f'{annotation:.3f}',
+        ax.annotate(f'{annotation:.3f}',
                             (compareScannerS['ms'][i], compareScannerS['mx'][i]),
-                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45)
+                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45,
+                    path_effects=[pe.withStroke(linewidth=2, foreground="white")])
 
-    axes[1].set_xlim(126, 500)
-    axes[1].set_ylim(255, 650)
-    axes[1].set_title('BP3 Madgraph/ScannerS')
-    axes[1].set_xlabel(r'$M_{S}$')
-    axes[1].set_ylabel(r'$M_{X}$')
+    ax.set_xlim(126, 500)
+    ax.set_ylim(255, 650)
+    ax.set_xlabel(r'$M_{2}$ [GeV]')
+    ax.set_ylabel(r'$M_{3}$ [GeV]')
+    ax.legend(title='BP3 $\sqrt{s}=13$ TeV:\n$h_{1}=H$, $h_{2}=S$, $h_{3}=X$',
+              alignment='left', loc='lower right')
+
+    fig.colorbar(scatter, ax=ax, label=r'$\sigma_{MG5}(gg \to h_{3}  \to h _{1} h _{2}) \ / \ \sigma_{SnS}(gg \to h _{3} \to h _{1}h _{2})$')
     
-    plt.savefig(os.path.join(pathSavefig, 'MadgraphVsScannerS_CrossSecRatio_BPs.pdf'))
+    plt.savefig(os.path.join(pathSavefig, 'MadgraphVsScannerS_CrossSecRatio_BP3.pdf'))
     plt.close()
     
