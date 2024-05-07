@@ -2,9 +2,10 @@ import pandas
 import numpy as np
 import os
 import re
+import json
 
-import matplotlib
-import matplotlib.patheffects
+import matplotlib as mpl
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import mplhep as hep
 
@@ -18,7 +19,7 @@ if __name__ == '__main__':
 
     # runName (see twoD_mgConfigureCompareScannerS.py or twoD_mgConfigure.py 
     # for more information)
-    runName = 'nevents10000_v3'
+    runName = 'nevents10000_triangleVsFull'
 
     # path to txt file containing dataIds
     # this file will be generated when twoD_mgConfigureCompareScannerS.py is executed
@@ -48,10 +49,31 @@ if __name__ == '__main__':
     limits = limitsUntransposed.T
     print(limits)
 
+    ## plotting style
+    with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
+        styles = json.load(json_file)
+
     plt.style.use(hep.style.ATLAS)
     hep.style.use({"mathtext.default": "rm"})
-    matplotlib.rcParams['axes.labelsize'] = 19
-    matplotlib.rcParams['axes.titlesize'] = 19
+
+    # change label fontsize
+    mpl.rcParams['axes.labelsize'] = styles['axes.labelsize']
+    mpl.rcParams['axes.titlesize'] = styles['axes.titlesize']
+
+    # change ticksize
+    mpl.rcParams['xtick.minor.size'] = styles['xtick.minor.size']
+    mpl.rcParams['xtick.major.size'] = styles['xtick.major.size']
+    mpl.rcParams['ytick.minor.size'] = styles['ytick.minor.size']
+    mpl.rcParams['ytick.major.size'] = styles['ytick.major.size']
+
+    # change legend font size and padding
+    mpl.rcParams['legend.borderpad'] = styles['legend.borderpad']
+    mpl.rcParams['legend.fontsize'] = styles['legend.fontsize']
+    mpl.rcParams['legend.title_fontsize'] = styles['legend.title_fontsize']
+    mpl.rcParams['legend.frameon'] = styles['legend.frameon']
+    mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
     with open(pathTxtFileWithDataIds) as file:
         dataIds = [line.strip() for line in file]
@@ -97,7 +119,7 @@ if __name__ == '__main__':
     'ms': [],
     'mx': [],
     'pp_eta0h': [],
-    'pp_eta0h_no_iota0': [],
+    'pp_iota0_eta0h': [],
     'ratio': []
     }
 
@@ -113,8 +135,9 @@ if __name__ == '__main__':
         if (abs(dfMadgraph['mH1'][0] - 125) < 10**(-6) or
             abs(dfMadgraph['mH2'][0] - 125) < 10**(-6)):
             continue
-        
-        ratio['pp_eta0h_no_iota0'].append(dfMadgraph['pp_eta0h_no_iota0'][0])
+        print(dataId)
+        print(dfMadgraph)
+        ratio['pp_iota0_eta0h'].append(dfMadgraph['pp_iota0_eta0h'][0])
         ratio['pp_eta0h'].append(dfMadgraph['pp_eta0h'][0])
         ratio['ratio'].append(dfMadgraph['ratio'][0])
         
@@ -138,7 +161,8 @@ if __name__ == '__main__':
     # plot all the Atlas limit points just to see which ones were picked
     # to calculate with Madgraph
     ax.scatter(AtlasBP2pointsMs, AtlasBP2pointsMx,
-               facecolors='none', edgecolor='grey', linestyle='dashed')
+               facecolors='none', edgecolor='grey', linestyle='dashed',
+               label='Atlas limits')
     # plot the points calculated with Madgraph
     scatter = ax.scatter(ratio['ms'], ratio['mx'], 
                     c=np.array(ratio['ratio']),
@@ -148,16 +172,18 @@ if __name__ == '__main__':
         annotation = ratio['ratio'][i]
         ax.annotate(f'{annotation:.3f}',
                             (ratio['ms'][i], ratio['mx'][i]),
-                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45)
+                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45,
+                    path_effects=[pe.withStroke(linewidth=2, foreground="white")])
 
     
     ax.set_xlim(1, 124)
     ax.set_ylim(126, 500)
-    ax.set_title('BP2')
-    ax.set_xlabel(r'$M_{S}$')
-    ax.set_ylabel(r'$M_{X}$')
+    ax.set_xlabel(r'$M_{1}$ [GeV]')
+    ax.set_ylabel(r'$M_{3}$ [GeV]')
+    ax.legend(title='BP2 $\sqrt{s}=13$ TeV:\n$h_1=S$, $h_{2}=H$, $h_{3}=X$',
+              alignment='left')
     
-    fig.colorbar(scatter, ax=ax, label=r'$\sigma(pp \to SH) \ / \ \sigma(pp \to SH~ / ~X)$')
+    fig.colorbar(scatter, ax=ax, label=r'$\sigma(gg \to h _{1} h _{2}) \ / \ \sigma(gg \to h _{3} \to h _{1}h _{2})$')
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP2.pdf'))
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP2.png'))
     plt.close()
@@ -165,7 +191,8 @@ if __name__ == '__main__':
     ## BP3
     fig, ax = plt.subplots()
     ax.scatter(AtlasBP3pointsMs, AtlasBP3pointsMx,
-               facecolors='none', edgecolor='grey', linestyle='dashed')
+               facecolors='none', edgecolor='grey', linestyle='dashed',
+               label='Atlas limits')
     scatter = ax.scatter(ratio['ms'], ratio['mx'], 
                     c=np.array(ratio['ratio']),
                     facecolors='C1')
@@ -174,15 +201,17 @@ if __name__ == '__main__':
         annotation = ratio['ratio'][i]
         ax.annotate(f'{annotation:.3f}',
                             (ratio['ms'][i], ratio['mx'][i]),
-                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45)
+                            textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45,
+                    path_effects=[pe.withStroke(linewidth=2, foreground="white")])
 
     ax.set_xlim(126, 500)
     ax.set_ylim(255, 650)
-    ax.set_title('BP3')
-    ax.set_xlabel(r'$M_{S}$')
-    ax.set_ylabel(r'$M_{X}$')
+    ax.set_xlabel(r'$M_{2}$ [GeV]')
+    ax.set_ylabel(r'$M_{3}$ [GeV]')
+    ax.legend(title='BP3 $\sqrt{s}=13$ TeV:\n$h_1=H$, $h_{2}=S$, $h_{3}=X$',
+              alignment='left', loc='lower right')
     
-    fig.colorbar(scatter, ax=ax, label=r'$\sigma(pp \to SH) \ / \ \sigma(pp \to SH~ / ~X)$')
+    fig.colorbar(scatter, ax=ax, label=r'$\sigma(gg \to h _{1} h _{2}) \ / \ \sigma(gg \to h _{3} \to h _{1} h _{2})$')
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP3.pdf'))
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP3.png'))
     plt.close()

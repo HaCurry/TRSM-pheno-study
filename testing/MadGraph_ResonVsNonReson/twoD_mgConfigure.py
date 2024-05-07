@@ -150,7 +150,7 @@ if __name__ == '__main__':
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
     # E: (or you can leave as is)
-    runNameExec = 'nevents10000_ATLAS3'
+    runNameExec = 'nevents10000_ATLAS4'
 
     # number of Madgraph events
     # E: (or you can leave as is)
@@ -162,6 +162,7 @@ if __name__ == '__main__':
     JobFlavour = 'tomorrow'
 
     # path to where the condor submit files and executable will be
+    # E:
     pathCondorSubAndExec = os.path.join(pathRepo, f'testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/{runNameExec}')
     
     # tries to create the directory
