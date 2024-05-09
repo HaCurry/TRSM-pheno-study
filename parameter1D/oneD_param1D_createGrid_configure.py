@@ -103,7 +103,7 @@ if __name__ == '__main__':
              'mH3': [BP2R1_pointlist[i][1] for i in range(len(BP2R1_pointlist))]}
 
     df_BP2R1 = pandas.DataFrame(BP2R1)
-    df_BP2R1.to_csv(os.path.join(pathGrids, 'BP2_region1.tsv'))
+    df_BP2R1.to_csv(os.path.join(pathGrids, 'BP2_region1.tsv'), sep='\t')
 
     # region 2
     ms_lowerbound_constrain, ms_upperbound_constrain, mx_lowerbound_constrain, mx_upperbound_constrain, condition = 1, 124, 126, 245, BP2conditionRegion2
@@ -124,7 +124,7 @@ if __name__ == '__main__':
              'mH3': [BP2R2_pointlist[i][1] for i in range(len(BP2R2_pointlist))]}
 
     df_BP2R2 = pandas.DataFrame(BP2R2)
-    df_BP2R2.to_csv(os.path.join(pathGrids, 'BP2_region2.tsv'))
+    df_BP2R2.to_csv(os.path.join(pathGrids, 'BP2_region2.tsv'), sep='\t')
 
 
     ## create grid for BP3
@@ -151,7 +151,7 @@ if __name__ == '__main__':
              'mH3': [BP3R1_pointlist[i][1] for i in range(len(BP3R1_pointlist))]}
 
     df_BP3R1 = pandas.DataFrame(BP3R1)
-    df_BP3R1.to_csv(os.path.join(pathGrids, 'BP3_region1.tsv'))
+    df_BP3R1.to_csv(os.path.join(pathGrids, 'BP3_region1.tsv'), sep='\t')
 
     # region 2
     ms_lowerbound_constrain, ms_upperbound_constrain, mx_lowerbound_constrain, mx_upperbound_constrain, condition = 126, 380, 255, 600, BP3conditionRegion2
@@ -172,5 +172,5 @@ if __name__ == '__main__':
              'mH3': [BP3R2_pointlist[i][1] for i in range(len(BP3R2_pointlist))]}
 
     df_BP3R2 = pandas.DataFrame(BP3R2)
-    df_BP3R2.to_csv(os.path.join(pathGrids, 'BP3_region2.tsv'))
+    df_BP3R2.to_csv(os.path.join(pathGrids, 'BP3_region2.tsv'), sep='\t')
 
