@@ -20,10 +20,16 @@ if __name__ == '__main__':
     pathOutputParent = '/eos/user/i/ihaque/parameter1DPlots' 
     
     # path to plots
-    pathPlots = os.path.join(pathRepo, 'parameter1D', 'plots')
+    # E: (or you can leave it as is)
+    pathPlots = os.path.join(pathOutputParent, 'plots')
 
-    processLatex = {'x_H3_H1_bb_H2_gamgam': 'gg\\to h_{1}(\gamma\gamma)h_{2}(b\\bar{b})',
-                    'x_H3_H1_gamgam_H2_bb': 'gg\\to h_{1}(b\\bar{b})h_{2}(\gamma\gamma)'}
+    os.makedirs(os.path.join(pathPlots, 'BP2', 'region1'), exist_ok=True)
+    os.makedirs(os.path.join(pathPlots, 'BP2', 'region2'), exist_ok=True)
+    os.makedirs(os.path.join(pathPlots, 'BP3', 'region1'), exist_ok=True)
+    os.makedirs(os.path.join(pathPlots, 'BP3', 'region2'), exist_ok=True)
+
+    processLatex = {'x_H3_H1_bb_H2_gamgam': 'gg\\to h_{3} \\to h_{1}(\gamma\gamma)h_{2}(b\\bar{b})',
+                    'x_H3_H1_gamgam_H2_bb': 'gg\\to h_{3} \\to h_{1}(b\\bar{b})h_{2}(\gamma\gamma)'}
 
     regionLatex = {'region1': 'R1',
                    'region2': 'R2'}
@@ -33,6 +39,12 @@ if __name__ == '__main__':
                  'thetaSX': '\\theta_{SX}',
                  'vs': 'v_{s}',
                  'vx': 'v_{x}'}
+
+    lims = {'thetahS': [-np.pi/2, +np.pi/2],
+            'thetahX': [-np.pi/2, +np.pi/2],
+            'thetaSX': [-np.pi/2, +np.pi/2],
+            'vs': [1, 1000],
+            'vx': [1, 1000]}
     
     # angles
 
@@ -40,7 +52,7 @@ if __name__ == '__main__':
 
         for regionX in ['region1', 'region2']:
 
-            for angle in ['thetahS', 'thetahX', 'thetaSX']:
+            for free in ['thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']:
 
                 for process in ['x_H3_H1_bb_H2_gamgam', 'x_H3_H1_gamgam_H2_bb']:
     
@@ -51,21 +63,21 @@ if __name__ == '__main__':
 
                     for path in TRSMOutput_BPX_regionX_paths:
                         print(path)
+
                         pathNofree = glob.glob(os.path.join(path, 'nofree', 'output*'))[0]
-                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam')
-        
-                        free = angle
+                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free)
+
                         pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
                         obs = TRSM.observables(pathFree, 'bb', 'gamgam', free)
-                        process = 'x_H3_H1_bb_H2_gamgam'
-                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.5)
-                        # ax.legend(title=f'{BPX} $\sqrt{{s}}=13$\n')
-                        ax.set_title(f'{BPX} {regionLatex[regionX]}: $\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{processLatex[process]}$')
-                        ax.set_xlabel(f'${freeLatex[angle]}$')
-                        ax.set_ylabel(f'$\sigma_{processLatex[process]}/\sigma^{{fixed}}_{processLatex[process]}$')
+        
+                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
+                        ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
+                        ax.set_title(f'{BPX} {regionLatex[regionX]}: $\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{{{processLatex[process]}}}$')
+                        ax.set_xlabel(f'${freeLatex[free]}$')
+                        ax.set_ylabel(f'$\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{{{processLatex[process]}}}$')
+                        ax.set_xlim(lims[free][0], lims[free][1])
 
-                plt.savefig(os.path.join(pathPlots, f'{BPX}_{regionX}_{angle}_{process}.pdf'))
-                plt.close()
-
-    # vevs
+                    plt.tight_layout()
+                    plt.savefig(os.path.join(pathPlots, BPX, regionX, f'{BPX}_{regionX}_{free}_{process}.pdf'))
+                    plt.close()
 
