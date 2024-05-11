@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # path to condor job output
     # E:
     pathOutputParent = '/eos/user/i/ihaque/parameter1DPlots' 
-    
+
     # path to plots
     # E: (or you can leave it as is)
     pathPlots = os.path.join(pathOutputParent, 'plots')
@@ -34,18 +34,18 @@ if __name__ == '__main__':
     regionLatex = {'region1': 'R1',
                    'region2': 'R2'}
 
-    freeLatex = {'thetahS': '\\theta_{hS}',
-                 'thetahX': '\\theta_{hX}',
-                 'thetaSX': '\\theta_{SX}',
-                 'vs': 'v_{s}',
-                 'vx': 'v_{x}'}
+    freeLatex = {'thetahS': '$\\theta_{hS}$',
+                 'thetahX': '$\\theta_{hX}$',
+                 'thetaSX': '$\\theta_{SX}$',
+                 'vs': '$v_{s}$ [GeV]',
+                 'vx': '$v_{x}$ [GeV]'}
 
     lims = {'thetahS': [-np.pi/2, +np.pi/2],
             'thetahX': [-np.pi/2, +np.pi/2],
             'thetaSX': [-np.pi/2, +np.pi/2],
             'vs': [1, 1000],
             'vx': [1, 1000]}
-    
+
     # angles
 
     for BPX in ['BP2', 'BP3']:
@@ -55,7 +55,7 @@ if __name__ == '__main__':
             for free in ['thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']:
 
                 for process in ['x_H3_H1_bb_H2_gamgam', 'x_H3_H1_gamgam_H2_bb']:
-    
+
                     TRSMOutput_BPX_regionX_paths = glob.glob(os.path.join(pathOutputParent, BPX, regionX, 'X*S*'),
                                                              recursive=True)
 
@@ -65,15 +65,27 @@ if __name__ == '__main__':
                         print(path)
 
                         pathNofree = glob.glob(os.path.join(path, 'nofree', 'output*'))[0]
-                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free)
+                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free,
+                                                      'R31', 'b_H3_H1H2', 'b_H2_H1H1')
 
                         pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
-                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free)
-        
-                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
+                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free,
+                                               'R31', 'b_H3_H1H2', 'b_H2_H1H1')
+
+                        yval = (np.array(obs['R31'])**2 * np.array(obs['b_H3_H1H2']) * (1 - np.array(obs['b_H2_H1H1']))) / (np.array(obs_nofree['R31'])**2 * np.array(obs_nofree['b_H3_H1H2']) * (1 - np.array(obs_nofree['b_H2_H1H1'])))
+
+                        if BPX == 'BP2' and regionX == 'region1' and free == 'thetahS':
+                            print(f'long way {yval[0]} and its constituents')
+                            print(f'num, R31: {np.array(obs["R31"])[0]}, b_H3_H1H2 {np.array(obs["b_H3_H1H2"])[0]}, b_H2_H1H1 {np.array(obs["b_H2_H1H1"])[0]}')
+                            print(f'denom, R31: {np.array(obs_nofree["R31"])[0]}, b_H3_H1H2 {np.array(obs_nofree["b_H3_H1H2"])[0]}, b_H2_H1H1 {np.array(obs_nofree["b_H2_H1H1"])[0]}')
+                            print(f'short way {np.array(obs[process])[0]/obs_nofree[process][0]} and its constituents num: {np.array(obs[process])[0]} and den: {obs_nofree[process][0]}\n')
+                            print('===================================================')
+
+                        ax.plot(obs[free], yval, color='C0', alpha=0.2)
+                        # ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
                         ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
                         ax.set_title(f'{BPX} {regionLatex[regionX]}: $\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{{{processLatex[process]}}}$')
-                        ax.set_xlabel(f'${freeLatex[free]}$')
+                        ax.set_xlabel(f'{freeLatex[free]}')
                         ax.set_ylabel(f'$\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{{{processLatex[process]}}}$')
                         ax.set_xlim(lims[free][0], lims[free][1])
 
