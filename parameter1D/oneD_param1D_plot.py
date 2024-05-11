@@ -1,10 +1,13 @@
 import glob
 import os
+import json
 
 import numpy as np
-import pandas
-import matplotlib
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+import matplotlib.patches as mpatches
+import mplhep as hep
 from helpScannerS import functions as TRSM
 
 if __name__ == '__main__':
@@ -23,6 +26,33 @@ if __name__ == '__main__':
     # E: (or you can leave it as is)
     pathPlots = os.path.join(pathOutputParent, 'plots')
 
+    # plotting style
+        ## plotting style
+    with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
+        styles = json.load(json_file)
+
+    plt.style.use(hep.style.ATLAS)
+    hep.style.use({"mathtext.default": "rm"})
+
+    # change label fontsize
+    mpl.rcParams['axes.labelsize'] = styles['axes.labelsize']
+    mpl.rcParams['axes.titlesize'] = styles['axes.titlesize']
+
+    # change ticksize
+    mpl.rcParams['xtick.minor.size'] = styles['xtick.minor.size']
+    mpl.rcParams['xtick.major.size'] = styles['xtick.major.size']
+    mpl.rcParams['ytick.minor.size'] = styles['ytick.minor.size']
+    mpl.rcParams['ytick.major.size'] = styles['ytick.major.size']
+
+    # change legend font size and padding
+    mpl.rcParams['legend.borderpad'] = styles['legend.borderpad']
+    mpl.rcParams['legend.fontsize'] = styles['legend.fontsize']
+    mpl.rcParams['legend.title_fontsize'] = styles['legend.title_fontsize']
+    mpl.rcParams['legend.frameon'] = styles['legend.frameon']
+    mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+
     os.makedirs(os.path.join(pathPlots, 'BP2', 'region1'), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, 'BP2', 'region2'), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, 'BP3', 'region1'), exist_ok=True)
@@ -31,14 +61,20 @@ if __name__ == '__main__':
     processLatex = {'x_H3_H1_bb_H2_gamgam': 'gg\\to h_{3} \\to h_{1}(\gamma\gamma)h_{2}(b\\bar{b})',
                     'x_H3_H1_gamgam_H2_bb': 'gg\\to h_{3} \\to h_{1}(b\\bar{b})h_{2}(\gamma\gamma)'}
 
-    regionLatex = {'region1': 'R1',
-                   'region2': 'R2'}
+    regionLatex = {'region1': 'region 1',
+                   'region2': 'region 2'}
 
-    freeLatex = {'thetahS': '$\\theta_{hS}$',
-                 'thetahX': '$\\theta_{hX}$',
-                 'thetaSX': '$\\theta_{SX}$',
-                 'vs': '$v_{s}$ [GeV]',
-                 'vx': '$v_{x}$ [GeV]'}
+    xlabelLatex = {'thetahS': '$\\theta_{hS}$',
+                   'thetahX': '$\\theta_{hX}$',
+                   'thetaSX': '$\\theta_{SX}$',
+                   'vs': '$v_{s}$ [GeV]',
+                   'vx': '$v_{x}$ [GeV]'}
+
+    freeLatex = {'thetahS': '\\theta_{hS}',
+                 'thetahX': '\\theta_{hX}',
+                 'thetaSX': '\\theta_{SX}',
+                 'vs': 'v_{s}',
+                 'vx': 'v_{x}'}
 
     lims = {'thetahS': [-np.pi/2, +np.pi/2],
             'thetahX': [-np.pi/2, +np.pi/2],
@@ -46,7 +82,17 @@ if __name__ == '__main__':
             'vs': [1, 1000],
             'vx': [1, 1000]}
 
-    # angles
+    BPXvals = {'BP2_thetahS': 1.352,
+               'BP2_thetahX': 1.175,
+               'BP2_thetaSX': -0.407,
+               'BP2_vs': '120~\\text{GeV}',
+               'BP2_vx': '890~\\text{GeV}',
+               'BP3_thetahS': -0.129,
+               'BP3_thetahX': 0.226,
+               'BP3_thetaSX': -0.899,
+               'BP3_vs': '140~\\text{GeV}',
+               'BP3_vx': '100~\\text{GeV}'}
+
 
     for BPX in ['BP2', 'BP3']:
 
@@ -54,6 +100,9 @@ if __name__ == '__main__':
 
             for free in ['thetahS', 'thetahX', 'thetaSX', 'vs', 'vx']:
 
+                # note that the the process does not matter here, either mode
+                # gives the same result (see thesis), both modes are included
+                # as a sanity check.
                 for process in ['x_H3_H1_bb_H2_gamgam', 'x_H3_H1_gamgam_H2_bb']:
 
                     TRSMOutput_BPX_regionX_paths = glob.glob(os.path.join(pathOutputParent, BPX, regionX, 'X*S*'),
@@ -65,29 +114,21 @@ if __name__ == '__main__':
                         print(path)
 
                         pathNofree = glob.glob(os.path.join(path, 'nofree', 'output*'))[0]
-                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free,
-                                                      'R31', 'b_H3_H1H2', 'b_H2_H1H1')
+                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free)
 
                         pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
-                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free,
-                                               'R31', 'b_H3_H1H2', 'b_H2_H1H1')
+                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free)
 
-                        yval = (np.array(obs['R31'])**2 * np.array(obs['b_H3_H1H2']) * (1 - np.array(obs['b_H2_H1H1']))) / (np.array(obs_nofree['R31'])**2 * np.array(obs_nofree['b_H3_H1H2']) * (1 - np.array(obs_nofree['b_H2_H1H1'])))
-
-                        if BPX == 'BP2' and regionX == 'region1' and free == 'thetahS':
-                            print(f'long way {yval[0]} and its constituents')
-                            print(f'num, R31: {np.array(obs["R31"])[0]}, b_H3_H1H2 {np.array(obs["b_H3_H1H2"])[0]}, b_H2_H1H1 {np.array(obs["b_H2_H1H1"])[0]}')
-                            print(f'denom, R31: {np.array(obs_nofree["R31"])[0]}, b_H3_H1H2 {np.array(obs_nofree["b_H3_H1H2"])[0]}, b_H2_H1H1 {np.array(obs_nofree["b_H2_H1H1"])[0]}')
-                            print(f'short way {np.array(obs[process])[0]/obs_nofree[process][0]} and its constituents num: {np.array(obs[process])[0]} and den: {obs_nofree[process][0]}\n')
-                            print('===================================================')
-
-                        ax.plot(obs[free], yval, color='C0', alpha=0.2)
-                        # ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
+                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
                         ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
-                        ax.set_title(f'{BPX} {regionLatex[regionX]}: $\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{{{processLatex[process]}}}$')
-                        ax.set_xlabel(f'{freeLatex[free]}')
-                        ax.set_ylabel(f'$\sigma_{{{processLatex[process]}}}/\sigma^{{fixed}}_{{{processLatex[process]}}}$')
+                        ax.set_xlabel(f'{xlabelLatex[free]}')
+                        ax.set_ylabel(f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$')
                         ax.set_xlim(lims[free][0], lims[free][1])
+                        ax.legend(title=f'{BPX}: {regionLatex[regionX]}',
+                                  handles=[
+                                  mlines.Line2D([], [], color='C0', alpha=0.2, label=f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$'),
+                                  mlines.Line2D([], [], color='black', linestyle='none', marker='o', label=f'${freeLatex[free]}={BPXvals[f"{BPX}_{free}"]}$'),
+                                  ], alignment='left')
 
                     plt.tight_layout()
                     plt.savefig(os.path.join(pathPlots, BPX, regionX, f'{BPX}_{regionX}_{free}_{process}.pdf'))
