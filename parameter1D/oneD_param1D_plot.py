@@ -122,7 +122,7 @@ if __name__ == '__main__':
                         pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
                         obs = TRSM.observables(pathFree, 'bb', 'gamgam', free)
 
-                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
+                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], linewidth=0.5)
                         ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
                         ax.set_xlabel(f'{xlabelLatex[free]}')
                         ax.set_ylabel(f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$')
