@@ -18,13 +18,13 @@ if __name__ == '__main__':
     # E:
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
 
+    # path to plots
+    # E: (or you can leave it as is)
+    pathPlots = os.path.join(pathRepo, 'parameter1D', 'plots')
+
     # path to condor job output
     # E:
     pathOutputParent = '/eos/user/i/ihaque/parameter1DPlots' 
-
-    # path to plots
-    # E: (or you can leave it as is)
-    pathPlots = os.path.join(pathOutputParent, 'plots')
 
     # plotting style
         ## plotting style
@@ -82,6 +82,9 @@ if __name__ == '__main__':
             'vs': [1, 1000],
             'vx': [1, 1000]}
 
+    AtlasNotation = {'BP2': '$h_{1}=S$, $h_{2}=H$, $h_{3}=X$',
+                     'BP3': '$h_{1}=H$, $h_{2}=S$, $h_{3}=X$'}
+
     BPXvals = {'BP2_thetahS': 1.352,
                'BP2_thetahX': 1.175,
                'BP2_thetaSX': -0.407,
@@ -124,7 +127,7 @@ if __name__ == '__main__':
                         ax.set_xlabel(f'{xlabelLatex[free]}')
                         ax.set_ylabel(f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$')
                         ax.set_xlim(lims[free][0], lims[free][1])
-                        ax.legend(title=f'{BPX}: {regionLatex[regionX]}',
+                        ax.legend(title=f'{BPX}: {regionLatex[regionX]}\n{AtlasNotation[BPX]}',
                                   handles=[
                                   mlines.Line2D([], [], color='C0', alpha=0.2, label=f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$'),
                                   mlines.Line2D([], [], color='black', linestyle='none', marker='o', label=f'${freeLatex[free]}={BPXvals[f"{BPX}_{free}"]}$'),

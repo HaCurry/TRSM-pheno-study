@@ -122,10 +122,6 @@ def pointGen(BP, region, size, generator):
     else:
         raise Exception('No generator chosen')
 
-
-
-
-
 if __name__ == '__main__':
 
     ## paths
@@ -134,14 +130,12 @@ if __name__ == '__main__':
     # E:
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
 
-    # path to the directory containing this script
-    pathParam1D = os.path.join(pathRepo, 'parameter1D')
-
     # path to plots
-    pathPlots = os.path.join(pathParam1D, 'plots')
+    # E:
+    pathPlots = os.path.join(pathRepo, 'parameter1D', 'plots')
 
     # path to the directory where the points for the grid are saved
-    pathGrids = os.path.join(pathParam1D, 'grids')
+    pathGrids = os.path.join(pathRepo, 'parameter1D', 'grids')
 
     # path to ScannerS output
     path13_BP = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints')
@@ -179,13 +173,13 @@ if __name__ == '__main__':
     mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
-   
+
     # read in the grids
-    df_BP2R1.to_csv(os.path.join(pathGrids, 'BP2_region1.tsv'))
-    df_BP2R2.to_csv(os.path.join(pathGrids, 'BP2_region2.tsv'))
-    df_BP3R1.to_csv(os.path.join(pathGrids, 'BP3_region1.tsv'))
-    df_BP3R2.to_csv(os.path.join(pathGrids, 'BP3_region2.tsv'))
-    
+    df_BP2R1 = pandas.read_table(os.path.join(pathGrids, 'BP2_region1.tsv'))
+    df_BP2R2 = pandas.read_table(os.path.join(pathGrids, 'BP2_region2.tsv'))
+    df_BP3R1 = pandas.read_table(os.path.join(pathGrids, 'BP3_region1.tsv'))
+    df_BP3R2 = pandas.read_table(os.path.join(pathGrids, 'BP3_region2.tsv'))
+
     ## plot the grids
 
     # BP2
@@ -203,7 +197,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(figsize=(6.75,6))
 
     # plot the BP2 region
-    contf = ax.contourf(xi, yi, zi, 0, colors=['C0'])
+    contf = ax.contourf(xi, yi, zi, [-1000, 1000], colors=['C0'])
 
     # the line M3 = M1 + M2
     ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
@@ -231,7 +225,7 @@ if __name__ == '__main__':
                                      cbarvisible=False,
                                      xlims=(-3, 127), ylims=(110, 510))
 
-    ax.legend(title='BP2:',
+    ax.legend(title='BP2:\n$h_{1}=S$, $h_{2}=H$, $h_{3}=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='none', marker='x', color='C1', label='Region 1'),
@@ -243,7 +237,7 @@ if __name__ == '__main__':
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'BP2gridPlot.pdf'))
 
-    
+
     # BP3
 
     ScannerS_BP3 = TRSM.observables(path13_BP3, 
@@ -259,7 +253,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(figsize=(6.75,6))
 
     # plot the BP3 region
-    contf = ax.contourf(xi, yi, zi, 0, colors=['C0'])
+    contf = ax.contourf(xi, yi, zi, [-1000, 1000], colors=['C0'])
 
     # the line M3 = M1 + M2
     ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
@@ -279,12 +273,12 @@ if __name__ == '__main__':
                                      r'',
                                      cbarvisible=False,
                                      xlims=(115, 510), ylims=(245, 660))
-                                     
+
     # plot the grid regions
     ax.scatter(np.array(df_BP3R1['mH2']), np.array(df_BP3R1['mH3']), facecolor='C1', marker='x')
     ax.scatter(np.array(df_BP3R2['mH2']), np.array(df_BP3R2['mH3']), facecolor='C2', marker='x')
 
-    ax.legend(title='BP3:',
+    ax.legend(title='BP3:\n$h_{1}=H$, $h_{2}=S$, $h_{3}=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),

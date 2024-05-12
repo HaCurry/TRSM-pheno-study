@@ -123,6 +123,8 @@ if __name__ == '__main__':
                   'vs': [1, 1000],
                   'vx': [1, 1000]}
 
+    points = 100
+
     for regionX in ['region1', 'region2']:
 
         for BPX in ['BP2', 'BP3']:
@@ -187,7 +189,7 @@ if __name__ == '__main__':
                     newElement = copy.deepcopy(element)
                     newElement[f'{key}_lb'] = freeParams[key][0] 
                     newElement[f'{key}_ub'] = freeParams[key][1] 
-                    newElement[f'{key}Points'] = 50
+                    newElement[f'{key}Points'] = points
                     newModelParams.append(newElement)
 
                 config.configureDirs(newModelParams, pathOutput_BPX_regionX, pathOutputDataIds_BPX_regionX,
