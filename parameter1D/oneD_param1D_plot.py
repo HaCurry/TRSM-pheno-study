@@ -130,7 +130,6 @@ if __name__ == '__main__':
                         ax.set_xlim(lims[free][0], lims[free][1])
                         ax.legend(title=f'{BPX}: {regionLatex[regionX]}\n{AtlasNotation[BPX]}',
                                   handles=[
-                                  mlines.Line2D([], [], color='C0', alpha=0.2, label=f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$'),
                                   mlines.Line2D([], [], color='black', linestyle='none', marker='o', label=f'${freeLatex[free]}={BPXvals[f"{BPX}_{free}"]}$'),
                                   ], alignment='left')
 
