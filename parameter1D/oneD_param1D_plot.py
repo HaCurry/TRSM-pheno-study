@@ -10,6 +10,7 @@ import matplotlib.patches as mpatches
 import mplhep as hep
 from helpScannerS import functions as TRSM
 
+
 if __name__ == '__main__':
 
     ## paths
@@ -26,8 +27,7 @@ if __name__ == '__main__':
     # E:
     pathOutputParent = '/eos/user/i/ihaque/parameter1DPlots' 
 
-    # plotting style
-        ## plotting style
+    ## plotting style
     with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
         styles = json.load(json_file)
 
@@ -120,10 +120,15 @@ if __name__ == '__main__':
                         obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free)
 
                         pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
-                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free)
+                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free,
+                                               'valid_BFB', 'valid_Higgs', 'valid_STU',
+                                               'valid_Uni')
+                        nonmasked = np.array(obs[process])/obs_nofree[process][0]
+                        masked = np.ma.masked_where(((np.array(obs['valid_BFB']) < 1) | (np.array(obs['valid_Higgs']) < 1) |
+                        (np.array(obs['valid_STU']) < 1) | (np.array(obs['valid_Uni']) < 1)), nonmasked)
 
-                        ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], linewidth=0.5,
-                                marker='o', markersize=1)
+                        ax.plot(obs[free], masked, linewidth=0.5, markersize=1)
+                        # ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
                         ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
                         ax.set_xlabel(f'{xlabelLatex[free]}')
                         ax.set_ylabel(f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$')
@@ -136,4 +141,3 @@ if __name__ == '__main__':
                     plt.tight_layout()
                     plt.savefig(os.path.join(pathPlots, BPX, regionX, f'{BPX}_{regionX}_{free}_{process}.pdf'))
                     plt.close()
-
