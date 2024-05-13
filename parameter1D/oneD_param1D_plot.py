@@ -127,7 +127,7 @@ if __name__ == '__main__':
                         masked = np.ma.masked_where(((np.array(obs['valid_BFB']) < 1) | (np.array(obs['valid_Higgs']) < 1) |
                         (np.array(obs['valid_STU']) < 1) | (np.array(obs['valid_Uni']) < 1)), nonmasked)
 
-                        ax.plot(obs[free], masked, linewidth=0.5, markersize=1)
+                        ax.plot(obs[free], masked, linewidth=0.5)
                         # ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
                         ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
                         ax.set_xlabel(f'{xlabelLatex[free]}')
