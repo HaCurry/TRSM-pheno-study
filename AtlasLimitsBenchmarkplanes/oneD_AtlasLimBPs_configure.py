@@ -200,13 +200,18 @@ if __name__ == '__main__':
 
     for modelParam in listModelParams:
         dataId = modelParam['extra']['dataId']
+        ObsLim = modelParam['extra']['ObservedLimit']
         configPath = os.path.join(pathOutputParent, dataId, f'config_{dataId}.tsv')
         outputPath = os.path.join(pathOutputParent, dataId, f'output_{dataId}.tsv')
         cwd = os.path.join(pathOutputParent, dataId)
         runTRSM = [pathTRSM, *constraints, outputPath, 'check', configPath]
         subprocess.run(runTRSM, cwd=cwd)
-        frames.append(pandas.DataFrame(outputPath))
+        dfModelParam = pandas.read_table(outputPath, index_col=0)
+        dfModelParam['dataId'] = dataId
+        dfModelParam['ObsLim'] = ObsLim
+        frames.append(dfModelParam)
 
     df = pandas.concat(frames, ignore_index=True)
-    df.to_csv(os.path.join(pathRepo, 'AtlasLimitsBenchmarkplanes', 'AtlasLimitsBenchmarkplanes.tsv'))
+    df.to_csv(os.path.join(pathRepo, 'AtlasLimitsBenchmarkplanes', 'AtlasLimitsBenchmarkplanes.tsv'),
+              sep='\t')
 
