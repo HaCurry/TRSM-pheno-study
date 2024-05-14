@@ -107,6 +107,9 @@ pathExecOutputJob={pathExecOutputParent}/${{1}}/${{runName}}
 # path to the ATLAS distribution of Madgraph executable
 pathExecMadgraph=/cvmfs/sft.cern.ch/lcg/views/LCG_104c_ATLAS_5/x86_64-el9-gcc13-opt/bin/mg5_aMC
 
+# copy model to job output path
+cp -r {pathExecOutputParent}/twosinglet-master {pathExecOutputParent}/${{1}}/
+
 # path to the TRSM package (https://gitlab.com/apapaefs/twosinglet)
 pathExecModel={pathExecOutputParent}/${{1}}/twosinglet-master
 
@@ -145,12 +148,12 @@ if __name__ == '__main__':
     # path to parent directory containing all the mass points (dataId)
     # each mass point corresponds to a condor job
     # E:
-    pathExecOutputParent = '/eos/user/i/ihaque/MadgraphResonVsNonReson/MadgraphResonVsNonReson'
+    pathExecOutputParent = '/afs/cern.ch/user/i/ihaque//MadgraphResonVsNonReson'
 
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
     # E: (or you can leave as is)
-    runNameExec = 'nevents10000_ATLAS4'
+    runNameExec = 'nevents10000_AFS'
 
     # number of Madgraph events
     # E: (or you can leave as is)
