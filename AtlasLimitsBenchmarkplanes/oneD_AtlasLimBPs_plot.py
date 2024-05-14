@@ -1,6 +1,7 @@
 import os
 import json
 
+import numpy as np
 import pandas
 import matplotlib as mpl
 import matplotlib.patheffects as pe
@@ -64,15 +65,18 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
     
-    obs = TRSM.observables(pathAtlasBP, 'bb', 'gamgam')
+    obs = TRSM.observables(pathAtlasBP, 'bb', 'gamgam', 'mH1', 'mH2', 'mH3', 'ObsLim',
+                           normSM=1)
 
     ms_BP2 = []
     mx_BP2 = []
     XS_BP2 = []
+    ObsLim_BP2 = []
 
     ms_BP3 = []
     mx_BP3 = []
     XS_BP3 = []
+    ObsLim_BP3 = []
 
     for i in range(len(obs['mH1'])):
 
@@ -80,46 +84,69 @@ if __name__ == '__main__':
         if abs(obs['mH2'][i] - 125.09) < 10**(-6):
             ms_BP2.append(obs['mH1'][i])
             mx_BP2.append(obs['mH3'][i])
-            XS_BP2.append(obs['x_H3_H1_bb_H2_gamgam'])
+            XS_BP2.append(obs['x_H3_H1_bb_H2_gamgam'][i])
+            ObsLim_BP2.append(obs['ObsLim'][i])
 
         # BP3
         elif abs(obs['mH1'][i] - 125.09) < 10**(-6):
             ms_BP3.append(obs['mH2'][i])
             mx_BP3.append(obs['mH3'][i])
             XS_BP3.append(obs['x_H3_H1_gamgam_H2_bb'][i])
+            ObsLim_BP3.append(obs['ObsLim'][i])
+
+        else:
+            raise Exception('Something went wrong...')
             
 
     # BP2
     
     fig, ax = plt.subplots()
 
-    ax.scatter(ms_BP2, mx_BP2, s=XS_BP2)
-
-    for i in range(len(z)):
-        ax.annotate('{:.0f}'.format(XS_BP2[i]), (ms_BP2[i], mx_BP2[i]),
+    scatter = ax.scatter(ms_BP2, mx_BP2, c=np.array(ObsLim_BP2)/np.array(XS_BP2))
+    print((np.array(ObsLim_BP2)/np.array(XS_BP2))[0])
+    print(ms_BP2[0])
+    print(mx_BP2[0])
+    print(np.array(XS_BP2)[0])
+    print(np.array(ObsLim_BP2)[0])
+    for i in range(len(XS_BP2)):
+        print(f'XS: {XS_BP2[i]}')
+        print(f'ObsLim: {ObsLim_BP2[i]}')
+        print(f'ObsLim/XS: {(np.array(ObsLim_BP2)/np.array(XS_BP2))[i]}')
+        ax.annotate('{:.0f}'.format((np.array(ObsLim_BP2)/np.array(XS_BP2))[i]), (ms_BP2[i], mx_BP2[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=9, rotation=45, 
                      path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground='w')])
     
+    ax.legend(title='BP2 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$',
+              alignment='left')
+
     twoDPlot.plotAuxTitleAndBounds2D('', '$M_{1}$ [GeV]', '$M_{3}$ [GeV]',
                                      '$\sigma(lim)/\sigma(gg\\to h_{3} \\to h_{1}(b\\bar{b})~h_{2}(\gamma\gamma))$', 
-                                     fig=fig, im=im, ax=ax)
+                                     fig=fig, im=scatter, ax=ax)
 
     plt.savefig('temp.pdf')
+    plt.close()
 
 
     # BP3
     
     fig, ax = plt.subplots()
 
-    ax.scatter(ms_BP3, mx_BP3, s=XS_BP3)
+    scatter = ax.scatter(ms_BP3, mx_BP3, c=np.array(ObsLim_BP3)/np.array(XS_BP3))
 
-    for i in range(len(z)):
-        ax.annotate('{:.0f}'.format(XS_BP3[i]), (ms_BP3[i], mx_BP3[i]),
+    for i in range(len(XS_BP3)):
+        print(f'XS: {XS_BP3[i]}')
+        print(f'ObsLim: {ObsLim_BP3[i]}')
+        print(f'ObsLim/XS: {(np.array(ObsLim_BP3)/np.array(XS_BP3))[i]}')
+        ax.annotate('{:.0f}'.format((np.array(ObsLim_BP3)/np.array(XS_BP3))[i]), (ms_BP3[i], mx_BP3[i]),
                      textcoords='offset points', xytext=(-3,-2), fontsize=9, rotation=45, 
                      path_effects=[pe.withStroke(linewidth=1.5, foreground='w')])
     
-    twoDPlot.plotAuxTitleAndBounds2D('', '$M_{1}$ [GeV]', '$M_{3}$ [GeV]',
+    ax.legend(title='BP3 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$',
+              alignment='left')
+
+    twoDPlot.plotAuxTitleAndBounds2D('', '$M_{2}$ [GeV]', '$M_{3}$ [GeV]',
                                      '$\sigma(lim)/\sigma(gg\\to h_{3} \\to h_{1}(\gamma\gamma)~h_{2}(b\\bar{b}))$', 
-                                     fig=fig, im=im, ax=ax)
+                                     fig=fig, im=scatter, ax=ax)
 
     plt.savefig('temp2.pdf')
+    plt.close()
