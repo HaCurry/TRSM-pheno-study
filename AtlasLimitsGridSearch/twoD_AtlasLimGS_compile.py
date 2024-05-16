@@ -56,6 +56,8 @@ if __name__ == '__main__':
                'x_X_S_bb_H_gamgam_max': [],
                'ObsLimExclusions': [],
                'ScannerSExclusions': [],
+               'numOfNans': [],
+               'numOfModels': [],
                'ObsLim': [],
                'dataId': [],
                'ms': [],
@@ -126,16 +128,31 @@ if __name__ == '__main__':
                             please check your code')
 
         # check how many models are excluded by the Atlas limit
+        # and how many models are np.nans
         numOfObsLimExclusions = 0
+        numOfNans = 0
         for i in range(numOfModels):
             if XS/obs[x_X_S_bb_H_gamgam][i] < 1:
-                numOfObsLimExclusions = numOfObsLimExclusions + 1 
+                numOfObsLimExclusions = numOfObsLimExclusions + 1
 
             else:
                 pass
 
+            if np.isnan(obs[x_X_S_bb_H_gamgam][i]) == True:
+                numOfNans = numOfNans + 1
+
+            else:
+                pass
+
+
         # save the number of models excluded by the Atlas limit
         dictMax['ObsLimExclusions'].append(numOfObsLimExclusions)
+
+        # save the number models which are np.nans
+        dictMax['numOfNans'].append(numOfNans)
+
+        # save the number of models which survived 
+        dictMax['numOfModels'].append(numOfModels)
 
         # check how many are excluded by ScannerS constraints
         # (it is just the number of rows in the ScannerS input

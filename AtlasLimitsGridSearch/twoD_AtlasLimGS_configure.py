@@ -118,7 +118,7 @@ if __name__ == '__main__':
 
     # path to condor job output
     # E:
-    pathOutputParent = '/eos/user/i/ihaque/AtlasLimitsBenchmarkplaneGridSearchOutput' 
+    pathOutputParent = '/eos/user/i/ihaque/AtlasLimitsGridSearchOutput' 
 
     # path to ScannerS TRSM executable
     # E:
@@ -175,7 +175,7 @@ if __name__ == '__main__':
                         'extra': {'dataId': f'{dataId}', 'ObservedLimit': XS} } for (mH1, mH2, mH3, XS, dataId) in listModelTuples]
 
     # this file is actually not necessary for this script
-    pathDataIds = os.path.join(pathOutputParent, 'dataIds.txt')
+    pathDataIds = os.path.join(pathCondorSubmitAndExecute, 'dataIds.txt')
 
     # create the directory structure
     config.configureDirs(listModelParams, pathOutputParent, pathDataIds)
@@ -204,5 +204,5 @@ if __name__ == '__main__':
                         STU,
                         Higgs,
                         pathSubmit,
-                        'tomorrow',
+                        'longlunch',
                         pathDataIds)
