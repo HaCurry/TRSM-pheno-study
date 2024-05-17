@@ -18,24 +18,15 @@ if __name__ == '__main__':
     # path to repo
     # E:
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/'
-    
-    # # path to condor job output
-    # # E:
-    # pathOutputParent = '/eos/user/i/ihaque/AtlasLimitsBenchmarkplaneOutput' 
 
-    # ## read in the 2023 Atlas limits
-    # limitsUntransposed = pandas.read_json(os.path.join(pathRepo, 'Atlas2023Limits.json'))
-    # print(limitsUntransposed)
-    # limits=limitsUntransposed.T
-    # print(limits)
-
-    # dataIds = [element for element in limits.index]
-
-    # for dataId in dataIds:
-    #     pathOutput = 
+    # path to plots
+    # E: (or you can leave as is)
+    pathPlots = os.path.join(pathRepo, 'AtlasLimitsBenchmarkplanes', 'plots')
 
     # path to ScannerS values at Atlas limit points
     pathAtlasBP = os.path.join(pathRepo, 'AtlasLimitsBenchmarkplanes', 'AtlasLimitsBenchmarkplanes.tsv')
+    
+    os.makedirs(pathPlots, exist_ok=True)
 
     ## plotting style
 
@@ -123,7 +114,7 @@ if __name__ == '__main__':
                                      '$\sigma(lim)/\sigma(gg\\to h_{3} \\to h_{1}(b\\bar{b})~h_{2}(\gamma\gamma))$', 
                                      fig=fig, im=scatter, ax=ax)
 
-    plt.savefig('temp.pdf')
+    plt.savefig(os.path.join(pathPlots, 'BP2.pdf'))
     plt.close()
 
 
@@ -148,5 +139,5 @@ if __name__ == '__main__':
                                      '$\sigma(lim)/\sigma(gg\\to h_{3} \\to h_{1}(\gamma\gamma)~h_{2}(b\\bar{b}))$', 
                                      fig=fig, im=scatter, ax=ax)
 
-    plt.savefig('temp2.pdf')
+    plt.savefig(os.path.join(pathPlots, 'BP3.pdf'))
     plt.close()
