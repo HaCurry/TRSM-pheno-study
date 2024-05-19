@@ -7,6 +7,7 @@ import matplotlib as mpl
 import matplotlib.patheffects as pe
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 import mplhep as hep
 from helpScannerS import functions as TRSM
 from helpScannerS import twoDPlotter as twoDPlot
@@ -118,23 +119,19 @@ if __name__ == '__main__':
     rotation = 45
     linewidth = 2.0
 
-    # hatching settings
+    # BP2 BP3 dashed line settings
+    axvlineColor = 'blue'
+    axvlineLinestyle = 'dashed'
+    axvlineLinewidth = 1
+    axvlineLabel = r'$\text{BP2}\leftrightarrow\text{BP3}$'
 
-    # BP2
-    BP2linewidth = 0.5
-    BP2edgecolor = 'r'
-    BP2facecolor = 'none'
-    BP2hatch = r'..'
-    BP2alpha = 0.20
+    # scatter settings
+    scatterFacecolor = 'red'
+    scatterMarkersize = 15
 
-    # BP3
-    BP3linewidth = 0.5
-    BP3edgecolor = 'b'
-    BP3facecolor = 'none'
-    BP3hatch = r'\\'
-    BP3alpha = 0.20
-
-
+    # legend settings
+    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
+    
     # ScannerS output for constraint hatching
     ScannerS_BP2 = TRSM.observables(pathScannerSBP2 , 
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
@@ -163,12 +160,22 @@ if __name__ == '__main__':
     msLow, mxLow, ObsLimVsXSLow = cutter(ms, mx, np.array(ObsLim)/np.array(XS),
                                      (0, 270), (160, 420))
 
-
     im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSLow), vmax=max(ObsLimVsXSLow),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
+    # plot the constraints according to the patterns below below
+    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    legendIconsAndLabels = []
+    for key in constraints:
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+                                            ax, constraints[key])
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+                                            ax, constraints[key])
+
+    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
+
     # where the points are
-    # im = ax.scatter(msLow, mxLow, facecolor='none', edgecolor='red')
+    ax.scatter(msLow, mxLow, facecolor=scatterFacecolor, s=scatterMarkersize)
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
@@ -183,16 +190,6 @@ if __name__ == '__main__':
             ax.annotate('{:.1f}'.format(ObsLimVsXSLow[i]), (msLow[i], mxLow[i]),
                         textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
                         path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
-
-    # BP2
-    ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
-                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
-                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
-
-    # BP3
-    ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
-                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
-                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
 
     # subregion of the original image
     x1, x2, y1, y2 = 86, 117, 215, 257
@@ -213,27 +210,21 @@ if __name__ == '__main__':
     axins.imshow(zi, origin='lower', vmin=min(ObsLimVsXSLow), vmax=max(ObsLimVsXSLow),
                  extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
+    # where the points are
+    axins.scatter(msLow, mxLow, facecolor=scatterFacecolor, s=scatterMarkersize)
+
     ax.indicate_inset_zoom(axins, edgecolor="black")
 
-    # # plot the constraints according to the patterns below below
-    # constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
-    # legendIconsAndLabels = []
-    # for key in constraints:
-    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
-    #                                         ax, constraints[key])
-    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
-    #                                         ax, constraints[key])
-
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
     ax.legend(title=title,
               handles=[
-              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='r', hatch=r'//\\', label='BP2'),
-              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='b', hatch=r'//\\', label='BP3'),
+              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
+              mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               ], loc='lower right', alignment='left')
 
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_lowmass.pdf'))
     plt.close()
+
 
     ## medium mass
 
@@ -244,11 +235,25 @@ if __name__ == '__main__':
 
     im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSMed), vmax=max(ObsLimVsXSMed),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
-    # im = ax.scatter(msMed, mxMed, c=ObsLimVsXSMed)
+
+    # plot the constraints according to the patterns below below
+    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    legendIconsAndLabels = []
+    for key in constraints:
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+                                            ax, constraints[key])
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+                                            ax, constraints[key])
+
+    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
+
+    # where the points are
+    ax.scatter(msMed, mxMed, facecolor=scatterFacecolor, s=scatterMarkersize)
+
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
                                      r'$\sigma(obs)/\sigma(gg\to X \to S(bb)~H(\gamma\gamma))$',
-                                     xlims=(15, 490), ylims=(420, 620),
+                                     xlims=(15, 490), ylims=(415, 620),
                                      fig=fig, ax=ax, im=im)
 
     for i in range(len(ObsLimVsXSMed)):
@@ -256,30 +261,12 @@ if __name__ == '__main__':
                     textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
                     path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
-    # BP2
-    ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
-                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
-                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
-
-    # BP3
-    ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
-                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
-                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
-
-    # # plot the constraints according to the patterns below below
-    # constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
-    # legendIconsAndLabels = []
-    # for key in constraints:
-    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
-    #                                         ax, constraints[key])
-    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
-    #                                         ax, constraints[key])
-
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
     ax.legend(title=title,
               handles=[
-              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='r', hatch=r'//\\', label='BP2'),
-              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='b', hatch=r'//\\', label='BP3'),
+              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
+              mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
+              mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
+              mpatches.Patch(linewidth=0, fill=None, hatch='..', label='Unitarity'),
               ], loc='lower right', alignment='left')
 
     plt.tight_layout()
@@ -296,11 +283,25 @@ if __name__ == '__main__':
 
     im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSHigh), vmax=max(ObsLimVsXSHigh),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
-    # im = ax.scatter(msHigh, mxHigh, c=ObsLimVsXSHigh)
+
+    # plot the constraints according to the patterns below below
+    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    legendIconsAndLabels = []
+    for key in constraints:
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+                                            ax, constraints[key])
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+                                            ax, constraints[key])
+
+    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
+
+    # where the points are
+    ax.scatter(msHigh, mxHigh, facecolor=scatterFacecolor, s=scatterMarkersize)
+
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
                                      r'$\sigma(obs)/\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))$',
-                                     xlims=(40, 535), ylims=(620, 1200),
+                                     xlims=(40, 535), ylims=(620, 1300),
                                      fig=fig, ax=ax, im=im)
 
     for i in range(len(ObsLimVsXSHigh)):
@@ -308,31 +309,13 @@ if __name__ == '__main__':
                     textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, 
                     path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
-    # BP2
-    ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
-                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
-                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
-
-    # BP3
-    ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
-                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
-                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
-
-    # # plot the constraints according to the patterns below below
-    # constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
-    # legendIconsAndLabels = []
-    # for key in constraints:
-    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
-    #                                         ax, constraints[key])
-    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
-    #                                         ax, constraints[key])
-
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
     ax.legend(title=title,
               handles=[
-              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='r', hatch=r'//\\', label='BP2'),
-              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='b', hatch=r'//\\', label='BP3'),
-              ], loc='upper left', alignment='left')
+              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
+              mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
+              mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
+              mpatches.Patch(linewidth=0, fill=None, hatch='..', label='Unitarity'),
+              ], loc='upper right', alignment='left')
 
     plt.tight_layout()
     plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_highmass.pdf'))

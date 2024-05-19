@@ -60,10 +60,7 @@ if __name__ == '__main__':
 
     ms = np.array([element for element in df['ms']])
     mx = np.array([element for element in df['mx']])
-    ObsLim = np.array([element for element in df['ObsLim']])
-    XSmax = np.array([element for element in df['x_X_S_bb_H_gamgam_max']])
-
-    norm = (31.02 * 0.0026) * 10**(-3)
+    survModelsRat = np.array([element/100000 for element in df['numOfModels']])
 
     ## plotting style
 
@@ -113,46 +110,39 @@ if __name__ == '__main__':
     scatterMarkersize = 15
 
     # legend settings
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\nGrid search: 100000 models'
+    title = 'Fraction of surviving models (%)\nGrid search: 100000 models'
 
     ## Maximum cross cections from grid search
 
     msLini, mxLini = np.linspace(min(ms), max(ms), 800), np.linspace(min(mx), max(mx), 1000)
     msMeshi, mxMeshi = np.meshgrid(msLini, mxLini)
 
-    zi = scipy.interpolate.griddata((ms, mx), ObsLim/XSmax, (msMeshi, mxMeshi), method='cubic')
-
-    msLinConti, mxLinConti = np.linspace(min(ms), max(ms), 25), np.linspace(min(mx), max(mx), 25)
-    msMeshConti, mxMeshConti = np.meshgrid(msLini, mxLini)
-
-    ziCont = scipy.interpolate.griddata((ms, mx), ObsLim/XSmax, (msMeshConti, mxMeshConti), method='nearest')
+    zi = scipy.interpolate.griddata((ms, mx), survModelsRat, (msMeshi, mxMeshi), method='cubic')
 
     ## low mass
 
     fig, ax = plt.subplots()
 
-    msLow, mxLow, ObsLimVsXSmaxLow = cutter(ms, mx, ObsLim/XSmax,
+    msLow, mxLow, survModelsRatLow = cutter(ms, mx, survModelsRat,
                                      (0, 270), (160, 420))
 
-    im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSmaxLow), vmax=max(ObsLimVsXSmaxLow),
+    im = ax.imshow(zi, origin='lower', vmin=min(survModelsRatLow), vmax=max(survModelsRatLow),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # where the points are
     ax.scatter(msLow, mxLow, facecolor=scatterFacecolor, s=scatterMarkersize)
 
-    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', 'red'])
-
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\sigma(obs)/\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))$',
+                                     r'survived models (%)',
                                      xlims=(0, 270), ylims=(160, 420),
                                      fig=fig, ax=ax, im=im)
 
-    for i in range(len(ObsLimVsXSmaxLow)):
+    for i in range(len(survModelsRatLow)):
         if 80 < msLow[i] and mxLow[i] < 260:
             continue
         else:
-            ax.annotate('{:.1f}'.format(ObsLimVsXSmaxLow[i]), (msLow[i], mxLow[i]),
+            ax.annotate('{:.2f}'.format(survModelsRatLow[i]), (msLow[i], mxLow[i]),
                         textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
                         path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
@@ -163,15 +153,15 @@ if __name__ == '__main__':
                           xlim=(x1, x2), ylim=(y1, y2),
                           xticklabels=[], yticklabels=[])
 
-    for i in range(len(ObsLimVsXSmaxLow)):
+    for i in range(len(survModelsRatLow)):
         if 80 > msLow[i] and mxLow[i] > 260:
             continue
         else:
-            axins.annotate('{:.1f}'.format(ObsLimVsXSmaxLow[i]), (msLow[i], mxLow[i]),
+            axins.annotate('{:.2f}'.format(survModelsRatLow[i]), (msLow[i], mxLow[i]),
                         textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
                         path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
-    axins.imshow(zi, origin='lower', vmin=min(ObsLimVsXSmaxLow), vmax=max(ObsLimVsXSmaxLow),
+    axins.imshow(zi, origin='lower', vmin=min(survModelsRatLow), vmax=max(survModelsRatLow),
                  extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # where the points are
@@ -181,12 +171,10 @@ if __name__ == '__main__':
 
 
     ax.legend(title=title,
-              handles=[
-              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
-              ], loc='lower right', alignment='left')
+              loc='lower right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_max_lowmass.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_survModel_lowmass.pdf'))
     plt.close()
 
 
@@ -194,35 +182,31 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    msMed, mxMed, ObsLimVsXSmaxMed = cutter(ms, mx, ObsLim/XSmax,
-                                     (0, 525), (420, 620))
+    msMed, mxMed, survModelsRatMed = cutter(ms, mx, survModelsRat,
+                                         (0, 525), (420, 620))
 
-    im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSmaxMed), vmax=max(ObsLimVsXSmaxMed),
+    im = ax.imshow(zi, origin='lower', vmin=min(survModelsRatMed), vmax=max(survModelsRatMed),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # where the points are
     ax.scatter(msMed, mxMed, facecolor=scatterFacecolor, s=scatterMarkersize)
 
-    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', 'red'])
-
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\sigma(obs)/\sigma(gg\to X \to S(bb)~H(\gamma\gamma))$',
+                                     r'survived models (%)',
                                      xlims=(15, 510), ylims=(415, 620),
                                      fig=fig, ax=ax, im=im)
 
-    for i in range(len(ObsLimVsXSmaxMed)):
-        ax.annotate('{:.1f}'.format(ObsLimVsXSmaxMed[i]), (msMed[i], mxMed[i]),
+    for i in range(len(survModelsRatMed)):
+        ax.annotate('{:.2f}'.format(survModelsRatMed[i]), (msMed[i], mxMed[i]),
                     textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
                     path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
     ax.legend(title=title,
-              handles=[
-              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
-              ], loc='lower right', alignment='left')
+              loc='lower right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_max_mediummass.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_survModel_mediummass.pdf'))
     plt.close()
 
 
@@ -230,34 +214,30 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
-    msHigh, mxHigh, ObsLimVsXSmaxHigh = cutter(ms, mx, ObsLim/XSmax,
+    msHigh, mxHigh, survModelsRatHigh = cutter(ms, mx, survModelsRat,
                                         (0, 525), (620, 1200))
 
-    im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSmaxHigh), vmax=max(ObsLimVsXSmaxHigh),
+    im = ax.imshow(zi, origin='lower', vmin=min(survModelsRatHigh), vmax=max(survModelsRatHigh),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # where the points are
     ax.scatter(msHigh, mxHigh, facecolor=scatterFacecolor, s=scatterMarkersize)
 
-    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', 'red'])
-
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\sigma(obs)/\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))$',
-                                     xlims=(40, 535), ylims=(620, 1200),
+                                     r'survived models (%)',
+                                     xlims=(40, 535), ylims=(620, 1080),
                                      fig=fig, ax=ax, im=im)
 
-    for i in range(len(ObsLimVsXSmaxHigh)):
-        ax.annotate('{:.1f}'.format(ObsLimVsXSmaxHigh[i]), (msHigh[i], mxHigh[i]),
+    for i in range(len(survModelsRatHigh)):
+        ax.annotate('{:.2f}'.format(survModelsRatHigh[i]), (msHigh[i], mxHigh[i]),
                     textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, 
                     path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
     ax.legend(title=title,
-              handles=[
-              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
-              ], loc='upper right', alignment='left')
+              loc='upper right', alignment='left')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_max_highmass.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_survModel_highmass.pdf'))
     plt.close()
 
