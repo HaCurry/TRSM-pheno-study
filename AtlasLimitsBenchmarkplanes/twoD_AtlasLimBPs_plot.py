@@ -2,14 +2,38 @@ import os
 import json
 
 import numpy as np
-import pandas
+import scipy.interpolate
 import matplotlib as mpl
 import matplotlib.patheffects as pe
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import mplhep as hep
-from helpScannerS import configurer as config
 from helpScannerS import functions as TRSM
 from helpScannerS import twoDPlotter as twoDPlot
+
+def cutter(x, y, z, xlim, ylim):
+
+    xNewlist = []
+    yNewlist = []
+    zNewlist = []
+
+    tol = 10 ** (-6)
+
+    for i in range(len(x)):
+        if (xlim[0] < x[i] and x[i] < xlim[1] and 
+            ylim[0] < y[i] and y[i] < ylim[1]):
+            xNewlist.append(x[i])
+            yNewlist.append(y[i])
+            zNewlist.append(z[i])
+
+            if (abs(x[i] - xlim[0]) < tol and
+                abs(x[i] - xlim[1]) < tol and
+                abs(y[i] - ylim[0]) < tol and
+                abs(y[i] - ylim[1]) < tol):
+                raise Exception('Function cutter is not precise enough for this.')
+
+    return xNewlist, yNewlist, zNewlist
+
 
 if __name__ == '__main__':
 
@@ -25,8 +49,14 @@ if __name__ == '__main__':
 
     # path to ScannerS values at Atlas limit points
     pathAtlasBP = os.path.join(pathRepo, 'AtlasLimitsBenchmarkplanes', 'AtlasLimitsBenchmarkplanes.tsv')
-    
+
     os.makedirs(pathPlots, exist_ok=True)
+
+    # path to ScannerS output with BP2 and BP3 settings (for hatching constraints)
+    pathScannerSBP2 = os.path.join(pathRepo, 'Benchmarkplanes',
+                                   'BPs_extendedmass', 'BP2', 'output_BP2.tsv')
+    pathScannerSBP3 = os.path.join(pathRepo, 'Benchmarkplanes',
+                                   'BPs_extendedmass', 'BP3', 'output_BP3.tsv')
 
     ## plotting style
 
@@ -55,89 +85,256 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
-    
+
     obs = TRSM.observables(pathAtlasBP, 'bb', 'gamgam', 'mH1', 'mH2', 'mH3', 'ObsLim',
                            normSM=1)
 
-    ms_BP2 = []
-    mx_BP2 = []
-    XS_BP2 = []
-    ObsLim_BP2 = []
-
-    ms_BP3 = []
-    mx_BP3 = []
-    XS_BP3 = []
-    ObsLim_BP3 = []
+    ms = []
+    mx = []
+    XS = []
+    ObsLim = []
 
     for i in range(len(obs['mH1'])):
 
         # BP2
         if abs(obs['mH2'][i] - 125.09) < 10**(-6):
-            ms_BP2.append(obs['mH1'][i])
-            mx_BP2.append(obs['mH3'][i])
-            XS_BP2.append(obs['x_H3_H1_bb_H2_gamgam'][i])
-            ObsLim_BP2.append(obs['ObsLim'][i])
+            ms.append(obs['mH1'][i])
+            mx.append(obs['mH3'][i])
+            XS.append(obs['x_H3_H1_bb_H2_gamgam'][i])
+            ObsLim.append(obs['ObsLim'][i])
 
         # BP3
         elif abs(obs['mH1'][i] - 125.09) < 10**(-6):
-            ms_BP3.append(obs['mH2'][i])
-            mx_BP3.append(obs['mH3'][i])
-            XS_BP3.append(obs['x_H3_H1_gamgam_H2_bb'][i])
-            ObsLim_BP3.append(obs['ObsLim'][i])
+            ms.append(obs['mH2'][i])
+            mx.append(obs['mH3'][i])
+            XS.append(obs['x_H3_H1_gamgam_H2_bb'][i])
+            ObsLim.append(obs['ObsLim'][i])
 
         else:
             raise Exception('Something went wrong...')
-            
+
+    # annotation settings
+    fontsize = 10
+    rotation = 45
+    linewidth = 2.0
+
+    # hatching settings
 
     # BP2
-    
-    fig, ax = plt.subplots()
-
-    scatter = ax.scatter(ms_BP2, mx_BP2, c=np.array(ObsLim_BP2)/np.array(XS_BP2))
-    print((np.array(ObsLim_BP2)/np.array(XS_BP2))[0])
-    print(ms_BP2[0])
-    print(mx_BP2[0])
-    print(np.array(XS_BP2)[0])
-    print(np.array(ObsLim_BP2)[0])
-    for i in range(len(XS_BP2)):
-        print(f'XS: {XS_BP2[i]}')
-        print(f'ObsLim: {ObsLim_BP2[i]}')
-        print(f'ObsLim/XS: {(np.array(ObsLim_BP2)/np.array(XS_BP2))[i]}')
-        ax.annotate('{:.0f}'.format((np.array(ObsLim_BP2)/np.array(XS_BP2))[i]), (ms_BP2[i], mx_BP2[i]),
-                     textcoords='offset points', xytext=(-3,-2), fontsize=9, rotation=45, 
-                     path_effects=[mpl.patheffects.withStroke(linewidth=1.5, foreground='w')])
-    
-    ax.legend(title='BP2 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$',
-              alignment='left')
-
-    twoDPlot.plotAuxTitleAndBounds2D('', '$M_{1}$ [GeV]', '$M_{3}$ [GeV]',
-                                     '$\sigma(lim)/\sigma(gg\\to h_{3} \\to h_{1}(b\\bar{b})~h_{2}(\gamma\gamma))$', 
-                                     fig=fig, im=scatter, ax=ax)
-
-    plt.savefig(os.path.join(pathPlots, 'BP2.pdf'))
-    plt.close()
-
+    BP2linewidth = 0.5
+    BP2edgecolor = 'r'
+    BP2facecolor = 'none'
+    BP2hatch = r'..'
+    BP2alpha = 0.20
 
     # BP3
-    
+    BP3linewidth = 0.5
+    BP3edgecolor = 'b'
+    BP3facecolor = 'none'
+    BP3hatch = r'\\'
+    BP3alpha = 0.20
+
+
+    # ScannerS output for constraint hatching
+    ScannerS_BP2 = TRSM.observables(pathScannerSBP2 , 
+                                    'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
+                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    kineticExclude=True)
+
+    ScannerS_BP3 = TRSM.observables(pathScannerSBP3 , 
+                                    'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
+                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    kineticExclude=True)
+
+
+    # create a fit out of all the points, this fit is used to plot the color plots
+    msLini, mxLini = np.linspace(min(ms), max(ms), 800), np.linspace(min(mx), max(mx), 1000)
+    msMeshi, mxMeshi = np.meshgrid(msLini, mxLini)
+
+    zi = scipy.interpolate.griddata((ms, mx), np.array(ObsLim)/np.array(XS), (msMeshi, mxMeshi), method='cubic')
+
+    print(f'nanmax: {np.nanmax(zi)} and actual max {np.nanmax(np.array(ObsLim)/np.array(XS))}')
+
+
+    ## low mass
+
     fig, ax = plt.subplots()
 
-    scatter = ax.scatter(ms_BP3, mx_BP3, c=np.array(ObsLim_BP3)/np.array(XS_BP3))
+    msLow, mxLow, ObsLimVsXSLow = cutter(ms, mx, np.array(ObsLim)/np.array(XS),
+                                     (0, 270), (160, 420))
 
-    for i in range(len(XS_BP3)):
-        print(f'XS: {XS_BP3[i]}')
-        print(f'ObsLim: {ObsLim_BP3[i]}')
-        print(f'ObsLim/XS: {(np.array(ObsLim_BP3)/np.array(XS_BP3))[i]}')
-        ax.annotate('{:.0f}'.format((np.array(ObsLim_BP3)/np.array(XS_BP3))[i]), (ms_BP3[i], mx_BP3[i]),
-                     textcoords='offset points', xytext=(-3,-2), fontsize=9, rotation=45, 
-                     path_effects=[pe.withStroke(linewidth=1.5, foreground='w')])
-    
-    ax.legend(title='BP3 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$',
-              alignment='left')
 
-    twoDPlot.plotAuxTitleAndBounds2D('', '$M_{2}$ [GeV]', '$M_{3}$ [GeV]',
-                                     '$\sigma(lim)/\sigma(gg\\to h_{3} \\to h_{1}(\gamma\gamma)~h_{2}(b\\bar{b}))$', 
-                                     fig=fig, im=scatter, ax=ax)
+    im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSLow), vmax=max(ObsLimVsXSLow),
+                   extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
-    plt.savefig(os.path.join(pathPlots, 'BP3.pdf'))
+    # where the points are
+    # im = ax.scatter(msLow, mxLow, facecolor='none', edgecolor='red')
+
+    twoDPlot.plotAuxTitleAndBounds2D(r'',
+                                     r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
+                                     r'$\sigma(obs)/\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))$',
+                                     xlims=(0, 270), ylims=(160, 420),
+                                     fig=fig, ax=ax, im=im)
+
+    for i in range(len(ObsLimVsXSLow)):
+        if 80 < msLow[i] and mxLow[i] < 260:
+            continue
+        else:
+            ax.annotate('{:.1f}'.format(ObsLimVsXSLow[i]), (msLow[i], mxLow[i]),
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
+                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+
+    # BP2
+    ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
+                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
+                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
+
+    # BP3
+    ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
+                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
+                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
+
+    # subregion of the original image
+    x1, x2, y1, y2 = 86, 117, 215, 257
+    axins = ax.inset_axes([200, 250, 60, 60],
+                          transform=ax.transData,
+                          xlim=(x1, x2), ylim=(y1, y2),
+                          xticklabels=[], yticklabels=[])
+
+    for i in range(len(ObsLimVsXSLow)):
+        if 80 > msLow[i] and mxLow[i] > 260:
+            continue
+        else:
+            axins.annotate('{:.1f}'.format(ObsLimVsXSLow[i]), (msLow[i], mxLow[i]),
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
+                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+
+    # axins.scatter(msLow, mxLow, c=ObsLimVsXSLow)
+    axins.imshow(zi, origin='lower', vmin=min(ObsLimVsXSLow), vmax=max(ObsLimVsXSLow),
+                 extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
+
+    ax.indicate_inset_zoom(axins, edgecolor="black")
+
+    # # plot the constraints according to the patterns below below
+    # constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    # legendIconsAndLabels = []
+    # for key in constraints:
+    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+    #                                         ax, constraints[key])
+    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+    #                                         ax, constraints[key])
+
+    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
+    ax.legend(title=title,
+              handles=[
+              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='r', hatch=r'//\\', label='BP2'),
+              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='b', hatch=r'//\\', label='BP3'),
+              ], loc='lower right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_lowmass.pdf'))
     plt.close()
+
+    ## medium mass
+
+    fig, ax = plt.subplots()
+
+    msMed, mxMed, ObsLimVsXSMed = cutter(ms, mx, np.array(ObsLim)/np.array(XS),
+                                     (0, 525), (420, 620))
+
+    im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSMed), vmax=max(ObsLimVsXSMed),
+                   extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
+    # im = ax.scatter(msMed, mxMed, c=ObsLimVsXSMed)
+    twoDPlot.plotAuxTitleAndBounds2D(r'',
+                                     r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
+                                     r'$\sigma(obs)/\sigma(gg\to X \to S(bb)~H(\gamma\gamma))$',
+                                     xlims=(15, 490), ylims=(420, 620),
+                                     fig=fig, ax=ax, im=im)
+
+    for i in range(len(ObsLimVsXSMed)):
+        ax.annotate('{:.1f}'.format(ObsLimVsXSMed[i]), (msMed[i], mxMed[i]),
+                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
+                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+
+    # BP2
+    ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
+                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
+                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
+
+    # BP3
+    ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
+                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
+                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
+
+    # # plot the constraints according to the patterns below below
+    # constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    # legendIconsAndLabels = []
+    # for key in constraints:
+    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+    #                                         ax, constraints[key])
+    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+    #                                         ax, constraints[key])
+
+    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
+    ax.legend(title=title,
+              handles=[
+              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='r', hatch=r'//\\', label='BP2'),
+              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='b', hatch=r'//\\', label='BP3'),
+              ], loc='lower right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_mediummass.pdf'))
+    plt.close()
+
+
+    ## high mass
+
+    fig, ax = plt.subplots()
+
+    msHigh, mxHigh, ObsLimVsXSHigh = cutter(ms, mx, np.array(ObsLim)/np.array(XS),
+                                        (0, 525), (620, 1200))
+
+    im = ax.imshow(zi, origin='lower', vmin=min(ObsLimVsXSHigh), vmax=max(ObsLimVsXSHigh),
+                   extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
+    # im = ax.scatter(msHigh, mxHigh, c=ObsLimVsXSHigh)
+    twoDPlot.plotAuxTitleAndBounds2D(r'',
+                                     r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
+                                     r'$\sigma(obs)/\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))$',
+                                     xlims=(40, 535), ylims=(620, 1200),
+                                     fig=fig, ax=ax, im=im)
+
+    for i in range(len(ObsLimVsXSHigh)):
+        ax.annotate('{:.1f}'.format(ObsLimVsXSHigh[i]), (msHigh[i], mxHigh[i]),
+                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, 
+                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+
+    # BP2
+    ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
+                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
+                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
+
+    # BP3
+    ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
+                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
+                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
+
+    # # plot the constraints according to the patterns below below
+    # constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    # legendIconsAndLabels = []
+    # for key in constraints:
+    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+    #                                         ax, constraints[key])
+    #     contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+    #                                         ax, constraints[key])
+
+    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
+    ax.legend(title=title,
+              handles=[
+              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='r', hatch=r'//\\', label='BP2'),
+              mpatches.Patch(linewidth=0, fill=None, alpha=0.25, color='b', hatch=r'//\\', label='BP3'),
+              ], loc='upper left', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, 'ObsLim_XSH_bbgamgam_highmass.pdf'))
+    plt.close()
+
