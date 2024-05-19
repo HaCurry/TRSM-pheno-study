@@ -192,7 +192,7 @@ if __name__ == '__main__':
         pass
 
     else:
-        raise Exceptions(f'dataIds missing in {pathOutputParent}')
+        raise Exception(f'dataIds missing in {pathOutputParent}')
 
     constraints = ['--BFB', str(BFB), '--Uni', str(Uni), '--STU', str(STU), '--Higgs', str(Higgs)]
 
