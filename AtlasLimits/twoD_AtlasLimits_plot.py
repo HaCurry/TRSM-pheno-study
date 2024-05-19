@@ -3,6 +3,7 @@ import os
 
 import pandas
 import numpy as np
+import scipy.interpolate
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as pe
@@ -93,9 +94,36 @@ if __name__ == '__main__':
     # norm = (31.05 * 10**(-3)) * 0.002637
     norm = (31.02 * 10**(-3) * 0.0026)
 
+    # annotation settings
     fontsize = 12
     rotation = 45
     linewidth = 2.0
+
+    # hatching settings
+
+    # BP2
+    BP2linewidth = 0.5
+    BP2edgecolor = 'r'
+    BP2facecolor = 'none'
+    BP2hatch = r'..'
+    BP2alpha = 0.20
+
+    # BP3
+    BP3linewidth = 0.5
+    BP3edgecolor = 'b'
+    BP3facecolor = 'none'
+    BP3hatch = r'\\'
+    BP3alpha = 0.20
+
+
+    msLini, mxLini = np.linspace(min(ms), max(ms), 800), np.linspace(min(mx), max(mx), 1000)
+    msMeshi, mxMeshi = np.meshgrid(msLini, mxLini)
+
+    zi = scipy.interpolate.griddata((ms, mx), np.array(XS)/norm, (msMeshi, mxMeshi), method='cubic')
+
+    print(zi)
+    print(f'nanmax: {np.nanmax(zi)} and actual max {np.nanmax(np.array(XS)/norm)}')
+
 
     ## low mass
 
@@ -104,7 +132,12 @@ if __name__ == '__main__':
     msLow, mxLow, XSnormLow = cutter(ms, mx, np.array(XS)/norm,
                                      (0, 270), (160, 420))
 
-    im = ax.scatter(msLow, mxLow, c=XSnormLow)
+
+    im = ax.imshow(zi, origin='lower', vmin=min(XSnormLow), vmax=max(XSnormLow),
+                   extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
+
+    # where the points are
+    # im = ax.scatter(msLow, mxLow, facecolor='none', edgecolor='red')
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
@@ -113,19 +146,22 @@ if __name__ == '__main__':
                                      fig=fig, ax=ax, im=im)
 
     for i in range(len(XSnormLow)):
-        ax.annotate('{:.1f}'.format(XSnormLow[i]), (msLow[i], mxLow[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+        if 80 < msLow[i] and mxLow[i] < 260:
+            continue
+        else:
+            ax.annotate('{:.1f}'.format(XSnormLow[i]), (msLow[i], mxLow[i]),
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
+                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
 
     # BP2
     ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
-                 linewidth=1, edgecolor='r', facecolor='none',
-                 hatch=r'//\\', alpha=0.25, zorder=0))
+                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
+                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
 
     # BP3
     ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
-                 linewidth=1, edgecolor='b', facecolor='none',
-                 hatch=r'//\\', alpha=0.25, zorder=0))
+                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
+                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
 
     # subregion of the original image
     x1, x2, y1, y2 = 86, 117, 215, 257
@@ -134,7 +170,17 @@ if __name__ == '__main__':
                           xlim=(x1, x2), ylim=(y1, y2),
                           xticklabels=[], yticklabels=[])
 
-    axins.scatter(msLow, mxLow, c=XSnormLow)
+    for i in range(len(XSnormLow)):
+        if 80 > msLow[i] and mxLow[i] > 260:
+            continue
+        else:
+            axins.annotate('{:.1f}'.format(XSnormLow[i]), (msLow[i], mxLow[i]),
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
+                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+
+    # axins.scatter(msLow, mxLow, c=XSnormLow)
+    axins.imshow(zi, origin='lower', vmin=min(XSnormLow), vmax=max(XSnormLow),
+                 extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     ax.indicate_inset_zoom(axins, edgecolor="black")
 
@@ -158,7 +204,9 @@ $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
     msMed, mxMed, XSnormMed = cutter(ms, mx, np.array(XS)/norm,
                                      (0, 525), (420, 620))
 
-    im = ax.scatter(msMed, mxMed, c=XSnormMed)
+    im = ax.imshow(zi, origin='lower', vmin=min(XSnormMed), vmax=max(XSnormMed),
+                   extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
+    # im = ax.scatter(msMed, mxMed, c=XSnormMed)
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
                                      r'$\sigma(obs)/\sigma(ref)$',
@@ -172,13 +220,13 @@ $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
 
     # BP2
     ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
-                 linewidth=1, edgecolor='r', facecolor='none',
-                 hatch=r'//\\', alpha=0.25, zorder=0))
+                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
+                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
 
     # BP3
     ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
-                 linewidth=1, edgecolor='b', facecolor='none',
-                 hatch=r'//\\', alpha=0.25, zorder=0))
+                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
+                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
 
     title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\n\
 $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
@@ -200,11 +248,13 @@ $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
     msHigh, mxHigh, XSnormHigh = cutter(ms, mx, np.array(XS)/norm,
                                         (0, 525), (620, 1200))
 
-    im = ax.scatter(msHigh, mxHigh, c=XSnormHigh)
+    im = ax.imshow(zi, origin='lower', vmin=min(XSnormHigh), vmax=max(XSnormHigh),
+                   extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
+    # im = ax.scatter(msHigh, mxHigh, c=XSnormHigh)
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
                                      r'$\sigma(obs)/\sigma(ref)$',
-                                     xlims=(0, 525), ylims=(620, 1200),
+                                     xlims=(40, 525), ylims=(620, 1200),
                                      fig=fig, ax=ax, im=im)
 
     for i in range(len(XSnormHigh)):
@@ -214,13 +264,13 @@ $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
 
     # BP2
     ax.add_patch(mpatches.Rectangle((1,126), 123, 874,
-                 linewidth=1, edgecolor='r', facecolor='none',
-                 hatch=r'//\\', alpha=0.25, zorder=0))
+                 linewidth=BP2linewidth, edgecolor=BP2edgecolor, facecolor=BP2facecolor,
+                 hatch=BP2hatch, alpha=BP2alpha, zorder=0))
 
     # BP3
     ax.add_patch(mpatches.Rectangle((126,255), 374, 745,
-                 linewidth=1, edgecolor='b', facecolor='none',
-                 hatch=r'//\\', alpha=0.25, zorder=0))
+                 linewidth=BP3linewidth, edgecolor=BP3edgecolor, facecolor=BP3facecolor,
+                 hatch=BP3hatch, alpha=BP3alpha, zorder=0))
 
     title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\n\
 $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
