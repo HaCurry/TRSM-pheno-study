@@ -114,7 +114,7 @@ if __name__ == '__main__':
     scatterMarkersize = 15
 
     # legend settings
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\n\
+    title = '$\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\n\
 $ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$'
     
     msLini, mxLini = np.linspace(min(ms), max(ms), 800), np.linspace(min(mx), max(mx), 1000)
