@@ -93,27 +93,19 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
     # annotation settings
-    fontsize = 12
-    rotation = 45
-    linewidth = 2.0
-
-    # annotation settings
     fontsize = 10
     rotation = 45
-    linewidth = 2.0
+    color = 'red'
 
-    # BP2 BP3 dashed line settings
-    axvlineColor = 'blue'
-    axvlineLinestyle = 'dashed'
-    axvlineLinewidth = 1
-    axvlineLabel = r'$\text{BP2}\leftrightarrow\text{BP3}$'
+    # annotation path effects
+    path_effects = [pe.withStroke(linewidth=0.0, foreground='black')]
 
     # scatter settings
-    scatterFacecolor = 'red'
+    scatterFacecolor = 'black'
     scatterMarkersize = 15
 
     # legend settings
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\nGrid search: 100000 models'
+    title = '$\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\nGrid search: 100000 models'
 
     ## Maximum cross cections from grid search
 
@@ -153,8 +145,8 @@ if __name__ == '__main__':
             continue
         else:
             ax.annotate('{:.1f}'.format(ObsLimVsXSmaxLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color, 
+                        path_effects=path_effects)
 
     # subregion of the original image
     x1, x2, y1, y2 = 86, 117, 215, 257
@@ -168,8 +160,8 @@ if __name__ == '__main__':
             continue
         else:
             axins.annotate('{:.1f}'.format(ObsLimVsXSmaxLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color, 
+                        path_effects=path_effects)
 
     axins.imshow(zi, origin='lower', vmin=min(ObsLimVsXSmaxLow), vmax=max(ObsLimVsXSmaxLow),
                  extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
@@ -182,7 +174,6 @@ if __name__ == '__main__':
 
     ax.legend(title=title,
               handles=[
-              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
               ], loc='lower right', alignment='left')
 
     plt.tight_layout()
@@ -213,12 +204,11 @@ if __name__ == '__main__':
 
     for i in range(len(ObsLimVsXSmaxMed)):
         ax.annotate('{:.1f}'.format(ObsLimVsXSmaxMed[i]), (msMed[i], mxMed[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color, 
+                    path_effects=path_effects)
 
     ax.legend(title=title,
               handles=[
-              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
               ], loc='lower right', alignment='left')
 
     plt.tight_layout()
@@ -249,12 +239,11 @@ if __name__ == '__main__':
 
     for i in range(len(ObsLimVsXSmaxHigh)):
         ax.annotate('{:.1f}'.format(ObsLimVsXSmaxHigh[i]), (msHigh[i], mxHigh[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, color=color, 
+                    path_effects=path_effects)
 
     ax.legend(title=title,
               handles=[
-              mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
               ], loc='upper right', alignment='left')
 
     plt.tight_layout()

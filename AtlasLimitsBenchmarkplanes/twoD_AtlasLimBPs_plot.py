@@ -4,9 +4,9 @@ import json
 import numpy as np
 import scipy.interpolate
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import matplotlib.patheffects as pe
 import matplotlib.patches as mpatches
-import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import mplhep as hep
 from helpScannerS import functions as TRSM
@@ -117,7 +117,10 @@ if __name__ == '__main__':
     # annotation settings
     fontsize = 10
     rotation = 45
-    linewidth = 2.0
+    color = 'red'
+
+    # annotation path effects
+    path_effects = [pe.withStroke(linewidth=0.0, foreground='black')]
 
     # BP2 BP3 dashed line settings
     axvlineColor = 'blue'
@@ -126,11 +129,12 @@ if __name__ == '__main__':
     axvlineLabel = r'$\text{BP2}\leftrightarrow\text{BP3}$'
 
     # scatter settings
-    scatterFacecolor = 'red'
+    scatterFacecolor = 'black'
     scatterMarkersize = 15
 
-    # legend settings
-    title = 'ATLAS $\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
+    # constraint hatching settings
+    constraints = {'BFB': '++', 'Higgs': r'//', 'STU': r'\\ ', 'Uni': '..'}
+    alpha = 0.1
     
     # ScannerS output for constraint hatching
     ScannerS_BP2 = TRSM.observables(pathScannerSBP2 , 
@@ -142,6 +146,9 @@ if __name__ == '__main__':
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
                                     'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
                                     kineticExclude=True)
+
+    # legend settings
+    title = '$\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit'
 
 
     # create a fit out of all the points, this fit is used to plot the color plots
@@ -164,13 +171,12 @@ if __name__ == '__main__':
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # plot the constraints according to the patterns below below
-    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
-                                            ax, constraints[key])
+                                            ax, constraints[key], alpha=alpha)
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
-                                            ax, constraints[key])
+                                            ax, constraints[key], alpha=alpha)
 
     ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
 
@@ -188,8 +194,9 @@ if __name__ == '__main__':
             continue
         else:
             ax.annotate('{:.1f}'.format(ObsLimVsXSLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color,
+                        path_effects=path_effects) 
+                        
 
     # subregion of the original image
     x1, x2, y1, y2 = 86, 117, 215, 257
@@ -203,10 +210,9 @@ if __name__ == '__main__':
             continue
         else:
             axins.annotate('{:.1f}'.format(ObsLimVsXSLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                           textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color,
+                           path_effects=path_effects) 
 
-    # axins.scatter(msLow, mxLow, c=ObsLimVsXSLow)
     axins.imshow(zi, origin='lower', vmin=min(ObsLimVsXSLow), vmax=max(ObsLimVsXSLow),
                  extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
@@ -237,13 +243,12 @@ if __name__ == '__main__':
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # plot the constraints according to the patterns below below
-    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
-                                            ax, constraints[key])
+                                            ax, constraints[key], alpha=alpha)
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
-                                            ax, constraints[key])
+                                            ax, constraints[key], alpha=alpha)
 
     ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
 
@@ -258,8 +263,8 @@ if __name__ == '__main__':
 
     for i in range(len(ObsLimVsXSMed)):
         ax.annotate('{:.1f}'.format(ObsLimVsXSMed[i]), (msMed[i], mxMed[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color,
+                    path_effects=path_effects)
 
     ax.legend(title=title,
               handles=[
@@ -285,13 +290,12 @@ if __name__ == '__main__':
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
 
     # plot the constraints according to the patterns below below
-    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
-                                            ax, constraints[key])
+                                            ax, constraints[key], alpha=alpha)
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
-                                            ax, constraints[key])
+                                            ax, constraints[key], alpha=alpha)
 
     ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
 
@@ -306,14 +310,13 @@ if __name__ == '__main__':
 
     for i in range(len(ObsLimVsXSHigh)):
         ax.annotate('{:.1f}'.format(ObsLimVsXSHigh[i]), (msHigh[i], mxHigh[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, color=color,
+                    path_effects=path_effects)
 
     ax.legend(title=title,
               handles=[
               mlines.Line2D([], [], linestyle=axvlineLinestyle, linewidth=axvlineLinewidth, color=axvlineColor, label=axvlineLabel),
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
-              mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
               mpatches.Patch(linewidth=0, fill=None, hatch='..', label='Unitarity'),
               ], loc='upper right', alignment='left')
 

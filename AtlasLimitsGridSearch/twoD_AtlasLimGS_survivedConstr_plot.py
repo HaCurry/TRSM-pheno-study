@@ -90,14 +90,12 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
     # annotation settings
-    fontsize = 12
-    rotation = 45
-    linewidth = 2.0
-
-    # annotation settings
     fontsize = 10
     rotation = 45
-    linewidth = 2.0
+    color = 'red'
+
+    # annotation path effects
+    path_effects = [pe.withStroke(linewidth=0.0, foreground='black')]
 
     # BP2 BP3 dashed line settings
     axvlineColor = 'blue'
@@ -106,11 +104,11 @@ if __name__ == '__main__':
     axvlineLabel = r'$\text{BP2}\leftrightarrow\text{BP3}$'
 
     # scatter settings
-    scatterFacecolor = 'red'
+    scatterFacecolor = 'black'
     scatterMarkersize = 15
 
     # legend settings
-    title = 'Fraction of surviving models (%)\nGrid search: 100000 models'
+    title = 'Fraction of surviving models \nScannerS constraints\nGrid search: 100000 models'
 
     ## Maximum cross cections from grid search
 
@@ -134,7 +132,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'survived models (%)',
+                                     r'fraction of surviving models',
                                      xlims=(0, 270), ylims=(160, 420),
                                      fig=fig, ax=ax, im=im)
 
@@ -143,8 +141,8 @@ if __name__ == '__main__':
             continue
         else:
             ax.annotate('{:.2f}'.format(survModelsRatLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color, 
+                        path_effects=path_effects)
 
     # subregion of the original image
     x1, x2, y1, y2 = 86, 117, 215, 257
@@ -158,8 +156,8 @@ if __name__ == '__main__':
             continue
         else:
             axins.annotate('{:.2f}'.format(survModelsRatLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                        path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color, 
+                        path_effects=path_effects)
 
     axins.imshow(zi, origin='lower', vmin=min(survModelsRatLow), vmax=max(survModelsRatLow),
                  extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
@@ -193,14 +191,14 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'survived models (%)',
+                                     r'fraction of surviving models',
                                      xlims=(15, 510), ylims=(415, 620),
                                      fig=fig, ax=ax, im=im)
 
     for i in range(len(survModelsRatMed)):
         ax.annotate('{:.2f}'.format(survModelsRatMed[i]), (msMed[i], mxMed[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color, 
+                    path_effects=path_effects)
 
     ax.legend(title=title,
               loc='lower right', alignment='left')
@@ -225,14 +223,14 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'survived models (%)',
+                                     r'fraction of surviving models',
                                      xlims=(40, 535), ylims=(620, 1080),
                                      fig=fig, ax=ax, im=im)
 
     for i in range(len(survModelsRatHigh)):
         ax.annotate('{:.2f}'.format(survModelsRatHigh[i]), (msHigh[i], mxHigh[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, 
-                    path_effects=[pe.withStroke(linewidth=linewidth, foreground='w')])
+                    textcoords='offset points', xytext=(-3,-2), fontsize=8, rotation=rotation, color=color, 
+                    path_effects=path_effects)
 
     ax.legend(title=title,
               loc='upper right', alignment='left')
