@@ -104,6 +104,11 @@ if __name__ == '__main__':
     scatterFacecolor = 'black'
     scatterMarkersize = 15
 
+    # exclusion contour settings
+    exclLinestyle = 'solid'
+    exclLinewidth = 1
+    exclColor = 'green'
+    exclLabel = 'exclusions at 95% C.L.'
     # legend settings
     title = '$\sqrt{s}=13$ TeV\n$gg\\to X\\to S(b\\bar{b}) H(\gamma \gamma)$\n95% C.L observed limit\nGrid search: 100000 models'
 
@@ -132,7 +137,7 @@ if __name__ == '__main__':
     # where the points are
     ax.scatter(msLow, mxLow, facecolor=scatterFacecolor, s=scatterMarkersize)
 
-    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', 'red'])
+    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', exclColor])
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
@@ -174,6 +179,7 @@ if __name__ == '__main__':
 
     ax.legend(title=title,
               handles=[
+              mlines.Line2D([], [], linestyle=exclLinestyle, linewidth=exclLinewidth, color=exclColor, label=exclLabel),
               ], loc='lower right', alignment='left')
 
     plt.tight_layout()
@@ -194,7 +200,7 @@ if __name__ == '__main__':
     # where the points are
     ax.scatter(msMed, mxMed, facecolor=scatterFacecolor, s=scatterMarkersize)
 
-    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', 'red'])
+    ax.contour(msMeshConti, mxMeshConti, ziCont, levels=[-1, 1], colors=['blue', exclColor])
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
@@ -209,6 +215,7 @@ if __name__ == '__main__':
 
     ax.legend(title=title,
               handles=[
+              mlines.Line2D([], [], linestyle=exclLinestyle, linewidth=exclLinewidth, color=exclColor, label=exclLabel),
               ], loc='lower right', alignment='left')
 
     plt.tight_layout()
