@@ -96,6 +96,9 @@ if __name__ == '__main__':
                'BP3_vs': '140~\\text{GeV}',
                'BP3_vx': '100~\\text{GeV}'}
 
+    constraints = {'enabled': 'True',
+                   'disabled': 'False'}
+
 
     for BPX in ['BP2', 'BP3']:
 
@@ -108,36 +111,47 @@ if __name__ == '__main__':
                 # as a sanity check.
                 for process in ['x_H3_H1_bb_H2_gamgam', 'x_H3_H1_gamgam_H2_bb']:
 
-                    TRSMOutput_BPX_regionX_paths = glob.glob(os.path.join(pathOutputParent, BPX, regionX, 'X*S*'),
-                                                             recursive=True)
+                    for constraintOption in constraints:
 
-                    fig, ax = plt.subplots()
+                        TRSMOutput_BPX_regionX_paths = glob.glob(os.path.join(pathOutputParent, BPX, regionX, 'X*S*'),
+                                                                 recursive=True)
 
-                    for path in TRSMOutput_BPX_regionX_paths:
-                        print(path)
+                        fig, ax = plt.subplots()
 
-                        pathNofree = glob.glob(os.path.join(path, 'nofree', 'output*'))[0]
-                        obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free)
+                        for path in TRSMOutput_BPX_regionX_paths:
+                            print(path)
 
-                        pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
-                        obs = TRSM.observables(pathFree, 'bb', 'gamgam', free,
-                                               'valid_BFB', 'valid_Higgs', 'valid_STU',
-                                               'valid_Uni')
-                        nonmasked = np.array(obs[process])/obs_nofree[process][0]
-                        masked = np.ma.masked_where(((np.array(obs['valid_BFB']) < 1) | (np.array(obs['valid_Higgs']) < 1) |
-                        (np.array(obs['valid_STU']) < 1) | (np.array(obs['valid_Uni']) < 1)), nonmasked)
+                            pathNofree = glob.glob(os.path.join(path, 'nofree', 'output*'))[0]
+                            obs_nofree = TRSM.observables(pathNofree, 'bb', 'gamgam', free)
 
-                        ax.plot(obs[free], masked, linewidth=0.5)
-                        # ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
-                        ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
-                        ax.set_xlabel(f'{xlabelLatex[free]}')
-                        ax.set_ylabel(f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$')
-                        ax.set_xlim(lims[free][0], lims[free][1])
-                        ax.legend(title=f'{BPX}: {regionLatex[regionX]}\n{AtlasNotation[BPX]}',
-                                  handles=[
-                                  mlines.Line2D([], [], color='black', linestyle='none', marker='o', label=f'${freeLatex[free]}={BPXvals[f"{BPX}_{free}"]}$'),
-                                  ], alignment='left')
+                            pathFree = glob.glob(os.path.join(path, free, 'output_*'))[0]
+                            obs = TRSM.observables(pathFree, 'bb', 'gamgam', free,
+                                                   'valid_BFB', 'valid_Higgs', 'valid_STU',
+                                                   'valid_Uni')
+                            nonmasked = np.array(obs[process])/obs_nofree[process][0]
+                            masked = np.ma.masked_where(((np.array(obs['valid_BFB']) < 1) | (np.array(obs['valid_Higgs']) < 1) |
+                            (np.array(obs['valid_STU']) < 1) | (np.array(obs['valid_Uni']) < 1)), nonmasked)
 
-                    plt.tight_layout()
-                    plt.savefig(os.path.join(pathPlots, BPX, regionX, f'{BPX}_{regionX}_{free}_{process}.pdf'))
-                    plt.close()
+                            if constraintOption == 'enabled':
+                                yvals = masked
+
+                            elif constraintOption == 'disabled':
+                                yvals = nonmasked
+
+                            else:
+                                raise Exception('Something went wrong...')
+
+                            ax.plot(obs[free], yvals, linewidth=0.5)
+                            # ax.plot(obs[free], np.array(obs[process])/obs_nofree[process][0], color='C0', alpha=0.2)
+                            ax.plot(obs_nofree[free][0], 1, marker='o', color='black')
+                            ax.set_xlabel(f'{xlabelLatex[free]}')
+                            ax.set_ylabel(f'$\delta({freeLatex[free]}, M_{1}, M_{2}, M_{3})$')
+                            ax.set_xlim(lims[free][0], lims[free][1])
+                            ax.legend(title=f'{BPX}: {regionLatex[regionX]}\n{AtlasNotation[BPX]}\nconstraints: {constraintOption}',
+                                      handles=[
+                                      mlines.Line2D([], [], color='black', linestyle='none', marker='o', label=f'${freeLatex[free]}={BPXvals[f"{BPX}_{free}"]}$'),
+                                      ], alignment='left')
+
+                        plt.tight_layout()
+                        plt.savefig(os.path.join(pathPlots, BPX, regionX, f'{BPX}_{regionX}_{free}_{process}_constr{constraints[constraintOption]}.pdf'))
+                        plt.close()
