@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
             count, edges, bars = ax.hist(np.array(obs[x_X_S_bb_H_gamgam])/norm, bins=15)
             ax.bar_label(bars)
-            ax.axvline(ObsLim/norm, color='red', ls='dashed')
+            ax.axvline(ObsLim/norm, color='red', ls='dashed', label=f'$\sigma(obs)/\sigma(ref) = {ObsLim/norm:.1f}$')
             ax.set_ylim(0,100)
             ax.set_xlabel(r'$\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))/\sigma(ref)$')
             ax.set_ylabel(r'Surviving models')
@@ -104,7 +104,6 @@ if __name__ == '__main__':
 $M_{{S}}={df_AtlasGSMax['ms'][i]}$, $M_{{X}}={df_AtlasGSMax['mx'][i]}$\n\
 Fraction of surviving models (out of $10^{{5}}$): {numOfModels/100000:.2f}\n\
 Number of exclusions: {ObsLimExclusions}\n\
-$\sigma(obs)/\sigma(ref) = {ObsLim/norm:.1f}$\n\
 $ref=gg\\to h_{{SM}}h_{{SM}}\\to b\\bar{{b}}\gamma\gamma$",
                       loc='upper right', alignment='left')
             plt.tight_layout()
@@ -114,7 +113,7 @@ $ref=gg\\to h_{{SM}}h_{{SM}}\\to b\\bar{{b}}\gamma\gamma$",
             fig, ax = plt.subplots()
 
             ax.hist(np.array(obs[x_X_S_bb_H_gamgam])/norm, bins=15)
-            ax.axvline(ObsLim/norm, color='red', ls='dashed')
+            ax.axvline(ObsLim/norm, color='red', ls='dashed', label=f'$\sigma(obs)/\sigma(ref) = {ObsLim/norm:.1f}$')
             ax.set_xlabel(r'$\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))/\sigma(ref)$')
             ax.set_ylabel(r'Surviving models')
 
@@ -123,7 +122,6 @@ $ref=gg\\to h_{{SM}}h_{{SM}}\\to b\\bar{{b}}\gamma\gamma$",
 $M_{{S}}={df_AtlasGSMax['ms'][i]}$, $M_{{X}}={df_AtlasGSMax['mx'][i]}$\n\
 Fraction of surviving models (out of $10^{{5}}$): {numOfModels/100000:.2f}\n\
 Number of exclusions: {ObsLimExclusions}\n\
-$\sigma(obs)/\sigma(ref) = {ObsLim/norm:.1f}$\n\
 $ref=gg\\to h_{{SM}}h_{{SM}}\\to b\\bar{{b}}\gamma\gamma$",
                       loc='upper right', alignment='left')
             plt.tight_layout()
