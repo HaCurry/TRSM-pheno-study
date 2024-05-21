@@ -36,8 +36,6 @@ if __name__ == '__main__':
     ObsLim = np.array([element for element in df['ObsLim']])
     max = np.array([element for element in df['x_X_S_bb_H_gamgam_max']])
 
-    norm = (31.02 * 0.0026) * 10**(-3)
-
     ## plotting style
 
     with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
@@ -65,37 +63,10 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
-    # ## read in the 2023 Atlas limits
-    # limitsUntransposed = pandas.read_json(os.path.join(pathRepo, 'Atlas2023Limits.json'))
-    # print(limitsUntransposed)
-    # limits=limitsUntransposed.T
-    # print(limits)
-
-    # ms = [element for element in limits['S']]
-    # mx = [element for element in limits['X']]
-
-    # # save it in pb
-    # XS = [element for element in 10**(-3) *limits['ObservedLimit']]
-    # dataIds = [element for element in limits.index]
-
-    # # dataId below will be the name of the folder containing all
-    # # the output (i.e cross sections and madgraph output) from execution
-    # # of the corresponding model parameters in listModelTuples
-    # listModelTuples = []
-    # for i in range(len(dataIds)):
-
-    #     if 125.09 < ms[i]:
-    #         listModelTuples.append((125.09, ms[i], mx[i], XS[i], dataIds[i], ms[i], mx[i]))
-
-    #     elif ms[i] < 125.09:
-    #         listModelTuples.append((ms[i], 125.09, mx[i], XS[i], dataIds[i], ms[i], mx[i]))
-
-    #     else:
-    #         raise Exception('Something went wrong')
     df_AtlasGSMax = pandas.read_table(os.path.join(pathRepo, 'AtlasLimitsGridSearch',
                                               'AtlasLimitsGridSearchMax.tsv'))
 
-    # for (mH1, mH2, mH3, XS, dataId, ms, mx) in listModelTuples:
+    norm = (31.05 * 10**(-3)) * 0.002637
     for i in range(len(df_AtlasGSMax)):
 
         ObsLimExclusions = df_AtlasGSMax['ObsLimExclusions'][i]
@@ -106,7 +77,7 @@ if __name__ == '__main__':
             numOfNans = df_AtlasGSMax['numOfNans'][i]
             ObsLimExclusions = df_AtlasGSMax['ObsLimExclusions'][i]
             ObsLim = df_AtlasGSMax['ObsLim'][i]
-            
+
             pathOutput = os.path.join(pathOutputParent, dataId, f'output_{dataId}.tsv')
             obs = TRSM.observables(pathOutput, 'bb', 'gamgam', normSM=1)
 
@@ -121,28 +92,41 @@ if __name__ == '__main__':
                 x_X_S_bb_H_gamgam = 'x_H3_H1_gamgam_H2_bb'
 
             fig, ax = plt.subplots()
-            count, edges, bars = ax.hist(obs[x_X_S_bb_H_gamgam], bins=15)
-            ax.bar_label(bars)
-            ax.axvline(ObsLim, color='red', ls='dashed')
-            ax.legend(title=f"total generated $\sigma$'s = {numOfModels}\n\
-number of np.nan's = {numOfNans}\n\
-number of exclusions = {ObsLimExclusions}\n\
-$\sigma(obs) = {ObsLim:.5f}$ pb",
-                      alignment='left')
 
+            count, edges, bars = ax.hist(np.array(obs[x_X_S_bb_H_gamgam])/norm, bins=15)
+            ax.bar_label(bars)
+            ax.axvline(ObsLim/norm, color='red', ls='dashed')
             ax.set_ylim(0,100)
-            ax.set_title(dataId)
-            ax.set_xlabel(r'$\sigma$ [pb]', labelpad=25)
-            ax.set_ylabel(r'count')
+            ax.set_xlabel(r'$\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))/\sigma(ref)$')
+            ax.set_ylabel(r'Surviving models')
+
+            ax.legend(title=f"Zoomed in\n\
+$M_{{S}}={df_AtlasGSMax['ms'][i]}$, $M_{{X}}={df_AtlasGSMax['mx'][i]}$\n\
+Fraction of surviving models (out of $10^{{5}}$): {numOfModels/100000:.2f}\n\
+Number of exclusions: {ObsLimExclusions}\n\
+$\sigma(obs)/\sigma(ref) = {ObsLim/norm:.1f}$\n\
+$ref=gg\\to h_{{SM}}h_{{SM}}\\to b\\bar{{b}}\gamma\gamma$",
+                      loc='upper right', alignment='left')
+            plt.tight_layout()
             plt.savefig(os.path.join(pathPlots, f'{dataId}.pdf'))
             plt.close()
 
             fig, ax = plt.subplots()
-            ax.hist(obs[x_X_S_bb_H_gamgam], bins=15)
-            ax.axvline(ObsLim, color='red', ls='dashed')
-            ax.set_title(f'{dataId} - full window')
-            ax.set_xlabel(r'$\sigma$ [pb]')
-            ax.set_ylabel(r'count')
+
+            ax.hist(np.array(obs[x_X_S_bb_H_gamgam])/norm, bins=15)
+            ax.axvline(ObsLim/norm, color='red', ls='dashed')
+            ax.set_xlabel(r'$\sigma(gg\to X \to S(b\bar{b})~H(\gamma\gamma))/\sigma(ref)$')
+            ax.set_ylabel(r'Surviving models')
+
+
+            ax.legend(title=f"Full window\n\
+$M_{{S}}={df_AtlasGSMax['ms'][i]}$, $M_{{X}}={df_AtlasGSMax['mx'][i]}$\n\
+Fraction of surviving models (out of $10^{{5}}$): {numOfModels/100000:.2f}\n\
+Number of exclusions: {ObsLimExclusions}\n\
+$\sigma(obs)/\sigma(ref) = {ObsLim/norm:.1f}$\n\
+$ref=gg\\to h_{{SM}}h_{{SM}}\\to b\\bar{{b}}\gamma\gamma$",
+                      loc='upper right', alignment='left')
+            plt.tight_layout()
             plt.savefig(os.path.join(pathPlots, f'{dataId}_large.pdf'))
             plt.close()
 
