@@ -1,21 +1,14 @@
-
-from helpScannerS import functions as TRSM
-from helpScannerS import twoDPlotter as twoDPlot
-
 import os
 import json
 
-import numpy as np
-import pandas
 import scipy.interpolate
-from scipy.interpolate import CubicSpline
-
 import mplhep as hep
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as pe
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+from helpScannerS import functions as TRSM
+from helpScannerS import twoDPlotter as twoDPlot
 
 if __name__ == '__main__': 
 
@@ -33,7 +26,6 @@ if __name__ == '__main__':
     os.makedirs(pathPlots, exist_ok=True)
     os.makedirs(os.path.join(pathPlots, 'BP2'), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, 'BP3'), exist_ok=True)
-
 
     path13_BP = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints')
 
@@ -76,7 +68,8 @@ if __name__ == '__main__':
 
     ScannerS_BP2 = TRSM.observables(path13_BP2, 
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3', 'w_H3',
-                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    'valid_BFB', 'valid_Higgs',
+                                    'valid_STU', 'valid_Uni',
                                     kineticExclude=True)
 
     NWA_BP2 = [ScannerS_BP2['w_H3'][i]/ScannerS_BP2['mH3'][i]
@@ -94,8 +87,10 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,)
+    levels = [0.0015, 0.0045, 0.0075, 0.0105]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize)
 
 
     # the line M3 = M1 + M2
@@ -112,11 +107,12 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP2 @ $13$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$',
+    ax.legend(title='BP2:\n$h_1=S$, $h_2=H$, $h_3=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
@@ -133,7 +129,8 @@ if __name__ == '__main__':
 
     ScannerS_BP3 = TRSM.observables(path13_BP3,
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3', 'w_H3',
-                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    'valid_BFB', 'valid_Higgs',
+                                    'valid_STU', 'valid_Uni',
                                     kineticExclude=True)
 
     NWA_BP3 = [ScannerS_BP3['w_H3'][i]/ScannerS_BP3['mH3'][i]
@@ -151,9 +148,11 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    manualLabelsPositions = [(145, 290), (170, 360), (180, 425), (210, 480),
-                             (225, 549), (240, 590), (250, 640)]
-    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
+    levels = [0.006, 0.018, 0.03, 0.042]
+    manualLabelsPositions = [(145, 290), (180, 425),
+                             (225, 549), (250, 640)]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
     clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
                       manual=manualLabelsPositions)
 
@@ -171,11 +170,12 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP3 @ $13$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$',
+    ax.legend(title='BP3:\n$h_1=H$, $h_2=S$, $h_3=X$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),

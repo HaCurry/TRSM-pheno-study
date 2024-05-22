@@ -1,19 +1,15 @@
-from helpScannerS import functions as TRSM
-from helpScannerS import twoDPlotter as twoDPlot
-
 import os
+import json
 
-import numpy as np
-import pandas
 import scipy.interpolate
-from scipy.interpolate import CubicSpline
-
-import mplhep as hep
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as pe
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+import mplhep as hep
+from helpScannerS import functions as TRSM
+from helpScannerS import twoDPlotter as twoDPlot
 
 if __name__ == '__main__': 
 
@@ -24,15 +20,12 @@ if __name__ == '__main__':
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
 
     # path to plotting directory
-    # E:
-    pathPlots = '/eos/user/i/ihaque/BenchmarkplanePlots' 
+    pathPlots = os.path.join(pathRepo, 'Benchmarkplanes', 'plots') 
 
     # create directories inside plotting directory for saving figures
     os.makedirs(pathPlots, exist_ok=True)
-    os.makedirs(os.path.join(pathPlots), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, 'BP2'), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, 'BP3'), exist_ok=True)
-
 
     path13_BP = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints')
 
@@ -43,23 +36,32 @@ if __name__ == '__main__':
     path13_BP3 = os.path.join(path13_BP, 'BP3', 'output_BP3_noconstraints.tsv')
 
     ## plotting style
+    with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
+        styles = json.load(json_file)    
+
     plt.style.use(hep.style.ATLAS)
     hep.style.use({"mathtext.default": "rm"})
 
     # change label fontsize
-    mpl.rcParams['axes.labelsize'] = 19
-    mpl.rcParams['axes.titlesize'] = 19
+    mpl.rcParams['axes.labelsize'] = styles['axes.labelsize']
+    mpl.rcParams['axes.titlesize'] = styles['axes.titlesize']
 
     # change ticksize
-    mpl.rcParams['xtick.minor.size'] = 3.0
-    mpl.rcParams['xtick.major.size'] = 5.0
-    mpl.rcParams['ytick.minor.size'] = 3.0
-    mpl.rcParams['ytick.major.size'] = 5.0
+    mpl.rcParams['xtick.minor.size'] = styles['xtick.minor.size']
+    mpl.rcParams['xtick.major.size'] = styles['xtick.major.size']
+    mpl.rcParams['ytick.minor.size'] = styles['ytick.minor.size']
+    mpl.rcParams['ytick.major.size'] = styles['ytick.major.size']
 
     # change legend font size and padding
-    mpl.rcParams['legend.borderpad'] = 0.5
-    mpl.rcParams['legend.fontsize'] = 13
-    mpl.rcParams['legend.title_fontsize'] = 13
+    mpl.rcParams['legend.borderpad'] = styles['legend.borderpad']
+    mpl.rcParams['legend.fontsize'] = styles['legend.fontsize']
+    mpl.rcParams['legend.title_fontsize'] = styles['legend.title_fontsize']
+    mpl.rcParams['legend.frameon'] = styles['legend.frameon']
+    mpl.rcParams['legend.fancybox'] = styles['legend.fancybox']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+    mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
+
+    contourFontsize = 13
 
     ## BP2
 
@@ -69,7 +71,8 @@ if __name__ == '__main__':
     # cross section is generated elsewhere at 13 TeV (see twoD_ScannerSCrossSections.py)
     ScannerS_BP2 = TRSM.observables(path13_BP2, 
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
-                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    'valid_BFB', 'valid_Higgs',
+                                    'valid_STU', 'valid_Uni',
                                     saveAll=True,
                                     kineticExclude=True)
 
@@ -87,11 +90,15 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=10)
+    levels = [0.2, 0.3, 0.4]
+    manualLabelsPositions = [(20, 185), (42.5, 250), (65, 330)]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
+                      manual=manualLabelsPositions)
 
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
+    # # change contour label edgecolor
+    # plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
 
     # the line M3 = M1 + M2
     ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
@@ -107,7 +114,8 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
@@ -118,7 +126,7 @@ if __name__ == '__main__':
               ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_BR_XSH_.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_BR_XSH.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
@@ -138,11 +146,12 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=10)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
+    levels = [0.1, 0.25, 0.5]
+    manualLabelsPositions = [(15, 160), (35, 205), (70, 280)]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
+                      manual=manualLabelsPositions )
 
     # the line M3 = M1 + M2
     ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
@@ -158,7 +167,8 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
@@ -169,7 +179,7 @@ if __name__ == '__main__':
               ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_XS_XSH_.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_XS_XSH.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
@@ -179,12 +189,13 @@ if __name__ == '__main__':
 
     ScannerS_BP3 = TRSM.observables(path13_BP3,
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
-                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    'valid_BFB', 'valid_Higgs',
+                                    'valid_STU', 'valid_Uni',
                                     saveAll=True,
                                     kineticExclude=True)
 
 
-    # BP3 13 TeV gg -> H3 -> H1 H2
+    # BP3 13 TeV H3 -> H1 H2 (branching ratio)
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP3['mH2'],
                                             ScannerS_BP3['mH3'],
@@ -198,11 +209,12 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=10)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
+    levels = [0.35, 0.45, 0.5]
+    manualLabelsPositions = [(340, 470), (250, 420), (180, 340)]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
+                      manual=manualLabelsPositions)
 
     # the line M3 = M1 + M2
     ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
@@ -237,7 +249,7 @@ if __name__ == '__main__':
     del x, y, z, xi, yi
 
 
-    ## BP3 13 TeV gg -> H3 -> H1 H2
+    ## BP3 13 TeV gg -> H3 -> H1 H2 (cross section)
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP3['mH2'],
                                             ScannerS_BP3['mH3'],
@@ -251,11 +263,14 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    cont = ax.contour(xi, yi, zi, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=10)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
+    levels = [0.05, 0.1, 0.2, 0.25, 0.3]
+    manualLabelsPositions = [(150, 590), (185, 510),
+                             (165, 420), (155, 380), (145, 345),
+                             (190, 365)]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
+                      manual=manualLabelsPositions)
 
     # the line M3 = M1 + M2
     ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
@@ -284,7 +299,7 @@ if __name__ == '__main__':
               ], loc='lower right')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_XS_XSH_.pdf'))
+    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_XS_XSH.pdf'))
     plt.close()
 
     del x, y, z, xi, yi
