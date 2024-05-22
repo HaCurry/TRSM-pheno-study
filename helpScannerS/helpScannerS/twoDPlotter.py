@@ -1094,7 +1094,7 @@ def plotAuxConstraints(inputDict, keyX, keyY, keyZ, ax, hatches, **kwargs):
     # additional color 'red' I do not know...
     # see where it is stolen from https://stackoverflow.com/a/55134750/17456342
     contf = ax.contourf(xi, yi, zi, 3, hatches=[hatches, ''],
-                        colors=['white', 'red'], alpha=0.5)
+                        colors=['white', 'red'], alpha=alpha)
 
     return contf
 
