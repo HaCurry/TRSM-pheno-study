@@ -4,7 +4,6 @@ import json
 import scipy.interpolate
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as pe
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 import mplhep as hep
