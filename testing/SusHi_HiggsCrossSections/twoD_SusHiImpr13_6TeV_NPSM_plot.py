@@ -1,20 +1,14 @@
-from helpScannerS import functions as TRSM
-from helpScannerS import twoDPlotter as twoDPlot
-
 import os
 import json
 
-import numpy as np
-import pandas
 import scipy.interpolate
-from scipy.interpolate import CubicSpline
-
-import mplhep as hep
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as pe
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+import mplhep as hep
+from helpScannerS import functions as TRSM
+from helpScannerS import twoDPlotter as twoDPlot
 
 if __name__ == '__main__': 
 
@@ -25,7 +19,8 @@ if __name__ == '__main__':
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
 
     # path to plotting directory
-    pathPlots = os.path.join(pathRepo, 'testing', 'SusHi_HiggsCrossSections', 'plots') 
+    pathPlots = os.path.join(pathRepo, 'testing', 'SusHi_HiggsCrossSections',
+                             'plots') 
 
     # create directories inside plotting directory for saving figures
     os.makedirs(pathPlots, exist_ok=True)
@@ -72,6 +67,8 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
+    contourFontsize = 13
+
     ## BP2
 
     # calculate the cross sections of gg -> H3 -> H1(bb)H2(gamgam) at 13.6 TeV with BP2 settings.
@@ -85,8 +82,9 @@ if __name__ == '__main__':
     # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR?sortcol=0;table=1;up=0#sorted_table
     ScannerS_BP2_13_6 = TRSM.observables(path13_BP2,
                                          'bb', 'gamgam', 'mH1', 'mH2', 'mH3', 
-                                         'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
-                                         normSM = 34.43 * 10**(-3) * 0.002637,
+                                         'valid_BFB', 'valid_Higgs', 
+                                         'valid_STU', 'valid_Uni',
+                                         normSM=34.43 * 10**(-3) * 0.002637,
                                          kineticExclude=True,
                                          pathRun3Data=path13_6,
                                          keyMassRun3='mass',
@@ -106,15 +104,13 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0, 0.5, 1, 2, 3, 10]
-    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower', linewidths=0.75, colors='red')
-    manualLabelPositions = [(7, 480), (12, 440), (75, 460),
-                            (32, 360), (50, 310), (35, 260), (20, 170)]
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
+    levels = [1, 2, 3, 10]
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    manualLabelPositions = [(75, 460), (32, 360), (50, 310),
+                            (35, 260), (20, 170)]
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
                       manual=manualLabelPositions)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
 
     # the line M3 = M1 + M2
     ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
@@ -122,7 +118,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(SM)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b})~h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
                                      xlims=(-3, 127), ylims=(117, 510),
                                      fig=fig, ax=ax, im=im)
 
@@ -130,11 +126,12 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2_13_6, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2_13_6, 'mH1', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP2 @ $13.6$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP2 $\sqrt{s}=13.6$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
@@ -164,15 +161,13 @@ if __name__ == '__main__':
 
     # contour plot
     levels = [0.1, 0.25, 0.5, 0.75, 1.25, 1.5]
-    cont = ax.contour(xi, yi, zi, levels, origin='lower', linewidths=0.75, colors='red')
+    cont = ax.contour(xi, yi, zi, levels, origin='lower',
+                      linewidths=0.75, colors='red')
     manualLabelsPositions = [(35, 285), (50, 280), (67.5, 270),
                              (80, 265), (100, 260), (120, 375), 
                              (112.5, 255)]
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
                       manual=manualLabelsPositions)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
 
     # the line M3 = M1 + M2
     ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
@@ -180,7 +175,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma) h_{2}(b\bar{b})) \right/ \sigma(SM)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma)~h_{2}(b\bar{b})) \right/ \sigma(ref)$',
                                      xlims=(-3, 127), ylims=(117, 510),
                                      fig=fig, ax=ax, im=im)
 
@@ -188,11 +183,12 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2_13_6, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2_13_6, 'mH1', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP2 @ $13.6$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP2 $\sqrt{s}=13.6$ TeV:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
@@ -214,9 +210,10 @@ if __name__ == '__main__':
     # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR?sortcol=0;table=1;up=0#sorted_table
     ScannerS_BP3_13_6 = TRSM.observables(path13_BP3,
                                          'bb', 'gamgam', 'mH1', 'mH2', 'mH3', 
-                                         'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                         'valid_BFB', 'valid_Higgs',
+                                         'valid_STU', 'valid_Uni',
                                          kineticExclude=True,
-                                         normSM = 34.43 * 10**(-3) * 0.002637,
+                                         normSM=34.43 * 10**(-3) * 0.002637,
                                          pathRun3Data=path13_6,
                                          keyMassRun3='mass',
                                          keyCrossSecRun3='SMCrossSec')
@@ -238,12 +235,10 @@ if __name__ == '__main__':
     levels = [0.01, 0.1, 1, 4]
     manualLabelsPositions = [(160, 420), (180, 460), (250, 510), (135, 290),
                              (135, 370)]
-    cont = ax.contour(xi, yi, zi, levels, origin='lower', linewidths=0.75, colors='red')
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
+    cont = ax.contour(xi, yi, zi, levels, origin='lower',
+                      linewidths=0.75, colors='red')
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
                       manual=manualLabelsPositions)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
 
     # the line M3 = M1 + M2
     ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
@@ -251,7 +246,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(SM)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b})~h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
@@ -259,11 +254,12 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3_13_6, 'mH2', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3_13_6, 'mH2', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP3 @ $13.6$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP3 $\sqrt{s}=13.6$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
@@ -294,14 +290,12 @@ if __name__ == '__main__':
 
     # contour plot
     levels = [0, 0.01, 0.1, 1, 3]
-    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower', linewidths=0.75, colors='red')
+    cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
+                      linewidths=0.75, colors='red')
     manualLabelPositions = [(130, 380), (150, 450), (160, 510),
                             (180, 570)]
-    clbls = ax.clabel(cont, inline=True, fontsize=10,
+    clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
                       manual=manualLabelPositions)
-
-    # change contour label edgecolor
-    plt.setp(clbls, path_effects=[pe.withStroke(linewidth=1, foreground="w")])
 
     # the line M3 = M1 + M2
     ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
@@ -309,7 +303,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma) h_{2}(b\bar{b})) \right/ \sigma(SM)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma)~h_{2}(b\bar{b})) \right/ \sigma(ref)$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
@@ -317,11 +311,12 @@ if __name__ == '__main__':
     constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3_13_6, 'mH2', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3_13_6, 'mH2', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP3 @ $13.6$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
+    ax.legend(title='BP3 $\sqrt{s}=13.6$ TeV:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}\\to b\\bar{b}\gamma\gamma$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
