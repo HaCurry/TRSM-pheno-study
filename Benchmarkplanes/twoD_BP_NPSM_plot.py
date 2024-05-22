@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b})~h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
                                      xlims=(-3, 127), ylims=(117, 510),
                                      fig=fig, ax=ax, im=im)
 
@@ -163,7 +163,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D('',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma) h_{2}(b\bar{b})) \right/ \sigma(ref)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma)~h_{2}(b\bar{b})) \right/ \sigma(ref)$',
                                      xlims=(-3, 127), ylims=(110, 510),
                                      fig=fig, ax=ax, im=im)
 
@@ -226,7 +226,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b}) h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(b\bar{b})~h_{2}(\gamma\gamma)) \right/ \sigma(ref)$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
@@ -282,7 +282,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma) h_{2}(b\bar{b})) \right/ \sigma(ref)$',
+                                     r'$\left.\sigma(gg\to h_{3} \to h_{1}(\gamma\gamma)~h_{2}(b\bar{b})) \right/ \sigma(ref)$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
