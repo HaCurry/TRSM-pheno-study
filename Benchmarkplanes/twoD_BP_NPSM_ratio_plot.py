@@ -173,7 +173,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$BR(h_{3}\to h_{1} \ h_{2})$',
+                                     r'$\left.\sigma(h_{1}(b\bar{b})~h_{2}(\gamma \gamma))\right/ \sigma(h_{1}(\gamma\gamma)~h_{2}(b\bar{b}))$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
