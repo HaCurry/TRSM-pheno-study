@@ -25,24 +25,22 @@ if __name__ == '__main__':
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno'
 
     # path to plotting directory
-    # E:
-    pathPlots = '/eos/user/i/ihaque/SusHiPlots' 
+    pathPlots = os.path.join(pathRepo, 'testing', 'SusHi_HiggsCrossSections', 'plots') 
 
     # create directories inside plotting directory for saving figures
     os.makedirs(pathPlots, exist_ok=True)
-    os.makedirs(os.path.join(pathPlots, '13_6TeV'), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, '13_6TeV', 'BP2'), exist_ok=True)
     os.makedirs(os.path.join(pathPlots, '13_6TeV', 'BP3'), exist_ok=True)
 
     # path to 13.6 TeV gg > h_{SM} ScannerS cross sections
     path13_6 = os.path.join(pathRepo, 'testing', 'SusHi_HiggsCrossSections',
-                            '13_6TeV_ScannerSCrossSections.tsv')
+                            '13_6TeV_SusHiImprCrossSections.tsv')
 
     # path to 13 TeV TRSM ScannerS cross sections with BP2 settings
     # path13_BP2 = os.path.join(pathRepo, 'plots2D', 'BP2_BR_XSH', 'output_BP2_BR_XSH.tsv')
     path13_BP2 = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints',
                               'BP2', 'output_BP2_noconstraints.tsv')
-    
+
     # path to 13 TeV TRSM ScannerS cross sections with BP3 settings
     # path13_BP3 = os.path.join(pathRepo, 'plots2D', 'BP3_BR_XSH', 'output_BP3_BR_XSH.tsv')
     path13_BP3 = os.path.join(pathRepo, 'Benchmarkplanes', 'BPs_noconstraints',
