@@ -8,6 +8,7 @@ def condorScriptCreator(runNameExec,
                         pathExecutable,
                         pathExecPython,
                         pathExecOutputParent,
+                        eosPathExec,
                         neventsExec,
                         pathSubmit,
                         JobFlavour,
@@ -41,6 +42,10 @@ def condorScriptCreator(runNameExec,
         path to the directory where all the output from
         the condor jobs will be output (i.e the cross
         sections).
+
+    eosPathExec: string
+        due to the limited storage space in AFS, the output from Madgraph is moved
+        to a specified directory in EOS.
 
     neventsExec: int
         number of events in the Madgraph calculations.
@@ -102,27 +107,43 @@ lhapdf-config --libdir
 runName={runNameExec}
 
 # job output path
-pathExecOutputJob={pathExecOutputParent}/${{1}}/${{runName}}
+pathExecOutputParentTmp=/tmp/ihaque/MadgraphResonVsNonReson
+mkdir -p ${{pathExecOutputParentTmp}}/${{1}}/${{runName}}
+pathExecOutputJob=${{pathExecOutputParentTmp}}/${{1}}/${{runName}}
 
 # path to the ATLAS distribution of Madgraph executable
 pathExecMadgraph=/cvmfs/sft.cern.ch/lcg/views/LCG_104c_ATLAS_5/x86_64-el9-gcc13-opt/bin/mg5_aMC
 
 # copy model to job output path
-cp -r {pathExecOutputParent}/twosinglet-master {pathExecOutputParent}/${{1}}/
+cp -r {pathExecOutputParent}/twosinglet-master ${{pathExecOutputParentTmp}}/${{1}}/
 
 # path to the TRSM package (https://gitlab.com/apapaefs/twosinglet)
-pathExecModel={pathExecOutputParent}/${{1}}/twosinglet-master
+pathExecModel=${{pathExecOutputParentTmp}}/${{1}}/twosinglet-master
 
 # Madgraph events
 neventsExec={neventsExec:.0f}
 
 # path to tsv file containing TRSM model parameters for madgraph
-pathExecConfig=${{pathExecOutputJob}}/config_${{1}}_${{runName}}.tsv
+pathExecConfig={pathExecOutputParent}/${{1}}/${{runName}}/config_${{1}}_${{runName}}.tsv
 
 # Enter directory and run python script which runs Madgraph 
 cd {os.path.dirname(pathExecPython)}
 echo "running twoD_mgCrossSections.py (Madgraph)..."
-time python3 twoD_mgCrossSections.py ${{runName}} ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}}'''
+time python3 twoD_mgCrossSections.py ${{runName}} ${{pathExecMadgraph}} ${{pathExecConfig}} ${{pathExecOutputJob}} ${{pathExecModel}} ${{neventsExec}}
+
+# delete the model
+rm -r ${{pathExecModel}}
+
+# Move the Madraph output directory to EOS
+eosOutputDir={eosPathExec}
+
+# mkdir -p ${{eosOutputDir}}/${{1}}
+mv ${{pathExecOutputJob}} ${{eosOutputDir}}/${{1}}/
+
+# move config files to EOS as well
+mv ${{pathExecConfig}} ${{eosOutputDir}}/${{1}}/${{runName}}/
+mv {pathExecOutputParent}/${{1}}/${{runName}}/settings_${{1}}_${{runName}}.json ${{eosOutputDir}}/${{1}}/${{runName}}/
+'''
 
     with open(pathExecutable, 'w') as executableFile:
         executableFile.write(executable)
@@ -148,12 +169,18 @@ if __name__ == '__main__':
     # path to parent directory containing all the mass points (dataId)
     # each mass point corresponds to a condor job
     # E:
-    pathExecOutputParent = '/afs/cern.ch/user/i/ihaque//MadgraphResonVsNonReson'
+    pathExecOutputParent = '/afs/cern.ch/user/i/ihaque/MadgraphResonVsNonReson'
 
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
     # E: (or you can leave as is)
-    runNameExec = 'nevents10000_AFS'
+    runNameExec = 'nevents10000_AFS2'
+
+    # Madgraph needs to be run and output its content on AFS, however after all the output
+    # from Madgraph is output it is moved to a directory in EOS due to the limited storage
+    # space in AFS
+    # E:
+    eosPathExec = '/eos/user/i/ihaque/MadgraphResonVsNonResonOutput'
 
     # number of Madgraph events
     # E: (or you can leave as is)
@@ -162,12 +189,12 @@ if __name__ == '__main__':
     # condor maximum runtime for each job (see condor docs for more info or
     # batchdocs: https://batchdocs.web.cern.ch/tutorial/exercise6b.html)
     # E: (or you can leave as is)
-    JobFlavour = 'tomorrow'
+    JobFlavour = 'longlunch'
 
     # path to where the condor submit files and executable will be
     # E:
     pathCondorSubAndExec = os.path.join(pathRepo, f'testing/MadGraph_ResonVsNonReson/MadgraphResonVsNonResonCondor/{runNameExec}')
-    
+
     # tries to create the directory
     try:
         os.makedirs(pathCondorSubAndExec)
@@ -287,26 +314,26 @@ if __name__ == '__main__':
     #         raise Exception('something went wrong') 
 
     # pick the points you want to test
-    newListModelParams = []
-    desiredPoints = ['X170_S30', 'X210_S70', 'X325_S110',
-                     'X375_S125', 'X400_S200', 'X450_S70', 'X500_S125',
-                     'X550_S300', 'X750_S50', 'X850_S125', 'X900_S400', 
-                     'X375_S70', 'X240_S100', 'X300_S150', 'X500_S325',
-                     'X550_S185', 'X525_S250', 'X475_S170']
+    # newListModelParams = []
+    # desiredPoints = ['X170_S30', 'X210_S70', 'X325_S110',
+    #                  'X375_S125', 'X400_S200', 'X450_S70', 'X500_S125',
+    #                  'X550_S300', 'X750_S50', 'X850_S125', 'X900_S400', 
+    #                  'X375_S70', 'X240_S100', 'X300_S150', 'X500_S325',
+    #                  'X550_S185', 'X525_S250', 'X475_S170']
 
-    for element in listModelParams:
-        if element['extra']['dataId'] in desiredPoints:
-            newListModelParams.append(element)
-        else:
-            continue
+    # for element in listModelParams:
+    #     if element['extra']['dataId'] in desiredPoints:
+    #         newListModelParams.append(element)
+    #     else:
+    #         continue
 
-    if len(newListModelParams) != len(desiredPoints):
-        print([element['extra']['dataId'] for element in newListModelParams])
-        raise Exception('Not all desired points were found')
+    # if len(newListModelParams) != len(desiredPoints):
+    #     print([element['extra']['dataId'] for element in newListModelParams])
+    #     raise Exception('Not all desired points were found')
 
-    listModelParams = newListModelParams
+    # listModelParams = newListModelParams
 
-    [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
+    # [print(f'{element["mH1_lb"]:.0f}, {element["mH2_lb"]:.0f}, {element["mH3_lb"]:.0f}') for element in listModelParams]
 
     # create the directory structure for the condor output
     # for each point in listModelParams (see above) a separate directory
@@ -321,6 +348,7 @@ if __name__ == '__main__':
                         pathExecutable,
                         pathExecPython,
                         pathExecOutputParent,
+                        eosPathExec,
                         neventsExec,
                         pathSubmit,
                         JobFlavour,
