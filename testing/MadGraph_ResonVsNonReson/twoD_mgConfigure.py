@@ -108,16 +108,19 @@ runName={runNameExec}
 
 # job output path
 pathExecOutputParentTmp=/tmp/ihaque/MadgraphResonVsNonReson
-mkdir -p ${{pathExecOutputParentTmp}}/${{1}}/${{runName}}
 pathExecOutputJob=${{pathExecOutputParentTmp}}/${{1}}/${{runName}}
+mkdir -p ${{pathExecOutputJob}}
+
+# enter job output path
+cd ${{pathExecOutputJob}}
 
 # path to the ATLAS distribution of Madgraph executable
 pathExecMadgraph=/cvmfs/sft.cern.ch/lcg/views/LCG_104c_ATLAS_5/x86_64-el9-gcc13-opt/bin/mg5_aMC
 
-# copy model to job output path
+# copy model (TRSM: https://gitlab.com/apapaefs/twosinglet) to job output path
 cp -r {pathExecOutputParent}/twosinglet-master ${{pathExecOutputParentTmp}}/${{1}}/
 
-# path to the TRSM package (https://gitlab.com/apapaefs/twosinglet)
+# path to the TRSM package
 pathExecModel=${{pathExecOutputParentTmp}}/${{1}}/twosinglet-master
 
 # Madgraph events
@@ -125,6 +128,9 @@ neventsExec={neventsExec:.0f}
 
 # path to tsv file containing TRSM model parameters for madgraph
 pathExecConfig={pathExecOutputParent}/${{1}}/${{runName}}/config_${{1}}_${{runName}}.tsv
+
+# path to json file containing some additional data (not used, but can be useful)
+pathExecSettings={pathExecOutputParent}/${{1}}/${{runName}}/settings_${{1}}_${{runName}}.json
 
 # Enter directory and run python script which runs Madgraph 
 cd {os.path.dirname(pathExecPython)}
@@ -137,12 +143,11 @@ rm -r ${{pathExecModel}}
 # Move the Madraph output directory to EOS
 eosOutputDir={eosPathExec}
 
-# mkdir -p ${{eosOutputDir}}/${{1}}
-mv ${{pathExecOutputJob}} ${{eosOutputDir}}/${{1}}/
+mv ${{pathExecOutputParentTmp}}/${{1}} ${{eosOutputDir}}/
 
 # move config files to EOS as well
 mv ${{pathExecConfig}} ${{eosOutputDir}}/${{1}}/${{runName}}/
-mv {pathExecOutputParent}/${{1}}/${{runName}}/settings_${{1}}_${{runName}}.json ${{eosOutputDir}}/${{1}}/${{runName}}/
+mv ${{pathExecSettings}} ${{eosOutputDir}}/${{1}}/${{runName}}/
 '''
 
     with open(pathExecutable, 'w') as executableFile:
