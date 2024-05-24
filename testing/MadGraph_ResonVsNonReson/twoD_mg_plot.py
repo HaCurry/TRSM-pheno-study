@@ -96,7 +96,6 @@ if __name__ == '__main__':
     pp_iota0_eta0h = [dfMadgraph['pp_iota0_eta0h'][i] for i in range(len(dfMadgraph))]
     pp_eta0h = [dfMadgraph['pp_eta0h'][i] for i in range(len(dfMadgraph))]
     ratio = [dfMadgraph['ratio'][i] for i in range(len(dfMadgraph))]
-    pp_iota0_eta0h_SnS = [dfMadgraph['pp_iota0_eta0h_SnS'][i] for i in range(len(dfMadgraph))]
 
     # annotation settings
     fontsize = 10
@@ -121,14 +120,16 @@ if __name__ == '__main__':
     alpha = 0.1
     
     # ScannerS output for constraint hatching
-    ScannerS_BP2 = TRSM.observables(pathScannerSBP2 , 
+    ScannerS_BP2 = TRSM.observables(pathScannerSBP2 ,
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
-                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    'valid_BFB', 'valid_Higgs',
+                                    'valid_STU', 'valid_Uni',
                                     kineticExclude=True)
 
-    ScannerS_BP3 = TRSM.observables(pathScannerSBP3 , 
+    ScannerS_BP3 = TRSM.observables(pathScannerSBP3 ,
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
-                                    'valid_BFB', 'valid_Higgs', 'valid_STU', 'valid_Uni',
+                                    'valid_BFB', 'valid_Higgs', 
+                                    'valid_STU', 'valid_Uni',
                                     kineticExclude=True)
 
     # legend settings
@@ -156,12 +157,15 @@ if __name__ == '__main__':
     # plot the constraints according to the patterns below below
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', 
+                                            f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', 
+                                            f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
 
-    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
+    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle,
+               linewidth=axvlineLinewidth)
 
     # where the points are
     ax.scatter(msLow, mxLow, facecolor=scatterFacecolor, s=scatterMarkersize)
@@ -177,8 +181,9 @@ if __name__ == '__main__':
             continue
         else:
             ax.annotate('{:.3f}'.format(ratioLow[i]), (msLow[i], mxLow[i]),
-                        textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color,
-                        path_effects=path_effects) 
+                        textcoords='offset points', xytext=(-3, -2),
+                        fontsize=fontsize, rotation=rotation, color=color,
+                        path_effects=path_effects)
                         
 
     # subregion of the original image
@@ -193,8 +198,9 @@ if __name__ == '__main__':
             continue
         else:
             axins.annotate('{:.3f}'.format(ratioLow[i]), (msLow[i], mxLow[i]),
-                           textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color,
-                           path_effects=path_effects) 
+                           textcoords='offset points', xytext=(-3, -2),
+                           fontsize=fontsize, rotation=rotation, color=color,
+                           path_effects=path_effects)
 
     axins.imshow(zi, origin='lower', vmin=min(ratioLow), vmax=max(ratioLow),
                  extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
@@ -228,12 +234,15 @@ if __name__ == '__main__':
     # plot the constraints according to the patterns below below
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', 
+                                            f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', 
+                                            f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
 
-    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
+    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle,
+               linewidth=axvlineLinewidth)
 
     # where the points are
     ax.scatter(msMed, mxMed, facecolor=scatterFacecolor, s=scatterMarkersize)
@@ -246,7 +255,8 @@ if __name__ == '__main__':
 
     for i in range(len(ratioMed)):
         ax.annotate('{:.3f}'.format(ratioMed[i]), (msMed[i], mxMed[i]),
-                    textcoords='offset points', xytext=(-3,-2), fontsize=fontsize, rotation=rotation, color=color,
+                    textcoords='offset points', xytext=(-3, -2),
+                    fontsize=fontsize, rotation=rotation, color=color,
                     path_effects=path_effects)
 
     ax.legend(title=title,
@@ -280,7 +290,8 @@ if __name__ == '__main__':
         contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
 
-    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle, linewidth=axvlineLinewidth)
+    ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle,
+               linewidth=axvlineLinewidth)
 
     # where the points are
     ax.scatter(msHigh, mxHigh, facecolor=scatterFacecolor, s=scatterMarkersize)
