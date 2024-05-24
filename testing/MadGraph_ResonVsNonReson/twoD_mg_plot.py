@@ -97,6 +97,10 @@ if __name__ == '__main__':
     pp_eta0h = [dfMadgraph['pp_eta0h'][i] for i in range(len(dfMadgraph))]
     ratio = [dfMadgraph['ratio'][i] for i in range(len(dfMadgraph))]
 
+    # the ratio is \sigma(gg -> SH) / \sigma(gg -> X -> SH)
+    # but it is better to have the reverse
+    ratio = [1/ratio[i] for i in range(len(ratio))]
+
     # annotation settings
     fontsize = 10
     rotation = 45
@@ -118,7 +122,7 @@ if __name__ == '__main__':
     # constraint hatching settings
     constraints = {'BFB': '++', 'Higgs': r'//', 'STU': r'\\ ', 'Uni': '..'}
     alpha = 0.1
-    
+
     # ScannerS output for constraint hatching
     ScannerS_BP2 = TRSM.observables(pathScannerSBP2 ,
                                     'bb', 'gamgam', 'mH1', 'mH2', 'mH3',
@@ -139,7 +143,8 @@ if __name__ == '__main__':
     msLini, mxLini = np.linspace(min(ms), max(ms), 800), np.linspace(min(mx), max(mx), 1000)
     msMeshi, mxMeshi = np.meshgrid(msLini, mxLini)
 
-    zi = scipy.interpolate.griddata((ms, mx), ratio, (msMeshi, mxMeshi), method='cubic')
+    zi = scipy.interpolate.griddata((ms, mx), ratio, (msMeshi, mxMeshi),
+                                    method='cubic')
 
     print(f'nanmax: {np.nanmax(zi)} and actual max {np.nanmax(ratio)}')
 
@@ -149,7 +154,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     msLow, mxLow, ratioLow = cutter(ms, mx, ratio,
-                                     (0, 270), (160, 420))
+                                    (0, 270), (160, 420))
 
     im = ax.imshow(zi, origin='lower', vmin=min(ratioLow), vmax=max(ratioLow),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
@@ -157,10 +162,10 @@ if __name__ == '__main__':
     # plot the constraints according to the patterns below below
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', 
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
                                             f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', 
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3',
                                             f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
 
@@ -172,7 +177,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\left.\sigma(gg\to SH) \right/ \sigma(gg \to X \to SH)$',
+                                     r'$\left.\sigma(gg \to X \to SH) \right/ \sigma(gg\to SH)$',
                                      xlims=(0, 270), ylims=(160, 420),
                                      fig=fig, ax=ax, im=im)
 
@@ -184,7 +189,7 @@ if __name__ == '__main__':
                         textcoords='offset points', xytext=(-3, -2),
                         fontsize=fontsize, rotation=rotation, color=color,
                         path_effects=path_effects)
-                        
+
 
     # subregion of the original image
     x1, x2, y1, y2 = 86, 117, 215, 257
@@ -234,10 +239,10 @@ if __name__ == '__main__':
     # plot the constraints according to the patterns below below
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', 
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
                                             f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', 
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3',
                                             f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
 
@@ -249,7 +254,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\left.\sigma(gg\to SH) \right/ \sigma(gg \to X \to SH)$',
+                                     r'$\left.\sigma(gg \to X \to SH) \right/ \sigma(gg\to SH)$',
                                      xlims=(15, 490), ylims=(415, 620),
                                      fig=fig, ax=ax, im=im)
 
@@ -277,7 +282,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     msHigh, mxHigh, ratioHigh = cutter(ms, mx, ratio,
-                                        (0, 525), (620, 1200))
+                                       (0, 525), (620, 1200))
 
     im = ax.imshow(zi, origin='lower', vmin=min(ratioHigh), vmax=max(ratioHigh),
                    extent=[min(ms), max(ms), min(mx), max(mx)], aspect='auto')
@@ -285,9 +290,11 @@ if __name__ == '__main__':
     # plot the constraints according to the patterns below below
     legendIconsAndLabels = []
     for key in constraints:
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
-        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3', f'valid_{key}',
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3',
+                                            f'valid_{key}',
                                             ax, constraints[key], alpha=alpha)
 
     ax.axvline(125.09, color=axvlineColor, linestyle=axvlineLinestyle,
@@ -298,7 +305,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\left.\sigma(gg\to SH) \right/ \sigma(gg \to X \to SH)$',
+                                     r'$\left.\sigma(gg \to X \to SH) \right/ \sigma(gg\to SH)$',
                                      xlims=(40, 535), ylims=(620, 1300),
                                      fig=fig, ax=ax, im=im)
 
