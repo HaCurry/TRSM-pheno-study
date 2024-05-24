@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\left.\sigma(gg\to SH) \right/ \sigma(gg \to X \to SH)$',
+                                     r'$\left.\sigma_{MG5}(gg\to X \to SH) \right/ \sigma_{SnS}(gg \to X \to SH)$',
                                      xlims=(0, 270), ylims=(160, 420),
                                      fig=fig, ax=ax, im=im)
 
@@ -257,7 +257,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\left.\sigma(gg\to SH) \right/ \sigma(gg \to X \to SH)$',
+                                     r'$\left.\sigma_{MG5}(gg\to X \to SH) \right/ \sigma_{SnS}(gg \to X \to SH)$',
                                      xlims=(15, 490), ylims=(415, 620),
                                      fig=fig, ax=ax, im=im)
 
@@ -310,7 +310,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{S}$ [GeV]', r'$M_{X}$ [GeV]',
-                                     r'$\left.\sigma(gg\to SH) \right/ \sigma(gg \to X \to SH)$',
+                                     r'$\left.\sigma_{MG5}(gg\to X \to SH) \right/ \sigma_{SnS}(gg \to X \to SH)$',
                                      xlims=(40, 535), ylims=(620, 1300),
                                      fig=fig, ax=ax, im=im)
 
