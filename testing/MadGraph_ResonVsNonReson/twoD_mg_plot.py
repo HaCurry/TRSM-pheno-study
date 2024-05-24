@@ -96,7 +96,7 @@ if __name__ == '__main__':
     pp_iota0_eta0h = [dfMadgraph['pp_iota0_eta0h'][i] for i in range(len(dfMadgraph))]
     pp_eta0h = [dfMadgraph['pp_eta0h'][i] for i in range(len(dfMadgraph))]
     ratio = [dfMadgraph['ratio'][i] for i in range(len(dfMadgraph))]
-    pp_iota0_eta0h = [dfMadgraph['pp_iota0_eta0h_SnS'][i] for i in range(len(dfMadgraph))]
+    pp_iota0_eta0h_SnS = [dfMadgraph['pp_iota0_eta0h_SnS'][i] for i in range(len(dfMadgraph))]
 
     # annotation settings
     fontsize = 10
