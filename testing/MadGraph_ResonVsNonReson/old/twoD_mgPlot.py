@@ -1,9 +1,8 @@
-import pandas
-import numpy as np
 import os
-import re
 import json
 
+import pandas
+import numpy as np
 import matplotlib as mpl
 import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
@@ -88,7 +87,7 @@ if __name__ == '__main__':
         df['mx'][i] < 500
     )
     ]
-    
+
     AtlasBP2pointsMx = [df['mx'][i] for i in range(len(df)) if (
         1 <= df['ms'][i] and
         df['ms'][i] <= 124 and
@@ -140,13 +139,13 @@ if __name__ == '__main__':
         ratio['pp_iota0_eta0h'].append(dfMadgraph['pp_iota0_eta0h'][0])
         ratio['pp_eta0h'].append(dfMadgraph['pp_eta0h'][0])
         ratio['ratio'].append(dfMadgraph['ratio'][0])
-        
+
         ## save ms and mx
         if abs(dfMadgraph['mH2'][0] - 125.09) < 10**(-6):
             ms = dfMadgraph['mH1'][0]
             mx = dfMadgraph['mH3'][0]
 
-        
+
         elif abs(dfMadgraph['mH1'][0] - 125.09) < 10**(-6):
             ms = dfMadgraph['mH2'][0]
             mx = dfMadgraph['mH3'][0]
@@ -175,14 +174,14 @@ if __name__ == '__main__':
                             textcoords='offset points', xytext=(-3,-2), fontsize=10, rotation=45,
                     path_effects=[pe.withStroke(linewidth=2, foreground="white")])
 
-    
+
     ax.set_xlim(1, 124)
     ax.set_ylim(126, 500)
     ax.set_xlabel(r'$M_{1}$ [GeV]')
     ax.set_ylabel(r'$M_{3}$ [GeV]')
     ax.legend(title='BP2 $\sqrt{s}=13$ TeV:\n$h_1=S$, $h_{2}=H$, $h_{3}=X$',
               alignment='left')
-    
+
     fig.colorbar(scatter, ax=ax, label=r'$\sigma(gg \to h _{1} h _{2}) \ / \ \sigma(gg \to h _{3} \to h _{1}h _{2})$')
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP2.pdf'))
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP2.png'))
@@ -210,9 +209,8 @@ if __name__ == '__main__':
     ax.set_ylabel(r'$M_{3}$ [GeV]')
     ax.legend(title='BP3 $\sqrt{s}=13$ TeV:\n$h_1=H$, $h_{2}=S$, $h_{3}=X$',
               alignment='left', loc='lower right')
-    
+
     fig.colorbar(scatter, ax=ax, label=r'$\sigma(gg \to h _{1} h _{2}) \ / \ \sigma(gg \to h _{3} \to h _{1} h _{2})$')
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP3.pdf'))
     plt.savefig(os.path.join(pathSavefig, 'Madgraph_ResonVsNonResonRatio_BP3.png'))
     plt.close()
-    
