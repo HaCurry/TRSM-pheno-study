@@ -27,10 +27,13 @@ if __name__ == '__main__':
     pathTRSM = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/TRSMBroken'
 
     # path to output
-    pathMadgraphOutput = os.path.join(pathRepo, 'testing', 'MadGraph_ResonVsNonReson', 'MadgraphResonVsNonReson.tsv')
+    pathMadgraphOutput = os.path.join(pathRepo, 'testing',
+                                      'MadGraph_ResonVsNonReson',
+                                      'MadgraphResonVsNonReson.tsv')
 
     ## read in the 2023 Atlas limits
-    limitsUntransposed = pandas.read_json(os.path.join(pathRepo, 'Atlas2023Limits.json'))
+    limitsUntransposed = pandas.read_json(os.path.join(pathRepo,
+                                                       'Atlas2023Limits.json'))
     print(limitsUntransposed)
     limits=limitsUntransposed.T
     print(limits)
@@ -48,7 +51,9 @@ if __name__ == '__main__':
                'ms': [], 'mx': [],
                'pp_eta0h': [], 'pp_iota0_eta0h': [], 
                'ratio': [],
-               'pp_iota0_eta0h_SnS': []}
+               'x_X_SH_SnS': [],
+               'x_X_S_bb_H_gamgam_SnS': []} # x_X_S_bb_H_gamgam is not used
+                                            # but can be useful to have
 
     skipDataIds = ['X190_S15', 'X210_S15', 'X230_S15', 'X250_S15']
     for dataId in dataIds:
@@ -75,13 +80,15 @@ if __name__ == '__main__':
             if abs(dfMadgraph['mH2'][0] - 125.09) < 10**(-6):
                 ms = dfMadgraph['mH1'][0]
                 mx = dfMadgraph['mH3'][0]
-                ScannerSKey = 'x_H3_H1_bb_H2_gamgam'
+                x_X_S_bb_H_gamgam = 'x_H3_H1_bb_H2_gamgam'
 
 
             elif abs(dfMadgraph['mH1'][0] - 125.09) < 10**(-6):
                 ms = dfMadgraph['mH2'][0]
                 mx = dfMadgraph['mH3'][0]
-                ScannerSKey = 'x_H3_H1_gamgam_H2_bb'
+                x_X_S_bb_H_gamgam = 'x_H3_H1_gamgam_H2_bb'
+
+            x_X_SH = 'x_H3_H1H2'
 
             dictOut['ms'].append(ms)
             dictOut['mx'].append(mx)
@@ -108,22 +115,29 @@ if __name__ == '__main__':
 
             pathScannerSOutput = os.path.join(pathScannerSWorkingDir,
                                               f'output_X{mx}_S{ms}.tsv')
-            
+
             config.checkCreatorNew(pathScannerSConfig, ScannerSConfig)
 
-            constraints = ['--BFB', '0', '--Uni', '0', '--STU', '0', '--Higgs', '0']
-            subprocess.run([pathTRSM, *constraints, pathScannerSOutput, 'check', pathScannerSConfig],
-                           cwd=pathScannerSWorkingDir)
+            constraints = ['--BFB', '0', '--Uni', '0', '--STU', '0', '--Higgs',
+                           '0']
+            shellPrompt = [pathTRSM, *constraints, pathScannerSOutput, 'check',
+                           pathScannerSConfig]
+            subprocess.run(shellPrompt, cwd=pathScannerSWorkingDir)
 
-            obs = TRSM.observables(pathScannerSOutput, 'bb', 'gamgam', normSM=1)
+            obs = TRSM.observables(pathScannerSOutput, 'bb', 'gamgam',
+                                   normSM=1, saveAll=True)
 
             # sanity check
-            if len(obs[ScannerSKey]) == 1:
+            if (len(obs[x_X_S_bb_H_gamgam]) == 1 or
+                len(obs['x_H3_H1_bb_H2_gamgam']) == 1):
                 pass
             else:
                 raise Exception('something went wrong in the TRSM output file...')
 
-            dictOut['pp_iota0_eta0h_SnS'].append(obs[ScannerSKey][0])
+            dictOut['x_X_SH_SnS'].append(obs[x_X_SH][0])
+
+            # this is not really used, but can be useful to have
+            dictOut['x_X_S_bb_H_gamgam_SnS'].append(obs[x_X_S_bb_H_gamgam][0])
 
     df = pandas.DataFrame(dictOut)
     df.to_csv(pathMadgraphOutput, sep='\t')
