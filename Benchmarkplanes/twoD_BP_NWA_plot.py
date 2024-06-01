@@ -1,6 +1,7 @@
 import os
 import json
 
+import numpy as np
 import scipy.interpolate
 import mplhep as hep
 import matplotlib as mpl
@@ -37,7 +38,7 @@ if __name__ == '__main__':
 
     ## plotting style
     with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
-        styles = json.load(json_file)    
+        styles = json.load(json_file)
 
     plt.style.use(hep.style.ATLAS)
     hep.style.use({"mathtext.default": "rm"})
@@ -128,6 +129,64 @@ if __name__ == '__main__':
     del x, y, z, xi, yi, NWA_BP2
 
 
+    # BP2 \Gamma(H2)/M2
+
+    NWA_BP2 = [ScannerS_BP2['w_H2'][i]/ScannerS_BP2['mH2'][i]
+               for i in range(len(ScannerS_BP2['w_H2']))]
+
+    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2['mH1'],
+                                            ScannerS_BP2['mH3'],
+                                            NWA_BP2)
+    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+    fig, ax = plt.subplots()
+
+    # color plot
+    im = ax.imshow(zi, origin='lower',
+                   extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    # contour plot
+    levels = [0.5*10**(-7), 2*10**(-7)]
+    manualLabelsPositions = [(10, 150), (17, 170), (37.5, 220),
+                             (117, 375)]
+    cont = ax.contour(xi, yi, zi, origin='lower',
+                      linewidths=0.75, colors='red')
+    # clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
+    #                   manual=manualLabelsPositions )
+
+
+    # the line M3 = M1 + M2
+    ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
+            ls='dashed', color='k', linewidth=2)
+
+    twoDPlot.plotAuxTitleAndBounds2D(r'',
+                                     r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
+                                     r'$\Gamma(h_{2})~/~M_{2}$',
+                                     xlims=(-3, 127), ylims=(117, 510),
+                                     fig=fig, ax=ax, im=im)
+
+    # plot the constraints according to the patterns below below
+    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    legendIconsAndLabels = []
+    for key in constraints:
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP2, 'mH1', 'mH3',
+                                            f'valid_{key}',
+                                            ax, constraints[key])
+
+    # custom legends for the constrained regions
+    ax.legend(title='BP2:\n$h_1=S$, $h_2=H$, $h_3=X$',
+              handles=[
+              mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
+              mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
+              ], loc='lower right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, 'BP2', 'BP2_NWA_H2.pdf'))
+    plt.close()
+
+    del x, y, z, xi, yi, NWA_BP2
+
+
     # BP2 \Gamma(H1)/M1
 
     NWA_BP2 = [ScannerS_BP2['w_H1'][i]/ScannerS_BP2['mH1'][i]
@@ -196,7 +255,7 @@ if __name__ == '__main__':
                                     kineticExclude=True)
 
 
-    # BP3 \Gamma(H3)/M2
+    # BP3 \Gamma(H3)/M3
 
     NWA_BP3 = [ScannerS_BP3['w_H3'][i]/ScannerS_BP3['mH3'][i]
                for i in range(len(ScannerS_BP3['w_H3']))]
@@ -311,4 +370,63 @@ if __name__ == '__main__':
     plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_NWA_H2.pdf'))
     plt.close()
 
-    del x, y, z, xi, yi
+    del x, y, z, xi, yi, NWA_BP3
+
+
+    # BP3 \Gamma(H1)/M1
+
+    NWA_BP3 = [ScannerS_BP3['w_H1'][i]/ScannerS_BP3['mH1'][i]
+               for i in range(len(ScannerS_BP3['w_H1']))]
+
+    x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP3['mH2'],
+                                            ScannerS_BP3['mH3'],
+                                            NWA_BP3)
+    zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
+
+    fig, ax = plt.subplots()
+
+    # color plot
+    im = ax.imshow(zi, origin='lower',
+                   extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
+
+    # contour plot
+    levels = [0.0005, 0.0015, 0.0025,]
+    manualLabelsPositions = [(270, 440), (380, 540),
+                             (465, 630)]
+    cont = ax.contour(xi, yi, zi, origin='lower',
+                      linewidths=0.75, colors='red')
+    # clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
+    #                   manual=manualLabelsPositions)
+
+    # the line M3 = M1 + M2
+    ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
+            ls='dashed', color='k', linewidth=2)
+
+    twoDPlot.plotAuxTitleAndBounds2D(r'',
+                                     r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
+                                     r'$\Gamma(h_{1})~/~M_{1}$',
+                                     xlims=(115, 510), ylims=(245, 660),
+                                     fig=fig, ax=ax, im=im)
+
+    # plot the constraints according to the patterns below below
+    constraints = {'BFB': '+++', 'Higgs': r'////', 'STU': r'\\\\ ', 'Uni': '...'}
+    legendIconsAndLabels = []
+    for key in constraints:
+        contf = twoDPlot.plotAuxConstraints(ScannerS_BP3, 'mH2', 'mH3',
+                                            f'valid_{key}',
+                                            ax, constraints[key])
+
+    # custom legends for the constrained regions
+    ax.legend(title='BP3:\n$h_1=H$, $h_2=S$, $h_3=X$',
+              handles=[
+              mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
+              mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
+              mpatches.Patch(linewidth=0, fill=None, hatch='..', label='Unitarity'),
+              mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
+              ], loc='lower right', alignment='left')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(pathPlots, 'BP3', 'BP3_NWA_H1.pdf'))
+    plt.close()
+
+    del x, y, z, xi, yi, NWA_BP3
