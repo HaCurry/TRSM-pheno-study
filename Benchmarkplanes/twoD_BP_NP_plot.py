@@ -60,6 +60,10 @@ if __name__ == '__main__':
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
     mpl.rcParams['legend.edgecolor'] = styles['legend.edgecolor']
 
+    # standard model HH cross section
+    # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/LHCHWGHH?redirectedfrom=LHCPhysics.LHCHXSWGHH
+    normCrossSec = 31.05 * 10**(-3)
+
     contourFontsize = 13
 
     ## BP2
@@ -135,7 +139,8 @@ if __name__ == '__main__':
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP2['mH1'],
                                             ScannerS_BP2['mH3'],
-                                            ScannerS_BP2['x_H3_H1H2'])
+                                            [i/normCrossSec for i in 
+                                                ScannerS_BP2['x_H3_H1H2']])
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     fig, ax = plt.subplots()
@@ -145,7 +150,7 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0.1, 0.25, 0.5]
+    levels = [i/normCrossSec for i in [0.1, 0.25, 0.5]]
     manualLabelsPositions = [(15, 160), (35, 205), (70, 280)]
     cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
                       linewidths=0.75, colors='red')
@@ -252,7 +257,8 @@ if __name__ == '__main__':
 
     x, y, z, xi, yi = twoDPlot.plotAuxVar2D(ScannerS_BP3['mH2'],
                                             ScannerS_BP3['mH3'],
-                                            ScannerS_BP3['x_H3_H1H2'])
+                                            [i/normCrossSec for i in
+                                                ScannerS_BP3['x_H3_H1H2']])
     zi = scipy.interpolate.griddata((x, y), z, (xi, yi), method='linear')
 
     fig, ax = plt.subplots()
@@ -262,7 +268,7 @@ if __name__ == '__main__':
                    extent=[x.min(), x.max(), y.min(), y.max()], aspect='auto')
 
     # contour plot
-    levels = [0.05, 0.1, 0.2, 0.25, 0.3]
+    levels = [i/normCrossSec for i in [0.05, 0.1, 0.2, 0.25, 0.3]]
     manualLabelsPositions = [(150, 590), (185, 510),
                              (165, 420), (155, 380), (145, 345),
                              (190, 365)]
