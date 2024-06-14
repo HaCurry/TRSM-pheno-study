@@ -155,7 +155,7 @@ if __name__ == '__main__':
     cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
                       linewidths=0.75, colors='red')
     clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
-                      manual=manualLabelsPositions )
+                      manual=manualLabelsPositions, fmt='%1.1f')
 
     # the line M3 = M1 + M2
     ax.plot([1, 124], [1 + 125.09, 124 + 125.09],
@@ -163,7 +163,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D('',
                                      r'$M_{1}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\sigma(gg \to h_{3}\to h_{1} \ h_{2})$',
+                                     r'$\left.\sigma(gg \to h_{3}\to h_{1} \ h_{2})\right/ \sigma(ref)$',
                                      xlims=(-3, 127), ylims=(117, 510),
                                      fig=fig, ax=ax, im=im)
 
@@ -176,7 +176,7 @@ if __name__ == '__main__':
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP2:\n$h_1=S$, $h_2=H$, $h_3=X$',
+    ax.legend(title='BP2:\n$h_1=S$, $h_2=H$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mlines.Line2D([], [], linestyle='dashed', color='black', label='$M_{3}=M_{1}+M_{2}$')
@@ -275,7 +275,7 @@ if __name__ == '__main__':
     cont = ax.contour(xi, yi, zi, levels=levels, origin='lower',
                       linewidths=0.75, colors='red')
     clbls = ax.clabel(cont, inline=True, fontsize=contourFontsize,
-                      manual=manualLabelsPositions)
+                      manual=manualLabelsPositions, fmt='%1.1f')
 
     # the line M3 = M1 + M2
     ax.plot([126, 500], [126 + 125.09, 500 + 125.09],
@@ -283,7 +283,7 @@ if __name__ == '__main__':
 
     twoDPlot.plotAuxTitleAndBounds2D(r'',
                                      r'$M_{2}$ [GeV]', r'$M_{3}$ [GeV]',
-                                     r'$\sigma(gg \to h_{3}\to h_{1} \ h_{2})$',
+                                     r'$\left.\sigma(gg \to h_{3}\to h_{1} \ h_{2})\right/ \sigma(ref)$',
                                      xlims=(115, 510), ylims=(245, 660),
                                      fig=fig, ax=ax, im=im)
 
@@ -295,7 +295,7 @@ if __name__ == '__main__':
                                             ax, constraints[key])
 
     # custom legends for the constrained regions
-    ax.legend(title='BP3:\n$h_1=H$, $h_2=S$, $h_3=X$',
+    ax.legend(title='BP3:\n$h_1=H$, $h_2=S$, $h_3=X$\n$ref=gg\\to h_{SM}h_{SM}$',
               handles=[
               mpatches.Patch(linewidth=0, fill=None, hatch='++', label='Boundedness'),
               mpatches.Patch(linewidth=0, fill=None, hatch='//', label='HiggsBounds'),
