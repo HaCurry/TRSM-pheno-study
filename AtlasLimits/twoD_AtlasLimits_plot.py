@@ -91,9 +91,12 @@ if __name__ == '__main__':
     XS = [element for element in 10**(-3) * limits['ObservedLimit']]
     dataIds = [element for element in limits.index]
 
-    # normalize the limits by the SM di-Higgs to bbgamgam cross section
-    # norm = (31.05 * 10**(-3)) * 0.002637
-    norm = (31.02 * 10**(-3) * 0.0026)
+    # normalize the limits by the SM ggF di-Higgs cross section
+    # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/LHCHWGHH?redirectedfrom=LHCPhysics.LHCHXSWGHH
+    # and bbgamgam BR
+    # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR?sortcol=0;table=1;up=0#sorted_table
+
+    norm = (31.05 * 10**(-3)) * 0.002637 
 
     # annotation settings
     fontsize = 10
