@@ -140,10 +140,14 @@ time python3 twoD_mgCrossSections.py ${{runName}} ${{pathExecMadgraph}} ${{pathE
 # delete the model
 rm -r ${{pathExecModel}}
 
-# Move the Madraph output directory to EOS
+# path to Madraph output directory in EOS
 eosOutputDir={eosPathExec}
 
-mv ${{pathExecOutputParentTmp}}/${{1}} ${{eosOutputDir}}/
+# create the Madgraph output directory in EOS if it already does not exist
+mkdir -p ${{eosOutputDir}}/${{1}}/
+
+# Move the Madgraph output directory to EOS
+mv ${{pathExecOutputParentTmp}}/${{1}}/${{runName}} ${{eosOutputDir}}/${{1}}/
 
 # move config files to EOS as well
 mv ${{pathExecConfig}} ${{eosOutputDir}}/${{1}}/${{runName}}/
@@ -179,7 +183,7 @@ if __name__ == '__main__':
     # runNameExec will be created as a directory inside each mass point (dataId) 
     # the condor job output i.e the cross sections will be found there
     # E: (or you can leave as is)
-    runNameExec = 'nevents10000_AFS2'
+    runNameExec = 'nevents10000_preFINAL2'
 
     # Madgraph needs to be run and output its content on AFS, however after all the output
     # from Madgraph is output it is moved to a directory in EOS due to the limited storage
@@ -192,7 +196,7 @@ if __name__ == '__main__':
     neventsExec = 10000
 
     # condor maximum runtime for each job (see condor docs for more info or
-    # batchdocs: https://batchdocs.web.cern.ch/tutorial/exercise6b.html)
+    # batchdocs: https://batchdocs.web.cern.ch/tutorial/exercise6b.html )
     # E: (or you can leave as is)
     JobFlavour = 'longlunch'
 
