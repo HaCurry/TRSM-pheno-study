@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # runName
     # E:
-    runName = 'nevents10000_AFS2'
+    runName = 'nevents10000_preFINAL2'
 
     # path to ScannerS TRSM executable
     # E:
