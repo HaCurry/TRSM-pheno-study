@@ -63,8 +63,6 @@ if __name__ == '__main__':
     ObsLim = np.array([element for element in df['ObsLim']])
     XSmax = np.array([element for element in df['x_X_S_bb_H_gamgam_max']])
 
-    norm = (31.02 * 0.0026) * 10**(-3)
-
     ## plotting style
 
     with open(os.path.join(pathRepo, 'MatplotlibStyles.json')) as json_file:
