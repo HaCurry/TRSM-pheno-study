@@ -6,99 +6,6 @@ import numpy as np
 import pandas
 from helpScannerS import configurer as config
 
-def condorScriptCreator(pathExecutable, pathExecOutputParent, pathExecTRSM, pathSubmit, JobFlavour, pathDataIds):
-
-    '''
-    OBS!: do NOT append slashes '/' at the end of the paths in the input
-          arguments.
-
-    Input arguments with ...Exec... refer to the condor executable.
-
-    Remaining input arguments refer to the submit file (pathSubmit, 
-    JobFlavour, pathDataIds).
-
-    pathExecutable: string
-        path to where the condor executable will be written.
-
-    pathExecOutputParent: string 
-        path to the directory where all the output from
-        the condor jobs will be output (i.e the cross
-        sections).
-
-    pathExecTRSM: string
-        path to the ScannerS TRSM executable the condor executable
-        executes.
-
-    pathSubmit: string
-        path to where the condor submit file will be written.
-
-    JobFlavour: string
-        The maximal run time for a condor job (see
-        https://batchdocs.web.cern.ch/tutorial/exercise6b.html for more
-        information).
-
-    pathDataIds: string
-        names of the directories where output from the condor jobs
-        will be output (i.e cross sections). 
-
-    returns: None
-    '''
-
-    condorExecutable = f'''#!/bin/bash
-# condor executable
-
-pathCondorJobOutput={pathExecOutputParent}/${{1}}
-pathExecTRSM={pathExecTRSM}
-
-cd $pathCondorJobOutput/nofree
-${{pathExecTRSM}} --BFB 0 --Uni 0 --STU 0 --Higgs 0 ${{pathCondorJobOutput}}/nofree/output_${{1}}_nofree.tsv check ${{pathCondorJobOutput}}/nofree/config_${{1}}_nofree.tsv
-
-cd $pathCondorJobOutput/thetahS
-${{pathExecTRSM}} --BFB 0 --Uni 0 --STU 0 --Higgs 0 ${{pathCondorJobOutput}}/thetahS/output_${{1}}_thetahS.tsv check ${{pathCondorJobOutput}}/thetahS/config_${{1}}_thetahS.tsv
-
-cd $pathCondorJobOutput/thetahX
-${{pathExecTRSM}} --BFB 0 --Uni 0 --STU 0 --Higgs 0 ${{pathCondorJobOutput}}/thetahX/output_${{1}}_thetahX.tsv check ${{pathCondorJobOutput}}/thetahX/config_${{1}}_thetahX.tsv
-
-cd $pathCondorJobOutput/thetaSX
-${{pathExecTRSM}} --BFB 0 --Uni 0 --STU 0 --Higgs 0 ${{pathCondorJobOutput}}/thetaSX/output_${{1}}_thetaSX.tsv check ${{pathCondorJobOutput}}/thetaSX/config_${{1}}_thetaSX.tsv
-
-cd $pathCondorJobOutput/vs
-${{pathExecTRSM}} --BFB 0 --Uni 0 --STU 0 --Higgs 0 ${{pathCondorJobOutput}}/vs/output_${{1}}_vs.tsv check ${{pathCondorJobOutput}}/vs/config_${{1}}_vs.tsv
-
-cd $pathCondorJobOutput/vx
-${{pathExecTRSM}} --BFB 0 --Uni 0 --STU 0 --Higgs 0 ${{pathCondorJobOutput}}/vx/output_${{1}}_vx.tsv check ${{pathCondorJobOutput}}/vx/config_${{1}}_vx.tsv'''
-
-    with open(pathExecutable, 'w') as executableFile:
-        executableFile.write(condorExecutable)
-
-    condorSubmit = f''' # condor submit file
-executable              = {pathExecutable}
-
-getenv                  = True
-log                     = $(dataId).log
-output                  = $(dataId).out
-error                   = $(dataId).err
-arguments               = $(dataId)
-    
-# longlunch = 2 hrs
-+JobFlavour             = "{JobFlavour}"
-
-queue dataId from {pathDataIds}'''
-
-    with open(pathSubmit, 'w') as submitFile:
-        submitFile.write(condorSubmit)
-
-    print('+------------------------------+')
-    print(f'creating condor executable {pathExecutable}')
-    print('+------------------------------+')
-    print(condorExecutable)
-    print('\n')
-    print('+------------------------------+')
-    print(f'creating condor submit file {pathSubmit}')
-    print('+------------------------------+')
-    print(condorSubmit)
-
-
 if __name__ == '__main__':
 
     ## paths
@@ -107,7 +14,7 @@ if __name__ == '__main__':
     # E:
     pathRepo = '/afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/'
 
-    # path to condor job output
+    # path to output
     # E:
     pathOutputParent = '/eos/user/i/ihaque/AtlasLimitsBenchmarkplaneOutput' 
 
