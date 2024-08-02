@@ -1,0 +1,15 @@
+# condor submit file
+
+# path to the condor executable in this directory
+# E: 
+executable              = /afs/cern.ch/user/i/ihaque/scannerS/ScannerS-master/build/sh-bbyy-pheno/Benchmarkplanes/BPsCondor/condorExecutable.sh
+
+getenv                  = True
+log                     = condor.log
+output                  = condor.out
+error                   = condor.err
+    
+# longlunch = 2 hrs
++JobFlavour             = "longlunch"
+
+queue
