@@ -5,7 +5,7 @@ No need to run any scripts in this directory, however, the plotting scripts (`..
 OBS. If scripts is needed to run with condor (specifically the scripts), `twoD_SusHiCrossSections13TeV.py`, `twoD_SusHiCrossSections13_6TeV.py` then make sure to *not*
 submit them at the same time. This is due to the scripts will be trying to execute the _same_ SusHi executable at the same time which will most likely lead to problems.
 
-In other words, submit the above scripts (i.e the condor submit files in `SusHiCondor13TeV`, `SusHiCondor13TeV_N3LO`, `SusHiCondor13_6TeV`) sequentially, i.e after each
+In other words, submit the above scripts (i.e the condor submit files in `SusHiCondor13TeV`, `SusHiCondor13_6TeV`) sequentially, i.e after each
 job has finished.
 
 Or just run them locally, that works fine as well (but not in parallel)!
